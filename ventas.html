@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FABREC | Ventas</title>
+  
+  <!-- Tipografía Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* PALETA DEFAULT: GRAFITO NEUTRO */
+    :root {
+      --primary: #475569;
+      --primary-subtle: #f1f5f9;
+      --primary-border: #cbd5e1;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #f1f5f9;
+      --border-strong: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --text-soft: #94a3b8;
+      --success: #059669;
+      --success-bg: #ecfdf5;
+      --amber: #d97706;
+      --amber-bg: #fffbeb;
+      --rose: #e11d48;
+      --radius: 18px;
+      --radius-sm: 10px;
+    }
+
+    /* COLORES POR ZONA */
+    body[data-zona="la_parada"] {
+      --primary: #2563eb;
+      --primary-subtle: #eff6ff;
+      --primary-border: #bfdbfe;
+    }
+    body[data-zona="cono_norte"] {
+      --primary: #059669;
+      --primary-subtle: #ecfdf5;
+      --primary-border: #a7f3d0;
+    }
+    body[data-zona="santa_anita"] {
+      --primary: #7c3aed;
+      --primary-subtle: #f5f3ff;
+      --primary-border: #ddd6fe;
+    }
+    body[data-zona="cono_sur"] {
+      --primary: #ea580c;
+      --primary-subtle: #fff7ed;
+      --primary-border: #fed7aa;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 80px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* TOP HEADER */
+    .top-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border-strong);
+      padding: 14px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .header-inner {
+      max-width: 520px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .saludo-usuario {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+    .badge-zona-activa {
+      font-size: 11px;
+      font-weight: 800;
+      background: var(--primary-subtle);
+      color: var(--primary);
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--primary-border);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .badge-zona-activa:active {
+      transform: scale(0.96);
+      opacity: 0.8;
+    }
+
+    /* VIEWPORT */
+    .app-viewport {
+      max-width: 520px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px 20px;
+      flex: 1;
+    }
+
+    .view-pane {
+      display: none;
+    }
+    .view-pane.active {
+      display: block;
+    }
+
+    /* TARJETA CUENTAS */
+    .card-cuenta {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+    .cuenta-titular {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .cuenta-datos {
+      font-size: 12px;
+      line-height: 1.65;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .cuenta-datos strong {
+      font-weight: 700;
+    }
+    .acciones-cuenta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+    .btn-action-cuenta {
+      background: var(--primary-subtle);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      padding: 9px 12px;
+      font-size: 11px;
+      font-weight: 800;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.15s;
+    }
+    .btn-action-cuenta:active { opacity: 0.65; }
+
+    /* BOTONES PRINCIPALES DE ACCIÓN EN INICIO */
+    .contenedor-botones-principales {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .btn-nueva-venta {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      width: 100%;
+      padding: 15px;
+      font-size: 13px;
+      font-weight: 800;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+      transition: transform 0.1s ease;
+    }
+    .btn-nueva-venta:active {
+      transform: scale(0.98);
+    }
+
+    .btn-cierre-ventas {
+      background: var(--success);
+      color: #ffffff;
+      border: none;
+      width: 100%;
+      padding: 14px;
+      font-size: 13px;
+      font-weight: 800;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.18);
+      transition: transform 0.1s ease;
+    }
+    .btn-cierre-ventas:active {
+      transform: scale(0.98);
+    }
+
+    .seccion-header {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* TARJETA DE VENTA MINIMALISTA Y BALANCEADA */
+    .card-venta-simple {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      padding: 13px 16px;
+      margin-bottom: 9px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      transition: all 0.15s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      user-select: none;
+    }
+    .card-venta-simple:hover {
+      border-color: var(--primary-border);
+      background: #fafcff;
+    }
+    .card-venta-simple:active {
+      transform: scale(0.985);
+      background: var(--primary-subtle);
+    }
+    .card-venta-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .venta-simple-nombre {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .venta-simple-precio-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .venta-simple-monto {
+      font-size: 14.5px;
+      font-weight: 900;
+      color: var(--primary);
+      white-space: nowrap;
+      letter-spacing: -0.3px;
+    }
+    .icon-chevron {
+      width: 14px;
+      height: 14px;
+      stroke: var(--text-soft);
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .card-venta-bottom {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tag-pago-pill {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2.5px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg);
+      color: var(--text-muted);
+    }
+    .tag-pago-pill.pago-contraentrega {
+      background: #eff6ff;
+      color: #2563eb;
+      border-color: #bfdbfe;
+    }
+    .tag-pago-pill.pago-transferencia {
+      background: #ecfdf5;
+      color: #059669;
+      border-color: #a7f3d0;
+    }
+    .tag-pago-pill.pago-credito {
+      background: #fffbeb;
+      color: #d97706;
+      border-color: #fde68a;
+    }
+    .tag-pago-pill.pago-adelanto {
+      background: #f5f3ff;
+      color: #7c3aed;
+      border-color: #ddd6fe;
+    }
+    .venta-meta-item {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .venta-meta-dot {
+      color: var(--text-soft);
+      font-size: 9px;
+    }
+
+    /* FILTROS SEGMENTADOS */
+    .segmented-control {
+      display: flex;
+      background: var(--border-strong);
+      padding: 3px;
+      border-radius: 12px;
+      gap: 2px;
+      margin-bottom: 16px;
+    }
+    .segmented-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 7px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      font-family: inherit;
+      color: var(--text-muted);
+      border-radius: 9px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .segmented-btn.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    /* DASHBOARD MÉTRICAS Y GRÁFICAS */
+    .grid-kpis-dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .kpi-card-dash {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      padding: 16px;
+      border-radius: var(--radius);
+    }
+    .kpi-title-dash {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .kpi-value-dash {
+      font-size: 22px;
+      font-weight: 900;
+      margin-top: 4px;
+      color: var(--primary);
+    }
+
+    .chart-container-box {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+    .chart-header-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    /* MODALES */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      z-index: 100;
+      display: none;
+      align-items: flex-end;
+      backdrop-filter: blur(2px);
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-sheet {
+      background: var(--surface);
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      border-radius: 24px 24px 0 0;
+      padding: 22px 20px 30px;
+      max-height: 92vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.1);
+      animation: animSheet 0.2s ease-out;
+    }
+    @keyframes animSheet {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title {
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .btn-close {
+      background: var(--bg);
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+
+    .wizard-steps-indicator {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .step-pill {
+      flex: 1;
+      height: 4px;
+      border-radius: 4px;
+      background: var(--border-strong);
+      transition: background 0.2s ease;
+    }
+    .step-pill.active {
+      background: var(--primary);
+    }
+    .step-label-header {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* FORMULARIOS */
+    .input-field {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border-strong);
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 12px;
+      color: var(--text);
+      outline: none;
+    }
+    .input-field:focus {
+      border-color: var(--primary);
+    }
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .form-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .unit-switch-group {
+      display: flex;
+      background: var(--border);
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+    }
+    .unit-switch-btn {
+      flex: 1;
+      padding: 7px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 7px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+    .unit-switch-btn.active {
+      background: var(--surface);
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .tag-tarifa-simple {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 6px;
+      width: 100%;
+      margin: 6px 0;
+      letter-spacing: 0.3px;
+    }
+    .tarifa-menor {
+      background: var(--primary-subtle);
+      color: var(--primary);
+      border: 1px dashed var(--primary-border);
+    }
+    .tarifa-mayor {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid #a7f3d0;
+    }
+
+    .cart-box {
+      background: var(--primary-subtle);
+      border: 1px solid var(--primary-border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+    }
+    .cart-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 12px;
+      border-bottom: 1px dashed var(--primary-border);
+    }
+    .cart-row:last-child { border-bottom: none; }
+    .cart-btn-action {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+    }
+
+    /* FILAS STOCK */
+    .product-stock-card {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stock-product-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .stock-tag {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+    .stock-tag-ok {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+    .stock-tag-cero {
+      background: var(--amber-bg);
+      color: var(--amber);
+      border: 1px solid #fed7aa;
+    }
+
+    /* ZONA CARDS */
+    .zona-option-card {
+      background: var(--bg);
+      border: 1px solid var(--border-strong);
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color 0.15s ease;
+    }
+    .zona-option-card:hover {
+      border-color: var(--primary);
+      background: var(--primary-subtle);
+    }
+    .zona-option-nombre {
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .zona-option-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* DETALLE DE VENTA MODAL */
+    .detalle-bloque {
+      background: var(--bg);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .detalle-bloque-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px dashed var(--border-strong);
+    }
+    .detalle-bloque-item:last-child {
+      border-bottom: none;
+    }
+
+    /* BARRA INFERIOR */
+    .bottom-navbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: var(--surface);
+      border-top: 1px solid var(--border-strong);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 50;
+    }
+    .nav-btn {
+      flex: 1;
+      height: 100%;
+      background: transparent;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-soft);
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .nav-btn.active {
+      color: var(--primary);
+    }
+    .nav-btn svg {
+      width: 19px;
+      height: 19px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 700;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="top-header">
+    <div class="header-inner">
+      <div>
+        <div class="saludo-usuario" id="saludoTexto">¡Hola!</div>
+      </div>
+      <div class="badge-zona-activa" id="badgeZonaNombre" onclick="abrirModalZona()">
+        <span id="txtNombrePillZona">Seleccionar zona</span>
+        <svg style="width: 12px; height: 12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-viewport">
+
+    <!-- ============================================== -->
+    <!-- 1. INICIO: VENTAS Y CIERRE                     -->
+    <!-- ============================================== -->
+    <section id="paneInicio" class="view-pane active">
+      
+      <!-- CUENTAS BANCARIAS -->
+      <div class="card-cuenta" id="cardInfoCuentas">
+        <div class="cuenta-titular" id="cuentaTitular">TITULAR: SELECCIONA UNA ZONA</div>
+        <div class="cuenta-datos" id="cuentaDetalles">
+          Presiona el botón de zona arriba a la derecha para cargar las cuentas oficiales.
+        </div>
+        <div class="acciones-cuenta-grid" id="contenedorBotonesCuenta" style="display: none;">
+          <button onclick="copiarDatosBancariosCompletos()" class="btn-action-cuenta">
+            <svg style="width: 13px; height: 13px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copiar Datos
+          </button>
+          <button onclick="compartirDatosBancariosWhatsApp()" class="btn-action-cuenta">
+            <svg style="width: 13px; height: 13px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+            Compartir
+          </button>
+        </div>
+      </div>
+
+      <!-- BOTONES DE ACCIÓN PRINCIPALES -->
+      <div class="contenedor-botones-principales">
+        <button class="btn-nueva-venta" onclick="abrirModalVenta()">
+          <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nueva venta
+        </button>
+
+        <button onclick="enviarCierreAContabilidad()" class="btn-cierre-ventas" id="btnEnviarCierre">
+          <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Cierre de ventas
+        </button>
+      </div>
+
+      <!-- LISTA DE VENTAS DE HOY -->
+      <div class="seccion-header">
+        <span>Ventas del Día</span>
+        <span id="cantVentasBadge">0 pedidos</span>
+      </div>
+
+      <div id="listaVentasDia"></div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- 2. STOCK EN PLANTA (SOLO CANTIDADES)           -->
+    <!-- ============================================== -->
+    <section id="paneStock" class="view-pane">
+      <div class="seccion-header">
+        <span>Stock en Planta</span>
+      </div>
+      <input type="text" id="buscadorStock" oninput="filtrarListaStock()" placeholder="Buscar botella..." class="input-field" style="margin-bottom: 14px;">
+      
+      <div id="contenedorListaStock"></div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- 3. DASHBOARD DEL VENDEDOR (GRÁFICAS)           -->
+    <!-- ============================================== -->
+    <section id="paneDashboard" class="view-pane">
+      <div class="seccion-header">
+        <span>Rendimiento de Ventas</span>
+      </div>
+
+      <!-- FILTRO DE TIEMPO -->
+      <div class="segmented-control">
+        <button class="segmented-btn active" id="btnDashHoy" onclick="cambiarFiltroDashboard('hoy')">Hoy</button>
+        <button class="segmented-btn" id="btnDashSemana" onclick="cambiarFiltroDashboard('semana')">Semana</button>
+        <button class="segmented-btn" id="btnDashMes" onclick="cambiarFiltroDashboard('mes')">Mes</button>
+        <button class="segmented-btn" id="btnDashTodo" onclick="cambiarFiltroDashboard('todo')">Todo</button>
+      </div>
+
+      <!-- MÉTRICAS CLAVE -->
+      <div class="grid-kpis-dashboard">
+        <div class="kpi-card-dash">
+          <div class="kpi-title-dash">Monto Vendido</div>
+          <div class="kpi-value-dash" id="dashTotalSoles">S/ 0.00</div>
+        </div>
+        <div class="kpi-card-dash">
+          <div class="kpi-title-dash">Ventas Hechas</div>
+          <div class="kpi-value-dash" id="dashTotalPedidos">0</div>
+        </div>
+      </div>
+
+      <!-- GRÁFICA 1: MONTO EN SOLES -->
+      <div class="chart-container-box">
+        <div class="chart-header-title">Evolución de Ingresos (S/)</div>
+        <canvas id="canvasChartMonto" height="160" style="width: 100%; height: 160px;"></canvas>
+      </div>
+
+      <!-- GRÁFICA 2: CANTIDAD DE PEDIDOS -->
+      <div class="chart-container-box">
+        <div class="chart-header-title">Cantidad de Pedidos Realizados</div>
+        <canvas id="canvasChartPedidos" height="140" style="width: 100%; height: 140px;"></canvas>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================== -->
+  <!-- MODAL: DETALLE COMPLETO DE VENTA (AL TOCAR CARD)-->
+  <!-- ============================================== -->
+  <div id="modalDetalleVenta" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" id="detalleTituloVenta">Detalle de Venta</h3>
+        <button onclick="cerrarModalDetalleVenta()" class="btn-close">✕</button>
+      </div>
+
+      <!-- DATOS DEL CLIENTE Y ENTREGA -->
+      <div class="detalle-bloque">
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Cliente:</span>
+          <strong id="detClienteNombre">-</strong>
+        </div>
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">DNI / RUC:</span>
+          <span id="detClienteDoc">-</span>
+        </div>
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Teléfono:</span>
+          <span id="detClienteTel">-</span>
+        </div>
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Dirección de Entrega:</span>
+          <span id="detClienteDir" style="text-align: right; max-width: 60%;">-</span>
+        </div>
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Fecha de Entrega:</span>
+          <strong id="detFechaEntrega" style="color:var(--primary);">-</strong>
+        </div>
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Condición de Pago:</span>
+          <span id="detCondicionPago">-</span>
+        </div>
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Tarifa:</span>
+          <span id="detTarifa">-</span>
+        </div>
+      </div>
+
+      <!-- ITEMS COMPRADOS -->
+      <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-top:2px;">
+        Botellas en este pedido
+      </div>
+      <div id="detListaItems" class="detalle-bloque"></div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 4px 0;">
+        <span style="font-size:13px; font-weight:800;">Total Pagado / Pactado:</span>
+        <strong id="detMontoTotal" style="font-size:18px; color:var(--primary);">S/ 0.00</strong>
+      </div>
+
+      <button onclick="cerrarModalDetalleVenta()" class="btn-action-cuenta" style="height:44px; font-size:12px; border-radius:var(--radius); margin-top:4px;">
+        Cerrar Detalle
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL: REGISTRAR NUEVA VENTA (WIZARD 2 PASOS) -->
+  <!-- ============================================== -->
+  <div id="modalNuevaVenta" class="modal-overlay">
+    <div class="modal-sheet">
+      
+      <div class="modal-header">
+        <h3 class="modal-title" id="tituloModalVenta">Cotizar Pedido</h3>
+        <button onclick="cerrarModalVenta()" class="btn-close">✕</button>
+      </div>
+
+      <div class="wizard-steps-indicator">
+        <div class="step-pill active" id="pillPaso1"></div>
+        <div class="step-pill" id="pillPaso2"></div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- PASO 1: COTIZACIÓN PRIMERO                -->
+      <!-- ========================================== -->
+      <div id="wizardPaso1" style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="step-label-header">Paso 1: Cotización del Pedido</div>
+
+        <div style="background: var(--bg); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-strong);">
+          <label class="form-label">Modelo de Botella</label>
+          <select id="ventaSelectProducto" class="input-field" onchange="actualizarInfoProductoModal()" style="margin-bottom: 10px;"></select>
+
+          <!-- CONMUTADOR DE UNIDAD -->
+          <div class="unit-switch-group">
+            <button type="button" class="unit-switch-btn active" id="btnUnitPaquetes" onclick="cambiarUnidadMedida('paquetes')">Paquetes</button>
+            <button type="button" class="unit-switch-btn" id="btnUnitMillares" onclick="cambiarUnidadMedida('millares')">Millares</button>
+          </div>
+
+          <div class="form-grid-2" style="align-items: flex-end;">
+            <div>
+              <label class="form-label" id="lblCantidadUnidad">Cantidad (Paquetes)</label>
+              <input type="number" id="ventaCantidad" min="0" step="any" value="0" oninput="actualizarInfoProductoModal()" class="input-field">
+            </div>
+            <button onclick="guardarItemVenta()" id="btnAccionAgregarItem" class="btn-action-cuenta" style="width: 100%; height: 38px; background: var(--primary); color: #fff; border: none;">
+              + Añadir
+            </button>
+          </div>
+
+          <!-- INFO CONCISA -->
+          <div style="margin-top: 8px; font-size: 11px; display: flex; justify-content: space-between; align-items: center;">
+            <div id="txtPaquetesCalculadosMillar" style="display: none; font-weight: 800; color: var(--text);">Paquetes: 0</div>
+            <div id="txtStockBadgeSimple" style="font-weight: 700; color: var(--text-muted); margin-left: auto;">Stock: 0 paq</div>
+          </div>
+        </div>
+
+        <!-- RESUMEN DE LA COTIZACIÓN -->
+        <div id="modalCartBox" class="cart-box" style="display: none;">
+          <div id="badgeTarifaSimple" class="tag-tarifa-simple tarifa-menor">
+            Al por menor
+          </div>
+
+          <div id="modalCartItems"></div>
+          
+          <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 13px; font-weight: 800; padding-top: 8px; border-top: 1px solid var(--primary-border);">
+            <span>Total:</span>
+            <span id="modalTotalMonto" style="color: var(--primary); font-size: 16px;">S/ 0.00</span>
+          </div>
+        </div>
+
+        <button onclick="irAPaso2()" class="btn-nueva-venta" style="margin-top: 6px; margin-bottom: 0;">
+          Continuar a Datos del Cliente ➔
+        </button>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- PASO 2: DATOS DEL CLIENTE                 -->
+      <!-- ========================================== -->
+      <div id="wizardPaso2" style="display: none; flex-direction: column; gap: 12px;">
+        <div class="step-label-header">Paso 2: Datos del Comprador</div>
+
+        <!-- SELECTOR DE CLIENTE ANTERIOR -->
+        <div style="background: var(--surface); border: 1px solid var(--border-strong); padding: 10px 12px; border-radius: var(--radius-sm);">
+          <label class="form-label" style="color: var(--primary);">Elegir Comprador Frecuente</label>
+          <select id="selectClienteAntiguo" onchange="seleccionarClienteAntiguo(this.value)" class="input-field" style="font-weight: 700;">
+            <option value="">-- Nuevo Comprador --</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label">Cliente / Razón Social *</label>
+          <input type="text" id="ventaCliente" placeholder="Ej. Distribuidora San Juan" class="input-field">
+        </div>
+
+        <div class="form-grid-2">
+          <div>
+            <label class="form-label">DNI (ID Cliente) *</label>
+            <input type="text" id="ventaDni" placeholder="8 dígitos" maxlength="8" class="input-field">
+          </div>
+          <div>
+            <label class="form-label">RUC (Opcional Factura)</label>
+            <input type="text" id="ventaRuc" placeholder="11 dígitos" maxlength="11" class="input-field">
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div>
+            <label class="form-label">Teléfono *</label>
+            <input type="tel" id="ventaTelefono" placeholder="987654321" class="input-field">
+          </div>
+          <div>
+            <label class="form-label">Fecha de Entrega Requerida *</label>
+            <input type="date" id="ventaFechaEntrega" class="input-field" style="font-weight: 700;">
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div>
+            <label class="form-label">Condición Pago *</label>
+            <select id="ventaCondicion" class="input-field">
+              <option value="Transferencia">Transferencia</option>
+              <option value="Pago Contraentrega">Pago Contraentrega</option>
+              <option value="Adelanto 50%">Adelanto 50%</option>
+              <option value="Crédito">Crédito</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Dirección de Entrega *</label>
+            <input type="text" id="ventaDireccion" placeholder="Av. Los Laureles 321" class="input-field">
+          </div>
+        </div>
+
+        <div class="form-grid-2" style="margin-top: 6px;">
+          <button onclick="irAPaso1()" class="btn-action-cuenta" style="height: 48px; border-radius: var(--radius); font-size: 12px;">
+            ⬅ Volver
+          </button>
+          <button onclick="finalizarRegistroVenta()" class="btn-nueva-venta" style="margin-bottom: 0; height: 48px; font-size: 12px;">
+            Confirmar y Emitir
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL: SELECCIONAR ZONA                        -->
+  <!-- ============================================== -->
+  <div id="modalSelectorZona" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">Seleccionar Zona</h3>
+        <button onclick="cerrarModalZona()" class="btn-close">✕</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div class="zona-option-card" onclick="seleccionarZona('la_parada')">
+          <div>
+            <div class="zona-option-nombre">La Parada</div>
+            <div class="zona-option-sub">Junior • BCP / BBVA / Yape</div>
+          </div>
+          <svg style="width: 16px; height: 16px; color: #2563eb;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+
+        <div class="zona-option-card" onclick="seleccionarZona('cono_norte')">
+          <div>
+            <div class="zona-option-nombre">Cono Norte</div>
+            <div class="zona-option-sub">Yolanda • BCP / Yape</div>
+          </div>
+          <svg style="width: 16px; height: 16px; color: #059669;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+
+        <div class="zona-option-card" onclick="seleccionarZona('santa_anita')">
+          <div>
+            <div class="zona-option-nombre">Santa Anita / Huaycán / Chosica</div>
+            <div class="zona-option-sub">Gerald • BCP / Yape</div>
+          </div>
+          <svg style="width: 16px; height: 16px; color: #7c3aed;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+
+        <div class="zona-option-card" onclick="seleccionarZona('cono_sur')">
+          <div>
+            <div class="zona-option-nombre">Cono Sur</div>
+            <div class="zona-option-sub">Orlenis • BCP / Yape</div>
+          </div>
+          <svg style="width: 16px; height: 16px; color: #ea580c;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- BARRA INFERIOR (3 PESTAÑAS: VENTAS, STOCK, DASHBOARD) -->
+  <!-- ============================================== -->
+  <nav class="bottom-navbar">
+    <button class="nav-btn active" id="btnNavInicio" onclick="navegarA('paneInicio', this)">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Ventas</span>
+    </button>
+    <button class="nav-btn" id="btnNavStock" onclick="navegarA('paneStock', this)">
+      <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+      <span>Stock</span>
+    </button>
+    <button class="nav-btn" id="btnNavDashboard" onclick="navegarA('paneDashboard', this)">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Dashboard</span>
+    </button>
+  </nav>
+
+  <div id="toast" class="toast">Notificación</div>
+
+  <script>
+    // CONTABILIDAD FABREC (OFICIAL)
+    const NUMERO_CONTABILIDAD_WHATSAPP = "51922244819";
+
+    // CUENTAS OFICIALES POR ZONA
+    const ZONAS = {
+      la_parada: {
+        nombreZona: "La Parada",
+        asesor: "Junior",
+        titular: "INVERSIONES GARRO E.I.R.L.",
+        bcp: "191-9286644-0-82",
+        cci: "002-191-00928664408-256",
+        yape: "926 385 215",
+        bbva: "0011-0157-54-0100060005"
+      },
+      cono_norte: {
+        nombreZona: "Cono Norte",
+        asesor: "Yolanda",
+        titular: "INVERSIONES COMPLAPS",
+        bcp: "191-9405093-0-38",
+        cci: "002-191-00940509303-850",
+        yape: "955 144 286",
+        bbva: null
+      },
+      santa_anita: {
+        nombreZona: "Santa Anita/Huaycán/Chosica",
+        asesor: "Gerald",
+        titular: "TRANSPORTE HERMANOS",
+        bcp: "191-9905241-0-38",
+        cci: "002-191-00990524103-850",
+        yape: "920 883 350",
+        bbva: null
+      },
+      cono_sur: {
+        nombreZona: "Cono Sur",
+        asesor: "Orlenis",
+        titular: "PLASTIK PET E.I.R.L.",
+        bcp: "191-9870837-0-21",
+        cci: "002-191-00987083702-152",
+        yape: "904 888 872",
+        bbva: null
+      }
+    };
+
+    // CATÁLOGO OFICIAL FABREC
+    const CATALOGO_FABREC = [
+      { producto: "220 ml", menor: 16.5, mayor: 16.0, unidades: 100 },
+      { producto: "250 ml", menor: 16.5, mayor: 16.0, unidades: 100 },
+      { producto: "280 ml", menor: 16.5, mayor: 16.0, unidades: 100 },
+      { producto: "300 ml", menor: 16.5, mayor: 16.0, unidades: 100 },
+      { producto: "340 ml", menor: 16.5, mayor: 16.0, unidades: 100 },
+      { producto: "400 ml", menor: 17.5, mayor: 17.0, unidades: 100 },
+      { producto: "450 ml", menor: 17.5, mayor: 17.0, unidades: 100 },
+      { producto: "500 ml Néctar", menor: 18.0, mayor: 17.5, unidades: 100 },
+      { producto: "500 ml Gorda", menor: 20.5, mayor: 20.0, unidades: 100 },
+      { producto: "500 ml GH", menor: 20.5, mayor: 20.0, unidades: 100 },
+      { producto: "900 ml", menor: 15.5, mayor: 15.0, unidades: 50 },
+      { producto: "1000 ml", menor: 15.5, mayor: 15.0, unidades: 50 },
+      { producto: "1500 ml", menor: 22.5, mayor: 22.0, unidades: 50 },
+      { producto: "2500 ml", menor: 28.5, mayor: 28.0, unidades: 50 },
+      { producto: "3000 ml", menor: 32.5, mayor: 32.0, unidades: 50 },
+      { producto: "3000 ml (verde)", menor: 25.0, mayor: 25.0, unidades: 50 }
+    ];
+
+    const STOCK_PLANTA_DEFECTO = {
+      "220 ml": 50,
+      "250 ml": 40,
+      "280 ml": 60,
+      "300 ml": 50,
+      "500 ml Néctar": 100,
+      "1000 ml": 25
+    };
+
+    let zonaActivaClave = localStorage.getItem("fabrec_zona_activa") || "";
+    let inventarioLocal = JSON.parse(localStorage.getItem("fabrec_stock_local")) || STOCK_PLANTA_DEFECTO;
+    let ventasHoy = JSON.parse(localStorage.getItem("fabrec_ventas_hoy")) || [];
+    let todasLasVentas = JSON.parse(localStorage.getItem("fabrec_ventas_todas")) || [];
+    let directorioClientes = JSON.parse(localStorage.getItem("fabrec_clientes_registrados")) || [];
+    
+    let itemsVentaTemporal = [];
+    let indiceEditandoItem = -1;
+    let unidadSeleccionada = 'paquetes';
+    let filtroDashboardActivo = 'hoy';
+
+    // 1. NAVEGACIÓN ENTRE TABS
+    function navegarA(idPanel, btnElemento) {
+      document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+      const target = document.getElementById(idPanel);
+      if (target) target.classList.add('active');
+
+      if (btnElemento) {
+        btnElemento.classList.add('active');
+      }
+
+      if (idPanel === 'paneStock') renderizarListaStock();
+      if (idPanel === 'paneDashboard') renderizarDashboard();
+      window.scrollTo(0, 0);
+    }
+
+    // 2. MODAL Y CONTROL DE ZONA
+    function abrirModalZona() {
+      document.getElementById('modalSelectorZona').classList.add('open');
+    }
+
+    function cerrarModalZona() {
+      document.getElementById('modalSelectorZona').classList.remove('open');
+    }
+
+    function seleccionarZona(claveZona) {
+      zonaActivaClave = claveZona;
+      localStorage.setItem("fabrec_zona_activa", claveZona);
+
+      const body = document.body;
+      const txtPill = document.getElementById('txtNombrePillZona');
+      const cuentaTitular = document.getElementById('cuentaTitular');
+      const cuentaDetalles = document.getElementById('cuentaDetalles');
+      const contBotones = document.getElementById('contenedorBotonesCuenta');
+
+      if (!claveZona || !ZONAS[claveZona]) {
+        body.removeAttribute('data-zona');
+        txtPill.innerText = "Seleccionar zona";
+        cuentaTitular.innerText = "TITULAR: SELECCIONA UNA ZONA";
+        cuentaDetalles.innerHTML = "Presiona el botón de zona arriba a la derecha para cargar las cuentas oficiales.";
+        contBotones.style.display = 'none';
+        actualizarSaludo();
+        cerrarModalZona();
+        return;
+      }
+
+      const z = ZONAS[claveZona];
+      body.setAttribute('data-zona', claveZona);
+      txtPill.innerText = z.nombreZona;
+      cuentaTitular.innerText = "TITULAR: " + z.titular;
+
+      let html = "<strong>BCP:</strong> " + z.bcp + "<br><strong>CCI:</strong> " + z.cci + "<br><strong>YAPE:</strong> " + z.yape;
+      if (z.bbva) html += "<br><strong>BBVA:</strong> " + z.bbva;
+      cuentaDetalles.innerHTML = html;
+      contBotones.style.display = 'grid';
+
+      actualizarSaludo();
+      cerrarModalZona();
+      mostrarToast("Zona " + z.nombreZona + " asignada");
+    }
+
+    function actualizarSaludo() {
+      const hora = new Date().getHours();
+      let saludo = "¡Buenas tardes";
+      if (hora >= 5 && hora < 12) saludo = "¡Buenos días";
+      else if (hora >= 19 || hora < 5) saludo = "¡Buenas noches";
+
+      const asesor = (zonaActivaClave && ZONAS[zonaActivaClave]) ? ZONAS[zonaActivaClave].asesor : "";
+      document.getElementById('saludoTexto').innerText = asesor ? (saludo + ", " + asesor + "!") : (saludo + "!");
+    }
+
+    // 3. CUENTAS BANCARIAS: COPIAR Y COMPARTIR
+    function generarTextoDatosBancarios() {
+      if (!zonaActivaClave || !ZONAS[zonaActivaClave]) return "";
+      const z = ZONAS[zonaActivaClave];
+      let t = "*DATOS DE PAGO FABREC - " + z.nombreZona.toUpperCase() + "*\n" +
+              "Titular: " + z.titular + "\n" +
+              "BCP: " + z.bcp + "\n" +
+              "CCI: " + z.cci + "\n" +
+              "YAPE: " + z.yape;
+      if (z.bbva) t += "\nBBVA: " + z.bbva;
+      return t;
+    }
+
+    function copiarDatosBancariosCompletos() {
+      const t = generarTextoDatosBancarios();
+      if (!t) {
+        mostrarToast("Selecciona primero una zona");
+        return;
+      }
+      navigator.clipboard.writeText(t).then(() => {
+        mostrarToast("Cuentas copiadas al portapapeles");
+      });
+    }
+
+    function compartirDatosBancariosWhatsApp() {
+      const t = generarTextoDatosBancarios();
+      if (!t) {
+        mostrarToast("Selecciona primero una zona");
+        return;
+      }
+      const url = "https://api.whatsapp.com/send/?text=" + encodeURIComponent(t);
+      window.open(url, '_blank');
+    }
+
+    // 4. UNIDADES Y COTIZADOR
+    function cambiarUnidadMedida(unidad) {
+      unidadSeleccionada = unidad;
+      const btnPaq = document.getElementById('btnUnitPaquetes');
+      const btnMil = document.getElementById('btnUnitMillares');
+      const lblCant = document.getElementById('lblCantidadUnidad');
+
+      if (unidad === 'paquetes') {
+        btnPaq.classList.add('active');
+        btnMil.classList.remove('active');
+        lblCant.innerText = "Cantidad (Paquetes)";
+      } else {
+        btnMil.classList.add('active');
+        btnPaq.classList.remove('active');
+        lblCant.innerText = "Cantidad (Millares)";
+      }
+      actualizarInfoProductoModal();
+    }
+
+    function obtenerItemCatalogo(prodNom) {
+      return CATALOGO_FABREC.find(p => p.producto === prodNom) || null;
+    }
+
+    function calcularPaquetesDeEntrada(prodNom, inputVal) {
+      const item = obtenerItemCatalogo(prodNom);
+      if (!item) return 0;
+      if (unidadSeleccionada === 'paquetes') {
+        return Math.round(inputVal);
+      } else {
+        return Math.round((inputVal * 1000) / item.unidades);
+      }
+    }
+
+    function actualizarInfoProductoModal() {
+      const prodNom = document.getElementById('ventaSelectProducto').value;
+      const inputVal = parseFloat(document.getElementById('ventaCantidad').value) || 0;
+      const item = obtenerItemCatalogo(prodNom);
+      if (!item) return;
+
+      const stock = inventarioLocal[prodNom] || 0;
+      const stockBadge = document.getElementById('txtStockBadgeSimple');
+      
+      if (stock > 0) {
+        stockBadge.innerText = "Stock: " + stock + " paq";
+        stockBadge.style.color = "var(--text-muted)";
+      } else {
+        stockBadge.innerText = "Pedir";
+        stockBadge.style.color = "var(--amber)";
+      }
+
+      const paqCalc = calcularPaquetesDeEntrada(prodNom, inputVal);
+      const divEq = document.getElementById('txtPaquetesCalculadosMillar');
+
+      if (unidadSeleccionada === 'millares' && inputVal > 0) {
+        divEq.style.display = "block";
+        divEq.innerText = "Paquetes: " + paqCalc;
+      } else {
+        divEq.style.display = "none";
+      }
+    }
+
+    function recalcularTarifasDelPedido() {
+      let totalPaquetesEnPedido = 0;
+      itemsVentaTemporal.forEach(it => {
+        totalPaquetesEnPedido += it.paquetes_totales;
+      });
+
+      const esMayor = totalPaquetesEnPedido >= 100;
+
+      itemsVentaTemporal.forEach(it => {
+        const itemCat = obtenerItemCatalogo(it.producto);
+        if (itemCat) {
+          it.tipo_tarifa = esMayor ? "Mayor" : "Menor";
+          it.precio_unitario = esMayor ? itemCat.mayor : itemCat.menor;
+          it.subtotal = it.paquetes_totales * it.precio_unitario;
+        }
+      });
+
+      return { totalPaquetes: totalPaquetesEnPedido, esMayor: esMayor };
+    }
+
+    // 5. MODAL NUEVA VENTA
+    function abrirModalVenta() {
+      if (!zonaActivaClave) {
+        mostrarToast("Selecciona tu zona en la parte superior");
+        abrirModalZona();
+        return;
+      }
+      itemsVentaTemporal = [];
+      indiceEditandoItem = -1;
+      resetearFormularioItem();
+      limpiarCamposCliente();
+      
+      const hoyISO = new Date().toISOString().split('T')[0];
+      document.getElementById('ventaFechaEntrega').value = hoyISO;
+
+      cambiarUnidadMedida('paquetes');
+      irAPaso1();
+      renderizarItemsModal();
+      actualizarInfoProductoModal();
+      poblarSelectorClientesAntiguos();
+      document.getElementById('modalNuevaVenta').classList.add('open');
+    }
+
+    function cerrarModalVenta() {
+      document.getElementById('modalNuevaVenta').classList.remove('open');
+    }
+
+    function irAPaso1() {
+      document.getElementById('wizardPaso1').style.display = 'flex';
+      document.getElementById('wizardPaso2').style.display = 'none';
+      document.getElementById('pillPaso1').classList.add('active');
+      document.getElementById('pillPaso2').classList.remove('active');
+      document.getElementById('tituloModalVenta').innerText = "Cotizar Pedido";
+    }
+
+    function irAPaso2() {
+      if (itemsVentaTemporal.length === 0) {
+        mostrarToast("Agrega al menos una botella a la cotización");
+        return;
+      }
+
+      document.getElementById('wizardPaso1').style.display = 'none';
+      document.getElementById('wizardPaso2').style.display = 'flex';
+      document.getElementById('pillPaso1').classList.add('active');
+      document.getElementById('pillPaso2').classList.add('active');
+      document.getElementById('tituloModalVenta').innerText = "Datos del Cliente";
+    }
+
+    function poblarSelectBotellasModal() {
+      const sel = document.getElementById('ventaSelectProducto');
+      sel.innerHTML = CATALOGO_FABREC.map(p => `<option value="${p.producto}">${p.producto}</option>`).join('');
+    }
+
+    function resetearFormularioItem() {
+      document.getElementById('ventaCantidad').value = 0;
+      indiceEditandoItem = -1;
+      const btn = document.getElementById('btnAccionAgregarItem');
+      btn.innerText = "+ Añadir";
+      btn.style.background = "var(--primary)";
+    }
+
+    function guardarItemVenta() {
+      const prodNom = document.getElementById('ventaSelectProducto').value;
+      const inputVal = parseFloat(document.getElementById('ventaCantidad').value) || 0;
+      const paq = calcularPaquetesDeEntrada(prodNom, inputVal);
+
+      if (paq <= 0) {
+        mostrarToast("Ingresa una cantidad mayor a 0");
+        return;
+      }
+
+      const stockActual = inventarioLocal[prodNom] || 0;
+      const paraProduccion = paq > stockActual ? (paq - stockActual) : 0;
+      const desdeStock = paq - paraProduccion;
+
+      const nuevoItem = {
+        producto: prodNom,
+        paquetes_totales: paq,
+        paquetes_stock: desdeStock,
+        paquetes_produccion: paraProduccion,
+        unidad_origen: unidadSeleccionada,
+        valor_origen: inputVal,
+        tipo_tarifa: "Menor",
+        precio_unitario: 0,
+        subtotal: 0
+      };
+
+      if (indiceEditandoItem >= 0) {
+        itemsVentaTemporal[indiceEditandoItem] = nuevoItem;
+        mostrarToast("Ítem actualizado");
+      } else {
+        itemsVentaTemporal.push(nuevoItem);
+        mostrarToast("Añadido: " + paq + " paq de " + prodNom);
+      }
+
+      resetearFormularioItem();
+      renderizarItemsModal();
+      actualizarInfoProductoModal();
+    }
+
+    function cargarItemParaEditar(idx) {
+      if (!itemsVentaTemporal[idx]) return;
+      const it = itemsVentaTemporal[idx];
+      indiceEditandoItem = idx;
+
+      document.getElementById('ventaSelectProducto').value = it.producto;
+      cambiarUnidadMedida(it.unidad_origen || 'paquetes');
+      document.getElementById('ventaCantidad').value = it.valor_origen || it.paquetes_totales;
+
+      const btn = document.getElementById('btnAccionAgregarItem');
+      btn.innerText = "✓ Guardar Cambio";
+      btn.style.background = "var(--success)";
+
+      actualizarInfoProductoModal();
+      mostrarToast("Editando " + it.producto);
+    }
+
+    function renderizarItemsModal() {
+      const box = document.getElementById('modalCartBox');
+      const cont = document.getElementById('modalCartItems');
+      const badgeTarifa = document.getElementById('badgeTarifaSimple');
+
+      if (itemsVentaTemporal.length === 0) {
+        box.style.display = "none";
+        return;
+      }
+
+      box.style.display = "block";
+      const infoPedido = recalcularTarifasDelPedido();
+
+      if (infoPedido.esMayor) {
+        badgeTarifa.className = "tag-tarifa-simple tarifa-mayor";
+        badgeTarifa.innerText = "Al por mayor";
+      } else {
+        badgeTarifa.className = "tag-tarifa-simple tarifa-menor";
+        badgeTarifa.innerText = "Al por menor";
+      }
+
+      let totalMonto = 0;
+      let html = "";
+
+      itemsVentaTemporal.forEach((it, i) => {
+        totalMonto += it.subtotal;
+        html += `
+          <div class="cart-row">
+            <div>
+              <strong>${it.paquetes_totales} paq</strong> ${it.producto}
+              <span style="font-size:10px; color:var(--text-muted);">(S/ ${it.precio_unitario.toFixed(2)} c/u)</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="font-weight:700;">S/ ${it.subtotal.toFixed(2)}</span>
+              <button onclick="cargarItemParaEditar(${i})" class="cart-btn-action" style="color:var(--primary);" title="Editar">
+                <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              </button>
+              <button onclick="eliminarItemModal(${i})" class="cart-btn-action" style="color:var(--rose);" title="Eliminar">✕</button>
+            </div>
+          </div>
+        `;
+      });
+
+      cont.innerHTML = html;
+      document.getElementById('modalTotalMonto').innerText = "S/ " + totalMonto.toFixed(2);
+    }
+
+    function eliminarItemModal(idx) {
+      if (indiceEditandoItem === idx) resetearFormularioItem();
+      itemsVentaTemporal.splice(idx, 1);
+      renderizarItemsModal();
+    }
+
+    // 6. AUTOCOMPLETADO DE CLIENTES
+    function poblarSelectorClientesAntiguos() {
+      const sel = document.getElementById('selectClienteAntiguo');
+      let opts = '<option value="">-- Nuevo Comprador --</option>';
+      directorioClientes.forEach(c => {
+        opts += `<option value="${c.dni}">${c.nombre} (${c.dni})</option>`;
+      });
+      sel.innerHTML = opts;
+    }
+
+    function seleccionarClienteAntiguo(dniBuscado) {
+      if (!dniBuscado) {
+        limpiarCamposCliente();
+        return;
+      }
+      const clienteEncontrado = directorioClientes.find(c => c.dni === dniBuscado);
+      if (clienteEncontrado) {
+        document.getElementById('ventaCliente').value = clienteEncontrado.nombre;
+        document.getElementById('ventaDni').value = clienteEncontrado.dni;
+        document.getElementById('ventaRuc').value = clienteEncontrado.ruc === "No solicita factura" ? "" : clienteEncontrado.ruc;
+        document.getElementById('ventaTelefono').value = clienteEncontrado.telefono;
+        document.getElementById('ventaDireccion').value = clienteEncontrado.direccion;
+        mostrarToast("Datos de " + clienteEncontrado.nombre + " cargados");
+      }
+    }
+
+    function limpiarCamposCliente() {
+      document.getElementById('ventaCliente').value = "";
+      document.getElementById('ventaDni').value = "";
+      document.getElementById('ventaRuc').value = "";
+      document.getElementById('ventaTelefono').value = "";
+      document.getElementById('ventaDireccion').value = "";
+      document.getElementById('selectClienteAntiguo').value = "";
+    }
+
+    function guardarClienteEnDirectorio(clienteObj) {
+      const idx = directorioClientes.findIndex(c => c.dni === clienteObj.dni);
+      if (idx !== -1) {
+        directorioClientes[idx] = clienteObj;
+      } else {
+        directorioClientes.push(clienteObj);
+      }
+      localStorage.setItem("fabrec_clientes_registrados", JSON.stringify(directorioClientes));
+    }
+
+    // 7. FINALIZAR VENTA
+    function finalizarRegistroVenta() {
+      const cliente = document.getElementById('ventaCliente').value.trim();
+      const dni = document.getElementById('ventaDni').value.trim();
+      const ruc = document.getElementById('ventaRuc').value.trim();
+      const telefono = document.getElementById('ventaTelefono').value.trim();
+      const fechaEntrega = document.getElementById('ventaFechaEntrega').value;
+      const direccion = document.getElementById('ventaDireccion').value.trim();
+      const condicion = document.getElementById('ventaCondicion').value;
+
+      if (!cliente) {
+        mostrarToast("Escribe el nombre o razón social");
+        return;
+      }
+      if (!dni) {
+        mostrarToast("Ingresa el DNI del cliente");
+        return;
+      }
+      if (!telefono) {
+        mostrarToast("Ingresa el teléfono de contacto");
+        return;
+      }
+      if (!fechaEntrega) {
+        mostrarToast("Selecciona la fecha de entrega");
+        return;
+      }
+      if (!direccion) {
+        mostrarToast("Ingresa la dirección para el envío");
+        return;
+      }
+      if (itemsVentaTemporal.length === 0) {
+        mostrarToast("No hay botellas en el pedido");
+        return;
+      }
+
+      const infoPedido = recalcularTarifasDelPedido();
+      const z = ZONAS[zonaActivaClave];
+      const ahora = new Date();
+      const codigo = `VTA-${ahora.getFullYear()}${String(ahora.getMonth()+1).padStart(2,'0')}${String(ahora.getDate()).padStart(2,'0')}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      let totalSoles = 0;
+      let totalPaquetes = 0;
+      const ticketsProduccion = [];
+
+      itemsVentaTemporal.forEach(it => {
+        totalSoles += it.subtotal;
+        totalPaquetes += it.paquetes_totales;
+
+        if (inventarioLocal[it.producto] !== undefined) {
+          inventarioLocal[it.producto] = Math.max(0, inventarioLocal[it.producto] - it.paquetes_stock);
+        }
+
+        if (it.paquetes_produccion > 0) {
+          ticketsProduccion.push({
+            id_ticket_produccion: `PROD-${Date.now()}-${Math.floor(Math.random() * 100)}`,
+            producto: it.producto,
+            paquetes_a_fabricar: it.paquetes_produccion,
+            cliente: cliente,
+            vendedor: z.asesor,
+            zona: z.nombreZona,
+            fecha_entrega_programada: fechaEntrega,
+            hora: ahora.toLocaleTimeString('es-PE')
+          });
+        }
+      });
+
+      const clienteDatos = {
+        nombre: cliente,
+        dni: dni,
+        ruc: ruc || "No solicita factura",
+        telefono: telefono,
+        direccion: direccion
+      };
+
+      const nuevaVenta = {
+        codigo: codigo,
+        fecha_registro: ahora.toLocaleDateString('es-PE'),
+        hora_registro: ahora.toLocaleTimeString('es-PE'),
+        timestampISO: ahora.toISOString(),
+        fecha_entrega_solicitada: fechaEntrega,
+        cliente: clienteDatos,
+        tarifa_aplicada: infoPedido.esMayor ? "Al por mayor" : "Al por menor",
+        vendedor: z.asesor,
+        zona: z.nombreZona,
+        condicion_pago: condicion,
+        items: itemsVentaTemporal.slice(),
+        total_paquetes: totalPaquetes,
+        monto_total: totalSoles,
+        tickets_produccion: ticketsProduccion
+      };
+
+      ventasHoy.push(nuevaVenta);
+      todasLasVentas.push(nuevaVenta);
+      localStorage.setItem("fabrec_ventas_hoy", JSON.stringify(ventasHoy));
+      localStorage.setItem("fabrec_ventas_todas", JSON.stringify(todasLasVentas));
+      localStorage.setItem("fabrec_stock_local", JSON.stringify(inventarioLocal));
+
+      guardarClienteEnDirectorio(clienteDatos);
+
+      cerrarModalVenta();
+      mostrarToast("Venta " + codigo + " registrada");
+      renderizarVentasInicio();
+    }
+
+    // 8. RENDERIZADO DE VENTAS RÁPIDAS (CARD BALANCEADO Y ELEGANTE)
+    function renderizarVentasInicio() {
+      const cont = document.getElementById('listaVentasDia');
+      const badgeCant = document.getElementById('cantVentasBadge');
+      const btnEnviar = document.getElementById('btnEnviarCierre');
+
+      badgeCant.innerText = `${ventasHoy.length} pedidos`;
+
+      if (ventasHoy.length === 0) {
+        cont.innerHTML = `
+          <div style="text-align: center; color: var(--text-soft); padding: 32px 10px; font-size: 12px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); margin-bottom: 12px;">
+            No hay ventas registradas hoy. Presiona "Nueva venta".
+          </div>
+        `;
+        btnEnviar.style.display = "none";
+        return;
+      }
+
+      btnEnviar.style.display = "flex";
+
+      let html = "";
+      for (let j = ventasHoy.length - 1; j >= 0; j--) {
+        const v = ventasHoy[j];
+        
+        // Asignar clase de color según el tipo de pago
+        let clasePago = "pago-transferencia";
+        const cp = (v.condicion_pago || '').toLowerCase();
+        if (cp.includes('contraentrega')) clasePago = "pago-contraentrega";
+        else if (cp.includes('crédito') || cp.includes('credito')) clasePago = "pago-credito";
+        else if (cp.includes('adelanto')) clasePago = "pago-adelanto";
+
+        html += `
+          <div class="card-venta-simple" onclick="verDetalleVenta('${v.codigo}')">
+            <div class="card-venta-top">
+              <span class="venta-simple-nombre">${v.cliente.nombre}</span>
+              <div class="venta-simple-precio-group">
+                <span class="venta-simple-monto">S/ ${v.monto_total.toFixed(2)}</span>
+                <svg class="icon-chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+            </div>
+            <div class="card-venta-bottom">
+              <span class="tag-pago-pill ${clasePago}">${v.condicion_pago}</span>
+              <span class="venta-meta-item">${v.total_paquetes} paq</span>
+              <span class="venta-meta-dot">•</span>
+              <span class="venta-meta-item">${v.hora_registro}</span>
+            </div>
+          </div>
+        `;
+      }
+      cont.innerHTML = html;
+    }
+
+    // 9. MODAL DETALLE DE VENTA
+    function verDetalleVenta(codigoVenta) {
+      const v = todasLasVentas.find(x => x.codigo === codigoVenta) || ventasHoy.find(x => x.codigo === codigoVenta);
+      if (!v) return;
+
+      document.getElementById('detalleTituloVenta').innerText = `Pedido ${v.codigo}`;
+      document.getElementById('detClienteNombre').innerText = v.cliente.nombre;
+      document.getElementById('detClienteDoc').innerText = `DNI: ${v.cliente.dni} ${v.cliente.ruc !== 'No solicita factura' ? ' • RUC: ' + v.cliente.ruc : ''}`;
+      document.getElementById('detClienteTel').innerText = v.cliente.telefono;
+      document.getElementById('detClienteDir').innerText = v.cliente.direccion;
+      document.getElementById('detFechaEntrega').innerText = v.fecha_entrega_solicitada;
+      document.getElementById('detCondicionPago').innerText = v.condicion_pago;
+      document.getElementById('detTarifa').innerText = v.tarifa_aplicada;
+
+      const contItems = document.getElementById('detListaItems');
+      contItems.innerHTML = v.items.map(it => `
+        <div class="detalle-bloque-item">
+          <span><strong>${it.paquetes_totales} paq</strong> • ${it.producto}</span>
+          <span>S/ ${it.subtotal.toFixed(2)}</span>
+        </div>
+      `).join('');
+
+      document.getElementById('detMontoTotal').innerText = `S/ ${v.monto_total.toFixed(2)}`;
+      document.getElementById('modalDetalleVenta').classList.add('open');
+    }
+
+    function cerrarModalDetalleVenta() {
+      document.getElementById('modalDetalleVenta').classList.remove('open');
+    }
+
+    // 10. EXPORTACIÓN A CONTABILIDAD (+51 922 244 819)
+    function enviarCierreAContabilidad() {
+      if (ventasHoy.length === 0) {
+        mostrarToast("No hay ventas registradas hoy para enviar");
+        return;
+      }
+      if (!zonaActivaClave) {
+        mostrarToast("Selecciona tu zona antes de enviar");
+        abrirModalZona();
+        return;
+      }
+
+      const z = ZONAS[zonaActivaClave];
+      let totalSoles = 0;
+      let totalPaquetes = 0;
+      const todasLasProducciones = [];
+
+      ventasHoy.forEach(v => {
+        totalSoles += v.monto_total;
+        totalPaquetes += v.total_paquetes;
+        if (v.tickets_produccion && v.tickets_produccion.length > 0) {
+          todasLasProducciones.push(...v.tickets_produccion);
+        }
+      });
+
+      const payload = {
+        empresa: "FABREC",
+        tipo_documento: "registro_ventas_0001",
+        fecha_cierre: new Date().toISOString(),
+        vendedor: z.asesor,
+        zona: z.nombreZona,
+        resumen: {
+          monto_total: totalSoles,
+          total_paquetes: totalPaquetes,
+          cantidad_pedidos: ventasHoy.length,
+          pedidos_produccion_requeridos: todasLasProducciones.length
+        },
+        ventas: ventasHoy,
+        tickets_produccion: todasLasProducciones
+      };
+
+      const jsonStr = JSON.stringify(payload, null, 2);
+      const urlWhatsApp = "https://api.whatsapp.com/send/?phone=" + NUMERO_CONTABILIDAD_WHATSAPP + "&text=" + encodeURIComponent(jsonStr);
+      
+      window.open(urlWhatsApp, "_blank");
+      mostrarToast("Abriendo WhatsApp de Contabilidad...");
+    }
+
+    // 11. DASHBOARD COMERCIAL (CHARTS NATIVOS)
+    function cambiarFiltroDashboard(tipo) {
+      filtroDashboardActivo = tipo;
+      ['btnDashHoy', 'btnDashSemana', 'btnDashMes', 'btnDashTodo'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+      });
+
+      if (tipo === 'hoy') document.getElementById('btnDashHoy').classList.add('active');
+      if (tipo === 'semana') document.getElementById('btnDashSemana').classList.add('active');
+      if (tipo === 'mes') document.getElementById('btnDashMes').classList.add('active');
+      if (tipo === 'todo') document.getElementById('btnDashTodo').classList.add('active');
+
+      renderizarDashboard();
+    }
+
+    function renderizarDashboard() {
+      const ahora = new Date();
+      const hoyStr = ahora.toLocaleDateString('es-PE');
+      
+      const ventasFiltradas = todasLasVentas.filter(v => {
+        if (!v.timestampISO) return true;
+        const fVenta = new Date(v.timestampISO);
+
+        if (filtroDashboardActivo === 'hoy') {
+          return fVenta.toLocaleDateString('es-PE') === hoyStr;
+        } else if (filtroDashboardActivo === 'semana') {
+          const hace7dias = new Date(ahora.getTime() - (7 * 24 * 60 * 60 * 1000));
+          return fVenta >= hace7dias;
+        } else if (filtroDashboardActivo === 'mes') {
+          return fVenta.getMonth() === ahora.getMonth() && fVenta.getFullYear() === ahora.getFullYear();
+        }
+        return true;
+      });
+
+      let totalSoles = 0;
+      ventasFiltradas.forEach(v => {
+        totalSoles += v.monto_total;
+      });
+
+      document.getElementById('dashTotalSoles').innerText = "S/ " + totalSoles.toFixed(2);
+      document.getElementById('dashTotalPedidos').innerText = ventasFiltradas.length;
+
+      dibujarBarChart('canvasChartMonto', ventasFiltradas, 'monto_total', '#059669', 'S/');
+      dibujarBarChart('canvasChartPedidos', ventasFiltradas, 'conteo', '#2563eb', '');
+    }
+
+    function dibujarBarChart(canvasId, dataset, propiedad, colorHex, prefijo) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      const w = rect.width;
+      const h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+
+      if (dataset.length === 0) {
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '600 11px Montserrat';
+        ctx.textAlign = 'center';
+        ctx.fillText('Sin ventas registradas en este periodo', w / 2, h / 2);
+        return;
+      }
+
+      const mapaAgrupado = {};
+      dataset.forEach(d => {
+        const clave = d.fecha_registro || 'Hoy';
+        if (!mapaAgrupado[clave]) mapaAgrupado[clave] = { monto: 0, conteo: 0 };
+        mapaAgrupado[clave].monto += d.monto_total;
+        mapaAgrupado[clave].conteo += 1;
+      });
+
+      const etiquetas = Object.keys(mapaAgrupado);
+      const valores = etiquetas.map(k => propiedad === 'monto_total' ? mapaAgrupado[k].monto : mapaAgrupado[k].conteo);
+      const maxVal = Math.max(...valores, 1);
+
+      const paddingBottom = 26;
+      const paddingTop = 20;
+      const chartHeight = h - paddingBottom - paddingTop;
+      const barWidth = Math.min(36, (w / (valores.length || 1)) - 14);
+      const gap = w / valores.length;
+
+      valores.forEach((val, i) => {
+        const barHeight = (val / maxVal) * chartHeight;
+        const x = (i * gap) + (gap / 2) - (barWidth / 2);
+        const y = h - paddingBottom - barHeight;
+
+        ctx.fillStyle = colorHex;
+        ctx.beginPath();
+        const r = 5;
+        ctx.moveTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.lineTo(x + barWidth - r, y);
+        ctx.quadraticCurveTo(x + barWidth, y, x + barWidth, y + r);
+        ctx.lineTo(x + barWidth, h - paddingBottom);
+        ctx.lineTo(x, h - paddingBottom);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = '#0f172a';
+        ctx.font = '800 10px Montserrat';
+        ctx.textAlign = 'center';
+        const txtVal = prefijo ? `${prefijo} ${val.toFixed(0)}` : `${val}`;
+        ctx.fillText(txtVal, x + (barWidth / 2), y - 6);
+
+        ctx.fillStyle = '#64748b';
+        ctx.font = '600 9px Montserrat';
+        const txtLabel = etiquetas[i].length > 5 ? etiquetas[i].substring(0, 5) : etiquetas[i];
+        ctx.fillText(txtLabel, x + (barWidth / 2), h - 8);
+      });
+    }
+
+    // 12. STOCK EN PLANTA
+    function renderizarListaStock() {
+      const cont = document.getElementById('contenedorListaStock');
+      const q = (document.getElementById('buscadorStock').value || '').toLowerCase();
+      let html = "";
+
+      CATALOGO_FABREC.forEach(p => {
+        if (p.producto.toLowerCase().includes(q)) {
+          const stock = inventarioLocal[p.producto] || 0;
+          const tagClase = stock > 0 ? "stock-tag stock-tag-ok" : "stock-tag stock-tag-cero";
+          const tagTexto = stock > 0 ? (stock + " paq") : "Pedir";
+
+          html += `
+            <div class="product-stock-card">
+              <div class="stock-product-name">${p.producto}</div>
+              <div>
+                <span class="${tagClase}">${tagTexto}</span>
+              </div>
+            </div>
+          `;
+        }
+      });
+      cont.innerHTML = html;
+    }
+
+    function filtrarListaStock() {
+      renderizarListaStock();
+    }
+
+    function mostrarToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2400);
+    }
+
+    // EXPOSICIÓN GLOBAL
+    window.navegarA = navegarA;
+    window.abrirModalZona = abrirModalZona;
+    window.cerrarModalZona = cerrarModalZona;
+    window.seleccionarZona = seleccionarZona;
+    window.copiarDatosBancariosCompletos = copiarDatosBancariosCompletos;
+    window.compartirDatosBancariosWhatsApp = compartirDatosBancariosWhatsApp;
+    window.abrirModalVenta = abrirModalVenta;
+    window.cerrarModalVenta = cerrarModalVenta;
+    window.irAPaso1 = irAPaso1;
+    window.irAPaso2 = irAPaso2;
+    window.cambiarUnidadMedida = cambiarUnidadMedida;
+    window.actualizarInfoProductoModal = actualizarInfoProductoModal;
+    window.guardarItemVenta = guardarItemVenta;
+    window.cargarItemParaEditar = cargarItemParaEditar;
+    window.eliminarItemModal = eliminarItemModal;
+    window.finalizarRegistroVenta = finalizarRegistroVenta;
+    window.filtrarListaStock = filtrarListaStock;
+    window.enviarCierreAContabilidad = enviarCierreAContabilidad;
+    window.cambiarFiltroDashboard = cambiarFiltroDashboard;
+    window.seleccionarClienteAntiguo = seleccionarClienteAntiguo;
+    window.verDetalleVenta = verDetalleVenta;
+    window.cerrarModalDetalleVenta = cerrarModalDetalleVenta;
+
+    // INICIALIZACIÓN
+    window.addEventListener('DOMContentLoaded', () => {
+      poblarSelectBotellasModal();
+      if (zonaActivaClave && ZONAS[zonaActivaClave]) {
+        seleccionarZona(zonaActivaClave);
+      } else {
+        seleccionarZona("");
+      }
+      renderizarVentasInicio();
+    });
+  </script>
+</body>
+</html>
