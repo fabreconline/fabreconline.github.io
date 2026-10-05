@@ -994,9 +994,9 @@
       <div id="wizardPaso2" style="display: none; flex-direction: column; gap: 12px;">
         <div class="step-label-header">Paso 2: Datos del Comprador</div>
 
-        <!-- SELECTOR DE CLIENTE ANTERIOR -->
+        <!-- SELECTOR DE CLIENTE ANTERIOR DE LA ZONA -->
         <div style="background: var(--surface); border: 1px solid var(--border-strong); padding: 10px 12px; border-radius: var(--radius-sm);">
-          <label class="form-label" style="color: var(--primary);">Elegir Comprador Frecuente</label>
+          <label class="form-label" style="color: var(--primary);">Elegir Comprador de Esta Zona</label>
           <select id="selectClienteAntiguo" onchange="seleccionarClienteAntiguo(this.value)" class="input-field" style="font-weight: 700;">
             <option value="">-- Nuevo Comprador --</option>
           </select>
@@ -1199,16 +1199,43 @@
 
     let zonaActivaClave = localStorage.getItem("fabrec_zona_activa") || "";
     let inventarioLocal = JSON.parse(localStorage.getItem("fabrec_stock_local")) || STOCK_PLANTA_DEFECTO;
-    let ventasHoy = JSON.parse(localStorage.getItem("fabrec_ventas_hoy")) || [];
-    let todasLasVentas = JSON.parse(localStorage.getItem("fabrec_ventas_todas")) || [];
-    let directorioClientes = JSON.parse(localStorage.getItem("fabrec_clientes_registrados")) || [];
+    
+    // Variables locales dinámicas por zona activa
+    let ventasHoy = [];
+    let todasLasVentas = [];
+    let directorioClientes = [];
     
     let itemsVentaTemporal = [];
     let indiceEditandoItem = -1;
     let unidadSeleccionada = 'paquetes';
     let filtroDashboardActivo = 'hoy';
 
-    // 1. NAVEGACIÓN ENTRE TABS
+    // 1. CARGA AISLADA DE DATOS POR ZONA
+    function cargarDatosDeZonaActiva() {
+      if (!zonaActivaClave) {
+        ventasHoy = [];
+        todasLasVentas = [];
+        directorioClientes = [];
+      } else {
+        const keyHoy = `fabrec_ventas_hoy_${zonaActivaClave}`;
+        const keyTodas = `fabrec_ventas_todas_${zonaActivaClave}`;
+        const keyClientes = `fabrec_clientes_${zonaActivaClave}`;
+
+        ventasHoy = JSON.parse(localStorage.getItem(keyHoy)) || [];
+        todasLasVentas = JSON.parse(localStorage.getItem(keyTodas)) || [];
+        directorioClientes = JSON.parse(localStorage.getItem(keyClientes)) || [];
+
+        // Filtro estricto para ventas de la fecha actual
+        const hoyStr = new Date().toLocaleDateString('es-PE');
+        ventasHoy = ventasHoy.filter(v => v.fecha_registro === hoyStr);
+      }
+
+      renderizarVentasInicio();
+      renderizarDashboard();
+      poblarSelectorClientesAntiguos();
+    }
+
+    // 2. NAVEGACIÓN ENTRE LAS 3 PESTAÑAS
     function navegarA(idPanel, btnElemento) {
       document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -1225,7 +1252,7 @@
       window.scrollTo(0, 0);
     }
 
-    // 2. MODAL Y CONTROL DE ZONA
+    // 3. MODAL Y CONTROL DE ZONA
     function abrirModalZona() {
       document.getElementById('modalSelectorZona').classList.add('open');
     }
@@ -1251,6 +1278,7 @@
         cuentaDetalles.innerHTML = "Presiona el botón de zona arriba a la derecha para cargar las cuentas oficiales.";
         contBotones.style.display = 'none';
         actualizarSaludo();
+        cargarDatosDeZonaActiva();
         cerrarModalZona();
         return;
       }
@@ -1266,6 +1294,7 @@
       contBotones.style.display = 'grid';
 
       actualizarSaludo();
+      cargarDatosDeZonaActiva(); // Carga de forma aislada las ventas de esta zona
       cerrarModalZona();
       mostrarToast("Zona " + z.nombreZona + " asignada");
     }
@@ -1280,7 +1309,7 @@
       document.getElementById('saludoTexto').innerText = asesor ? (saludo + ", " + asesor + "!") : (saludo + "!");
     }
 
-    // 3. CUENTAS BANCARIAS: COPIAR Y COMPARTIR
+    // 4. CUENTAS BANCARIAS: COPIAR Y COMPARTIR
     function generarTextoDatosBancarios() {
       if (!zonaActivaClave || !ZONAS[zonaActivaClave]) return "";
       const z = ZONAS[zonaActivaClave];
@@ -1314,7 +1343,7 @@
       window.open(url, '_blank');
     }
 
-    // 4. UNIDADES Y COTIZADOR
+    // 5. UNIDADES Y COTIZADOR
     function cambiarUnidadMedida(unidad) {
       unidadSeleccionada = unidad;
       const btnPaq = document.getElementById('btnUnitPaquetes');
@@ -1395,7 +1424,7 @@
       return { totalPaquetes: totalPaquetesEnPedido, esMayor: esMayor };
     }
 
-    // 5. MODAL NUEVA VENTA
+    // 6. MODAL NUEVA VENTA (WIZARD 2 PASOS)
     function abrirModalVenta() {
       if (!zonaActivaClave) {
         mostrarToast("Selecciona tu zona en la parte superior");
@@ -1565,9 +1594,10 @@
       renderizarItemsModal();
     }
 
-    // 6. AUTOCOMPLETADO DE CLIENTES
+    // 7. AUTOCOMPLETADO DE CLIENTES POR ZONA
     function poblarSelectorClientesAntiguos() {
       const sel = document.getElementById('selectClienteAntiguo');
+      if (!sel) return;
       let opts = '<option value="">-- Nuevo Comprador --</option>';
       directorioClientes.forEach(c => {
         opts += `<option value="${c.dni}">${c.nombre} (${c.dni})</option>`;
@@ -1601,16 +1631,17 @@
     }
 
     function guardarClienteEnDirectorio(clienteObj) {
+      if (!zonaActivaClave) return;
       const idx = directorioClientes.findIndex(c => c.dni === clienteObj.dni);
       if (idx !== -1) {
         directorioClientes[idx] = clienteObj;
       } else {
         directorioClientes.push(clienteObj);
       }
-      localStorage.setItem("fabrec_clientes_registrados", JSON.stringify(directorioClientes));
+      localStorage.setItem(`fabrec_clientes_${zonaActivaClave}`, JSON.stringify(directorioClientes));
     }
 
-    // 7. FINALIZAR VENTA
+    // 8. FINALIZAR VENTA (GUARDADO EXCLUSIVO POR ZONA)
     function finalizarRegistroVenta() {
       const cliente = document.getElementById('ventaCliente').value.trim();
       const dni = document.getElementById('ventaDni').value.trim();
@@ -1694,6 +1725,7 @@
         tarifa_aplicada: infoPedido.esMayor ? "Al por mayor" : "Al por menor",
         vendedor: z.asesor,
         zona: z.nombreZona,
+        zonaClave: zonaActivaClave,
         condicion_pago: condicion,
         items: itemsVentaTemporal.slice(),
         total_paquetes: totalPaquetes,
@@ -1701,10 +1733,11 @@
         tickets_produccion: ticketsProduccion
       };
 
+      // Guardado por zona activa
       ventasHoy.push(nuevaVenta);
       todasLasVentas.push(nuevaVenta);
-      localStorage.setItem("fabrec_ventas_hoy", JSON.stringify(ventasHoy));
-      localStorage.setItem("fabrec_ventas_todas", JSON.stringify(todasLasVentas));
+      localStorage.setItem(`fabrec_ventas_hoy_${zonaActivaClave}`, JSON.stringify(ventasHoy));
+      localStorage.setItem(`fabrec_ventas_todas_${zonaActivaClave}`, JSON.stringify(todasLasVentas));
       localStorage.setItem("fabrec_stock_local", JSON.stringify(inventarioLocal));
 
       guardarClienteEnDirectorio(clienteDatos);
@@ -1714,7 +1747,7 @@
       renderizarVentasInicio();
     }
 
-    // 8. RENDERIZADO DE VENTAS RÁPIDAS (CARD BALANCEADO Y ELEGANTE)
+    // 9. RENDERIZADO DE VENTAS RÁPIDAS (CARD BALANCEADO Y ELEGANTE)
     function renderizarVentasInicio() {
       const cont = document.getElementById('listaVentasDia');
       const badgeCant = document.getElementById('cantVentasBadge');
@@ -1725,7 +1758,7 @@
       if (ventasHoy.length === 0) {
         cont.innerHTML = `
           <div style="text-align: center; color: var(--text-soft); padding: 32px 10px; font-size: 12px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); margin-bottom: 12px;">
-            No hay ventas registradas hoy. Presiona "Nueva venta".
+            No hay ventas registradas hoy en esta zona. Presiona "Nueva venta".
           </div>
         `;
         btnEnviar.style.display = "none";
@@ -1738,7 +1771,7 @@
       for (let j = ventasHoy.length - 1; j >= 0; j--) {
         const v = ventasHoy[j];
         
-        // Asignar clase de color según el tipo de pago
+        // Clase de color según método de pago
         let clasePago = "pago-transferencia";
         const cp = (v.condicion_pago || '').toLowerCase();
         if (cp.includes('contraentrega')) clasePago = "pago-contraentrega";
@@ -1766,7 +1799,7 @@
       cont.innerHTML = html;
     }
 
-    // 9. MODAL DETALLE DE VENTA
+    // 10. MODAL DETALLE DE VENTA
     function verDetalleVenta(codigoVenta) {
       const v = todasLasVentas.find(x => x.codigo === codigoVenta) || ventasHoy.find(x => x.codigo === codigoVenta);
       if (!v) return;
@@ -1796,10 +1829,10 @@
       document.getElementById('modalDetalleVenta').classList.remove('open');
     }
 
-    // 10. EXPORTACIÓN A CONTABILIDAD (+51 922 244 819)
+    // 11. EXPORTACIÓN A CONTABILIDAD (+51 922 244 819) POR ZONA ACTIVA
     function enviarCierreAContabilidad() {
       if (ventasHoy.length === 0) {
-        mostrarToast("No hay ventas registradas hoy para enviar");
+        mostrarToast("No hay ventas registradas hoy en esta zona");
         return;
       }
       if (!zonaActivaClave) {
@@ -1844,7 +1877,7 @@
       mostrarToast("Abriendo WhatsApp de Contabilidad...");
     }
 
-    // 11. DASHBOARD COMERCIAL (CHARTS NATIVOS)
+    // 12. DASHBOARD COMERCIAL POR ZONA (CHARTS NATIVOS)
     function cambiarFiltroDashboard(tipo) {
       filtroDashboardActivo = tipo;
       ['btnDashHoy', 'btnDashSemana', 'btnDashMes', 'btnDashTodo'].forEach(id => {
@@ -1864,6 +1897,7 @@
       const ahora = new Date();
       const hoyStr = ahora.toLocaleDateString('es-PE');
       
+      // Filtrar únicamente las ventas históricas de esta zona
       const ventasFiltradas = todasLasVentas.filter(v => {
         if (!v.timestampISO) return true;
         const fVenta = new Date(v.timestampISO);
@@ -1910,7 +1944,7 @@
         ctx.fillStyle = '#94a3b8';
         ctx.font = '600 11px Montserrat';
         ctx.textAlign = 'center';
-        ctx.fillText('Sin ventas registradas en este periodo', w / 2, h / 2);
+        ctx.fillText('Sin ventas registradas en esta zona', w / 2, h / 2);
         return;
       }
 
@@ -1962,7 +1996,7 @@
       });
     }
 
-    // 12. STOCK EN PLANTA
+    // 13. STOCK EN PLANTA
     function renderizarListaStock() {
       const cont = document.getElementById('contenedorListaStock');
       const q = (document.getElementById('buscadorStock').value || '').toLowerCase();
@@ -2032,7 +2066,6 @@
       } else {
         seleccionarZona("");
       }
-      renderizarVentasInicio();
     });
   </script>
 </body>
