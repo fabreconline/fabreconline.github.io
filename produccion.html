@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FABREC | Control de Producción</title>
+  <title>Fabrec | Producción</title>
   <!-- Fuente Montserrat -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +12,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- localForage CDN (IndexedDB) -->
+  <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -31,12 +33,12 @@
 </head>
 <body class="transition-colors duration-300 min-h-screen pb-14 bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100">
 
-  <!-- AVISO FLOTANTE DE CONFIRMACIÓN (TOAST INTEGRADO) -->
+  <!-- AVISO FLOTANTE DE ACCIÓN (TOAST INTEGRADO) -->
   <div id="toastNotificacion" class="fixed top-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 transition-all duration-300 opacity-0 pointer-events-none z-50">
     <svg class="w-4 h-4 text-emerald-500 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
       <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
     </svg>
-    <span id="toastTexto">Conteo guardado en el reporte</span>
+    <span id="toastTexto">Operación realizada con éxito</span>
   </div>
 
   <div class="max-w-md mx-auto p-4">
@@ -48,34 +50,44 @@
         <h1 id="txtSaludo" class="text-xl font-bold tracking-tight">Buenos días</h1>
       </div>
 
-      <!-- Configuración -->
-      <button onclick="abrirConfiguracion()" class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition active:scale-95" title="Configuración de Máquinas">
-        <svg class="w-5 h-5 text-slate-600 dark:text-slate-300 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-      </button>
+      <div class="flex items-center gap-2">
+        <!-- Configuración -->
+        <button onclick="abrirConfiguracion()" class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition active:scale-95 text-slate-600 dark:text-slate-300" title="Configuración de Máquinas">
+          <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
+      </div>
     </header>
 
-    <!-- NAVEGACIÓN EN 3 PESTAÑAS (REGISTRO, REPORTE ACTUAL, DASHBOARD) -->
-    <nav class="flex bg-slate-200/80 dark:bg-slate-900 p-1 rounded-2xl mb-4 text-xs font-bold border border-slate-200 dark:border-slate-800 gap-1">
-      <button id="btnTabProd" onclick="cambiarTab('produccion')" class="flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm">
-        <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+    <!-- NAVEGACIÓN EN 4 PESTAÑAS -->
+    <nav class="flex bg-slate-200/80 dark:bg-slate-900 p-1 rounded-2xl mb-4 text-[11px] font-bold border border-slate-200 dark:border-slate-800 gap-1">
+      <button id="btnTabProd" onclick="cambiarTab('produccion')" class="flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm">
+        <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
         </svg>
         Registro
       </button>
 
-      <button id="btnTabReporte" onclick="cambiarTab('reporte')" class="flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 text-slate-500 dark:text-slate-400">
-        <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+      <button id="btnTabSolicitudes" onclick="cambiarTab('solicitudes')" class="flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
+        <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+        </svg>
+        Solicitudes
+        <span id="badgeSolicitudesCount" class="text-[9px] px-1.5 py-0.2 rounded-full bg-amber-200 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 font-extrabold">0</span>
+      </button>
+
+      <button id="btnTabReporte" onclick="cambiarTab('reporte')" class="flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
+        <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
         Reporte
-        <span id="badgeTabCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-extrabold">0</span>
+        <span id="badgeTabCount" class="text-[9px] px-1.5 py-0.2 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-extrabold">0</span>
       </button>
 
-      <button id="btnTabDashboard" onclick="cambiarTab('dashboard')" class="flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 text-slate-500 dark:text-slate-400">
-        <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+      <button id="btnTabDashboard" onclick="cambiarTab('dashboard')" class="flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
+        <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
         Dashboard
@@ -91,10 +103,19 @@
           </svg>
           <div>
             <p class="font-bold mb-1">No hay máquinas configuradas</p>
-            <p>Ingresa a configuración para registrar tus máquinas y definir sus factores.</p>
+            <p>Ingresa a configuración para registrar tus máquinas y asociar los modelos.</p>
             <button onclick="abrirConfiguracion()" class="mt-2 font-bold underline hover:text-amber-900 dark:hover:text-amber-100">Abrir Configuración</button>
           </div>
         </div>
+      </div>
+
+      <!-- Banner de Demanda Pendiente para el Modelo Seleccionado -->
+      <div id="bannerDemandaProducto" class="hidden bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-900 p-3 rounded-2xl text-xs flex justify-between items-center">
+        <div>
+          <span class="text-[10px] font-bold uppercase text-blue-600 dark:text-blue-400">Demanda Pendiente</span>
+          <p id="txtDemandaDetalle" class="font-bold text-slate-800 dark:text-slate-100 mt-0.5">0 paquetes solicitados</p>
+        </div>
+        <button onclick="cambiarTab('solicitudes')" class="text-[11px] font-bold text-blue-600 dark:text-blue-400 underline">Ver Solicitudes</button>
       </div>
 
       <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-3.5">
@@ -161,22 +182,66 @@
       </div>
     </main>
 
-    <!-- PESTAÑA 2: REPORTE ACTUAL -->
+    <!-- PESTAÑA 2: SOLICITUDES DE PRODUCCIÓN -->
+    <main id="seccionSolicitudes" class="hidden space-y-4">
+      <div class="flex justify-between items-center px-1">
+        <div>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Solicitudes de Producción</h2>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">Demandas registradas para planta</p>
+        </div>
+      </div>
+
+      <!-- Métricas Resumen -->
+      <div class="grid grid-cols-3 gap-2">
+        <div class="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
+          <p class="text-[10px] text-slate-400 uppercase font-semibold">Total Paq</p>
+          <p id="kpiDemandaPaquetes" class="text-base font-black text-slate-800 dark:text-slate-100">0</p>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
+          <p class="text-[10px] text-emerald-500 uppercase font-semibold">Listos</p>
+          <p id="kpiDemandaCubiertos" class="text-base font-black text-emerald-600 dark:text-emerald-400">0</p>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
+          <p class="text-[10px] text-amber-500 uppercase font-semibold">Pendientes</p>
+          <p id="kpiDemandaPendientes" class="text-base font-black text-amber-600 dark:text-amber-400">0</p>
+        </div>
+      </div>
+
+      <!-- Tarjetas de Solicitudes -->
+      <div id="contenedorSolicitudesLista" class="space-y-3 max-h-[62vh] overflow-y-auto pr-0.5">
+        <p class="text-xs text-slate-400 dark:text-slate-600 text-center py-12">No hay solicitudes cargadas en production.json.</p>
+      </div>
+    </main>
+
+    <!-- PESTAÑA 3: REPORTE ACTUAL -->
     <main id="seccionReporte" class="hidden space-y-4">
       <div class="flex justify-between items-center px-1">
         <div>
           <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Reporte en Curso</h2>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400">Conteos acumulados del turno actual</p>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">Conteos y solicitudes que cubre este turno</p>
         </div>
         <span id="badgeTotalPaquetes" class="text-xs bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-extrabold px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800/50">0 paq</span>
       </div>
 
-      <!-- Tarjetas de Conteos del Reporte -->
-      <div id="contenedorLista" class="space-y-3 max-h-[55vh] overflow-y-auto pr-0.5">
-        <p class="text-xs text-slate-400 dark:text-slate-600 text-center py-12">No hay conteos en el reporte actual.</p>
+      <!-- SECCIÓN: SOLICITUDES CUBIERTAS POR ESTA PRODUCCIÓN -->
+      <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+        <div class="flex justify-between items-center">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">Solicitudes cubiertas en este reporte</span>
+          <span id="badgeTicketsEnReporte" class="text-[10px] font-extrabold px-2 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 rounded-full">0 listos</span>
+        </div>
+        <div id="listaSolicitudesCubiertasReporte" class="space-y-1.5 text-xs">
+          <p class="text-slate-400 text-[11px] italic py-1">Registra producción para cubrir solicitudes pendientes.</p>
+        </div>
       </div>
 
-      <!-- Acciones de Reporte -->
+      <!-- SECCIÓN: CONTEOS DE MÁQUINA DEL REPORTE -->
+      <div class="space-y-1.5">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-1">Máquinas Registradas</span>
+        <div id="contenedorLista" class="space-y-3 max-h-[35vh] overflow-y-auto pr-0.5">
+          <p class="text-xs text-slate-400 dark:text-slate-600 text-center py-6">No hay conteos en el reporte actual.</p>
+        </div>
+      </div>
+
       <div class="space-y-2 pt-1">
         <button onclick="exportarStock()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 transition active:scale-[0.99]">
           <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -194,14 +259,8 @@
       </div>
     </main>
 
-    <!-- PESTAÑA 3: DASHBOARD & REPORTES HECHOS -->
+    <!-- PESTAÑA 4: DASHBOARD & HISTORIAL -->
     <main id="seccionDashboard" class="hidden space-y-4">
-      <div class="px-1">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Métricas & Historial</h2>
-        <p class="text-[11px] text-slate-500 dark:text-slate-400">Resumen analítico de todos los reportes emitidos</p>
-      </div>
-
-      <!-- KPIs Históricos -->
       <div class="grid grid-cols-3 gap-2">
         <div class="bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-center">
           <p class="text-[10px] uppercase font-bold text-slate-400">Reportes</p>
@@ -217,34 +276,52 @@
         </div>
       </div>
 
-      <!-- Gráfico 1: Paquetes por Máquina -->
+      <!-- GRÁFICO DE LÍNEAS: TENDENCIA DE MERMA Y RENDIMIENTO -->
       <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-        <h3 class="text-xs font-bold uppercase text-slate-400 mb-2">Producción Acumulada por Máquina (Paq)</h3>
+        <div class="flex justify-between items-center mb-1">
+          <h3 class="text-xs font-bold uppercase text-slate-400">Evolución de Rendimiento y Merma</h3>
+          <span class="text-[10px] font-bold text-rose-500 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded">% de Desperdicio</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mb-2">Relación de botellas útiles vs defectuosas por registro</p>
+        <div class="h-48">
+          <canvas id="chartLineasMermaRendimiento"></canvas>
+        </div>
+      </div>
+
+      <!-- Gráfico 2: Producción por Máquina -->
+      <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <h3 class="text-xs font-bold uppercase text-slate-400 mb-2">Paquetes por Máquina</h3>
         <div class="h-44">
           <canvas id="chartProduccionMaquinas"></canvas>
         </div>
       </div>
 
-      <!-- Gráfico 2: Mermas por Máquina -->
-      <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-        <h3 class="text-xs font-bold uppercase text-slate-400 mb-2">Mermas Registradas por Máquina (Unid)</h3>
-        <div class="h-44">
-          <canvas id="chartMermasMaquinas"></canvas>
+      <!-- Lista Histórica de Reportes Cerrados -->
+      <div>
+        <div class="flex justify-between items-center mb-2 px-1">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Reportes Cerrados Anteriores</h3>
+          <span class="text-[10px] text-slate-400">Toca para ver detalle</span>
+        </div>
+        <div id="contenedorHistorialReportes" class="space-y-2 max-h-56 overflow-y-auto pr-0.5">
+          <p class="text-xs text-slate-400 text-center py-6">Aún no hay reportes archivados.</p>
         </div>
       </div>
 
-      <!-- Lista Histórica de Reportes Finalizados con Opción de Compartir -->
-      <div>
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">Reportes Cerrados Anteriores</h3>
-        <div id="contenedorHistorialReportes" class="space-y-2 max-h-56 overflow-y-auto pr-0.5">
-          <p class="text-xs text-slate-400 text-center py-6">Aún no hay reportes archivados.</p>
+      <!-- BARRA DE ALMACENAMIENTO (INFO SECUNDARIA AL FINAL) -->
+      <div class="bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-1.5 opacity-80">
+        <div class="flex justify-between items-center text-xs">
+          <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Memoria Local (IndexedDB)</span>
+          <span id="txtStorageInfo" class="font-mono text-[10px] text-slate-400">Calculando...</span>
+        </div>
+        <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
+          <div id="barStorageProgress" class="bg-blue-600 dark:bg-blue-500 h-1.5 rounded-full transition-all duration-500" style="width: 1%"></div>
         </div>
       </div>
     </main>
 
   </div>
 
-  <!-- MODAL DE DIÁLOGOS Y ALERTAS INTEGRADO (SIN ALERTS NATIVOS) -->
+  <!-- MODAL INTEGRADO DE ALERTAS Y CONFIRMACIÓN -->
   <div id="modalDialogo" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-xs p-5 shadow-2xl space-y-4">
       <div class="flex items-start gap-3">
@@ -263,10 +340,101 @@
     </div>
   </div>
 
-  <!-- MODAL DE CONFIGURACIÓN -->
+  <!-- MODAL PARA EDITAR MÁQUINA EXISTENTE -->
+  <div id="modalEditarMaquina" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[68] hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-sm p-5 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
+        <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100">Editar Máquina</h3>
+        <button onclick="cerrarEditarMaquina()" class="text-slate-400 hover:text-slate-600 font-bold p-1">✕</button>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-500 mb-1">Nombre de la Máquina</label>
+          <input type="text" id="editMaquinaNombre" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-500 mb-1">Botellas por golpe / cavidad</label>
+          <input type="number" id="editMaquinaFactor" min="1" max="12" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2.5 text-xs font-bold text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-500 mb-1">Añadir modelo a esta máquina</label>
+          <div class="flex gap-2">
+            <select id="editCatalogoSelect" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </select>
+            <button onclick="agregarModeloAEdicion()" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center transition">
+              + Añadir
+            </button>
+          </div>
+        </div>
+
+        <!-- Chips de modelos de la máquina en edición -->
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-500 mb-1">Modelos asignados actualmente:</label>
+          <div id="chipsEditMaquina" class="flex flex-wrap gap-1.5 min-h-[30px] p-2 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2 flex gap-2">
+        <button onclick="cerrarEditarMaquina()" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs transition">
+          Cancelar
+        </button>
+        <button onclick="guardarEdicionMaquinaDirecto()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-xs transition">
+          Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE DETALLE DE REPORTE HISTÓRICO -->
+  <div id="modalDetalleReporte" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[65] hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-sm p-5 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto">
+      <div class="flex justify-between items-start border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div>
+          <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100" id="detReporteTitulo">Detalle de Producción</h3>
+          <p class="text-[11px] text-slate-400" id="detReporteSubtitulo"></p>
+        </div>
+        <button onclick="cerrarDetalleReporte()" class="text-slate-400 hover:text-slate-600 font-bold p-1">✕</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-2xl text-xs">
+        <div>
+          <span class="text-[10px] text-slate-400 uppercase font-semibold">Paquetes Totales</span>
+          <p class="text-lg font-black text-emerald-600 dark:text-emerald-400" id="detTotalPaquetes">0</p>
+        </div>
+        <div>
+          <span class="text-[10px] text-slate-400 uppercase font-semibold">Merma / Desperdicio</span>
+          <p class="text-lg font-black text-rose-500" id="detTotalMerma">0</p>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Conteos por Máquina</h4>
+        <div id="detConteosLista" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+      </div>
+
+      <div class="space-y-2 pt-1">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Solicitudes que cubrió</h4>
+        <div id="detSolicitudesLista" class="space-y-1.5 max-h-32 overflow-y-auto pr-1"></div>
+      </div>
+
+      <div class="pt-2 flex gap-2">
+        <button onclick="cerrarDetalleReporte()" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs transition">
+          Cerrar
+        </button>
+        <button id="btnCompartirDesdeDetalle" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+          Compartir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE CONFIGURACIÓN DE MÁQUINAS -->
   <div id="modalConfig" class="fixed inset-0 w-full h-full bg-slate-100 dark:bg-slate-950 z-50 hidden overflow-y-auto">
     <div class="max-w-md mx-auto p-4 min-h-screen flex flex-col justify-start">
-      
       <div class="space-y-5">
         <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-3 pt-1">
           <button onclick="cerrarConfiguracion()" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition active:scale-95" title="Volver">
@@ -275,21 +443,17 @@
             </svg>
           </button>
           <div>
-            <h3 class="font-bold text-base tracking-wide">Configuración de Máquinas</h3>
-            <p class="text-[11px] text-slate-500">Parámetros de conteo y modelos</p>
+            <h3 class="font-bold text-base tracking-wide">Configuración</h3>
+            <p class="text-[11px] text-slate-500">Parámetros operativos y máquinas</p>
           </div>
         </div>
 
-        <!-- Nombre del Técnico/Operario -->
         <div>
           <label class="block text-xs font-semibold text-slate-500 mb-1">Nombre del Operador o Turno</label>
           <input type="text" id="cfgNombre" oninput="autoGuardarNombre(this.value)" placeholder="Nombre o código del operador" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
-        <!-- Sección de Máquinas -->
         <div class="border-t border-slate-200 dark:border-slate-800 pt-4">
-          
-          <!-- FORMULARIO DESPLEGABLE (PERMANECE ABIERTO PARA FLUJO CONTINUO) -->
           <details id="detailsNuevaMaquina" class="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden mb-4 shadow-sm">
             <summary class="flex justify-between items-center p-3.5 cursor-pointer text-xs font-bold text-slate-700 dark:text-slate-200 select-none hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
               <span class="flex items-center gap-2">
@@ -304,11 +468,10 @@
                 <input type="text" id="nuevaMaquinaNombre" placeholder="Nombre o código de máquina" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
               </div>
 
-              <!-- Botellas por Golpe / Ciclo -->
               <div>
                 <label class="block text-[11px] font-semibold text-slate-500 mb-1">
                   Botellas por golpe / cavidad
-                  <span class="text-slate-400 font-normal">(1 estándar, 3 para multicavidad)</span>
+                  <span class="text-slate-400 font-normal">(1 normal, 3 multicavidad)</span>
                 </label>
                 <input type="number" id="nuevaMaquinaFactor" value="1" min="1" max="12" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2.5 text-xs font-bold text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
               </div>
@@ -327,12 +490,10 @@
                 </div>
               </div>
 
-              <!-- Chips de modelos seleccionados -->
               <div id="chipsModelosNuevaMaquina" class="flex flex-wrap gap-1.5 min-h-[26px]">
                 <span class="text-[11px] text-slate-400 italic">No has seleccionado modelos para esta máquina.</span>
               </div>
 
-              <!-- Botón Guardar Máquina -->
               <button onclick="guardarMaquinaDirecto()" class="w-full bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 text-white font-bold py-2.5 rounded-lg text-xs flex items-center justify-center gap-1.5 transition">
                 <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -342,21 +503,27 @@
             </div>
           </details>
 
-          <!-- Listado de Máquinas Activas -->
           <h5 class="text-[11px] font-bold text-slate-400 mb-2 uppercase tracking-wider">Máquinas Activas</h5>
           <div id="listaMaquinasConfig" class="space-y-2">
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
   <script>
     const WHATSAPP_COO = "51922796815";
-    const STORAGE_CONFIG = "fabrec_prod_config_v5";
-    const STORAGE_REPORTE_ACTUAL = "fabrec_prod_reporte_actual_v5";
-    const STORAGE_HISTORIAL_REPORTES = "fabrec_prod_historial_reportes_v5";
+    
+    localforage.config({
+      name: 'Fabrec_Produccion_DB',
+      storeName: 'fabrec_planta_store',
+      description: 'Base de datos IndexedDB para Fabrec Planta'
+    });
+
+    const KEY_CONFIG = "fabrec_prod_config_v5";
+    const KEY_REPORTE_ACTUAL = "fabrec_prod_reporte_actual_v5";
+    const KEY_HISTORIAL_REPORTES = "fabrec_prod_historial_reportes_v5";
+    const KEY_SOLICITUDES = "fabrec_prod_solicitudes_v2";
 
     const CATALOGO_FABREC = [
       "220 ml", "250 ml", "280 ml", "300 ml", "340 ml", "350 ml",
@@ -365,16 +532,865 @@
       "2500 ml", "3000 ml", "3000 ml (verde)", "Bolsas de tapas", "Preformas"
     ];
 
-    let appConfig = JSON.parse(localStorage.getItem(STORAGE_CONFIG)) || { nombre: "", maquinas: [] };
-    let reporteActual = JSON.parse(localStorage.getItem(STORAGE_REPORTE_ACTUAL)) || [];
-    let historialReportes = JSON.parse(localStorage.getItem(STORAGE_HISTORIAL_REPORTES)) || [];
+    let appConfig = { nombre: "", maquinas: [] };
+    let reporteActual = [];
+    let historialReportes = [];
+    let solicitudesProduccion = [];
     let modelosTempParaMaquina = [];
+    
+    // Variables de edición de máquina
+    let indiceMaquinaEnEdicion = -1;
+    let modelosEditTempParaMaquina = [];
 
     let chartMaquinasInstance = null;
-    let chartMermasInstance = null;
+    let chartLineasInstance = null;
     let confirmCallback = null;
 
-    // --- SISTEMA DE DIÁLOGOS Y NOTIFICACIONES INTEGRADOS ---
+    // --- CARGA INICIAL ---
+    async function cargarDatosIniciales() {
+      appConfig = (await localforage.getItem(KEY_CONFIG)) || { nombre: "", maquinas: [] };
+      reporteActual = (await localforage.getItem(KEY_REPORTE_ACTUAL)) || [];
+      historialReportes = (await localforage.getItem(KEY_HISTORIAL_REPORTES)) || [];
+      solicitudesProduccion = (await localforage.getItem(KEY_SOLICITUDES)) || [];
+
+      aplicarTemaAutomatico();
+      inicializarSelectores();
+      renderizarReporteActual();
+      actualizarBadgesContadores();
+      
+      await autoCargarProductionJSON();
+      setInterval(autoCargarProductionJSON, 20000);
+
+      actualizarBarraAlmacenamiento();
+    }
+
+    // --- SINCRONIZACIÓN DE BADGES EN TIEMPO REAL ---
+    function actualizarBadgesContadores() {
+      const badgeTab = document.getElementById('badgeTabCount');
+      if (badgeTab) {
+        badgeTab.innerText = reporteActual.length;
+      }
+      const badgeSoli = document.getElementById('badgeSolicitudesCount');
+      if (badgeSoli) {
+        const pendientes = solicitudesProduccion.filter(s => s.estado !== "producido").length;
+        badgeSoli.innerText = pendientes;
+      }
+    }
+
+    // --- BARRA DE ALMACENAMIENTO ---
+    async function actualizarBarraAlmacenamiento() {
+      if (navigator.storage && navigator.storage.estimate) {
+        try {
+          const est = await navigator.storage.estimate();
+          const usedMB = (est.usage / (1024 * 1024)).toFixed(2);
+          const quotaMB = (est.quota / (1024 * 1024)).toFixed(0);
+          const quotaGB = (est.quota / (1024 * 1024 * 1024)).toFixed(1);
+          const pct = est.quota ? ((est.usage / est.quota) * 100).toFixed(2) : 0;
+
+          const txt = document.getElementById('txtStorageInfo');
+          const bar = document.getElementById('barStorageProgress');
+          if (txt && bar) {
+            const limiteLabel = quotaMB > 1024 ? `${quotaGB} GB` : `${quotaMB} MB`;
+            txt.innerText = `${usedMB} MB / ${limiteLabel} (${pct}%)`;
+            bar.style.width = `${Math.max(2, Math.min(100, pct))}%`;
+          }
+        } catch(e) {}
+      }
+    }
+
+    // --- LECTURA AUTOMÁTICA DE PRODUCTION.JSON ---
+    async function autoCargarProductionJSON() {
+      try {
+        const resp = await fetch('production.json?t=' + Date.now(), { cache: 'no-store' });
+        if (!resp.ok) return;
+        const data = await resp.json();
+        await sincronizarTicketsJSON(data);
+      } catch(e) {}
+    }
+
+    async function sincronizarTicketsJSON(data) {
+      let ticketsExternos = [];
+      if (Array.isArray(data)) ticketsExternos = data;
+      else if (data.tickets && Array.isArray(data.tickets)) ticketsExternos = data.tickets;
+
+      if (ticketsExternos.length === 0) return;
+
+      let huboCambios = false;
+
+      ticketsExternos.forEach(ext => {
+        const idTicket = ext.id_ticket_produccion;
+        if (!idTicket) return;
+
+        const existente = solicitudesProduccion.find(s => s.id_ticket_produccion === idTicket);
+
+        if (!existente) {
+          solicitudesProduccion.push({
+            id_ticket_produccion: idTicket,
+            producto: ext.producto,
+            paquetes_a_fabricar: parseInt(ext.paquetes_a_fabricar) || 0,
+            fecha_entrega_programada: ext.fecha_entrega_programada || "",
+            estado: "pendiente",
+            produciendo: false
+          });
+          huboCambios = true;
+        } else {
+          if (existente.paquetes_a_fabricar !== parseInt(ext.paquetes_a_fabricar)) {
+            existente.paquetes_a_fabricar = parseInt(ext.paquetes_a_fabricar);
+            huboCambios = true;
+          }
+        }
+      });
+
+      actualizarChequeoSolicitudes();
+      if (huboCambios) {
+        await localforage.setItem(KEY_SOLICITUDES, solicitudesProduccion);
+        renderizarSolicitudes();
+        actualizarCalculoEnVivo();
+      }
+    }
+
+    function normalizarNombre(str) {
+      return (str || "").trim().toLowerCase().replace(/\s+/g, ' ');
+    }
+
+    function obtenerPaquetesPorProductoEnReporte() {
+      const mapa = {};
+      reporteActual.forEach(r => {
+        const k = normalizarNombre(r.producto);
+        mapa[k] = (mapa[k] || 0) + r.paquetes;
+      });
+      return mapa;
+    }
+
+    // --- CHEQUEO AUTOMÁTICO: CAMBIA A "PRODUCIDO" SOLO SI SE REGISTRA PRODUCCIÓN ---
+    function actualizarChequeoSolicitudes() {
+      if (solicitudesProduccion.length === 0) {
+        actualizarBadgesContadores();
+        return;
+      }
+
+      const pool = obtenerPaquetesPorProductoEnReporte();
+
+      solicitudesProduccion.forEach(ticket => {
+        const k = normalizarNombre(ticket.producto);
+        const req = ticket.paquetes_a_fabricar;
+        const disponible = pool[k] || 0;
+
+        if (disponible >= req && disponible > 0) {
+          ticket.estado = "producido";
+          ticket.paquetes_en_reporte = req;
+          ticket.produciendo = false;
+          pool[k] -= req;
+        } else if (disponible > 0) {
+          ticket.estado = ticket.produciendo ? "produciendo" : "en_proceso";
+          ticket.paquetes_en_reporte = disponible;
+          pool[k] = 0;
+        } else {
+          ticket.estado = ticket.produciendo ? "produciendo" : "pendiente";
+          ticket.paquetes_en_reporte = 0;
+        }
+      });
+
+      actualizarBadgesContadores();
+    }
+
+    // --- ALTERNAR ESTADO "PRODUCIENDO" MANUALMENTE ---
+    async function toggleProduciendoSolicitud(idTicket) {
+      const ticket = solicitudesProduccion.find(s => s.id_ticket_produccion === idTicket);
+      if (!ticket) return;
+
+      if (ticket.estado === 'producido') {
+        mostrarToast("Esta solicitud ya fue cubierta por la producción");
+        return;
+      }
+
+      ticket.produciendo = !ticket.produciendo;
+      ticket.estado = ticket.produciendo ? "produciendo" : "pendiente";
+
+      await localforage.setItem(KEY_SOLICITUDES, solicitudesProduccion);
+      renderizarSolicitudes();
+      actualizarBadgesContadores();
+
+      if (ticket.produciendo) {
+        mostrarToast(`Solicitud ${ticket.producto} marcada en Producción`);
+      } else {
+        mostrarToast(`Solicitud ${ticket.producto} devuelta a Pendiente`);
+      }
+    }
+
+    // --- RENDERIZAR VISTA DE SOLICITUDES ---
+    function renderizarSolicitudes() {
+      const cont = document.getElementById('contenedorSolicitudesLista');
+      const totalPaqEl = document.getElementById('kpiDemandaPaquetes');
+      const cubiertosEl = document.getElementById('kpiDemandaCubiertos');
+      const pendientesEl = document.getElementById('kpiDemandaPendientes');
+
+      if (solicitudesProduccion.length === 0) {
+        cont.innerHTML = '<p class="text-xs text-slate-400 dark:text-slate-600 text-center py-12">No hay solicitudes cargadas en production.json.</p>';
+        totalPaqEl.innerText = "0";
+        cubiertosEl.innerText = "0";
+        pendientesEl.innerText = "0";
+        return;
+      }
+
+      let totReq = 0;
+      let totListos = 0;
+
+      cont.innerHTML = solicitudesProduccion.map(s => {
+        totReq += s.paquetes_a_fabricar;
+        const esListo = s.estado === "producido";
+        const estaProduciendo = s.produciendo || s.estado === "produciendo";
+        if (esListo) totListos += s.paquetes_a_fabricar;
+
+        let badgeColor = "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-amber-300";
+        let badgeTexto = "PENDIENTE";
+
+        if (esListo) {
+          badgeColor = "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300";
+          badgeTexto = "COMPLETADO ✓";
+        } else if (estaProduciendo) {
+          badgeColor = "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border-blue-300";
+          badgeTexto = `PRODUCIENDO... (${s.paquetes_en_reporte || 0}/${s.paquetes_a_fabricar})`;
+        } else if (s.estado === "en_proceso") {
+          badgeColor = "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-amber-300";
+          badgeTexto = `EN REPORTE (${s.paquetes_en_reporte || 0}/${s.paquetes_a_fabricar})`;
+        }
+
+        return `
+          <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border ${esListo ? 'border-emerald-200/80 dark:border-emerald-900/50' : (estaProduciendo ? 'border-blue-300 dark:border-blue-800' : 'border-slate-200 dark:border-slate-800')} shadow-sm space-y-2">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-extrabold ${badgeColor} px-2.5 py-0.5 rounded-lg border text-[10px] tracking-wider uppercase">
+                ${badgeTexto}
+              </span>
+              <span class="text-[11px] font-mono text-slate-400">${s.id_ticket_produccion}</span>
+            </div>
+
+            <div class="flex justify-between items-end pt-1">
+              <div>
+                <p class="text-lg font-black text-slate-800 dark:text-slate-100">${s.producto}</p>
+                <p class="text-[11px] text-slate-400">Entrega programada: ${s.fecha_entrega_programada || 'Hoy'}</p>
+              </div>
+              <div class="text-right">
+                <span class="text-2xl font-black ${esListo ? 'text-emerald-600 dark:text-emerald-400' : 'text-blue-600 dark:text-blue-400'}">${s.paquetes_a_fabricar}</span>
+                <span class="text-xs font-semibold text-slate-400">paq</span>
+              </div>
+            </div>
+
+            <!-- Botones de Acción de la Solicitud -->
+            <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-end items-center gap-2">
+              ${esListo ? `
+                <button disabled class="bg-emerald-600 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-sm opacity-90 cursor-default">
+                  <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Completado
+                </button>
+              ` : `
+                <button onclick="toggleProduciendoSolicitud('${s.id_ticket_produccion}')" class="${estaProduciendo ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200'} font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition active:scale-95">
+                  <span class="w-2 h-2 rounded-full ${estaProduciendo ? 'bg-amber-300 animate-ping' : 'bg-slate-400'}"></span>
+                  ${estaProduciendo ? 'Produciendo' : 'Marcar Produciendo'}
+                </button>
+
+                <!-- Botón Gris Inactivo: Se activa solo cuando se registre la producción -->
+                <button disabled class="bg-slate-200 dark:bg-slate-800/80 text-slate-400 dark:text-slate-500 font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 cursor-not-allowed select-none" title="Registra la producción de este modelo para completar automáticamente">
+                  <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  Completado
+                </button>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      totalPaqEl.innerText = totReq;
+      cubiertosEl.innerText = totListos;
+      pendientesEl.innerText = Math.max(0, totReq - totListos);
+    }
+
+    // --- REGLAS DE DIVISIÓN Y CONTEO ---
+    function obtenerUnidadesPorPaquete(nombreProducto) {
+      if (!nombreProducto) return 100;
+      const match = nombreProducto.match(/(\d+)\s*(ml|l)/i);
+      if (match) {
+        let cant = parseInt(match[1]);
+        const unidad = match[2].toLowerCase();
+        if (unidad === 'l') cant = cant * 1000;
+        if (cant >= 900) return 50;
+        return 100;
+      }
+      return 100;
+    }
+
+    function obtenerFactorMaquina(nombreMaquina) {
+      if (!nombreMaquina) return 1;
+      const m = (appConfig.maquinas || []).find(x => x.nombre === nombreMaquina);
+      if (m && m.factorGolpe) return parseInt(m.factorGolpe) || 1;
+      const lower = nombreMaquina.toLowerCase();
+      if (lower.includes("400 gorda") || (lower.includes("gorda") && lower.includes("400"))) return 3;
+      return 1;
+    }
+
+    function calcularProduccionActual() {
+      const valorContador = parseFloat(document.getElementById('inProduccion').value) || 0;
+      const maquinaSel = document.getElementById('selectMaquina').value;
+      const productoSel = document.getElementById('selectProducto').value;
+
+      const factor = obtenerFactorMaquina(maquinaSel);
+      const divisor = obtenerUnidadesPorPaquete(productoSel);
+
+      const botellasTotales = valorContador * factor;
+      const paquetes = divisor > 0 ? Math.floor(botellasTotales / divisor) : 0;
+
+      return { contador: valorContador, factor, divisor, botellasTotales, paquetes };
+    }
+
+    function actualizarCalculoEnVivo() {
+      const calc = calcularProduccionActual();
+      const prodSel = document.getElementById('selectProducto').value;
+
+      document.getElementById('badgeFactorMaquina').innerText = `Factor: ${calc.factor}x botellas/golpe`;
+      document.getElementById('badgeDivisorModelo').innerText = `${calc.divisor} un/paquete`;
+
+      document.getElementById('txtPaquetesCalculados').innerText = calc.paquetes.toLocaleString();
+      document.getElementById('txtBotellasTotales').innerText = `${calc.botellasTotales.toLocaleString()} botellas`;
+      document.getElementById('txtFormulaResumen').innerText = `${calc.contador} pts × ${calc.factor} ÷ ${calc.divisor}`;
+
+      const banner = document.getElementById('bannerDemandaProducto');
+      const ticketsDelModelo = solicitudesProduccion.filter(t => normalizarNombre(t.producto) === normalizarNombre(prodSel) && t.estado !== 'producido');
+      if (ticketsDelModelo.length > 0) {
+        const paqPend = ticketsDelModelo.reduce((a, t) => a + t.paquetes_a_fabricar, 0);
+        document.getElementById('txtDemandaDetalle').innerText = `${paqPend} paquetes solicitados en cola`;
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    function alCambiarMaquina() {
+      cargarModelosPorMaquina();
+      actualizarCalculoEnVivo();
+    }
+
+    // --- CONTROL DE PESTAÑAS ---
+    function cambiarTab(tab) {
+      const seccionProd = document.getElementById('seccionProduccion');
+      const seccionSoli = document.getElementById('seccionSolicitudes');
+      const seccionRepo = document.getElementById('seccionReporte');
+      const seccionDash = document.getElementById('seccionDashboard');
+
+      const btnProd = document.getElementById('btnTabProd');
+      const btnSoli = document.getElementById('btnTabSolicitudes');
+      const btnRepo = document.getElementById('btnTabReporte');
+      const btnDash = document.getElementById('btnTabDashboard');
+
+      const estiloActivo = "flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm";
+      const estiloInactivo = "flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1 text-slate-500 dark:text-slate-400";
+
+      seccionProd.classList.add('hidden');
+      seccionSoli.classList.add('hidden');
+      seccionRepo.classList.add('hidden');
+      seccionDash.classList.add('hidden');
+
+      btnProd.className = estiloInactivo;
+      btnSoli.className = estiloInactivo;
+      btnRepo.className = estiloInactivo;
+      btnDash.className = estiloInactivo;
+
+      if (tab === 'produccion') {
+        seccionProd.classList.remove('hidden');
+        btnProd.className = estiloActivo;
+        actualizarCalculoEnVivo();
+      } else if (tab === 'solicitudes') {
+        seccionSoli.classList.remove('hidden');
+        btnSoli.className = estiloActivo;
+        autoCargarProductionJSON();
+        actualizarChequeoSolicitudes();
+        renderizarSolicitudes();
+      } else if (tab === 'reporte') {
+        seccionRepo.classList.remove('hidden');
+        btnRepo.className = estiloActivo;
+        renderizarReporteActual();
+      } else if (tab === 'dashboard') {
+        seccionDash.classList.remove('hidden');
+        btnDash.className = estiloActivo;
+        actualizarBarraAlmacenamiento();
+        renderizarDashboard();
+      }
+
+      actualizarBadgesContadores();
+    }
+
+    // --- AGREGAR CONTEO AL REPORTE (ACTUALIZA INMEDIATAMENTE EL NÚMERO DEL TAB) ---
+    async function agregarTiraje() {
+      if (!appConfig.maquinas || appConfig.maquinas.length === 0) {
+        mostrarAlerta("Configura al menos una máquina antes de registrar conteos.");
+        return;
+      }
+
+      const calc = calcularProduccionActual();
+      const maquina = document.getElementById('selectMaquina').value;
+      const producto = document.getElementById('selectProducto').value;
+      const merma = parseInt(document.getElementById('inMerma').value) || 0;
+
+      if (calc.contador <= 0 && merma <= 0) {
+        mostrarAlerta("Ingresa el número que marca la máquina en el campo 'Producción'.");
+        document.getElementById('inProduccion').focus();
+        return;
+      }
+
+      const ahora = new Date();
+      const fechaExacta = ahora.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const horaExacta = ahora.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      reporteActual.push({
+        id: Date.now(),
+        maquina,
+        factor_golpe: calc.factor,
+        contador_maquina: calc.contador,
+        botellas_fabricadas: calc.botellasTotales,
+        producto,
+        paquetes: calc.paquetes,
+        merma: merma,
+        fecha: fechaExacta,
+        hora: horaExacta,
+        timestampISO: ahora.toISOString()
+      });
+
+      await localforage.setItem(KEY_REPORTE_ACTUAL, reporteActual);
+      document.getElementById('inProduccion').value = '';
+      document.getElementById('inMerma').value = '';
+
+      // Verifica y actualiza solicitudes cubiertas automáticamente
+      actualizarChequeoSolicitudes();
+      await localforage.setItem(KEY_SOLICITUDES, solicitudesProduccion);
+
+      // Actualiza en tiempo real los números del tab
+      actualizarBadgesContadores();
+      actualizarCalculoEnVivo();
+      actualizarBarraAlmacenamiento();
+      
+      mostrarToast(`Conteo guardado: ${calc.paquetes} paq en ${maquina}`);
+    }
+
+    // --- RENDERIZAR REPORTE ACTUAL ---
+    function renderizarReporteActual() {
+      const cont = document.getElementById('contenedorLista');
+      const contSoliReporte = document.getElementById('listaSolicitudesCubiertasReporte');
+      const badgeTotal = document.getElementById('badgeTotalPaquetes');
+      const badgeTicketsRepo = document.getElementById('badgeTicketsEnReporte');
+
+      actualizarBadgesContadores();
+      actualizarChequeoSolicitudes();
+
+      const cubiertas = solicitudesProduccion.filter(s => s.estado === 'producido');
+      badgeTicketsRepo.innerText = `${cubiertas.length} listos`;
+
+      if (cubiertas.length === 0) {
+        contSoliReporte.innerHTML = '<p class="text-slate-400 text-[11px] italic py-1">Aún no hay solicitudes cubiertas con la producción registrada.</p>';
+      } else {
+        contSoliReporte.innerHTML = cubiertas.map(s => `
+          <div class="flex justify-between items-center bg-blue-50/70 dark:bg-blue-950/40 px-2.5 py-1.5 rounded-lg border border-blue-200/60 dark:border-blue-900/40">
+            <div>
+              <span class="font-bold text-slate-800 dark:text-slate-200">${s.producto}</span>
+              <span class="text-[10px] text-slate-400 font-mono ml-1">(${s.id_ticket_produccion})</span>
+            </div>
+            <span class="font-extrabold text-emerald-600 dark:text-emerald-400 text-[11px]">${s.paquetes_a_fabricar} paq cubiertos ✓</span>
+          </div>
+        `).join('');
+      }
+
+      if (reporteActual.length === 0) {
+        cont.innerHTML = '<p class="text-xs text-slate-400 dark:text-slate-600 text-center py-6">No hay conteos en el reporte actual.</p>';
+        badgeTotal.innerText = '0 paq';
+        return;
+      }
+
+      let totalPaq = 0;
+      cont.innerHTML = reporteActual.map((r, i) => {
+        totalPaq += r.paquetes;
+        return `
+          <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-1.5">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-lg border border-blue-200/60 dark:border-blue-900/50">
+                ${r.maquina} (${r.factor_golpe}x)
+              </span>
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] text-slate-400 font-medium">${r.fecha} • ${r.hora}</span>
+                <button onclick="eliminarRegistroReporte(${i})" class="text-slate-300 dark:text-slate-600 hover:text-rose-500 p-1 transition" title="Eliminar registro">
+                  <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-end pt-0.5">
+              <div>
+                <p class="text-sm font-extrabold text-slate-800 dark:text-slate-100">${r.producto}</p>
+                <p class="text-[11px] text-slate-400">Contador: ${r.contador_maquina} pts = ${r.botellas_fabricadas} botellas</p>
+                ${r.merma > 0 ? `<p class="text-xs text-rose-500 font-semibold">Merma: ${r.merma} un.</p>` : `<p class="text-[11px] text-slate-400">Sin merma</p>`}
+              </div>
+              <div class="text-right">
+                <span class="text-xl font-black text-emerald-600 dark:text-emerald-400">+${r.paquetes} <span class="text-xs font-semibold text-slate-400">paq</span></span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).reverse().join('');
+
+      badgeTotal.innerText = `${totalPaq} paq`;
+    }
+
+    async function eliminarRegistroReporte(i) {
+      const indexReal = reporteActual.length - 1 - i;
+      reporteActual.splice(indexReal, 1);
+      await localforage.setItem(KEY_REPORTE_ACTUAL, reporteActual);
+      actualizarChequeoSolicitudes();
+      await localforage.setItem(KEY_SOLICITUDES, solicitudesProduccion);
+      actualizarBadgesContadores();
+      renderizarReporteActual();
+      actualizarCalculoEnVivo();
+      actualizarBarraAlmacenamiento();
+    }
+
+    // --- EXPORTAR STOCK (WHATSAPP) ---
+    function exportarStock() {
+      if (reporteActual.length === 0) {
+        mostrarAlerta("No hay registros en el reporte actual para exportar.");
+        return;
+      }
+
+      actualizarChequeoSolicitudes();
+      const ahora = new Date();
+      const responsable = (appConfig.nombre && appConfig.nombre.trim() !== "") ? appConfig.nombre.trim() : "Operador";
+
+      let totalPaquetes = 0;
+      let totalMerma = 0;
+      let totalBotellas = 0;
+
+      reporteActual.forEach(r => {
+        totalPaquetes += r.paquetes;
+        totalMerma += r.merma;
+        totalBotellas += r.botellas_fabricadas;
+      });
+
+      const ticketsCubiertos = solicitudesProduccion.filter(t => t.estado === 'producido').length;
+
+      const payloadJSON = {
+        empresa: "FABREC",
+        tipo_documento: "registro_inventario_0001",
+        id_reporte: Date.now(),
+        fecha_exportacion: ahora.toISOString(),
+        responsable: responsable,
+        totales: {
+          paquetes_totales: totalPaquetes,
+          merma_total_unidades: totalMerma,
+          botellas_totales: totalBotellas,
+          cantidad_conteos: reporteActual.length,
+          solicitudes_totales: solicitudesProduccion.length,
+          solicitudes_producidas: ticketsCubiertos,
+          solicitudes_pendientes: solicitudesProduccion.length - ticketsCubiertos
+        },
+        conteos: reporteActual.map(r => ({
+          id: r.id,
+          maquina: r.maquina,
+          factor_golpe: r.factor_golpe,
+          contador_maquina: r.contador_maquina,
+          botellas_fabricadas: r.botellas_fabricadas,
+          producto: r.producto,
+          paquetes: r.paquetes,
+          merma: r.merma,
+          fecha: r.fecha,
+          hora: r.hora
+        })),
+        solicitudes_produccion: solicitudesProduccion.map(t => ({
+          id_ticket_produccion: t.id_ticket_produccion,
+          producto: t.producto,
+          paquetes_a_fabricar: t.paquetes_a_fabricar,
+          estado: t.estado,
+          fecha_entrega_programada: t.fecha_entrega_programada
+        }))
+      };
+
+      const textoMensaje = JSON.stringify(payloadJSON, null, 2);
+      const url = `https://wa.me/${WHATSAPP_COO}?text=${encodeURIComponent(textoMensaje)}`;
+      window.open(url, '_blank');
+    }
+
+    // --- NUEVO REPORTE ---
+    function finalizarReporteYCrearNuevo() {
+      if (reporteActual.length === 0) {
+        mostrarAlerta("El reporte actual no tiene datos que archivar.");
+        return;
+      }
+
+      mostrarConfirmacion(
+        "¿Deseas cerrar este turno e iniciar un nuevo reporte? Se archivarán los conteos en el historial.",
+        async () => {
+          const ahora = new Date();
+          let totalP = 0;
+          let totalM = 0;
+          let totalBot = 0;
+
+          reporteActual.forEach(r => {
+            totalP += r.paquetes;
+            totalM += r.merma;
+            totalBot += r.botellas_fabricadas;
+          });
+
+          historialReportes.push({
+            id: Date.now(),
+            fecha: ahora.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+            hora: ahora.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }),
+            timestampISO: ahora.toISOString(),
+            responsable: appConfig.nombre || "Operador",
+            totales: { paquetes: totalP, merma: totalM, botellas: totalBot },
+            conteos: [...reporteActual],
+            solicitudes_producidas: solicitudesProduccion.filter(s => s.estado === 'producido')
+          });
+
+          solicitudesProduccion = solicitudesProduccion.filter(s => s.estado !== 'producido');
+
+          await localforage.setItem(KEY_HISTORIAL_REPORTES, historialReportes);
+          await localforage.setItem(KEY_SOLICITUDES, solicitudesProduccion);
+
+          reporteActual = [];
+          await localforage.setItem(KEY_REPORTE_ACTUAL, reporteActual);
+
+          actualizarBadgesContadores();
+          renderizarReporteActual();
+          actualizarChequeoSolicitudes();
+          renderizarSolicitudes();
+          actualizarBarraAlmacenamiento();
+
+          mostrarToast("Nuevo reporte iniciado");
+          cambiarTab('produccion');
+        },
+        "Iniciar Nuevo Reporte"
+      );
+    }
+
+    // --- COMPARTIR Y DETALLE DE REPORTES HISTÓRICOS ---
+    function abrirDetalleReporte(idReporte) {
+      const rep = historialReportes.find(h => h.id === idReporte);
+      if (!rep) return;
+
+      document.getElementById('detReporteTitulo').innerText = `Reporte: ${rep.fecha} • ${rep.hora}`;
+      document.getElementById('detReporteSubtitulo').innerText = `Responsable: ${rep.responsable}`;
+      document.getElementById('detTotalPaquetes').innerText = `${rep.totales.paquetes} paq`;
+      document.getElementById('detTotalMerma').innerText = `${rep.totales.merma} un.`;
+
+      const contLista = document.getElementById('detConteosLista');
+      contLista.innerHTML = rep.conteos.map(c => `
+        <div class="p-2 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/60 dark:border-slate-800 text-xs flex justify-between items-center">
+          <div>
+            <p class="font-bold text-slate-800 dark:text-slate-100">${c.maquina} - ${c.producto}</p>
+            <p class="text-[10px] text-slate-400">Contador: ${c.contador_maquina} pts (${c.botellas_fabricadas} botellas)</p>
+          </div>
+          <div class="text-right">
+            <span class="font-black text-emerald-600 dark:text-emerald-400">${c.paquetes} paq</span>
+            <p class="text-[10px] text-rose-500 font-semibold">${c.merma} merma</p>
+          </div>
+        </div>
+      `).join('');
+
+      const soliLista = document.getElementById('detSolicitudesLista');
+      if (rep.solicitudes_producidas && rep.solicitudes_producidas.length > 0) {
+        soliLista.innerHTML = rep.solicitudes_producidas.map(s => `
+          <div class="p-2 bg-emerald-50/60 dark:bg-emerald-950/40 rounded-xl border border-emerald-200/60 dark:border-emerald-900/40 text-xs flex justify-between items-center">
+            <div>
+              <p class="font-bold text-slate-800 dark:text-slate-100">${s.producto}</p>
+              <p class="text-[10px] text-slate-400 font-mono">${s.id_ticket_produccion}</p>
+            </div>
+            <span class="font-black text-emerald-600 dark:text-emerald-400">${s.paquetes_a_fabricar} paq ✓</span>
+          </div>
+        `).join('');
+      } else {
+        soliLista.innerHTML = '<p class="text-slate-400 text-[11px] italic">No se cubrieron solicitudes en este reporte.</p>';
+      }
+
+      document.getElementById('btnCompartirDesdeDetalle').onclick = () => compartirReporteHistorial(rep.id);
+      document.getElementById('modalDetalleReporte').classList.remove('hidden');
+    }
+
+    function cerrarDetalleReporte() {
+      document.getElementById('modalDetalleReporte').classList.add('hidden');
+    }
+
+    function compartirReporteHistorial(idReporte) {
+      const rep = historialReportes.find(h => h.id === idReporte);
+      if (!rep) return;
+
+      const payloadJSON = {
+        empresa: "FABREC",
+        tipo_documento: "registro_inventario_0001",
+        id_reporte: rep.id,
+        fecha_exportacion: rep.timestampISO || new Date().toISOString(),
+        responsable: rep.responsable,
+        totales: {
+          paquetes_totales: rep.totales.paquetes,
+          merma_total_unidades: rep.totales.merma,
+          botellas_totales: rep.totales.botellas || 0,
+          cantidad_conteos: rep.conteos.length
+        },
+        conteos: rep.conteos,
+        solicitudes_produccion: rep.solicitudes_producidas || []
+      };
+
+      const textoMensaje = JSON.stringify(payloadJSON, null, 2);
+      const url = `https://wa.me/${WHATSAPP_COO}?text=${encodeURIComponent(textoMensaje)}`;
+      window.open(url, '_blank');
+    }
+
+    // --- DASHBOARD: GRÁFICOS Y HISTORIAL ---
+    function renderizarDashboard() {
+      let totalPaquetesHist = 0;
+      let totalMermasHist = 0;
+      let porMaquina = {};
+
+      const labelsLineas = [];
+      const dataTasaMerma = [];
+      const dataRendimiento = [];
+
+      const todosLosConteos = [];
+      historialReportes.forEach(rep => {
+        rep.conteos.forEach(c => todosLosConteos.push(c));
+      });
+      reporteActual.forEach(c => todosLosConteos.push(c));
+
+      todosLosConteos.forEach((c, idx) => {
+        totalPaquetesHist += c.paquetes;
+        totalMermasHist += c.merma;
+
+        if (!porMaquina[c.maquina]) {
+          porMaquina[c.maquina] = { paquetes: 0, merma: 0 };
+        }
+        porMaquina[c.maquina].paquetes += c.paquetes;
+        porMaquina[c.maquina].merma += c.merma;
+
+        const botellasUtiles = c.botellas_fabricadas || 0;
+        const merma = c.merma || 0;
+        const totalGolpes = botellasUtiles + merma;
+
+        let tasaMermaPct = 0;
+        let rendimientoPct = 100;
+
+        if (totalGolpes > 0) {
+          tasaMermaPct = parseFloat(((merma / totalGolpes) * 100).toFixed(1));
+          rendimientoPct = parseFloat((100 - tasaMermaPct).toFixed(1));
+        }
+
+        labelsLineas.push(`${c.maquina} (${c.hora ? c.hora.substring(0, 5) : '#' + (idx+1)})`);
+        dataTasaMerma.push(tasaMermaPct);
+        dataRendimiento.push(rendimientoPct);
+      });
+
+      document.getElementById('kpiTotalReportes').innerText = historialReportes.length;
+      document.getElementById('kpiTotalPaquetesHist').innerText = totalPaquetesHist.toLocaleString();
+      document.getElementById('kpiTotalMermasHist').innerText = totalMermasHist.toLocaleString();
+
+      if (chartLineasInstance) chartLineasInstance.destroy();
+      const ctxLine = document.getElementById('chartLineasMermaRendimiento').getContext('2d');
+      chartLineasInstance = new Chart(ctxLine, {
+        type: 'line',
+        data: {
+          labels: labelsLineas.length ? labelsLineas.slice(-10) : ['Sin datos'],
+          datasets: [
+            {
+              label: 'Tasa de Merma (%)',
+              data: dataTasaMerma.length ? dataTasaMerma.slice(-10) : [0],
+              borderColor: '#f43f5e',
+              backgroundColor: 'rgba(244, 63, 94, 0.1)',
+              borderWidth: 2.5,
+              tension: 0.35,
+              fill: true,
+              pointRadius: 4,
+              pointBackgroundColor: '#f43f5e'
+            },
+            {
+              label: 'Rendimiento Útil (%)',
+              data: dataRendimiento.length ? dataRendimiento.slice(-10) : [100],
+              borderColor: '#10b981',
+              backgroundColor: 'transparent',
+              borderWidth: 2,
+              borderDash: [4, 4],
+              tension: 0.35,
+              pointRadius: 3,
+              pointBackgroundColor: '#10b981'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: { boxWidth: 12, font: { family: 'Montserrat', size: 10 } }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: { callback: v => v + '%' }
+            },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+
+      const labelsMaq = Object.keys(porMaquina);
+      const dataP = labelsMaq.map(m => porMaquina[m].paquetes);
+
+      if (chartMaquinasInstance) chartMaquinasInstance.destroy();
+      const ctxP = document.getElementById('chartProduccionMaquinas').getContext('2d');
+      chartMaquinasInstance = new Chart(ctxP, {
+        type: 'bar',
+        data: {
+          labels: labelsMaq.length ? labelsMaq : ['Sin datos'],
+          datasets: [{
+            label: 'Paquetes',
+            data: dataP.length ? dataP : [0],
+            backgroundColor: '#2563eb',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+
+      const contHist = document.getElementById('contenedorHistorialReportes');
+      if (historialReportes.length === 0) {
+        contHist.innerHTML = '<p class="text-xs text-slate-400 text-center py-6">Aún no hay reportes archivados.</p>';
+        return;
+      }
+
+      contHist.innerHTML = historialReportes.slice().reverse().map(h => `
+        <div onclick="abrirDetalleReporte(${h.id})" class="cursor-pointer bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-xs shadow-sm flex justify-between items-center transition active:scale-[0.99]">
+          <div>
+            <p class="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+              <span>${h.fecha} • ${h.hora}</span>
+              <span class="text-[9px] bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-300 px-1.5 py-0.2 rounded font-extrabold">Ver</span>
+            </p>
+            <p class="text-[11px] text-slate-400 mt-0.5">${h.conteos.length} máquinas • Operador: ${h.responsable}</p>
+          </div>
+          <div class="text-right">
+            <span class="font-black text-emerald-600 dark:text-emerald-400 text-sm">${h.totales.paquetes} paq</span>
+            <span class="text-[11px] text-rose-500 font-semibold block">(${h.totales.merma} merma)</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // --- MODALES INTEGRADOS ---
     function mostrarAlerta(mensaje, titulo = "Aviso") {
       const modal = document.getElementById('modalDialogo');
       document.getElementById('modalDialogoTitulo').innerText = titulo;
@@ -393,7 +1409,7 @@
       document.getElementById('modalDialogoTitulo').innerText = titulo;
       document.getElementById('modalDialogoMensaje').innerText = mensaje;
       document.getElementById('modalDialogoBotones').innerHTML = `
-        <button onclick="cerrarDialogo()" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold py-2 rounded-xl text-xs transition">
+        <button onclick="cerrarDialogo()" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-bold py-2 rounded-xl text-xs transition">
           Cancelar
         </button>
         <button onclick="ejecutarConfirmacion()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition">
@@ -422,7 +1438,7 @@
       }, 2500);
     }
 
-    // --- MODO DÍA Y NOCHE AUTOMÁTICO ---
+    // --- MODO CLARO / OSCURO AUTOMÁTICO ---
     function aplicarTemaAutomatico() {
       const hora = new Date().getHours();
       const esDia = hora >= 6 && hora < 16;
@@ -447,105 +1463,29 @@
       }
     }
 
-    function autoGuardarNombre(valor) {
+    async function autoGuardarNombre(valor) {
       appConfig.nombre = valor;
-      localStorage.setItem(STORAGE_CONFIG, JSON.stringify(appConfig));
+      await localforage.setItem(KEY_CONFIG, appConfig);
       actualizarSaludo();
     }
 
-    // --- CÁLCULOS TÉCNICOS ---
-    function obtenerUnidadesPorPaquete(nombreProducto) {
-      if (!nombreProducto) return 100;
-      const match = nombreProducto.match(/(\d+)\s*(ml|l)/i);
-      if (match) {
-        let cant = parseInt(match[1]);
-        const unidad = match[2].toLowerCase();
-        if (unidad === 'l') cant = cant * 1000;
-        if (cant >= 900) return 50;
-        return 100;
-      }
-      return 100;
+    // --- CONFIGURACIÓN DE MÁQUINAS ---
+    function abrirConfiguracion() {
+      document.getElementById('cfgNombre').value = appConfig.nombre || '';
+      inicializarDropdownCatalogo();
+      modelosTempParaMaquina = [];
+      actualizarChipsModelosTemp();
+      renderizarMaquinasConfig();
+      document.getElementById('detailsNuevaMaquina').removeAttribute('open');
+      document.getElementById('modalConfig').classList.remove('hidden');
+      actualizarBarraAlmacenamiento();
     }
 
-    function obtenerFactorMaquina(nombreMaquina) {
-      if (!nombreMaquina) return 1;
-      const m = (appConfig.maquinas || []).find(x => x.nombre === nombreMaquina);
-      if (m && m.factorGolpe) return parseInt(m.factorGolpe) || 1;
-      
-      const lower = nombreMaquina.toLowerCase();
-      if (lower.includes("400 gorda") || (lower.includes("gorda") && lower.includes("400"))) {
-        return 3;
-      }
-      return 1;
+    function cerrarConfiguracion() {
+      document.getElementById('modalConfig').classList.add('hidden');
+      inicializarSelectores();
     }
 
-    function calcularProduccionActual() {
-      const valorContador = parseFloat(document.getElementById('inProduccion').value) || 0;
-      const maquinaSel = document.getElementById('selectMaquina').value;
-      const productoSel = document.getElementById('selectProducto').value;
-
-      const factor = obtenerFactorMaquina(maquinaSel);
-      const divisor = obtenerUnidadesPorPaquete(productoSel);
-
-      const botellasTotales = valorContador * factor;
-      const paquetes = divisor > 0 ? Math.floor(botellasTotales / divisor) : 0;
-
-      return { contador: valorContador, factor, divisor, botellasTotales, paquetes };
-    }
-
-    function actualizarCalculoEnVivo() {
-      const calc = calcularProduccionActual();
-
-      document.getElementById('badgeFactorMaquina').innerText = `Factor: ${calc.factor}x botellas/golpe`;
-      document.getElementById('badgeDivisorModelo').innerText = `${calc.divisor} un/paquete`;
-
-      document.getElementById('txtPaquetesCalculados').innerText = calc.paquetes.toLocaleString();
-      document.getElementById('txtBotellasTotales').innerText = `${calc.botellasTotales.toLocaleString()} botellas`;
-      document.getElementById('txtFormulaResumen').innerText = `${calc.contador} pts × ${calc.factor} ÷ ${calc.divisor}`;
-    }
-
-    function alCambiarMaquina() {
-      cargarModelosPorMaquina();
-      actualizarCalculoEnVivo();
-    }
-
-    // --- CONTROL DE PESTAÑAS ---
-    function cambiarTab(tab) {
-      const seccionProd = document.getElementById('seccionProduccion');
-      const seccionRepo = document.getElementById('seccionReporte');
-      const seccionDash = document.getElementById('seccionDashboard');
-
-      const btnProd = document.getElementById('btnTabProd');
-      const btnRepo = document.getElementById('btnTabReporte');
-      const btnDash = document.getElementById('btnTabDashboard');
-
-      const estiloActivo = "flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm";
-      const estiloInactivo = "flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 text-slate-500 dark:text-slate-400";
-
-      seccionProd.classList.add('hidden');
-      seccionRepo.classList.add('hidden');
-      seccionDash.classList.add('hidden');
-
-      btnProd.className = estiloInactivo;
-      btnRepo.className = estiloInactivo;
-      btnDash.className = estiloInactivo;
-
-      if (tab === 'produccion') {
-        seccionProd.classList.remove('hidden');
-        btnProd.className = estiloActivo;
-        actualizarCalculoEnVivo();
-      } else if (tab === 'reporte') {
-        seccionRepo.classList.remove('hidden');
-        btnRepo.className = estiloActivo;
-        renderizarReporteActual();
-      } else if (tab === 'dashboard') {
-        seccionDash.classList.remove('hidden');
-        btnDash.className = estiloActivo;
-        renderizarDashboard();
-      }
-    }
-
-    // --- SELECTORES ---
     function inicializarSelectores() {
       const selectM = document.getElementById('selectMaquina');
       const aviso = document.getElementById('avisoSinMaquinas');
@@ -595,340 +1535,6 @@
       }
     }
 
-    // --- GUARDAR TIRAJE (SE MANTIENE EN REGISTRO CON TOAST) ---
-    function agregarTiraje() {
-      if (!appConfig.maquinas || appConfig.maquinas.length === 0) {
-        mostrarAlerta("Configura al menos una máquina antes de registrar conteos.");
-        return;
-      }
-
-      const calc = calcularProduccionActual();
-      const maquina = document.getElementById('selectMaquina').value;
-      const producto = document.getElementById('selectProducto').value;
-      const merma = parseInt(document.getElementById('inMerma').value) || 0;
-
-      if (calc.contador <= 0 && merma <= 0) {
-        mostrarAlerta("Ingresa el valor del contador de la máquina en el campo 'Producción'.");
-        document.getElementById('inProduccion').focus();
-        return;
-      }
-
-      const ahora = new Date();
-      const fechaExacta = ahora.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      const horaExacta = ahora.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-      reporteActual.push({
-        id: Date.now(),
-        maquina,
-        factor_golpe: calc.factor,
-        contador_maquina: calc.contador,
-        botellas_fabricadas: calc.botellasTotales,
-        producto,
-        paquetes: calc.paquetes,
-        merma: merma,
-        fecha: fechaExacta,
-        hora: horaExacta,
-        timestampISO: ahora.toISOString()
-      });
-
-      guardarReporteActual();
-      document.getElementById('inProduccion').value = '';
-      document.getElementById('inMerma').value = '';
-      actualizarCalculoEnVivo();
-
-      mostrarToast(`Conteo agregado: ${calc.paquetes} paq en ${maquina}`);
-    }
-
-    // --- RENDERIZAR REPORTE ACTUAL ---
-    function renderizarReporteActual() {
-      const cont = document.getElementById('contenedorLista');
-      const badgeTotal = document.getElementById('badgeTotalPaquetes');
-      const badgeTab = document.getElementById('badgeTabCount');
-
-      badgeTab.innerText = reporteActual.length;
-
-      if (reporteActual.length === 0) {
-        cont.innerHTML = '<p class="text-xs text-slate-400 dark:text-slate-600 text-center py-12">No hay conteos en el reporte actual.</p>';
-        badgeTotal.innerText = '0 paq';
-        return;
-      }
-
-      let totalPaq = 0;
-      cont.innerHTML = reporteActual.map((r, i) => {
-        totalPaq += r.paquetes;
-        return `
-          <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2">
-            <div class="flex justify-between items-center text-xs">
-              <span class="font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-1 rounded-lg border border-blue-200/60 dark:border-blue-900/50">
-                ${r.maquina} (${r.factor_golpe}x)
-              </span>
-              <div class="flex items-center gap-2">
-                <span class="text-[11px] text-slate-400 font-medium">${r.fecha} • ${r.hora}</span>
-                <button onclick="eliminarRegistroReporte(${i})" class="text-slate-300 dark:text-slate-600 hover:text-rose-500 dark:hover:text-rose-400 p-1 transition" title="Eliminar registro">
-                  <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div class="flex justify-between items-end pt-1">
-              <div>
-                <p class="text-sm font-extrabold text-slate-800 dark:text-slate-100">${r.producto}</p>
-                <p class="text-[11px] text-slate-400">Contador: ${r.contador_maquina} pts = ${r.botellas_fabricadas} botellas</p>
-                ${r.merma > 0 ? `<p class="text-xs text-rose-500 font-semibold mt-0.5">Merma: ${r.merma} un.</p>` : `<p class="text-[11px] text-slate-400 mt-0.5">Sin merma reportada</p>`}
-              </div>
-              <div class="text-right">
-                <span class="text-xl font-black text-emerald-600 dark:text-emerald-400">+${r.paquetes} <span class="text-xs font-semibold text-slate-400">paq</span></span>
-              </div>
-            </div>
-          </div>
-        `;
-      }).reverse().join('');
-
-      badgeTotal.innerText = `${totalPaq} paq`;
-    }
-
-    function eliminarRegistroReporte(i) {
-      const indexReal = reporteActual.length - 1 - i;
-      reporteActual.splice(indexReal, 1);
-      guardarReporteActual();
-      renderizarReporteActual();
-    }
-
-    function guardarReporteActual() {
-      localStorage.setItem(STORAGE_REPORTE_ACTUAL, JSON.stringify(reporteActual));
-      document.getElementById('badgeTabCount').innerText = reporteActual.length;
-    }
-
-    // --- EXPORTAR STOCK ACTUAL A WHATSAPP ---
-    function exportarStock() {
-      if (reporteActual.length === 0) {
-        mostrarAlerta("No hay registros en el reporte actual para exportar.");
-        return;
-      }
-
-      const ahora = new Date();
-      const responsable = (appConfig.nombre && appConfig.nombre.trim() !== "") ? appConfig.nombre.trim() : "Operador";
-
-      let totalPaquetes = 0;
-      let totalMerma = 0;
-      let totalBotellas = 0;
-
-      reporteActual.forEach(r => {
-        totalPaquetes += r.paquetes;
-        totalMerma += r.merma;
-        totalBotellas += r.botellas_fabricadas;
-      });
-
-      const payloadJSON = {
-        empresa: "FABREC",
-        tipo_documento: "registro_inventario_0001",
-        id_reporte: Date.now(),
-        fecha_exportacion: ahora.toISOString(),
-        responsable: responsable,
-        totales: {
-          paquetes_totales: totalPaquetes,
-          merma_total_unidades: totalMerma,
-          botellas_totales: totalBotellas,
-          cantidad_conteos: reporteActual.length
-        },
-        conteos: reporteActual.map(r => ({
-          id: r.id,
-          maquina: r.maquina,
-          factor_golpe: r.factor_golpe,
-          contador_maquina: r.contador_maquina,
-          botellas_fabricadas: r.botellas_fabricadas,
-          producto: r.producto,
-          paquetes: r.paquetes,
-          merma: r.merma,
-          fecha: r.fecha,
-          hora: r.hora
-        }))
-      };
-
-      const textoMensaje = JSON.stringify(payloadJSON, null, 2);
-      const url = `https://wa.me/${WHATSAPP_COO}?text=${encodeURIComponent(textoMensaje)}`;
-      window.open(url, '_blank');
-    }
-
-    // --- NUEVO REPORTE (ARCHIVAR Y REINICIAR CON MODAL DE CONFIRMACIÓN) ---
-    function finalizarReporteYCrearNuevo() {
-      if (reporteActual.length === 0) {
-        mostrarAlerta("El reporte actual no tiene datos que archivar.");
-        return;
-      }
-
-      mostrarConfirmacion(
-        "¿Deseas cerrar este turno e iniciar un nuevo reporte? Los datos actuales se archivarán en el historial.",
-        () => {
-          const ahora = new Date();
-          let totalP = 0;
-          let totalM = 0;
-          let totalBot = 0;
-
-          reporteActual.forEach(r => {
-            totalP += r.paquetes;
-            totalM += r.merma;
-            totalBot += r.botellas_fabricadas;
-          });
-
-          historialReportes.push({
-            id: Date.now(),
-            fecha: ahora.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' }),
-            hora: ahora.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }),
-            timestampISO: ahora.toISOString(),
-            responsable: appConfig.nombre || "Operador",
-            totales: { paquetes: totalP, merma: totalM, botellas: totalBot },
-            conteos: [...reporteActual]
-          });
-
-          localStorage.setItem(STORAGE_HISTORIAL_REPORTES, JSON.stringify(historialReportes));
-
-          reporteActual = [];
-          guardarReporteActual();
-          renderizarReporteActual();
-
-          mostrarToast("Nuevo reporte iniciado con éxito");
-          cambiarTab('produccion');
-        },
-        "Iniciar Nuevo Reporte"
-      );
-    }
-
-    // --- COMPARTIR REPORTE DESDE EL HISTORIAL ---
-    function compartirReporteHistorial(idReporte) {
-      const rep = historialReportes.find(h => h.id === idReporte);
-      if (!rep) return;
-
-      const payloadJSON = {
-        empresa: "FABREC",
-        tipo_documento: "registro_inventario_0001",
-        id_reporte: rep.id,
-        fecha_exportacion: rep.timestampISO || new Date().toISOString(),
-        responsable: rep.responsable,
-        totales: {
-          paquetes_totales: rep.totales.paquetes,
-          merma_total_unidades: rep.totales.merma,
-          botellas_totales: rep.totales.botellas || 0,
-          cantidad_conteos: rep.conteos.length
-        },
-        conteos: rep.conteos
-      };
-
-      const textoMensaje = JSON.stringify(payloadJSON, null, 2);
-      const url = `https://wa.me/${WHATSAPP_COO}?text=${encodeURIComponent(textoMensaje)}`;
-      window.open(url, '_blank');
-    }
-
-    // --- RENDERIZADO DEL DASHBOARD & HISTORIAL ---
-    function renderizarDashboard() {
-      let totalPaquetesHist = 0;
-      let totalMermasHist = 0;
-      let porMaquina = {};
-
-      historialReportes.forEach(rep => {
-        rep.conteos.forEach(c => {
-          totalPaquetesHist += c.paquetes;
-          totalMermasHist += c.merma;
-
-          if (!porMaquina[c.maquina]) {
-            porMaquina[c.maquina] = { paquetes: 0, merma: 0 };
-          }
-          porMaquina[c.maquina].paquetes += c.paquetes;
-          porMaquina[c.maquina].merma += c.merma;
-        });
-      });
-
-      document.getElementById('kpiTotalReportes').innerText = historialReportes.length;
-      document.getElementById('kpiTotalPaquetesHist').innerText = totalPaquetesHist.toLocaleString();
-      document.getElementById('kpiTotalMermasHist').innerText = totalMermasHist.toLocaleString();
-
-      const labelsMaq = Object.keys(porMaquina);
-      const dataP = labelsMaq.map(m => porMaquina[m].paquetes);
-      const dataM = labelsMaq.map(m => porMaquina[m].merma);
-
-      if (chartMaquinasInstance) chartMaquinasInstance.destroy();
-      if (chartMermasInstance) chartMermasInstance.destroy();
-
-      const ctxP = document.getElementById('chartProduccionMaquinas').getContext('2d');
-      chartMaquinasInstance = new Chart(ctxP, {
-        type: 'bar',
-        data: {
-          labels: labelsMaq.length ? labelsMaq : ['Sin datos'],
-          datasets: [{
-            label: 'Paquetes',
-            data: dataP.length ? dataP : [0],
-            backgroundColor: '#2563eb',
-            borderRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true } }
-        }
-      });
-
-      const ctxM = document.getElementById('chartMermasMaquinas').getContext('2d');
-      chartMermasInstance = new Chart(ctxM, {
-        type: 'bar',
-        data: {
-          labels: labelsMaq.length ? labelsMaq : ['Sin datos'],
-          datasets: [{
-            label: 'Merma (un.)',
-            data: dataM.length ? dataM : [0],
-            backgroundColor: '#f43f5e',
-            borderRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true } }
-        }
-      });
-
-      const contHist = document.getElementById('contenedorHistorialReportes');
-      if (historialReportes.length === 0) {
-        contHist.innerHTML = '<p class="text-xs text-slate-400 text-center py-6">Aún no hay reportes archivados.</p>';
-        return;
-      }
-
-      contHist.innerHTML = historialReportes.slice().reverse().map(h => `
-        <div class="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-xs shadow-sm flex justify-between items-center">
-          <div>
-            <p class="font-bold text-slate-800 dark:text-slate-100">${h.fecha} • ${h.hora}</p>
-            <p class="text-[11px] text-slate-400">${h.conteos.length} máquinas • Por: ${h.responsable}</p>
-            <p class="text-[11px] font-semibold text-emerald-600 mt-0.5">${h.totales.paquetes} paq <span class="text-rose-500 font-normal">(${h.totales.merma} merma)</span></p>
-          </div>
-          <button onclick="compartirReporteHistorial(${h.id})" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-blue-600 dark:text-blue-400 font-bold px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1 transition" title="Volver a compartir por WhatsApp">
-            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
-            </svg>
-            Compartir
-          </button>
-        </div>
-      `).join('');
-    }
-
-    // --- MODAL CONFIGURACIÓN ---
-    function abrirConfiguracion() {
-      document.getElementById('cfgNombre').value = appConfig.nombre || '';
-      inicializarDropdownCatalogo();
-      modelosTempParaMaquina = [];
-      actualizarChipsModelosTemp();
-      renderizarMaquinasConfig();
-      document.getElementById('modalConfig').classList.remove('hidden');
-    }
-
-    function cerrarConfiguracion() {
-      document.getElementById('modalConfig').classList.add('hidden');
-      inicializarSelectores();
-    }
-
     function inicializarDropdownCatalogo() {
       const selectCat = document.getElementById('catalogoModelosSelect');
       selectCat.innerHTML = CATALOGO_FABREC.map(mod => `<option value="${mod}">${mod}</option>`).join('');
@@ -965,7 +1571,7 @@
       `).join('');
     }
 
-    function guardarMaquinaDirecto() {
+    async function guardarMaquinaDirecto() {
       const nom = document.getElementById('nuevaMaquinaNombre').value.trim();
       const factor = parseInt(document.getElementById('nuevaMaquinaFactor').value) || 1;
 
@@ -986,7 +1592,7 @@
         modelos: [...modelosTempParaMaquina]
       });
 
-      localStorage.setItem(STORAGE_CONFIG, JSON.stringify(appConfig));
+      await localforage.setItem(KEY_CONFIG, appConfig);
 
       document.getElementById('nuevaMaquinaNombre').value = '';
       document.getElementById('nuevaMaquinaFactor').value = '1';
@@ -995,17 +1601,103 @@
 
       renderizarMaquinasConfig();
       inicializarSelectores();
-      mostrarToast(`Máquina "${nom}" registrada con éxito`);
+      actualizarBarraAlmacenamiento();
+      mostrarToast(`Máquina "${nom}" guardada`);
+    }
+
+    // --- EDICIÓN DE MÁQUINAS ---
+    function abrirModalEditarMaquina(index) {
+      indiceMaquinaEnEdicion = index;
+      const m = appConfig.maquinas[index];
+      if (!m) return;
+
+      document.getElementById('editMaquinaNombre').value = m.nombre;
+      document.getElementById('editMaquinaFactor').value = m.factorGolpe || 1;
+
+      // Cargar catálogo en el dropdown de edición
+      const selCat = document.getElementById('editCatalogoSelect');
+      selCat.innerHTML = CATALOGO_FABREC.map(mod => `<option value="${mod}">${mod}</option>`).join('');
+
+      modelosEditTempParaMaquina = [...(m.modelos || [])];
+      actualizarChipsEdicionMaquina();
+
+      document.getElementById('modalEditarMaquina').classList.remove('hidden');
+    }
+
+    function cerrarEditarMaquina() {
+      document.getElementById('modalEditarMaquina').classList.add('hidden');
+      indiceMaquinaEnEdicion = -1;
+      modelosEditTempParaMaquina = [];
+    }
+
+    function agregarModeloAEdicion() {
+      const sel = document.getElementById('editCatalogoSelect');
+      const val = sel.value;
+      if (!val) return;
+
+      if (!modelosEditTempParaMaquina.includes(val)) {
+        modelosEditTempParaMaquina.push(val);
+        actualizarChipsEdicionMaquina();
+      }
+    }
+
+    function removerModeloDeEdicion(idx) {
+      modelosEditTempParaMaquina.splice(idx, 1);
+      actualizarChipsEdicionMaquina();
+    }
+
+    function actualizarChipsEdicionMaquina() {
+      const cont = document.getElementById('chipsEditMaquina');
+      if (modelosEditTempParaMaquina.length === 0) {
+        cont.innerHTML = '<span class="text-[11px] text-slate-400 italic">No hay modelos asignados a esta máquina.</span>';
+        return;
+      }
+
+      cont.innerHTML = modelosEditTempParaMaquina.map((mod, i) => `
+        <span class="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-200 text-[11px] font-semibold px-2 py-0.5 rounded-lg border border-blue-200 dark:border-blue-800">
+          ${mod}
+          <button type="button" onclick="removerModeloDeEdicion(${i})" class="text-blue-500 hover:text-rose-500 font-bold ml-0.5">×</button>
+        </span>
+      `).join('');
+    }
+
+    async function guardarEdicionMaquinaDirecto() {
+      if (indiceMaquinaEnEdicion < 0 || !appConfig.maquinas[indiceMaquinaEnEdicion]) return;
+
+      const nuevoNombre = document.getElementById('editMaquinaNombre').value.trim();
+      const nuevoFactor = parseInt(document.getElementById('editMaquinaFactor').value) || 1;
+
+      if (!nuevoNombre) {
+        mostrarAlerta("La máquina debe tener un nombre.");
+        return;
+      }
+
+      if (modelosEditTempParaMaquina.length === 0) {
+        mostrarAlerta("Debe tener al menos un modelo asignado.");
+        return;
+      }
+
+      appConfig.maquinas[indiceMaquinaEnEdicion].nombre = nuevoNombre;
+      appConfig.maquinas[indiceMaquinaEnEdicion].factorGolpe = nuevoFactor;
+      appConfig.maquinas[indiceMaquinaEnEdicion].modelos = [...modelosEditTempParaMaquina];
+
+      await localforage.setItem(KEY_CONFIG, appConfig);
+
+      cerrarEditarMaquina();
+      renderizarMaquinasConfig();
+      inicializarSelectores();
+      mostrarToast(`Máquina "${nuevoNombre}" actualizada`);
     }
 
     function eliminarMaquinaConfig(i) {
       mostrarConfirmacion(
-        "¿Deseas eliminar esta máquina de la lista activa?",
-        () => {
+        "¿Deseas eliminar esta máquina de la lista?",
+        async () => {
           appConfig.maquinas.splice(i, 1);
-          localStorage.setItem(STORAGE_CONFIG, JSON.stringify(appConfig));
+          await localforage.setItem(KEY_CONFIG, appConfig);
           renderizarMaquinasConfig();
           inicializarSelectores();
+          actualizarBarraAlmacenamiento();
         },
         "Eliminar Máquina"
       );
@@ -1027,21 +1719,26 @@
                 ${m.factorGolpe || 1}x botellas
               </span>
             </div>
-            <p class="text-[11px] text-slate-500 mt-1">${m.modelos.join(', ')}</p>
+            <p class="text-[11px] text-slate-500 mt-1">${(m.modelos || []).join(', ')}</p>
           </div>
-          <button onclick="eliminarMaquinaConfig(${i})" class="text-slate-400 hover:text-rose-500 p-1" title="Eliminar máquina">
-            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
+          <div class="flex items-center gap-1">
+            <button onclick="abrirModalEditarMaquina(${i})" class="text-slate-400 hover:text-blue-500 p-1 transition" title="Editar máquina">
+              <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
+              </svg>
+            </button>
+            <button onclick="eliminarMaquinaConfig(${i})" class="text-slate-400 hover:text-rose-500 p-1 transition" title="Eliminar máquina">
+              <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </div>
         </div>
       `).join('');
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      aplicarTemaAutomatico();
-      inicializarSelectores();
-      renderizarReporteActual();
+      cargarDatosIniciales();
     });
   </script>
 </body>

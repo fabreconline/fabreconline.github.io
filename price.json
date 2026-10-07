@@ -1,0 +1,114 @@
+[
+  {
+    "producto": "220 ml",
+    "precio_menor": 17,
+    "precio_mayor": 16.5,
+    "precio_cliente_final": 18.5,
+    "unidades_paquete": 100
+  },
+  {
+    "producto": "250 ml",
+    "precio_menor": 17,
+    "precio_mayor": 16.5,
+    "precio_cliente_final": 18.5,
+    "unidades_paquete": 100
+  },
+  {
+    "producto": "280 ml",
+    "precio_menor": 17,
+    "precio_mayor": 16.5,
+    "precio_cliente_final": 18.5,
+    "unidades_paquete": 100
+  },
+  {
+    "producto": "300 ml",
+    "precio_menor": 17,
+    "precio_mayor": 16.5,
+    "precio_cliente_final": 18.5,
+    "unidades_paquete": 100
+  },
+  {
+    "producto": "340 ml",
+    "precio_menor": 17,
+    "precio_mayor": 16.5,
+    "precio_cliente_final": 18.5,
+    "unidades_paquete": 100
+  },
+  {
+    "producto": "400 ml",
+    "precio_menor": 18,
+    "precio_mayor": 17.5,
+    "precio_cliente_final": 19.5,
+    "unidades_paquete": 100
+  },
+  {
+    "producto": "450 ml",
+    "precio_menor": 18,
+    "precio_mayor": 17.5,
+    "precio_cliente_final": 19.5,
+    "unidades_paquete": 100
+  },
+  {
+    "producto": "500 ml Néctar",
+    "precio_menor": 18.5,
+    "precio_mayor": 18,
+    "precio_cliente_final": 20,
+    "unidades_paquete": 100
+  },
+  {
+    "producto": "500 ml Gorda",
+    "precio_menor": 21,
+    "precio_mayor": 20.5,
+    "precio_cliente_final": 22.5,
+    "unidades_paquete": 100
+  },
+  {
+    "producto": "500 ml GH",
+    "precio_menor": 21,
+    "precio_mayor": 20.5,
+    "precio_cliente_final": 22.5,
+    "unidades_paquete": 100
+  },
+  {
+    "producto": "900 ml",
+    "precio_menor": 16,
+    "precio_mayor": 15,
+    "precio_cliente_final": 16.5,
+    "unidades_paquete": 50
+  },
+  {
+    "producto": "1000 ml",
+    "precio_menor": 15.5,
+    "precio_mayor": 15,
+    "precio_cliente_final": 16.5,
+    "unidades_paquete": 50
+  },
+  {
+    "producto": "1500 ml",
+    "precio_menor": 23,
+    "precio_mayor": 22.5,
+    "precio_cliente_final": 24,
+    "unidades_paquete": 50
+  },
+  {
+    "producto": "2500 ml",
+    "precio_menor": 29,
+    "precio_mayor": 28.5,
+    "precio_cliente_final": 31,
+    "unidades_paquete": 50
+  },
+  {
+    "producto": "3000 ml",
+    "precio_menor": 35,
+    "precio_mayor": 35,
+    "precio_cliente_final": 38,
+    "unidades_paquete": 50
+  },
+  {
+    "producto": "3000 ml (verde)",
+    "precio_menor": 25,
+    "precio_mayor": 25,
+    "precio_cliente_final": 28,
+    "unidades_paquete": 50
+  }
+]

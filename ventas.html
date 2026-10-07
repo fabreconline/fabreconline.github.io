@@ -179,7 +179,7 @@
     }
     .btn-action-cuenta:active { opacity: 0.65; }
 
-    /* BOTONES PRINCIPALES DE ACCIÓN EN INICIO */
+    /* BOTONES DE ACCIÓN PRINCIPALES */
     .contenedor-botones-principales {
       display: flex;
       flex-direction: column;
@@ -862,7 +862,7 @@
   </main>
 
   <!-- ============================================== -->
-  <!-- MODAL: DETALLE COMPLETO DE VENTA (AL TOCAR CARD)-->
+  <!-- MODAL: DETALLE COMPLETO DE VENTA               -->
   <!-- ============================================== -->
   <div id="modalDetalleVenta" class="modal-overlay">
     <div class="modal-sheet">
@@ -871,7 +871,6 @@
         <button onclick="cerrarModalDetalleVenta()" class="btn-close">✕</button>
       </div>
 
-      <!-- DATOS DEL CLIENTE Y ENTREGA -->
       <div class="detalle-bloque">
         <div class="detalle-bloque-item">
           <span style="color:var(--text-muted);">Cliente:</span>
@@ -903,7 +902,6 @@
         </div>
       </div>
 
-      <!-- ITEMS COMPRADOS -->
       <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-top:2px;">
         Botellas en este pedido
       </div>
@@ -936,9 +934,7 @@
         <div class="step-pill" id="pillPaso2"></div>
       </div>
 
-      <!-- ========================================== -->
-      <!-- PASO 1: COTIZACIÓN PRIMERO                -->
-      <!-- ========================================== -->
+      <!-- PASO 1: COTIZACIÓN PRIMERO -->
       <div id="wizardPaso1" style="display: flex; flex-direction: column; gap: 12px;">
         <div class="step-label-header">Paso 1: Cotización del Pedido</div>
 
@@ -955,7 +951,8 @@
           <div class="form-grid-2" style="align-items: flex-end;">
             <div>
               <label class="form-label" id="lblCantidadUnidad">Cantidad (Paquetes)</label>
-              <input type="number" id="ventaCantidad" min="0" step="any" value="0" oninput="actualizarInfoProductoModal()" class="input-field">
+              <!-- MODIFICACIÓN 1: INPUT VACÍO SIN 0 PRE-RELLENADO -->
+              <input type="number" id="ventaCantidad" min="1" step="any" value="" placeholder="0" oninput="actualizarInfoProductoModal()" class="input-field">
             </div>
             <button onclick="guardarItemVenta()" id="btnAccionAgregarItem" class="btn-action-cuenta" style="width: 100%; height: 38px; background: var(--primary); color: #fff; border: none;">
               + Añadir
@@ -988,9 +985,7 @@
         </button>
       </div>
 
-      <!-- ========================================== -->
-      <!-- PASO 2: DATOS DEL CLIENTE                 -->
-      <!-- ========================================== -->
+      <!-- PASO 2: DATOS DEL CLIENTE -->
       <div id="wizardPaso2" style="display: none; flex-direction: column; gap: 12px;">
         <div class="step-label-header">Paso 2: Datos del Comprador</div>
 
@@ -1105,7 +1100,7 @@
   </div>
 
   <!-- ============================================== -->
-  <!-- BARRA INFERIOR (3 PESTAÑAS: VENTAS, STOCK, DASHBOARD) -->
+  <!-- BARRA INFERIOR (3 PESTAÑAS)                   -->
   <!-- ============================================== -->
   <nav class="bottom-navbar">
     <button class="nav-btn active" id="btnNavInicio" onclick="navegarA('paneInicio', this)">
@@ -1125,8 +1120,8 @@
   <div id="toast" class="toast">Notificación</div>
 
   <script>
-    // CONTABILIDAD FABREC (OFICIAL)
-    const NUMERO_CONTABILIDAD_WHATSAPP = "51922244819";
+    // DESTINO OFICIAL: KING (+51 922 796 815)
+    const NUMERO_DESTINO_WHATSAPP = "51922796815";
 
     // CUENTAS OFICIALES POR ZONA
     const ZONAS = {
@@ -1168,39 +1163,13 @@
       }
     };
 
-    // CATÁLOGO OFICIAL FABREC
-    const CATALOGO_FABREC = [
-      { producto: "220 ml", menor: 16.5, mayor: 16.0, unidades: 100 },
-      { producto: "250 ml", menor: 16.5, mayor: 16.0, unidades: 100 },
-      { producto: "280 ml", menor: 16.5, mayor: 16.0, unidades: 100 },
-      { producto: "300 ml", menor: 16.5, mayor: 16.0, unidades: 100 },
-      { producto: "340 ml", menor: 16.5, mayor: 16.0, unidades: 100 },
-      { producto: "400 ml", menor: 17.5, mayor: 17.0, unidades: 100 },
-      { producto: "450 ml", menor: 17.5, mayor: 17.0, unidades: 100 },
-      { producto: "500 ml Néctar", menor: 18.0, mayor: 17.5, unidades: 100 },
-      { producto: "500 ml Gorda", menor: 20.5, mayor: 20.0, unidades: 100 },
-      { producto: "500 ml GH", menor: 20.5, mayor: 20.0, unidades: 100 },
-      { producto: "900 ml", menor: 15.5, mayor: 15.0, unidades: 50 },
-      { producto: "1000 ml", menor: 15.5, mayor: 15.0, unidades: 50 },
-      { producto: "1500 ml", menor: 22.5, mayor: 22.0, unidades: 50 },
-      { producto: "2500 ml", menor: 28.5, mayor: 28.0, unidades: 50 },
-      { producto: "3000 ml", menor: 32.5, mayor: 32.0, unidades: 50 },
-      { producto: "3000 ml (verde)", menor: 25.0, mayor: 25.0, unidades: 50 }
-    ];
-
-    const STOCK_PLANTA_DEFECTO = {
-      "220 ml": 50,
-      "250 ml": 40,
-      "280 ml": 60,
-      "300 ml": 50,
-      "500 ml Néctar": 100,
-      "1000 ml": 25
-    };
+    // VARIABLES DINÁMICAS (CARGADAS 100% VÍA FETCH DESDE price.json Y stock.json)
+    let CATALOGO_FABREC = [];
+    let inventarioLocal = {};
 
     let zonaActivaClave = localStorage.getItem("fabrec_zona_activa") || "";
-    let inventarioLocal = JSON.parse(localStorage.getItem("fabrec_stock_local")) || STOCK_PLANTA_DEFECTO;
     
-    // Variables locales dinámicas por zona activa
+    // Almacenamiento local aislado por zona
     let ventasHoy = [];
     let todasLasVentas = [];
     let directorioClientes = [];
@@ -1210,7 +1179,59 @@
     let unidadSeleccionada = 'paquetes';
     let filtroDashboardActivo = 'hoy';
 
-    // 1. CARGA AISLADA DE DATOS POR ZONA
+    // 1. CARGA EXTERNA DE PRECIOS (price.json) Y STOCK (stock.json)
+    async function cargarDatosExternos() {
+      // A. Cargar Tarifas desde price.json
+      try {
+        const resPrice = await fetch('price.json', { cache: 'no-store' });
+        if (resPrice.ok) {
+          const dataPrice = await resPrice.json();
+          const listaPrecios = Array.isArray(dataPrice) ? dataPrice : (dataPrice.precios || []);
+          CATALOGO_FABREC = listaPrecios.map(p => ({
+            producto: p.producto,
+            menor: p.precio_menor !== undefined ? p.precio_menor : (p.menor || 0),
+            mayor: p.precio_mayor !== undefined ? p.precio_mayor : (p.mayor || 0),
+            unidades: p.unidades_paquete || p.unidades || 100
+          }));
+        } else {
+          console.warn("No se pudo cargar price.json:", resPrice.status);
+        }
+      } catch (err) {
+        console.error("Error al obtener price.json:", err);
+      }
+
+      // B. Cargar Stock exclusivamente desde stock.json
+      try {
+        const resStock = await fetch('stock.json', { cache: 'no-store' });
+        if (resStock && resStock.ok) {
+          const dataStock = await resStock.json();
+          inventarioLocal = {};
+          if (Array.isArray(dataStock)) {
+            dataStock.forEach(item => {
+              const nombre = item.producto;
+              const cant = item.paquetes !== undefined ? item.paquetes : (item.paquetes_disponibles || 0);
+              if (nombre) inventarioLocal[nombre] = cant;
+            });
+          } else if (dataStock && dataStock.stock && Array.isArray(dataStock.stock)) {
+            dataStock.stock.forEach(item => {
+              const nombre = item.producto;
+              const cant = item.paquetes !== undefined ? item.paquetes : (item.paquetes_disponibles || 0);
+              if (nombre) inventarioLocal[nombre] = cant;
+            });
+          } else if (dataStock && typeof dataStock === 'object') {
+            inventarioLocal = { ...dataStock };
+          }
+        }
+      } catch (err) {
+        console.error("Error al obtener stock.json:", err);
+      }
+
+      poblarSelectBotellasModal();
+      renderizarListaStock();
+      actualizarInfoProductoModal();
+    }
+
+    // 2. CARGA AISLADA DE DATOS POR ZONA ACTIVA
     function cargarDatosDeZonaActiva() {
       if (!zonaActivaClave) {
         ventasHoy = [];
@@ -1225,7 +1246,6 @@
         todasLasVentas = JSON.parse(localStorage.getItem(keyTodas)) || [];
         directorioClientes = JSON.parse(localStorage.getItem(keyClientes)) || [];
 
-        // Filtro estricto para ventas de la fecha actual
         const hoyStr = new Date().toLocaleDateString('es-PE');
         ventasHoy = ventasHoy.filter(v => v.fecha_registro === hoyStr);
       }
@@ -1235,7 +1255,7 @@
       poblarSelectorClientesAntiguos();
     }
 
-    // 2. NAVEGACIÓN ENTRE LAS 3 PESTAÑAS
+    // 3. NAVEGACIÓN ENTRE TABS
     function navegarA(idPanel, btnElemento) {
       document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -1252,7 +1272,7 @@
       window.scrollTo(0, 0);
     }
 
-    // 3. MODAL Y CONTROL DE ZONA
+    // 4. MODAL Y CONTROL DE ZONA
     function abrirModalZona() {
       document.getElementById('modalSelectorZona').classList.add('open');
     }
@@ -1294,7 +1314,7 @@
       contBotones.style.display = 'grid';
 
       actualizarSaludo();
-      cargarDatosDeZonaActiva(); // Carga de forma aislada las ventas de esta zona
+      cargarDatosDeZonaActiva();
       cerrarModalZona();
       mostrarToast("Zona " + z.nombreZona + " asignada");
     }
@@ -1309,7 +1329,7 @@
       document.getElementById('saludoTexto').innerText = asesor ? (saludo + ", " + asesor + "!") : (saludo + "!");
     }
 
-    // 4. CUENTAS BANCARIAS: COPIAR Y COMPARTIR
+    // 5. CUENTAS BANCARIAS: COPIAR Y COMPARTIR
     function generarTextoDatosBancarios() {
       if (!zonaActivaClave || !ZONAS[zonaActivaClave]) return "";
       const z = ZONAS[zonaActivaClave];
@@ -1343,7 +1363,7 @@
       window.open(url, '_blank');
     }
 
-    // 5. UNIDADES Y COTIZADOR
+    // 6. UNIDADES Y COTIZADOR DINÁMICO
     function cambiarUnidadMedida(unidad) {
       unidadSeleccionada = unidad;
       const btnPaq = document.getElementById('btnUnitPaquetes');
@@ -1372,7 +1392,7 @@
       if (unidadSeleccionada === 'paquetes') {
         return Math.round(inputVal);
       } else {
-        return Math.round((inputVal * 1000) / item.unidades);
+        return Math.round((inputVal * 1000) / (item.unidades || 100));
       }
     }
 
@@ -1424,7 +1444,7 @@
       return { totalPaquetes: totalPaquetesEnPedido, esMayor: esMayor };
     }
 
-    // 6. MODAL NUEVA VENTA (WIZARD 2 PASOS)
+    // 7. MODAL NUEVA VENTA (WIZARD 2 PASOS)
     function abrirModalVenta() {
       if (!zonaActivaClave) {
         mostrarToast("Selecciona tu zona en la parte superior");
@@ -1472,13 +1492,25 @@
       document.getElementById('tituloModalVenta').innerText = "Datos del Cliente";
     }
 
+    // MODIFICACIÓN 2: OPCIONES CON COLOR SEGÚN STOCK DISPONIBLE
     function poblarSelectBotellasModal() {
       const sel = document.getElementById('ventaSelectProducto');
-      sel.innerHTML = CATALOGO_FABREC.map(p => `<option value="${p.producto}">${p.producto}</option>`).join('');
+      if (!sel) return;
+      sel.innerHTML = CATALOGO_FABREC.map(p => {
+        const stock = inventarioLocal[p.producto] || 0;
+        const tieneStock = stock > 0;
+        const colorOption = tieneStock ? '#059669' : '#d97706';
+        const punto = tieneStock ? '●' : '○';
+        const estadoTxt = tieneStock ? `${stock} paq` : 'Pedir';
+        return `<option value="${p.producto}" style="color: ${colorOption}; font-weight: 700;">
+          ${punto} ${p.producto} — ${estadoTxt}
+        </option>`;
+      }).join('');
     }
 
+    // MODIFICACIÓN 1: RESETEA INPUT A VACÍO (SIN CERO)
     function resetearFormularioItem() {
-      document.getElementById('ventaCantidad').value = 0;
+      document.getElementById('ventaCantidad').value = "";
       indiceEditandoItem = -1;
       const btn = document.getElementById('btnAccionAgregarItem');
       btn.innerText = "+ Añadir";
@@ -1487,14 +1519,15 @@
 
     function guardarItemVenta() {
       const prodNom = document.getElementById('ventaSelectProducto').value;
-      const inputVal = parseFloat(document.getElementById('ventaCantidad').value) || 0;
-      const paq = calcularPaquetesDeEntrada(prodNom, inputVal);
+      const inputValStr = document.getElementById('ventaCantidad').value.trim();
+      const inputVal = parseFloat(inputValStr);
 
-      if (paq <= 0) {
+      if (!inputValStr || isNaN(inputVal) || inputVal <= 0) {
         mostrarToast("Ingresa una cantidad mayor a 0");
         return;
       }
 
+      const paq = calcularPaquetesDeEntrada(prodNom, inputVal);
       const stockActual = inventarioLocal[prodNom] || 0;
       const paraProduccion = paq > stockActual ? (paq - stockActual) : 0;
       const desdeStock = paq - paraProduccion;
@@ -1594,7 +1627,7 @@
       renderizarItemsModal();
     }
 
-    // 7. AUTOCOMPLETADO DE CLIENTES POR ZONA
+    // 8. AUTOCOMPLETADO DE CLIENTES POR ZONA
     function poblarSelectorClientesAntiguos() {
       const sel = document.getElementById('selectClienteAntiguo');
       if (!sel) return;
@@ -1641,7 +1674,7 @@
       localStorage.setItem(`fabrec_clientes_${zonaActivaClave}`, JSON.stringify(directorioClientes));
     }
 
-    // 8. FINALIZAR VENTA (GUARDADO EXCLUSIVO POR ZONA)
+    // 9. FINALIZAR VENTA (MODIFICACIÓN 3: EL STOCK NO SE REDUCE)
     function finalizarRegistroVenta() {
       const cliente = document.getElementById('ventaCliente').value.trim();
       const dni = document.getElementById('ventaDni').value.trim();
@@ -1689,10 +1722,7 @@
         totalSoles += it.subtotal;
         totalPaquetes += it.paquetes_totales;
 
-        if (inventarioLocal[it.producto] !== undefined) {
-          inventarioLocal[it.producto] = Math.max(0, inventarioLocal[it.producto] - it.paquetes_stock);
-        }
-
+        // NOTA: Se eliminó la deducción del stock. El stock no se altera al vender.
         if (it.paquetes_produccion > 0) {
           ticketsProduccion.push({
             id_ticket_produccion: `PROD-${Date.now()}-${Math.floor(Math.random() * 100)}`,
@@ -1733,12 +1763,10 @@
         tickets_produccion: ticketsProduccion
       };
 
-      // Guardado por zona activa
       ventasHoy.push(nuevaVenta);
       todasLasVentas.push(nuevaVenta);
       localStorage.setItem(`fabrec_ventas_hoy_${zonaActivaClave}`, JSON.stringify(ventasHoy));
       localStorage.setItem(`fabrec_ventas_todas_${zonaActivaClave}`, JSON.stringify(todasLasVentas));
-      localStorage.setItem("fabrec_stock_local", JSON.stringify(inventarioLocal));
 
       guardarClienteEnDirectorio(clienteDatos);
 
@@ -1747,7 +1775,7 @@
       renderizarVentasInicio();
     }
 
-    // 9. RENDERIZADO DE VENTAS RÁPIDAS (CARD BALANCEADO Y ELEGANTE)
+    // 10. RENDERIZADO DE VENTAS DEL DÍA
     function renderizarVentasInicio() {
       const cont = document.getElementById('listaVentasDia');
       const badgeCant = document.getElementById('cantVentasBadge');
@@ -1771,7 +1799,6 @@
       for (let j = ventasHoy.length - 1; j >= 0; j--) {
         const v = ventasHoy[j];
         
-        // Clase de color según método de pago
         let clasePago = "pago-transferencia";
         const cp = (v.condicion_pago || '').toLowerCase();
         if (cp.includes('contraentrega')) clasePago = "pago-contraentrega";
@@ -1799,7 +1826,7 @@
       cont.innerHTML = html;
     }
 
-    // 10. MODAL DETALLE DE VENTA
+    // 11. MODAL DETALLE DE VENTA
     function verDetalleVenta(codigoVenta) {
       const v = todasLasVentas.find(x => x.codigo === codigoVenta) || ventasHoy.find(x => x.codigo === codigoVenta);
       if (!v) return;
@@ -1829,7 +1856,7 @@
       document.getElementById('modalDetalleVenta').classList.remove('open');
     }
 
-    // 11. EXPORTACIÓN A CONTABILIDAD (+51 922 244 819) POR ZONA ACTIVA
+    // 12. ENVÍO DEL CIERRE A KING (+51 922 796 815)
     function enviarCierreAContabilidad() {
       if (ventasHoy.length === 0) {
         mostrarToast("No hay ventas registradas hoy en esta zona");
@@ -1871,13 +1898,13 @@
       };
 
       const jsonStr = JSON.stringify(payload, null, 2);
-      const urlWhatsApp = "https://api.whatsapp.com/send/?phone=" + NUMERO_CONTABILIDAD_WHATSAPP + "&text=" + encodeURIComponent(jsonStr);
+      const urlWhatsApp = "https://api.whatsapp.com/send/?phone=" + NUMERO_DESTINO_WHATSAPP + "&text=" + encodeURIComponent(jsonStr);
       
       window.open(urlWhatsApp, "_blank");
-      mostrarToast("Abriendo WhatsApp de Contabilidad...");
+      mostrarToast("Abriendo WhatsApp de King...");
     }
 
-    // 12. DASHBOARD COMERCIAL POR ZONA (CHARTS NATIVOS)
+    // 13. DASHBOARD COMERCIAL POR ZONA (CHARTS NATIVOS)
     function cambiarFiltroDashboard(tipo) {
       filtroDashboardActivo = tipo;
       ['btnDashHoy', 'btnDashSemana', 'btnDashMes', 'btnDashTodo'].forEach(id => {
@@ -1897,7 +1924,6 @@
       const ahora = new Date();
       const hoyStr = ahora.toLocaleDateString('es-PE');
       
-      // Filtrar únicamente las ventas históricas de esta zona
       const ventasFiltradas = todasLasVentas.filter(v => {
         if (!v.timestampISO) return true;
         const fVenta = new Date(v.timestampISO);
@@ -1996,11 +2022,16 @@
       });
     }
 
-    // 13. STOCK EN PLANTA
+    // 14. STOCK EN PLANTA
     function renderizarListaStock() {
       const cont = document.getElementById('contenedorListaStock');
       const q = (document.getElementById('buscadorStock').value || '').toLowerCase();
       let html = "";
+
+      if (CATALOGO_FABREC.length === 0) {
+        cont.innerHTML = '<div style="text-align: center; color: var(--text-soft); padding: 30px; font-size: 12px;">Cargando catálogo...</div>';
+        return;
+      }
 
       CATALOGO_FABREC.forEach(p => {
         if (p.producto.toLowerCase().includes(q)) {
@@ -2059,8 +2090,8 @@
     window.cerrarModalDetalleVenta = cerrarModalDetalleVenta;
 
     // INICIALIZACIÓN
-    window.addEventListener('DOMContentLoaded', () => {
-      poblarSelectBotellasModal();
+    window.addEventListener('DOMContentLoaded', async () => {
+      await cargarDatosExternos();
       if (zonaActivaClave && ZONAS[zonaActivaClave]) {
         seleccionarZona(zonaActivaClave);
       } else {
