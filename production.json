@@ -1,0 +1,29 @@
+{
+  "empresa": "FABREC",
+  "tipo_documento": "ordenes_produccion_planta",
+  "fecha_generacion": "2026-10-07T10:39:09.116Z",
+  "total_tickets": 2,
+  "total_paquetes_requeridos": 60,
+  "tickets": [
+    {
+      "id_ticket_produccion": "PROD-1791310435154-11",
+      "producto": "220 ml",
+      "paquetes_a_fabricar": 20,
+      "cliente": "Wilmer Pompe Lopez",
+      "vendedor": "Junior",
+      "zona": "La Parada",
+      "fecha_entrega_programada": "2026-10-06",
+      "hora": "1:13:55 p. m."
+    },
+    {
+      "id_ticket_produccion": "PROD-1791310435155-41",
+      "producto": "900 ml",
+      "paquetes_a_fabricar": 40,
+      "cliente": "Wilmer Pompe Lopez",
+      "vendedor": "Junior",
+      "zona": "La Parada",
+      "fecha_entrega_programada": "2026-10-06",
+      "hora": "1:13:55 p. m."
+    }
+  ]
+}

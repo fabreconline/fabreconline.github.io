@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>FABREC | Ventas</title>
   
-  <!-- Tipografía Montserrat -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
-    /* PALETA DEFAULT: GRAFITO NEUTRO */
     :root {
       --primary: #475569;
       --primary-subtle: #f1f5f9;
@@ -32,34 +30,12 @@
       --radius-sm: 10px;
     }
 
-    /* COLORES POR ZONA */
-    body[data-zona="la_parada"] {
-      --primary: #2563eb;
-      --primary-subtle: #eff6ff;
-      --primary-border: #bfdbfe;
-    }
-    body[data-zona="cono_norte"] {
-      --primary: #059669;
-      --primary-subtle: #ecfdf5;
-      --primary-border: #a7f3d0;
-    }
-    body[data-zona="santa_anita"] {
-      --primary: #7c3aed;
-      --primary-subtle: #f5f3ff;
-      --primary-border: #ddd6fe;
-    }
-    body[data-zona="cono_sur"] {
-      --primary: #ea580c;
-      --primary-subtle: #fff7ed;
-      --primary-border: #fed7aa;
-    }
+    body[data-zona="la_parada"] { --primary: #2563eb; --primary-subtle: #eff6ff; --primary-border: #bfdbfe; }
+    body[data-zona="cono_norte"] { --primary: #059669; --primary-subtle: #ecfdf5; --primary-border: #a7f3d0; }
+    body[data-zona="santa_anita"] { --primary: #7c3aed; --primary-subtle: #f5f3ff; --primary-border: #ddd6fe; }
+    body[data-zona="cono_sur"] { --primary: #ea580c; --primary-subtle: #fff7ed; --primary-border: #fed7aa; }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     body {
       font-family: 'Montserrat', sans-serif;
@@ -72,7 +48,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* TOP HEADER */
     .top-header {
       background: var(--surface);
       border-bottom: 1px solid var(--border-strong);
@@ -81,677 +56,349 @@
       top: 0;
       z-index: 30;
     }
-    .header-inner {
-      max-width: 520px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .saludo-usuario {
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: -0.3px;
-    }
+    .header-inner { max-width: 520px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .saludo-usuario { font-size: 15px; font-weight: 800; letter-spacing: -0.3px; }
     .badge-zona-activa {
-      font-size: 11px;
-      font-weight: 800;
-      background: var(--primary-subtle);
-      color: var(--primary);
-      padding: 6px 12px;
-      border-radius: 20px;
-      border: 1px solid var(--primary-border);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.15s ease;
-      user-select: none;
+      font-size: 11px; font-weight: 800; background: var(--primary-subtle); color: var(--primary);
+      padding: 6px 12px; border-radius: 20px; border: 1px solid var(--primary-border);
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s ease; user-select: none;
     }
-    .badge-zona-activa:active {
-      transform: scale(0.96);
-      opacity: 0.8;
-    }
+    .badge-zona-activa:active { transform: scale(0.96); opacity: 0.8; }
 
-    /* VIEWPORT */
-    .app-viewport {
-      max-width: 520px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 16px 20px;
-      flex: 1;
-    }
+    .app-viewport { max-width: 520px; width: 100%; margin: 0 auto; padding: 16px 20px; flex: 1; }
+    .view-pane { display: none; }
+    .view-pane.active { display: block; }
 
-    .view-pane {
-      display: none;
-    }
-    .view-pane.active {
-      display: block;
-    }
-
-    /* TARJETA CUENTAS */
     .card-cuenta {
-      background: var(--surface);
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 18px;
+      background: var(--surface); border: 1px solid var(--border-strong);
+      border-radius: var(--radius); padding: 16px; margin-bottom: 18px;
     }
-    .cuenta-titular {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-    }
-    .cuenta-datos {
-      font-size: 12px;
-      line-height: 1.65;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-    .cuenta-datos strong {
-      font-weight: 700;
-    }
+    .cuenta-titular { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .cuenta-datos { font-size: 12px; line-height: 1.65; color: var(--text); margin-bottom: 12px; }
+    .cuenta-datos strong { font-weight: 700; }
     .acciones-cuenta-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      border-top: 1px solid var(--border);
-      padding-top: 12px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      border-top: 1px solid var(--border); padding-top: 12px;
     }
     .btn-action-cuenta {
-      background: var(--primary-subtle);
-      color: var(--primary);
-      border: 1px solid var(--primary-border);
-      padding: 9px 12px;
-      font-size: 11px;
-      font-weight: 800;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      font-family: inherit;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: opacity 0.15s;
+      background: var(--primary-subtle); color: var(--primary); border: 1px solid var(--primary-border);
+      padding: 9px 12px; font-size: 11px; font-weight: 800; border-radius: var(--radius-sm);
+      cursor: pointer; font-family: inherit; display: inline-flex; align-items: center;
+      justify-content: center; gap: 6px; transition: opacity 0.15s;
     }
     .btn-action-cuenta:active { opacity: 0.65; }
 
-    /* BOTONES DE ACCIÓN PRINCIPALES */
-    .contenedor-botones-principales {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 22px;
-    }
-
+    .contenedor-botones-principales { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
     .btn-nueva-venta {
-      background: var(--primary);
-      color: #ffffff;
-      border: none;
-      width: 100%;
-      padding: 15px;
-      font-size: 13px;
-      font-weight: 800;
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-family: inherit;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-      transition: transform 0.1s ease;
+      background: var(--primary); color: #ffffff; border: none; width: 100%; padding: 15px;
+      font-size: 13px; font-weight: 800; border-radius: var(--radius); cursor: pointer;
+      font-family: inherit; display: flex; align-items: center; justify-content: center;
+      gap: 8px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05); transition: transform 0.1s ease;
     }
-    .btn-nueva-venta:active {
-      transform: scale(0.98);
-    }
-
+    .btn-nueva-venta:active { transform: scale(0.98); }
     .btn-cierre-ventas {
-      background: var(--success);
-      color: #ffffff;
-      border: none;
-      width: 100%;
-      padding: 14px;
-      font-size: 13px;
-      font-weight: 800;
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-family: inherit;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.18);
-      transition: transform 0.1s ease;
+      background: var(--success); color: #ffffff; border: none; width: 100%; padding: 14px;
+      font-size: 13px; font-weight: 800; border-radius: var(--radius); cursor: pointer;
+      font-family: inherit; display: flex; align-items: center; justify-content: center;
+      gap: 8px; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.18); transition: transform 0.1s ease;
     }
-    .btn-cierre-ventas:active {
-      transform: scale(0.98);
-    }
+    .btn-cierre-ventas:active { transform: scale(0.98); }
 
     .seccion-header {
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--text-muted); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .seccion-header .badge-count {
+      font-size: 10px; font-weight: 800; background: var(--primary-subtle); color: var(--primary);
+      padding: 3px 9px; border-radius: 20px; border: 1px solid var(--primary-border);
+      text-transform: none; letter-spacing: 0;
     }
 
-    /* TARJETA DE VENTA MINIMALISTA Y BALANCEADA */
     .card-venta-simple {
+      background: var(--surface); border: 1px solid var(--border-strong);
+      border-radius: 14px; padding: 13px 16px; margin-bottom: 9px; cursor: pointer;
+      display: flex; flex-direction: column; gap: 7px; transition: all 0.15s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02); user-select: none;
+    }
+    .card-venta-simple:hover { border-color: var(--primary-border); background: #fafcff; }
+    .card-venta-simple:active { transform: scale(0.985); background: var(--primary-subtle); }
+
+    .card-venta-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .venta-simple-nombre {
+      font-size: 13.5px; font-weight: 800; color: var(--text); letter-spacing: -0.2px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .venta-simple-precio-group { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .venta-simple-monto {
+      font-size: 14.5px; font-weight: 900; color: var(--primary);
+      white-space: nowrap; letter-spacing: -0.3px;
+    }
+    .icon-chevron {
+      width: 14px; height: 14px; stroke: var(--text-soft); fill: none;
+      stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .card-venta-bottom { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+    .tag-estado-pago {
+      font-size: 10px; font-weight: 800; padding: 2.5px 8px; border-radius: 6px;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .tag-estado-pago.pagado { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+    .tag-estado-pago.pendiente { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+    .tag-estado-pago svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 3; }
+
+    .venta-meta-item { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+    .venta-meta-dot { color: var(--text-soft); font-size: 9px; }
+
+    .segmented-control {
+      display: flex; background: var(--border-strong); padding: 3px;
+      border-radius: 12px; gap: 2px; margin-bottom: 16px;
+    }
+    .segmented-btn {
+      flex: 1; border: none; background: transparent; padding: 7px 6px;
+      font-size: 10.5px; font-weight: 800; font-family: inherit; color: var(--text-muted);
+      border-radius: 9px; cursor: pointer; text-align: center;
+      transition: all 0.15s ease; display: inline-flex; align-items: center;
+      justify-content: center; gap: 4px;
+    }
+    .segmented-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .segmented-btn .pill-count {
+      font-size: 9px; font-weight: 900; background: var(--amber); color: #fff;
+      padding: 1px 6px; border-radius: 10px; line-height: 1.4;
+    }
+    .segmented-btn.active .pill-count { background: var(--rose); }
+
+    .grid-kpis-dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .kpi-card-dash { background: var(--surface); border: 1px solid var(--border-strong); padding: 15px; border-radius: var(--radius); }
+    .kpi-title-dash { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .kpi-value-dash { font-size: 19px; font-weight: 900; margin-top: 4px; color: var(--primary); letter-spacing: -0.5px; }
+
+    .chart-container-box {
+      background: var(--surface); border: 1px solid var(--border-strong);
+      border-radius: var(--radius); padding: 18px; margin-bottom: 14px;
+    }
+    .chart-header-title {
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 12px;
+    }
+
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45);
+      z-index: 100; display: none; align-items: flex-end; backdrop-filter: blur(2px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-sheet {
+      background: var(--surface); width: 100%; max-width: 520px; margin: 0 auto;
+      border-radius: 24px 24px 0 0; padding: 22px 20px 30px; max-height: 92vh;
+      overflow-y: auto; display: flex; flex-direction: column; gap: 14px;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.1); animation: animSheet 0.2s ease-out;
+    }
+    @keyframes animSheet { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; }
+    .modal-title { font-size: 15px; font-weight: 800; }
+    .btn-close {
+      background: var(--bg); border: none; width: 32px; height: 32px;
+      border-radius: 50%; cursor: pointer; font-size: 14px; font-weight: 800; color: var(--text-muted);
+    }
+
+    .wizard-steps-indicator { display: flex; gap: 8px; align-items: center; }
+    .step-pill { flex: 1; height: 4px; border-radius: 4px; background: var(--border-strong); transition: background 0.2s ease; }
+    .step-pill.active { background: var(--primary); }
+    .step-label-header { font-size: 11px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .input-field {
+      width: 100%; background: var(--bg); border: 1px solid var(--border-strong);
+      padding: 10px 12px; border-radius: var(--radius-sm); font-family: inherit;
+      font-size: 12px; color: var(--text); outline: none;
+    }
+    .input-field:focus { border-color: var(--primary); }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .form-label {
+      font-size: 10px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; margin-bottom: 4px; display: block;
+    }
+
+    .unit-switch-group {
+      display: flex; background: var(--border); padding: 3px;
+      border-radius: var(--radius-sm); margin-bottom: 10px;
+    }
+    .unit-switch-btn {
+      flex: 1; padding: 7px 10px; font-size: 11px; font-weight: 800;
+      border: none; background: transparent; color: var(--text-muted);
+      border-radius: 7px; cursor: pointer; font-family: inherit; transition: all 0.15s ease;
+    }
+    .unit-switch-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+
+    .tag-tarifa-simple {
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 6px;
+      width: 100%; margin: 6px 0; letter-spacing: 0.3px;
+    }
+    .tarifa-menor { background: var(--primary-subtle); color: var(--primary); border: 1px dashed var(--primary-border); }
+    .tarifa-mayor { background: var(--success-bg); color: var(--success); border: 1px solid #a7f3d0; }
+
+    .cart-box {
+      background: var(--primary-subtle); border: 1px solid var(--primary-border);
+      border-radius: var(--radius-sm); padding: 12px;
+    }
+    .cart-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0; font-size: 12px; border-bottom: 1px dashed var(--primary-border);
+    }
+    .cart-row:last-child { border-bottom: none; }
+    .cart-btn-action {
+      background: none; border: none; cursor: pointer; padding: 4px;
+      display: inline-flex; align-items: center; justify-content: center; border-radius: 4px;
+    }
+
+    /* ================================================
+       NUEVO ESTILO PARA LA LISTA DE PRECIOS
+       ================================================ */
+    .precio-card {
       background: var(--surface);
       border: 1px solid var(--border-strong);
       border-radius: 14px;
-      padding: 13px 16px;
+      padding: 14px 16px;
       margin-bottom: 9px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      transition: all 0.15s ease;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-      user-select: none;
+      transition: border-color 0.15s ease, transform 0.1s ease;
     }
-    .card-venta-simple:hover {
-      border-color: var(--primary-border);
-      background: #fafcff;
-    }
-    .card-venta-simple:active {
-      transform: scale(0.985);
-      background: var(--primary-subtle);
-    }
-    .card-venta-top {
+    .precio-card:hover { border-color: var(--primary-border); }
+
+    .precio-card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      margin-bottom: 11px;
     }
-    .venta-simple-nombre {
+    .precio-card-nombre {
       font-size: 13.5px;
       font-weight: 800;
       color: var(--text);
       letter-spacing: -0.2px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      line-height: 1.3;
     }
-    .venta-simple-precio-group {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-    .venta-simple-monto {
-      font-size: 14.5px;
-      font-weight: 900;
-      color: var(--primary);
-      white-space: nowrap;
-      letter-spacing: -0.3px;
-    }
-    .icon-chevron {
-      width: 14px;
-      height: 14px;
-      stroke: var(--text-soft);
-      fill: none;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .card-venta-bottom {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .tag-pago-pill {
+    .precio-card-units {
       font-size: 10px;
-      font-weight: 700;
-      padding: 2.5px 8px;
-      border-radius: 6px;
-      border: 1px solid var(--border-strong);
-      background: var(--bg);
-      color: var(--text-muted);
-    }
-    .tag-pago-pill.pago-contraentrega {
-      background: #eff6ff;
-      color: #2563eb;
-      border-color: #bfdbfe;
-    }
-    .tag-pago-pill.pago-transferencia {
-      background: #ecfdf5;
-      color: #059669;
-      border-color: #a7f3d0;
-    }
-    .tag-pago-pill.pago-credito {
-      background: #fffbeb;
-      color: #d97706;
-      border-color: #fde68a;
-    }
-    .tag-pago-pill.pago-adelanto {
-      background: #f5f3ff;
-      color: #7c3aed;
-      border-color: #ddd6fe;
-    }
-    .venta-meta-item {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-    .venta-meta-dot {
-      color: var(--text-soft);
-      font-size: 9px;
-    }
-
-    /* FILTROS SEGMENTADOS */
-    .segmented-control {
-      display: flex;
-      background: var(--border-strong);
-      padding: 3px;
-      border-radius: 12px;
-      gap: 2px;
-      margin-bottom: 16px;
-    }
-    .segmented-btn {
-      flex: 1;
-      border: none;
-      background: transparent;
-      padding: 7px 10px;
-      font-size: 11px;
       font-weight: 800;
-      font-family: inherit;
       color: var(--text-muted);
-      border-radius: 9px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.15s ease;
-    }
-    .segmented-btn.active {
-      background: var(--surface);
-      color: var(--text);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      background: var(--bg);
+      padding: 3px 9px;
+      border-radius: 20px;
+      border: 1px solid var(--border-strong);
+      flex-shrink: 0;
+      white-space: nowrap;
     }
 
-    /* DASHBOARD MÉTRICAS Y GRÁFICAS */
-    .grid-kpis-dashboard {
+    .precio-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 8px;
     }
-    .kpi-card-dash {
-      background: var(--surface);
-      border: 1px solid var(--border-strong);
-      padding: 16px;
-      border-radius: var(--radius);
-    }
-    .kpi-title-dash {
-      font-size: 10px;
-      font-weight: 800;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .kpi-value-dash {
-      font-size: 22px;
-      font-weight: 900;
-      margin-top: 4px;
-      color: var(--primary);
-    }
-
-    .chart-container-box {
-      background: var(--surface);
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius);
-      padding: 18px;
-      margin-bottom: 14px;
-    }
-    .chart-header-title {
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
-    /* MODALES */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.45);
-      z-index: 100;
-      display: none;
-      align-items: flex-end;
-      backdrop-filter: blur(2px);
-    }
-    .modal-overlay.open {
-      display: flex;
-    }
-    .modal-sheet {
-      background: var(--surface);
-      width: 100%;
-      max-width: 520px;
-      margin: 0 auto;
-      border-radius: 24px 24px 0 0;
-      padding: 22px 20px 30px;
-      max-height: 92vh;
-      overflow-y: auto;
+    .precio-item {
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.1);
-      animation: animSheet 0.2s ease-out;
+      gap: 2px;
     }
-    @keyframes animSheet {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .modal-title {
-      font-size: 15px;
-      font-weight: 800;
-    }
-    .btn-close {
-      background: var(--bg);
-      border: none;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--text-muted);
-    }
+    .precio-item.menor { background: var(--primary-subtle); border: 1px solid var(--primary-border); }
+    .precio-item.mayor { background: var(--success-bg); border: 1px solid #a7f3d0; }
 
-    .wizard-steps-indicator {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .step-pill {
-      flex: 1;
-      height: 4px;
-      border-radius: 4px;
-      background: var(--border-strong);
-      transition: background 0.2s ease;
-    }
-    .step-pill.active {
-      background: var(--primary);
-    }
-    .step-label-header {
-      font-size: 11px;
+    .precio-label {
+      font-size: 9px;
       font-weight: 800;
-      color: var(--primary);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
+      opacity: 0.7;
     }
+    .precio-item.menor .precio-label { color: var(--primary); }
+    .precio-item.mayor .precio-label { color: var(--success); }
 
-    /* FORMULARIOS */
-    .input-field {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border-strong);
-      padding: 10px 12px;
-      border-radius: var(--radius-sm);
-      font-family: inherit;
-      font-size: 12px;
-      color: var(--text);
-      outline: none;
+    .precio-value {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
     }
-    .input-field:focus {
-      border-color: var(--primary);
-    }
-    .form-grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .form-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin-bottom: 4px;
-      display: block;
-    }
+    .precio-item.menor .precio-value { color: var(--primary); }
+    .precio-item.mayor .precio-value { color: var(--success); }
 
-    .unit-switch-group {
-      display: flex;
-      background: var(--border);
-      padding: 3px;
-      border-radius: var(--radius-sm);
-      margin-bottom: 10px;
-    }
-    .unit-switch-btn {
-      flex: 1;
-      padding: 7px 10px;
-      font-size: 11px;
-      font-weight: 800;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      border-radius: 7px;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.15s ease;
-    }
-    .unit-switch-btn.active {
-      background: var(--surface);
-      color: var(--primary);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    }
-
-    .tag-tarifa-simple {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 5px 12px;
-      border-radius: 6px;
-      width: 100%;
-      margin: 6px 0;
-      letter-spacing: 0.3px;
-    }
-    .tarifa-menor {
-      background: var(--primary-subtle);
-      color: var(--primary);
-      border: 1px dashed var(--primary-border);
-    }
-    .tarifa-mayor {
-      background: var(--success-bg);
-      color: var(--success);
-      border: 1px solid #a7f3d0;
-    }
-
-    .cart-box {
-      background: var(--primary-subtle);
-      border: 1px solid var(--primary-border);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-    }
-    .cart-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      font-size: 12px;
-      border-bottom: 1px dashed var(--primary-border);
-    }
-    .cart-row:last-child { border-bottom: none; }
-    .cart-btn-action {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 4px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 4px;
-    }
-
-    /* FILAS STOCK */
-    .product-stock-card {
-      background: var(--surface);
-      border: 1px solid var(--border-strong);
-      padding: 14px 16px;
-      border-radius: var(--radius-sm);
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .stock-product-name {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--text);
-    }
-    .stock-tag {
-      font-size: 11px;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 6px;
-    }
-    .stock-tag-ok {
-      background: var(--success-bg);
-      color: var(--success);
-    }
-    .stock-tag-cero {
-      background: var(--amber-bg);
-      color: var(--amber);
-      border: 1px solid #fed7aa;
-    }
-
-    /* ZONA CARDS */
     .zona-option-card {
-      background: var(--bg);
-      border: 1px solid var(--border-strong);
-      padding: 14px;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: border-color 0.15s ease;
+      background: var(--bg); border: 1px solid var(--border-strong); padding: 14px;
+      border-radius: var(--radius-sm); cursor: pointer; display: flex;
+      justify-content: space-between; align-items: center; transition: border-color 0.15s ease;
     }
-    .zona-option-card:hover {
-      border-color: var(--primary);
-      background: var(--primary-subtle);
-    }
-    .zona-option-nombre {
-      font-size: 13px;
-      font-weight: 800;
-    }
-    .zona-option-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
+    .zona-option-card:hover { border-color: var(--primary); background: var(--primary-subtle); }
+    .zona-option-nombre { font-size: 13px; font-weight: 800; }
+    .zona-option-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
-    /* DETALLE DE VENTA MODAL */
     .detalle-bloque {
-      background: var(--bg);
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      font-size: 12px;
-      line-height: 1.6;
+      background: var(--bg); border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm); padding: 12px; font-size: 12px; line-height: 1.6;
     }
     .detalle-bloque-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 4px 0;
+      display: flex; justify-content: space-between; padding: 4px 0;
       border-bottom: 1px dashed var(--border-strong);
     }
-    .detalle-bloque-item:last-child {
-      border-bottom: none;
-    }
+    .detalle-bloque-item:last-child { border-bottom: none; }
 
-    /* BARRA INFERIOR */
     .bottom-navbar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 64px;
-      background: var(--surface);
-      border-top: 1px solid var(--border-strong);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 50;
+      position: fixed; bottom: 0; left: 0; right: 0; height: 64px;
+      background: var(--surface); border-top: 1px solid var(--border-strong);
+      display: flex; justify-content: space-around; align-items: center; z-index: 50;
     }
     .nav-btn {
-      flex: 1;
-      height: 100%;
-      background: transparent;
-      border: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      font-family: inherit;
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--text-soft);
-      cursor: pointer;
-      touch-action: manipulation;
+      flex: 1; height: 100%; background: transparent; border: none;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 4px; font-family: inherit; font-size: 10px; font-weight: 700;
+      color: var(--text-soft); cursor: pointer; touch-action: manipulation;
     }
-    .nav-btn.active {
-      color: var(--primary);
-    }
+    .nav-btn.active { color: var(--primary); }
     .nav-btn svg {
-      width: 19px;
-      height: 19px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      width: 19px; height: 19px; stroke: currentColor; fill: none;
+      stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
     }
 
-    /* TOAST */
     .toast {
-      position: fixed;
-      top: 16px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-100px);
-      background: #0f172a;
-      color: #ffffff;
-      padding: 10px 18px;
-      border-radius: 30px;
-      font-size: 12px;
-      font-weight: 700;
-      z-index: 200;
-      opacity: 0;
-      pointer-events: none;
+      position: fixed; top: 16px; left: 50%;
+      transform: translateX(-50%) translateY(-100px); background: #0f172a;
+      color: #ffffff; padding: 10px 18px; border-radius: 30px; font-size: 12px;
+      font-weight: 700; z-index: 200; opacity: 0; pointer-events: none;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    .empty-state {
+      text-align: center; color: var(--text-soft); padding: 32px 10px;
+      font-size: 12px; background: var(--surface); border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm); margin-bottom: 12px;
     }
+
+    .registro-row {
+      border-bottom: 1px dashed var(--border-strong);
+      padding: 10px 0; font-size: 11.5px;
+    }
+    .registro-row:last-child { border-bottom: none; }
+    .registro-row-top {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .registro-codigo {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10.5px; color: var(--primary); font-weight: 800;
+    }
+    .registro-monto { font-weight: 800; font-size: 12.5px; }
+    .registro-row-sub {
+      color: var(--text-muted); margin-top: 3px; font-size: 10.5px; font-weight: 600;
+    }
+    .registro-saldo { color: var(--amber); font-weight: 700; }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="top-header">
     <div class="header-inner">
-      <div>
-        <div class="saludo-usuario" id="saludoTexto">¡Hola!</div>
-      </div>
+      <div><div class="saludo-usuario" id="saludoTexto">¡Hola!</div></div>
       <div class="badge-zona-activa" id="badgeZonaNombre" onclick="abrirModalZona()">
         <span id="txtNombrePillZona">Seleccionar zona</span>
         <svg style="width: 12px; height: 12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
@@ -761,12 +408,8 @@
 
   <main class="app-viewport">
 
-    <!-- ============================================== -->
-    <!-- 1. INICIO: VENTAS Y CIERRE                     -->
-    <!-- ============================================== -->
     <section id="paneInicio" class="view-pane active">
       
-      <!-- CUENTAS BANCARIAS -->
       <div class="card-cuenta" id="cardInfoCuentas">
         <div class="cuenta-titular" id="cuentaTitular">TITULAR: SELECCIONA UNA ZONA</div>
         <div class="cuenta-datos" id="cuentaDetalles">
@@ -784,7 +427,6 @@
         </div>
       </div>
 
-      <!-- BOTONES DE ACCIÓN PRINCIPALES -->
       <div class="contenedor-botones-principales">
         <button class="btn-nueva-venta" onclick="abrirModalVenta()">
           <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -797,36 +439,43 @@
         </button>
       </div>
 
-      <!-- LISTA DE VENTAS DE HOY -->
       <div class="seccion-header">
-        <span>Ventas del Día</span>
-        <span id="cantVentasBadge">0 pedidos</span>
+        <span id="tituloSeccionVentas">Ventas del Día</span>
+        <span class="badge-count" id="cantVentasBadge">0 pedidos</span>
+      </div>
+
+      <input type="text" id="buscadorVentas" oninput="renderizarVentasInicio()" placeholder="Buscar por código de venta o cliente..." class="input-field" style="margin-bottom: 10px;">
+
+      <div class="segmented-control">
+        <button class="segmented-btn active" id="btnFiltroTodas" onclick="cambiarFiltroVentas('todas')">Todas</button>
+        <button class="segmented-btn" id="btnFiltroPendientes" onclick="cambiarFiltroVentas('pendientes')">
+          Por cobrar <span class="pill-count" id="pillPendientesCount" style="display:none;">0</span>
+        </button>
+        <button class="segmented-btn" id="btnFiltroConfirmados" onclick="cambiarFiltroVentas('confirmados')">
+          Confirmados <span class="pill-count" id="pillConfirmadosCount" style="display:none;">0</span>
+        </button>
+      </div>
+
+      <div id="panelAccionesConfirmados" style="display: none; margin-bottom: 12px;">
+        <button onclick="enviarPagosContabilidad()" class="btn-cierre-ventas" style="margin-bottom: 0;">
+          <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Enviar pagos a Contabilidad
+        </button>
       </div>
 
       <div id="listaVentasDia"></div>
     </section>
 
-    <!-- ============================================== -->
-    <!-- 2. STOCK EN PLANTA (SOLO CANTIDADES)           -->
-    <!-- ============================================== -->
-    <section id="paneStock" class="view-pane">
-      <div class="seccion-header">
-        <span>Stock en Planta</span>
-      </div>
-      <input type="text" id="buscadorStock" oninput="filtrarListaStock()" placeholder="Buscar botella..." class="input-field" style="margin-bottom: 14px;">
-      
-      <div id="contenedorListaStock"></div>
+    <!-- TAB: PRECIOS -->
+    <section id="panePrecios" class="view-pane">
+      <div class="seccion-header"><span>Lista de Precios</span></div>
+      <input type="text" id="buscadorPrecios" oninput="renderizarListaPrecios()" placeholder="Buscar botella..." class="input-field" style="margin-bottom: 14px;">
+      <div id="contenedorListaPrecios"></div>
     </section>
 
-    <!-- ============================================== -->
-    <!-- 3. DASHBOARD DEL VENDEDOR (GRÁFICAS)           -->
-    <!-- ============================================== -->
     <section id="paneDashboard" class="view-pane">
-      <div class="seccion-header">
-        <span>Rendimiento de Ventas</span>
-      </div>
+      <div class="seccion-header"><span>Rendimiento de Ventas</span></div>
 
-      <!-- FILTRO DE TIEMPO -->
       <div class="segmented-control">
         <button class="segmented-btn active" id="btnDashHoy" onclick="cambiarFiltroDashboard('hoy')">Hoy</button>
         <button class="segmented-btn" id="btnDashSemana" onclick="cambiarFiltroDashboard('semana')">Semana</button>
@@ -834,7 +483,6 @@
         <button class="segmented-btn" id="btnDashTodo" onclick="cambiarFiltroDashboard('todo')">Todo</button>
       </div>
 
-      <!-- MÉTRICAS CLAVE -->
       <div class="grid-kpis-dashboard">
         <div class="kpi-card-dash">
           <div class="kpi-title-dash">Monto Vendido</div>
@@ -846,24 +494,36 @@
         </div>
       </div>
 
-      <!-- GRÁFICA 1: MONTO EN SOLES -->
+      <div class="grid-kpis-dashboard">
+        <div class="kpi-card-dash" style="border-color: #a7f3d0;">
+          <div class="kpi-title-dash">Cobrado</div>
+          <div class="kpi-value-dash" id="dashCobrado" style="color: var(--success);">S/ 0.00</div>
+        </div>
+        <div class="kpi-card-dash" style="border-color: #fde68a;">
+          <div class="kpi-title-dash">Por Cobrar</div>
+          <div class="kpi-value-dash" id="dashPorCobrar" style="color: var(--amber);">S/ 0.00</div>
+        </div>
+      </div>
+
       <div class="chart-container-box">
         <div class="chart-header-title">Evolución de Ingresos (S/)</div>
         <canvas id="canvasChartMonto" height="160" style="width: 100%; height: 160px;"></canvas>
       </div>
 
-      <!-- GRÁFICA 2: CANTIDAD DE PEDIDOS -->
       <div class="chart-container-box">
         <div class="chart-header-title">Cantidad de Pedidos Realizados</div>
         <canvas id="canvasChartPedidos" height="140" style="width: 100%; height: 140px;"></canvas>
+      </div>
+
+      <div class="chart-container-box">
+        <div class="chart-header-title">Registros de Ventas</div>
+        <div id="contenedorRegistrosCierre"></div>
       </div>
     </section>
 
   </main>
 
-  <!-- ============================================== -->
-  <!-- MODAL: DETALLE COMPLETO DE VENTA               -->
-  <!-- ============================================== -->
+  <!-- MODAL: DETALLE DE VENTA -->
   <div id="modalDetalleVenta" class="modal-overlay">
     <div class="modal-sheet">
       <div class="modal-header">
@@ -872,6 +532,10 @@
       </div>
 
       <div class="detalle-bloque">
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Código:</span>
+          <strong id="detCodigoVenta" style="font-family: ui-monospace, monospace; font-size: 11px;">-</strong>
+        </div>
         <div class="detalle-bloque-item">
           <span style="color:var(--text-muted);">Cliente:</span>
           <strong id="detClienteNombre">-</strong>
@@ -893,6 +557,10 @@
           <strong id="detFechaEntrega" style="color:var(--primary);">-</strong>
         </div>
         <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Fecha de Venta:</span>
+          <span id="detFechaVenta">-</span>
+        </div>
+        <div class="detalle-bloque-item">
           <span style="color:var(--text-muted);">Condición de Pago:</span>
           <span id="detCondicionPago">-</span>
         </div>
@@ -901,6 +569,25 @@
           <span id="detTarifa">-</span>
         </div>
       </div>
+
+      <div class="detalle-bloque" id="bloqueEstadoPago" style="background: var(--primary-subtle); border-color: var(--primary-border);">
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Estado de Pago:</span>
+          <span id="detEstadoPago">-</span>
+        </div>
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Monto Pagado:</span>
+          <strong id="detMontoPagado" style="color: var(--success);">S/ 0.00</strong>
+        </div>
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Saldo Pendiente:</span>
+          <strong id="detMontoPendiente" style="color: var(--amber);">S/ 0.00</strong>
+        </div>
+      </div>
+
+      <button id="btnConfirmarCobroDetalle" onclick="abrirModalConfirmarCobroDesdeDetalle()" class="btn-cierre-ventas" style="display: none; height: 46px; font-size: 12px; margin-bottom: 0;">
+        Confirmar Cobro Recibido
+      </button>
 
       <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-top:2px;">
         Botellas en este pedido
@@ -912,15 +599,53 @@
         <strong id="detMontoTotal" style="font-size:18px; color:var(--primary);">S/ 0.00</strong>
       </div>
 
+      <button onclick="enviarReciboCliente()" class="btn-action-cuenta" style="height:46px; font-size:12px; border-radius:var(--radius); margin-top:4px; background: var(--success-bg); color: var(--success); border-color: #a7f3d0;">
+        <svg style="width: 15px; height: 15px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        Enviar recibo al cliente
+      </button>
+
       <button onclick="cerrarModalDetalleVenta()" class="btn-action-cuenta" style="height:44px; font-size:12px; border-radius:var(--radius); margin-top:4px;">
         Cerrar Detalle
       </button>
     </div>
   </div>
 
-  <!-- ============================================== -->
-  <!-- MODAL: REGISTRAR NUEVA VENTA (WIZARD 2 PASOS) -->
-  <!-- ============================================== -->
+  <!-- MODAL: CONFIRMAR COBRO -->
+  <div id="modalConfirmarCobro" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">Confirmar Cobro</h3>
+        <button onclick="cerrarModalConfirmarCobro()" class="btn-close">✕</button>
+      </div>
+
+      <div style="background: var(--bg); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-strong); font-size: 12px; line-height: 1.7;">
+        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">Cliente:</span> <strong id="cobroClienteNombre">-</strong></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">Pedido:</span> <span id="cobroVentaCodigo" style="font-family: ui-monospace, monospace; font-size: 10.5px;">-</span></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">Total del pedido:</span> <span id="cobroMontoTotal">S/ 0.00</span></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">Saldo pendiente:</span> <strong id="cobroMontoPendiente" style="color: var(--amber);">S/ 0.00</strong></div>
+      </div>
+
+      <div>
+        <label class="form-label">Monto recibido (S/) *</label>
+        <input type="number" id="cobroMonto" step="0.01" min="0" class="input-field" style="font-weight: 800; font-size: 15px;">
+      </div>
+
+      <div>
+        <label class="form-label">Método de cobro</label>
+        <select id="cobroMetodo" class="input-field">
+          <option value="Efectivo">Efectivo</option>
+          <option value="Transferencia">Transferencia</option>
+        </select>
+      </div>
+
+      <div class="form-grid-2" style="margin-top: 4px;">
+        <button onclick="cerrarModalConfirmarCobro()" class="btn-action-cuenta" style="height: 46px; border-radius: var(--radius); font-size: 12px;">Cancelar</button>
+        <button onclick="confirmarCobroYNotificar()" class="btn-cierre-ventas" style="height: 46px; font-size: 12px; margin: 0; padding: 0;">Confirmar pago</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: NUEVA VENTA -->
   <div id="modalNuevaVenta" class="modal-overlay">
     <div class="modal-sheet">
       
@@ -934,7 +659,6 @@
         <div class="step-pill" id="pillPaso2"></div>
       </div>
 
-      <!-- PASO 1: COTIZACIÓN PRIMERO -->
       <div id="wizardPaso1" style="display: flex; flex-direction: column; gap: 12px;">
         <div class="step-label-header">Paso 1: Cotización del Pedido</div>
 
@@ -942,7 +666,6 @@
           <label class="form-label">Modelo de Botella</label>
           <select id="ventaSelectProducto" class="input-field" onchange="actualizarInfoProductoModal()" style="margin-bottom: 10px;"></select>
 
-          <!-- CONMUTADOR DE UNIDAD -->
           <div class="unit-switch-group">
             <button type="button" class="unit-switch-btn active" id="btnUnitPaquetes" onclick="cambiarUnidadMedida('paquetes')">Paquetes</button>
             <button type="button" class="unit-switch-btn" id="btnUnitMillares" onclick="cambiarUnidadMedida('millares')">Millares</button>
@@ -951,7 +674,6 @@
           <div class="form-grid-2" style="align-items: flex-end;">
             <div>
               <label class="form-label" id="lblCantidadUnidad">Cantidad (Paquetes)</label>
-              <!-- MODIFICACIÓN 1: INPUT VACÍO SIN 0 PRE-RELLENADO -->
               <input type="number" id="ventaCantidad" min="1" step="any" value="" placeholder="0" oninput="actualizarInfoProductoModal()" class="input-field">
             </div>
             <button onclick="guardarItemVenta()" id="btnAccionAgregarItem" class="btn-action-cuenta" style="width: 100%; height: 38px; background: var(--primary); color: #fff; border: none;">
@@ -959,21 +681,15 @@
             </button>
           </div>
 
-          <!-- INFO CONCISA -->
           <div style="margin-top: 8px; font-size: 11px; display: flex; justify-content: space-between; align-items: center;">
             <div id="txtPaquetesCalculadosMillar" style="display: none; font-weight: 800; color: var(--text);">Paquetes: 0</div>
             <div id="txtStockBadgeSimple" style="font-weight: 700; color: var(--text-muted); margin-left: auto;">Stock: 0 paq</div>
           </div>
         </div>
 
-        <!-- RESUMEN DE LA COTIZACIÓN -->
         <div id="modalCartBox" class="cart-box" style="display: none;">
-          <div id="badgeTarifaSimple" class="tag-tarifa-simple tarifa-menor">
-            Al por menor
-          </div>
-
+          <div id="badgeTarifaSimple" class="tag-tarifa-simple tarifa-menor">Al por menor</div>
           <div id="modalCartItems"></div>
-          
           <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 13px; font-weight: 800; padding-top: 8px; border-top: 1px solid var(--primary-border);">
             <span>Total:</span>
             <span id="modalTotalMonto" style="color: var(--primary); font-size: 16px;">S/ 0.00</span>
@@ -981,15 +697,13 @@
         </div>
 
         <button onclick="irAPaso2()" class="btn-nueva-venta" style="margin-top: 6px; margin-bottom: 0;">
-          Continuar a Datos del Cliente ➔
+          Continuar a Datos del Cliente
         </button>
       </div>
 
-      <!-- PASO 2: DATOS DEL CLIENTE -->
       <div id="wizardPaso2" style="display: none; flex-direction: column; gap: 12px;">
         <div class="step-label-header">Paso 2: Datos del Comprador</div>
 
-        <!-- SELECTOR DE CLIENTE ANTERIOR DE LA ZONA -->
         <div style="background: var(--surface); border: 1px solid var(--border-strong); padding: 10px 12px; border-radius: var(--radius-sm);">
           <label class="form-label" style="color: var(--primary);">Elegir Comprador de Esta Zona</label>
           <select id="selectClienteAntiguo" onchange="seleccionarClienteAntiguo(this.value)" class="input-field" style="font-weight: 700;">
@@ -1019,7 +733,7 @@
             <input type="tel" id="ventaTelefono" placeholder="987654321" class="input-field">
           </div>
           <div>
-            <label class="form-label">Fecha de Entrega Requerida *</label>
+            <label class="form-label">Fecha de Entrega *</label>
             <input type="date" id="ventaFechaEntrega" class="input-field" style="font-weight: 700;">
           </div>
         </div>
@@ -1027,11 +741,16 @@
         <div class="form-grid-2">
           <div>
             <label class="form-label">Condición Pago *</label>
-            <select id="ventaCondicion" class="input-field">
-              <option value="Transferencia">Transferencia</option>
-              <option value="Pago Contraentrega">Pago Contraentrega</option>
-              <option value="Adelanto 50%">Adelanto 50%</option>
-              <option value="Crédito">Crédito</option>
+            <select id="ventaCondicion" class="input-field" style="font-weight: 700;">
+              <optgroup label="YA PAGADO">
+                <option value="Efectivo">Efectivo</option>
+                <option value="Transferencia">Transferencia</option>
+              </optgroup>
+              <optgroup label="POR COBRAR">
+                <option value="Pago Contraentrega">Pago Contraentrega</option>
+                <option value="Adelanto 50%">Adelanto 50%</option>
+                <option value="Crédito">Crédito</option>
+              </optgroup>
             </select>
           </div>
           <div>
@@ -1042,7 +761,7 @@
 
         <div class="form-grid-2" style="margin-top: 6px;">
           <button onclick="irAPaso1()" class="btn-action-cuenta" style="height: 48px; border-radius: var(--radius); font-size: 12px;">
-            ⬅ Volver
+            Volver
           </button>
           <button onclick="finalizarRegistroVenta()" class="btn-nueva-venta" style="margin-bottom: 0; height: 48px; font-size: 12px;">
             Confirmar y Emitir
@@ -1053,16 +772,13 @@
     </div>
   </div>
 
-  <!-- ============================================== -->
-  <!-- MODAL: SELECCIONAR ZONA                        -->
-  <!-- ============================================== -->
+  <!-- MODAL: ZONA -->
   <div id="modalSelectorZona" class="modal-overlay">
     <div class="modal-sheet">
       <div class="modal-header">
         <h3 class="modal-title">Seleccionar Zona</h3>
         <button onclick="cerrarModalZona()" class="btn-close">✕</button>
       </div>
-
       <div style="display: flex; flex-direction: column; gap: 10px;">
         <div class="zona-option-card" onclick="seleccionarZona('la_parada')">
           <div>
@@ -1071,7 +787,6 @@
           </div>
           <svg style="width: 16px; height: 16px; color: #2563eb;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
-
         <div class="zona-option-card" onclick="seleccionarZona('cono_norte')">
           <div>
             <div class="zona-option-nombre">Cono Norte</div>
@@ -1079,7 +794,6 @@
           </div>
           <svg style="width: 16px; height: 16px; color: #059669;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
-
         <div class="zona-option-card" onclick="seleccionarZona('santa_anita')">
           <div>
             <div class="zona-option-nombre">Santa Anita / Huaycán / Chosica</div>
@@ -1087,7 +801,6 @@
           </div>
           <svg style="width: 16px; height: 16px; color: #7c3aed;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
-
         <div class="zona-option-card" onclick="seleccionarZona('cono_sur')">
           <div>
             <div class="zona-option-nombre">Cono Sur</div>
@@ -1099,17 +812,14 @@
     </div>
   </div>
 
-  <!-- ============================================== -->
-  <!-- BARRA INFERIOR (3 PESTAÑAS)                   -->
-  <!-- ============================================== -->
   <nav class="bottom-navbar">
     <button class="nav-btn active" id="btnNavInicio" onclick="navegarA('paneInicio', this)">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       <span>Ventas</span>
     </button>
-    <button class="nav-btn" id="btnNavStock" onclick="navegarA('paneStock', this)">
-      <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
-      <span>Stock</span>
+    <button class="nav-btn" id="btnNavPrecios" onclick="navegarA('panePrecios', this)">
+      <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      <span>Precios</span>
     </button>
     <button class="nav-btn" id="btnNavDashboard" onclick="navegarA('paneDashboard', this)">
       <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
@@ -1120,56 +830,36 @@
   <div id="toast" class="toast">Notificación</div>
 
   <script>
-    // DESTINO OFICIAL: KING (+51 922 796 815)
-    const NUMERO_DESTINO_WHATSAPP = "51922796815";
+    const NUMERO_CIERRE_KING = "51922796815";
+    const NUMERO_CONTABILIDAD = "51922244819";
 
-    // CUENTAS OFICIALES POR ZONA
     const ZONAS = {
-      la_parada: {
-        nombreZona: "La Parada",
-        asesor: "Junior",
-        titular: "INVERSIONES GARRO E.I.R.L.",
-        bcp: "191-9286644-0-82",
-        cci: "002-191-00928664408-256",
-        yape: "926 385 215",
-        bbva: "0011-0157-54-0100060005"
-      },
-      cono_norte: {
-        nombreZona: "Cono Norte",
-        asesor: "Yolanda",
-        titular: "INVERSIONES COMPLAPS",
-        bcp: "191-9405093-0-38",
-        cci: "002-191-00940509303-850",
-        yape: "955 144 286",
-        bbva: null
-      },
-      santa_anita: {
-        nombreZona: "Santa Anita/Huaycán/Chosica",
-        asesor: "Gerald",
-        titular: "TRANSPORTE HERMANOS",
-        bcp: "191-9905241-0-38",
-        cci: "002-191-00990524103-850",
-        yape: "920 883 350",
-        bbva: null
-      },
-      cono_sur: {
-        nombreZona: "Cono Sur",
-        asesor: "Orlenis",
-        titular: "PLASTIK PET E.I.R.L.",
-        bcp: "191-9870837-0-21",
-        cci: "002-191-00987083702-152",
-        yape: "904 888 872",
-        bbva: null
-      }
+      la_parada: { nombreZona: "La Parada", asesor: "Junior", titular: "INVERSIONES GARRO E.I.R.L.", bcp: "191-9286644-0-82", cci: "002-191-00928664408-256", yape: "926 385 215", bbva: "0011-0157-54-0100060005" },
+      cono_norte: { nombreZona: "Cono Norte", asesor: "Yolanda", titular: "INVERSIONES COMPLAPS", bcp: "191-9405093-0-38", cci: "002-191-00940509303-850", yape: "955 144 286", bbva: null },
+      santa_anita: { nombreZona: "Santa Anita/Huaycán/Chosica", asesor: "Gerald", titular: "TRANSPORTE HERMANOS", bcp: "191-9905241-0-38", cci: "002-191-00990524103-850", yape: "920 883 350", bbva: null },
+      cono_sur: { nombreZona: "Cono Sur", asesor: "Orlenis", titular: "PLASTIK PET E.I.R.L.", bcp: "191-9870837-0-21", cci: "002-191-00987083702-152", yape: "904 888 872", bbva: null }
     };
 
-    // VARIABLES DINÁMICAS (CARGADAS 100% VÍA FETCH DESDE price.json Y stock.json)
+    const ZONA_ABREV = {
+      la_parada: "parada",
+      cono_norte: "norte",
+      santa_anita: "anita",
+      cono_sur: "sur"
+    };
+
+    const CONDICION_A_ESTADO = {
+      "Efectivo":            { estado: "PAGADO",    ratio: 1 },
+      "Transferencia":       { estado: "PAGADO",    ratio: 1 },
+      "Pago Contraentrega":  { estado: "PENDIENTE", ratio: 0 },
+      "Adelanto 50%":        { estado: "PARCIAL",   ratio: 0.5 },
+      "Crédito":             { estado: "PENDIENTE", ratio: 0 }
+    };
+
     let CATALOGO_FABREC = [];
     let inventarioLocal = {};
 
     let zonaActivaClave = localStorage.getItem("fabrec_zona_activa") || "";
     
-    // Almacenamiento local aislado por zona
     let ventasHoy = [];
     let todasLasVentas = [];
     let directorioClientes = [];
@@ -1178,10 +868,66 @@
     let indiceEditandoItem = -1;
     let unidadSeleccionada = 'paquetes';
     let filtroDashboardActivo = 'hoy';
+    let filtroVentasActivo = 'todas';
+    let codigoVentaCobrando = null;
+    let ventaDetalleActual = null;
 
-    // 1. CARGA EXTERNA DE PRECIOS (price.json) Y STOCK (stock.json)
+    // ==================================================
+    // HELPERS DE ESTADO DE PAGO
+    // ==================================================
+    function derivarEstadoDesdeCondicion(cond) {
+      const c = CONDICION_A_ESTADO[cond];
+      return c ? c.estado : "PENDIENTE";
+    }
+
+    function getEstadoPago(v) {
+      return v.estado_pago || derivarEstadoDesdeCondicion(v.condicion_pago);
+    }
+
+    function getMontoPagado(v) {
+      if (v.monto_pagado !== undefined) return v.monto_pagado;
+      const e = getEstadoPago(v);
+      if (e === "PAGADO") return v.monto_total;
+      if (e === "PARCIAL") return +(v.monto_total * 0.5).toFixed(2);
+      return 0;
+    }
+
+    function getMontoPendiente(v) {
+      if (v.monto_pendiente !== undefined) return v.monto_pendiente;
+      return +(v.monto_total - getMontoPagado(v)).toFixed(2);
+    }
+
+    function esPagado(v) {
+      return getMontoPendiente(v) <= 0.01;
+    }
+
+    // Venta que nació como "por cobrar" y ahora está completamente pagada,
+    // y todavía no ha sido sincronizada con contabilidad.
+    function esPendienteContabilidad(v) {
+      return esPagado(v) && !v.contabilidad_enviada;
+    }
+
+    // ==================================================
+    // HELPERS DE FORMATO
+    // ==================================================
+    function formatearMonto(v) {
+      const n = Number(v) || 0;
+      const abs = Math.abs(n);
+      if (abs >= 1000000) {
+        const num = (n / 1000000).toFixed(1).replace(/\.0$/, '');
+        return 'S/ ' + num + 'M';
+      }
+      if (abs >= 1000) {
+        const num = (n / 1000).toFixed(1).replace(/\.0$/, '');
+        return 'S/ ' + num + 'k';
+      }
+      return 'S/ ' + n.toFixed(2);
+    }
+
+    // ==================================================
+    // 1. CARGA EXTERNA
+    // ==================================================
     async function cargarDatosExternos() {
-      // A. Cargar Tarifas desde price.json
       try {
         const resPrice = await fetch('price.json', { cache: 'no-store' });
         if (resPrice.ok) {
@@ -1193,14 +939,9 @@
             mayor: p.precio_mayor !== undefined ? p.precio_mayor : (p.mayor || 0),
             unidades: p.unidades_paquete || p.unidades || 100
           }));
-        } else {
-          console.warn("No se pudo cargar price.json:", resPrice.status);
         }
-      } catch (err) {
-        console.error("Error al obtener price.json:", err);
-      }
+      } catch (err) { console.error("Error price.json:", err); }
 
-      // B. Cargar Stock exclusivamente desde stock.json
       try {
         const resStock = await fetch('stock.json', { cache: 'no-store' });
         if (resStock && resStock.ok) {
@@ -1218,73 +959,61 @@
               const cant = item.paquetes !== undefined ? item.paquetes : (item.paquetes_disponibles || 0);
               if (nombre) inventarioLocal[nombre] = cant;
             });
-          } else if (dataStock && typeof dataStock === 'object') {
-            inventarioLocal = { ...dataStock };
           }
         }
-      } catch (err) {
-        console.error("Error al obtener stock.json:", err);
-      }
+      } catch (err) { console.error("Error stock.json:", err); }
 
       poblarSelectBotellasModal();
-      renderizarListaStock();
+      renderizarListaPrecios();
       actualizarInfoProductoModal();
     }
 
-    // 2. CARGA AISLADA DE DATOS POR ZONA ACTIVA
+    // ==================================================
+    // 2. CARGA POR ZONA
+    // ==================================================
     function cargarDatosDeZonaActiva() {
       if (!zonaActivaClave) {
-        ventasHoy = [];
-        todasLasVentas = [];
-        directorioClientes = [];
+        ventasHoy = []; todasLasVentas = []; directorioClientes = [];
       } else {
-        const keyHoy = `fabrec_ventas_hoy_${zonaActivaClave}`;
-        const keyTodas = `fabrec_ventas_todas_${zonaActivaClave}`;
-        const keyClientes = `fabrec_clientes_${zonaActivaClave}`;
-
-        ventasHoy = JSON.parse(localStorage.getItem(keyHoy)) || [];
-        todasLasVentas = JSON.parse(localStorage.getItem(keyTodas)) || [];
-        directorioClientes = JSON.parse(localStorage.getItem(keyClientes)) || [];
+        ventasHoy = JSON.parse(localStorage.getItem(`fabrec_ventas_hoy_${zonaActivaClave}`)) || [];
+        todasLasVentas = JSON.parse(localStorage.getItem(`fabrec_ventas_todas_${zonaActivaClave}`)) || [];
+        directorioClientes = JSON.parse(localStorage.getItem(`fabrec_clientes_${zonaActivaClave}`)) || [];
 
         const hoyStr = new Date().toLocaleDateString('es-PE');
-        ventasHoy = ventasHoy.filter(v => v.fecha_registro === hoyStr);
+        ventasHoy = ventasHoy.filter(v => {
+          if (!v.fecha_venta) return false;
+          return new Date(v.fecha_venta).toLocaleDateString('es-PE') === hoyStr;
+        });
       }
-
       renderizarVentasInicio();
       renderizarDashboard();
       poblarSelectorClientesAntiguos();
+      renderizarRegistrosCierre();
     }
 
-    // 3. NAVEGACIÓN ENTRE TABS
+    // ==================================================
+    // 3. NAVEGACIÓN
+    // ==================================================
     function navegarA(idPanel, btnElemento) {
       document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-
       const target = document.getElementById(idPanel);
       if (target) target.classList.add('active');
-
-      if (btnElemento) {
-        btnElemento.classList.add('active');
-      }
-
-      if (idPanel === 'paneStock') renderizarListaStock();
-      if (idPanel === 'paneDashboard') renderizarDashboard();
+      if (btnElemento) btnElemento.classList.add('active');
+      if (idPanel === 'panePrecios') renderizarListaPrecios();
+      if (idPanel === 'paneDashboard') { renderizarDashboard(); renderizarRegistrosCierre(); }
       window.scrollTo(0, 0);
     }
 
-    // 4. MODAL Y CONTROL DE ZONA
-    function abrirModalZona() {
-      document.getElementById('modalSelectorZona').classList.add('open');
-    }
-
-    function cerrarModalZona() {
-      document.getElementById('modalSelectorZona').classList.remove('open');
-    }
+    // ==================================================
+    // 4. ZONA
+    // ==================================================
+    function abrirModalZona() { document.getElementById('modalSelectorZona').classList.add('open'); }
+    function cerrarModalZona() { document.getElementById('modalSelectorZona').classList.remove('open'); }
 
     function seleccionarZona(claveZona) {
       zonaActivaClave = claveZona;
       localStorage.setItem("fabrec_zona_activa", claveZona);
-
       const body = document.body;
       const txtPill = document.getElementById('txtNombrePillZona');
       const cuentaTitular = document.getElementById('cuentaTitular');
@@ -1324,12 +1053,41 @@
       let saludo = "¡Buenas tardes";
       if (hora >= 5 && hora < 12) saludo = "¡Buenos días";
       else if (hora >= 19 || hora < 5) saludo = "¡Buenas noches";
-
       const asesor = (zonaActivaClave && ZONAS[zonaActivaClave]) ? ZONAS[zonaActivaClave].asesor : "";
       document.getElementById('saludoTexto').innerText = asesor ? (saludo + ", " + asesor + "!") : (saludo + "!");
     }
 
-    // 5. CUENTAS BANCARIAS: COPIAR Y COMPARTIR
+    // ==================================================
+    // 5. GENERACIÓN DE CÓDIGOS
+    // ==================================================
+    function fechaCompacta(d) {
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yy = String(d.getFullYear()).slice(-2);
+      return dd + mm + yy;
+    }
+
+    function generarCodigoVenta() {
+      const abrev = ZONA_ABREV[zonaActivaClave] || "gen";
+      const fecha = fechaCompacta(new Date());
+      const num = String(ventasHoy.length + 1).padStart(2, '0');
+      return `venta_${abrev}_${fecha}_${num}`;
+    }
+
+    function generarCodigoRegistroParaFecha(fechaObj) {
+      const abrev = ZONA_ABREV[zonaActivaClave] || "gen";
+      const fecha = fechaCompacta(fechaObj);
+      return `registro_venta_${abrev}_${fecha}_01`;
+    }
+
+    function extraerSecuenciaVenta(codigoVenta) {
+      const partes = codigoVenta.split('_');
+      return partes[partes.length - 1] || "01";
+    }
+
+    // ==================================================
+    // 6. CUENTAS BANCARIAS
+    // ==================================================
     function generarTextoDatosBancarios() {
       if (!zonaActivaClave || !ZONAS[zonaActivaClave]) return "";
       const z = ZONAS[zonaActivaClave];
@@ -1344,39 +1102,29 @@
 
     function copiarDatosBancariosCompletos() {
       const t = generarTextoDatosBancarios();
-      if (!t) {
-        mostrarToast("Selecciona primero una zona");
-        return;
-      }
-      navigator.clipboard.writeText(t).then(() => {
-        mostrarToast("Cuentas copiadas al portapapeles");
-      });
+      if (!t) { mostrarToast("Selecciona primero una zona"); return; }
+      navigator.clipboard.writeText(t).then(() => mostrarToast("Cuentas copiadas al portapapeles"));
     }
 
     function compartirDatosBancariosWhatsApp() {
       const t = generarTextoDatosBancarios();
-      if (!t) {
-        mostrarToast("Selecciona primero una zona");
-        return;
-      }
-      const url = "https://api.whatsapp.com/send/?text=" + encodeURIComponent(t);
-      window.open(url, '_blank');
+      if (!t) { mostrarToast("Selecciona primero una zona"); return; }
+      window.open("https://api.whatsapp.com/send/?text=" + encodeURIComponent(t), '_blank');
     }
 
-    // 6. UNIDADES Y COTIZADOR DINÁMICO
+    // ==================================================
+    // 7. UNIDADES
+    // ==================================================
     function cambiarUnidadMedida(unidad) {
       unidadSeleccionada = unidad;
       const btnPaq = document.getElementById('btnUnitPaquetes');
       const btnMil = document.getElementById('btnUnitMillares');
       const lblCant = document.getElementById('lblCantidadUnidad');
-
       if (unidad === 'paquetes') {
-        btnPaq.classList.add('active');
-        btnMil.classList.remove('active');
+        btnPaq.classList.add('active'); btnMil.classList.remove('active');
         lblCant.innerText = "Cantidad (Paquetes)";
       } else {
-        btnMil.classList.add('active');
-        btnPaq.classList.remove('active');
+        btnMil.classList.add('active'); btnPaq.classList.remove('active');
         lblCant.innerText = "Cantidad (Millares)";
       }
       actualizarInfoProductoModal();
@@ -1389,11 +1137,8 @@
     function calcularPaquetesDeEntrada(prodNom, inputVal) {
       const item = obtenerItemCatalogo(prodNom);
       if (!item) return 0;
-      if (unidadSeleccionada === 'paquetes') {
-        return Math.round(inputVal);
-      } else {
-        return Math.round((inputVal * 1000) / (item.unidades || 100));
-      }
+      if (unidadSeleccionada === 'paquetes') return Math.round(inputVal);
+      return Math.round((inputVal * 1000) / (item.unidades || 100));
     }
 
     function actualizarInfoProductoModal() {
@@ -1401,10 +1146,8 @@
       const inputVal = parseFloat(document.getElementById('ventaCantidad').value) || 0;
       const item = obtenerItemCatalogo(prodNom);
       if (!item) return;
-
       const stock = inventarioLocal[prodNom] || 0;
       const stockBadge = document.getElementById('txtStockBadgeSimple');
-      
       if (stock > 0) {
         stockBadge.innerText = "Stock: " + stock + " paq";
         stockBadge.style.color = "var(--text-muted)";
@@ -1412,26 +1155,18 @@
         stockBadge.innerText = "Pedir";
         stockBadge.style.color = "var(--amber)";
       }
-
       const paqCalc = calcularPaquetesDeEntrada(prodNom, inputVal);
       const divEq = document.getElementById('txtPaquetesCalculadosMillar');
-
       if (unidadSeleccionada === 'millares' && inputVal > 0) {
         divEq.style.display = "block";
         divEq.innerText = "Paquetes: " + paqCalc;
-      } else {
-        divEq.style.display = "none";
-      }
+      } else { divEq.style.display = "none"; }
     }
 
     function recalcularTarifasDelPedido() {
       let totalPaquetesEnPedido = 0;
-      itemsVentaTemporal.forEach(it => {
-        totalPaquetesEnPedido += it.paquetes_totales;
-      });
-
+      itemsVentaTemporal.forEach(it => { totalPaquetesEnPedido += it.paquetes_totales; });
       const esMayor = totalPaquetesEnPedido >= 100;
-
       itemsVentaTemporal.forEach(it => {
         const itemCat = obtenerItemCatalogo(it.producto);
         if (itemCat) {
@@ -1440,11 +1175,12 @@
           it.subtotal = it.paquetes_totales * it.precio_unitario;
         }
       });
-
       return { totalPaquetes: totalPaquetesEnPedido, esMayor: esMayor };
     }
 
-    // 7. MODAL NUEVA VENTA (WIZARD 2 PASOS)
+    // ==================================================
+    // 8. MODAL NUEVA VENTA
+    // ==================================================
     function abrirModalVenta() {
       if (!zonaActivaClave) {
         mostrarToast("Selecciona tu zona en la parte superior");
@@ -1455,10 +1191,9 @@
       indiceEditandoItem = -1;
       resetearFormularioItem();
       limpiarCamposCliente();
-      
       const hoyISO = new Date().toISOString().split('T')[0];
       document.getElementById('ventaFechaEntrega').value = hoyISO;
-
+      document.getElementById('ventaCondicion').value = "Efectivo";
       cambiarUnidadMedida('paquetes');
       irAPaso1();
       renderizarItemsModal();
@@ -1467,9 +1202,7 @@
       document.getElementById('modalNuevaVenta').classList.add('open');
     }
 
-    function cerrarModalVenta() {
-      document.getElementById('modalNuevaVenta').classList.remove('open');
-    }
+    function cerrarModalVenta() { document.getElementById('modalNuevaVenta').classList.remove('open'); }
 
     function irAPaso1() {
       document.getElementById('wizardPaso1').style.display = 'flex';
@@ -1480,11 +1213,7 @@
     }
 
     function irAPaso2() {
-      if (itemsVentaTemporal.length === 0) {
-        mostrarToast("Agrega al menos una botella a la cotización");
-        return;
-      }
-
+      if (itemsVentaTemporal.length === 0) { mostrarToast("Agrega al menos una botella a la cotización"); return; }
       document.getElementById('wizardPaso1').style.display = 'none';
       document.getElementById('wizardPaso2').style.display = 'flex';
       document.getElementById('pillPaso1').classList.add('active');
@@ -1492,7 +1221,6 @@
       document.getElementById('tituloModalVenta').innerText = "Datos del Cliente";
     }
 
-    // MODIFICACIÓN 2: OPCIONES CON COLOR SEGÚN STOCK DISPONIBLE
     function poblarSelectBotellasModal() {
       const sel = document.getElementById('ventaSelectProducto');
       if (!sel) return;
@@ -1502,13 +1230,10 @@
         const colorOption = tieneStock ? '#059669' : '#d97706';
         const punto = tieneStock ? '●' : '○';
         const estadoTxt = tieneStock ? `${stock} paq` : 'Pedir';
-        return `<option value="${p.producto}" style="color: ${colorOption}; font-weight: 700;">
-          ${punto} ${p.producto} — ${estadoTxt}
-        </option>`;
+        return `<option value="${p.producto}" style="color: ${colorOption}; font-weight: 700;">${punto} ${p.producto} — ${estadoTxt}</option>`;
       }).join('');
     }
 
-    // MODIFICACIÓN 1: RESETEA INPUT A VACÍO (SIN CERO)
     function resetearFormularioItem() {
       document.getElementById('ventaCantidad').value = "";
       indiceEditandoItem = -1;
@@ -1521,11 +1246,7 @@
       const prodNom = document.getElementById('ventaSelectProducto').value;
       const inputValStr = document.getElementById('ventaCantidad').value.trim();
       const inputVal = parseFloat(inputValStr);
-
-      if (!inputValStr || isNaN(inputVal) || inputVal <= 0) {
-        mostrarToast("Ingresa una cantidad mayor a 0");
-        return;
-      }
+      if (!inputValStr || isNaN(inputVal) || inputVal <= 0) { mostrarToast("Ingresa una cantidad mayor a 0"); return; }
 
       const paq = calcularPaquetesDeEntrada(prodNom, inputVal);
       const stockActual = inventarioLocal[prodNom] || 0;
@@ -1533,15 +1254,10 @@
       const desdeStock = paq - paraProduccion;
 
       const nuevoItem = {
-        producto: prodNom,
-        paquetes_totales: paq,
-        paquetes_stock: desdeStock,
-        paquetes_produccion: paraProduccion,
-        unidad_origen: unidadSeleccionada,
-        valor_origen: inputVal,
-        tipo_tarifa: "Menor",
-        precio_unitario: 0,
-        subtotal: 0
+        producto: prodNom, paquetes_totales: paq,
+        paquetes_stock: desdeStock, paquetes_produccion: paraProduccion,
+        unidad_origen: unidadSeleccionada, valor_origen: inputVal,
+        tipo_tarifa: "Menor", precio_unitario: 0, subtotal: 0
       };
 
       if (indiceEditandoItem >= 0) {
@@ -1551,7 +1267,6 @@
         itemsVentaTemporal.push(nuevoItem);
         mostrarToast("Añadido: " + paq + " paq de " + prodNom);
       }
-
       resetearFormularioItem();
       renderizarItemsModal();
       actualizarInfoProductoModal();
@@ -1561,15 +1276,12 @@
       if (!itemsVentaTemporal[idx]) return;
       const it = itemsVentaTemporal[idx];
       indiceEditandoItem = idx;
-
       document.getElementById('ventaSelectProducto').value = it.producto;
       cambiarUnidadMedida(it.unidad_origen || 'paquetes');
       document.getElementById('ventaCantidad').value = it.valor_origen || it.paquetes_totales;
-
       const btn = document.getElementById('btnAccionAgregarItem');
-      btn.innerText = "✓ Guardar Cambio";
+      btn.innerText = "Guardar Cambio";
       btn.style.background = "var(--success)";
-
       actualizarInfoProductoModal();
       mostrarToast("Editando " + it.producto);
     }
@@ -1578,15 +1290,9 @@
       const box = document.getElementById('modalCartBox');
       const cont = document.getElementById('modalCartItems');
       const badgeTarifa = document.getElementById('badgeTarifaSimple');
-
-      if (itemsVentaTemporal.length === 0) {
-        box.style.display = "none";
-        return;
-      }
-
+      if (itemsVentaTemporal.length === 0) { box.style.display = "none"; return; }
       box.style.display = "block";
       const infoPedido = recalcularTarifasDelPedido();
-
       if (infoPedido.esMayor) {
         badgeTarifa.className = "tag-tarifa-simple tarifa-mayor";
         badgeTarifa.innerText = "Al por mayor";
@@ -1594,10 +1300,8 @@
         badgeTarifa.className = "tag-tarifa-simple tarifa-menor";
         badgeTarifa.innerText = "Al por menor";
       }
-
       let totalMonto = 0;
       let html = "";
-
       itemsVentaTemporal.forEach((it, i) => {
         totalMonto += it.subtotal;
         html += `
@@ -1616,7 +1320,6 @@
           </div>
         `;
       });
-
       cont.innerHTML = html;
       document.getElementById('modalTotalMonto').innerText = "S/ " + totalMonto.toFixed(2);
     }
@@ -1627,30 +1330,27 @@
       renderizarItemsModal();
     }
 
-    // 8. AUTOCOMPLETADO DE CLIENTES POR ZONA
+    // ==================================================
+    // 9. CLIENTES
+    // ==================================================
     function poblarSelectorClientesAntiguos() {
       const sel = document.getElementById('selectClienteAntiguo');
       if (!sel) return;
       let opts = '<option value="">-- Nuevo Comprador --</option>';
-      directorioClientes.forEach(c => {
-        opts += `<option value="${c.dni}">${c.nombre} (${c.dni})</option>`;
-      });
+      directorioClientes.forEach(c => { opts += `<option value="${c.dni}">${c.nombre} (${c.dni})</option>`; });
       sel.innerHTML = opts;
     }
 
     function seleccionarClienteAntiguo(dniBuscado) {
-      if (!dniBuscado) {
-        limpiarCamposCliente();
-        return;
-      }
-      const clienteEncontrado = directorioClientes.find(c => c.dni === dniBuscado);
-      if (clienteEncontrado) {
-        document.getElementById('ventaCliente').value = clienteEncontrado.nombre;
-        document.getElementById('ventaDni').value = clienteEncontrado.dni;
-        document.getElementById('ventaRuc').value = clienteEncontrado.ruc === "No solicita factura" ? "" : clienteEncontrado.ruc;
-        document.getElementById('ventaTelefono').value = clienteEncontrado.telefono;
-        document.getElementById('ventaDireccion').value = clienteEncontrado.direccion;
-        mostrarToast("Datos de " + clienteEncontrado.nombre + " cargados");
+      if (!dniBuscado) { limpiarCamposCliente(); return; }
+      const c = directorioClientes.find(x => x.dni === dniBuscado);
+      if (c) {
+        document.getElementById('ventaCliente').value = c.nombre;
+        document.getElementById('ventaDni').value = c.dni;
+        document.getElementById('ventaRuc').value = c.ruc === "No solicita factura" ? "" : c.ruc;
+        document.getElementById('ventaTelefono').value = c.telefono;
+        document.getElementById('ventaDireccion').value = c.direccion;
+        mostrarToast("Datos de " + c.nombre + " cargados");
       }
     }
 
@@ -1663,18 +1363,16 @@
       document.getElementById('selectClienteAntiguo').value = "";
     }
 
-    function guardarClienteEnDirectorio(clienteObj) {
+    function guardarClienteEnDirectorio(c) {
       if (!zonaActivaClave) return;
-      const idx = directorioClientes.findIndex(c => c.dni === clienteObj.dni);
-      if (idx !== -1) {
-        directorioClientes[idx] = clienteObj;
-      } else {
-        directorioClientes.push(clienteObj);
-      }
+      const idx = directorioClientes.findIndex(x => x.dni === c.dni);
+      if (idx !== -1) directorioClientes[idx] = c; else directorioClientes.push(c);
       localStorage.setItem(`fabrec_clientes_${zonaActivaClave}`, JSON.stringify(directorioClientes));
     }
 
-    // 9. FINALIZAR VENTA (MODIFICACIÓN 3: EL STOCK NO SE REDUCE)
+    // ==================================================
+    // 10. FINALIZAR VENTA
+    // ==================================================
     function finalizarRegistroVenta() {
       const cliente = document.getElementById('ventaCliente').value.trim();
       const dni = document.getElementById('ventaDni').value.trim();
@@ -1684,72 +1382,55 @@
       const direccion = document.getElementById('ventaDireccion').value.trim();
       const condicion = document.getElementById('ventaCondicion').value;
 
-      if (!cliente) {
-        mostrarToast("Escribe el nombre o razón social");
-        return;
-      }
-      if (!dni) {
-        mostrarToast("Ingresa el DNI del cliente");
-        return;
-      }
-      if (!telefono) {
-        mostrarToast("Ingresa el teléfono de contacto");
-        return;
-      }
-      if (!fechaEntrega) {
-        mostrarToast("Selecciona la fecha de entrega");
-        return;
-      }
-      if (!direccion) {
-        mostrarToast("Ingresa la dirección para el envío");
-        return;
-      }
-      if (itemsVentaTemporal.length === 0) {
-        mostrarToast("No hay botellas en el pedido");
-        return;
-      }
+      if (!cliente) { mostrarToast("Escribe el nombre o razón social"); return; }
+      if (!dni) { mostrarToast("Ingresa el DNI del cliente"); return; }
+      if (!telefono) { mostrarToast("Ingresa el teléfono de contacto"); return; }
+      if (!fechaEntrega) { mostrarToast("Selecciona la fecha de entrega"); return; }
+      if (!direccion) { mostrarToast("Ingresa la dirección para el envío"); return; }
+      if (itemsVentaTemporal.length === 0) { mostrarToast("No hay botellas en el pedido"); return; }
 
       const infoPedido = recalcularTarifasDelPedido();
       const z = ZONAS[zonaActivaClave];
       const ahora = new Date();
-      const codigo = `VTA-${ahora.getFullYear()}${String(ahora.getMonth()+1).padStart(2,'0')}${String(ahora.getDate()).padStart(2,'0')}-${Math.floor(1000 + Math.random() * 9000)}`;
+      const codigoVenta = generarCodigoVenta();
+      const abrev = ZONA_ABREV[zonaActivaClave] || "gen";
+      const fechaCorta = fechaCompacta(ahora);
+      const seqVenta = extraerSecuenciaVenta(codigoVenta);
 
       let totalSoles = 0;
       let totalPaquetes = 0;
       const ticketsProduccion = [];
+      let prodSeq = 0;
 
       itemsVentaTemporal.forEach(it => {
         totalSoles += it.subtotal;
         totalPaquetes += it.paquetes_totales;
-
-        // NOTA: Se eliminó la deducción del stock. El stock no se altera al vender.
         if (it.paquetes_produccion > 0) {
+          prodSeq++;
           ticketsProduccion.push({
-            id_ticket_produccion: `PROD-${Date.now()}-${Math.floor(Math.random() * 100)}`,
+            codigo: `produccion_${abrev}_${fechaCorta}_${seqVenta}_${String(prodSeq).padStart(2,'0')}`,
+            fecha_solicitud: ahora.toISOString(),
             producto: it.producto,
             paquetes_a_fabricar: it.paquetes_produccion,
-            cliente: cliente,
-            vendedor: z.asesor,
-            zona: z.nombreZona,
-            fecha_entrega_programada: fechaEntrega,
-            hora: ahora.toLocaleTimeString('es-PE')
+            venta_codigo: codigoVenta
           });
         }
       });
 
-      const clienteDatos = {
-        nombre: cliente,
-        dni: dni,
-        ruc: ruc || "No solicita factura",
-        telefono: telefono,
-        direccion: direccion
-      };
+      const config = CONDICION_A_ESTADO[condicion] || { estado: "PENDIENTE", ratio: 0 };
+      const montoPagado = +(totalSoles * config.ratio).toFixed(2);
+      const montoPendiente = +(totalSoles - montoPagado).toFixed(2);
+
+      // Si la venta nació ya pagada (Efectivo/Transferencia), no necesita
+      // pasar por el flujo de "Confirmados" ni enviarse como actualización
+      // de pago a contabilidad. Se marca como ya sincronizada.
+      const esPagoInmediato = (condicion === "Efectivo" || condicion === "Transferencia");
+
+      const clienteDatos = { nombre: cliente, dni, ruc: ruc || "No solicita factura", telefono, direccion };
 
       const nuevaVenta = {
-        codigo: codigo,
-        fecha_registro: ahora.toLocaleDateString('es-PE'),
-        hora_registro: ahora.toLocaleTimeString('es-PE'),
-        timestampISO: ahora.toISOString(),
+        codigo: codigoVenta,
+        fecha_venta: ahora.toISOString(),
         fecha_entrega_solicitada: fechaEntrega,
         cliente: clienteDatos,
         tarifa_aplicada: infoPedido.esMayor ? "Al por mayor" : "Al por menor",
@@ -1757,6 +1438,17 @@
         zona: z.nombreZona,
         zonaClave: zonaActivaClave,
         condicion_pago: condicion,
+        estado_pago: config.estado,
+        monto_pagado: montoPagado,
+        monto_pendiente: montoPendiente,
+        contabilidad_enviada: esPagoInmediato,
+        cobros: montoPagado > 0 ? [{
+          fecha: ahora.toISOString(),
+          monto: montoPagado,
+          metodo: condicion === "Adelanto 50%" ? "Adelanto 50%" : condicion,
+          vendedor: z.asesor,
+          nota: condicion === "Adelanto 50%" ? "Adelanto inicial 50%" : "Pago al registrar venta"
+        }] : [],
         items: itemsVentaTemporal.slice(),
         total_paquetes: totalPaquetes,
         monto_total: totalSoles,
@@ -1771,39 +1463,127 @@
       guardarClienteEnDirectorio(clienteDatos);
 
       cerrarModalVenta();
-      mostrarToast("Venta " + codigo + " registrada");
+      mostrarToast("Venta " + codigoVenta + " registrada");
       renderizarVentasInicio();
     }
 
-    // 10. RENDERIZADO DE VENTAS DEL DÍA
+    // ==================================================
+    // 11. FILTRO VENTAS
+    // ==================================================
+    function cambiarFiltroVentas(filtro) {
+      filtroVentasActivo = filtro;
+      ['btnFiltroTodas', 'btnFiltroPendientes', 'btnFiltroConfirmados'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+      });
+      if (filtro === 'todas') document.getElementById('btnFiltroTodas').classList.add('active');
+      if (filtro === 'pendientes') document.getElementById('btnFiltroPendientes').classList.add('active');
+      if (filtro === 'confirmados') document.getElementById('btnFiltroConfirmados').classList.add('active');
+      renderizarVentasInicio();
+    }
+
+    // Por cobrar = cualquier venta con saldo pendiente, sin importar la fecha
+    function contarPendientes() {
+      return todasLasVentas.filter(v => !esPagado(v)).length;
+    }
+
+    // Confirmados = pagadas (que antes eran por cobrar) y sin sincronizar
+    function contarConfirmados() {
+      return todasLasVentas.filter(v => esPendienteContabilidad(v)).length;
+    }
+
+    // ==================================================
+    // 12. RENDERIZAR VENTAS
+    // ==================================================
     function renderizarVentasInicio() {
       const cont = document.getElementById('listaVentasDia');
       const badgeCant = document.getElementById('cantVentasBadge');
       const btnEnviar = document.getElementById('btnEnviarCierre');
+      const pillPendientes = document.getElementById('pillPendientesCount');
+      const pillConfirmados = document.getElementById('pillConfirmadosCount');
+      const panelAcciones = document.getElementById('panelAccionesConfirmados');
+      const tituloSeccion = document.getElementById('tituloSeccionVentas');
 
+      const pendientes = contarPendientes();
+      const confirmados = contarConfirmados();
       badgeCant.innerText = `${ventasHoy.length} pedidos`;
 
-      if (ventasHoy.length === 0) {
-        cont.innerHTML = `
-          <div style="text-align: center; color: var(--text-soft); padding: 32px 10px; font-size: 12px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); margin-bottom: 12px;">
-            No hay ventas registradas hoy en esta zona. Presiona "Nueva venta".
-          </div>
-        `;
-        btnEnviar.style.display = "none";
+      if (pendientes > 0) {
+        pillPendientes.style.display = 'inline-block';
+        pillPendientes.innerText = pendientes;
+      } else {
+        pillPendientes.style.display = 'none';
+      }
+
+      if (confirmados > 0) {
+        pillConfirmados.style.display = 'inline-block';
+        pillConfirmados.innerText = confirmados;
+      } else {
+        pillConfirmados.style.display = 'none';
+      }
+
+      // Panel de envío a contabilidad solo en Confirmados
+      panelAcciones.style.display = (filtroVentasActivo === 'confirmados') ? 'block' : 'none';
+
+      // El botón de cierre de ventas aparece siempre que haya ventas hoy,
+      // sin importar el tab activo.
+      btnEnviar.style.display = ventasHoy.length > 0 ? 'flex' : 'none';
+
+      // Título dinámico según tab
+      if (filtroVentasActivo === 'todas') tituloSeccion.innerText = 'Ventas del Día';
+      else if (filtroVentasActivo === 'pendientes') tituloSeccion.innerText = 'Ventas por Cobrar';
+      else if (filtroVentasActivo === 'confirmados') tituloSeccion.innerText = 'Pagos Confirmados';
+
+      const q = (document.getElementById('buscadorVentas').value || '').toLowerCase().trim();
+
+      let lista = [];
+      let mostrarFecha = false;
+
+      if (filtroVentasActivo === 'todas') {
+        lista = ventasHoy.slice().reverse();
+      } else if (filtroVentasActivo === 'pendientes') {
+        // Pendientes de cualquier fecha
+        lista = todasLasVentas.filter(v => !esPagado(v));
+        lista.sort((a, b) => new Date(b.fecha_venta) - new Date(a.fecha_venta));
+        mostrarFecha = true;
+      } else if (filtroVentasActivo === 'confirmados') {
+        lista = todasLasVentas.filter(v => esPendienteContabilidad(v));
+        lista.sort((a, b) => new Date(b.fecha_venta) - new Date(a.fecha_venta));
+        mostrarFecha = true;
+      }
+
+      if (q) {
+        lista = lista.filter(v =>
+          (v.codigo || '').toLowerCase().includes(q) ||
+          (v.cliente && v.cliente.nombre && v.cliente.nombre.toLowerCase().includes(q)) ||
+          (v.cliente && v.cliente.dni && v.cliente.dni.includes(q))
+        );
+      }
+
+      if (lista.length === 0) {
+        let msg = "No hay ventas que coincidan con el filtro o búsqueda.";
+        if (filtroVentasActivo === 'confirmados') msg = "No hay pagos pendientes de enviar a contabilidad.";
+        if (filtroVentasActivo === 'pendientes') msg = "No hay ventas por cobrar en esta zona.";
+        if (filtroVentasActivo === 'todas' && ventasHoy.length === 0) msg = "No hay ventas registradas hoy en esta zona. Presiona \"Nueva venta\".";
+        cont.innerHTML = `<div class="empty-state">${msg}</div>`;
         return;
       }
 
-      btnEnviar.style.display = "flex";
-
+      const hoyStr = new Date().toLocaleDateString('es-PE');
       let html = "";
-      for (let j = ventasHoy.length - 1; j >= 0; j--) {
-        const v = ventasHoy[j];
-        
-        let clasePago = "pago-transferencia";
-        const cp = (v.condicion_pago || '').toLowerCase();
-        if (cp.includes('contraentrega')) clasePago = "pago-contraentrega";
-        else if (cp.includes('crédito') || cp.includes('credito')) clasePago = "pago-credito";
-        else if (cp.includes('adelanto')) clasePago = "pago-adelanto";
+
+      lista.forEach(v => {
+        const pagado = esPagado(v);
+        const fechaVenta = v.fecha_venta ? new Date(v.fecha_venta) : null;
+        const horaTexto = fechaVenta ? fechaVenta.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }) : '';
+        const fechaTexto = fechaVenta ? fechaVenta.toLocaleDateString('es-PE') : '';
+        const esDeHoy = fechaVenta && fechaVenta.toLocaleDateString('es-PE') === hoyStr;
+
+        let metaTexto = `${v.total_paquetes} paq`;
+        let fechaMostrar = '';
+        if (mostrarFecha && !esDeHoy) {
+          fechaMostrar = fechaTexto + ' • ';
+        }
 
         html += `
           <div class="card-venta-simple" onclick="verDetalleVenta('${v.codigo}')">
@@ -1815,30 +1595,53 @@
               </div>
             </div>
             <div class="card-venta-bottom">
-              <span class="tag-pago-pill ${clasePago}">${v.condicion_pago}</span>
-              <span class="venta-meta-item">${v.total_paquetes} paq</span>
+              ${pagado
+                ? `<span class="tag-estado-pago pagado"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Pagado</span>`
+                : `<span class="tag-estado-pago pendiente"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Por cobrar</span>`}
+              <span class="venta-meta-item">${metaTexto}</span>
               <span class="venta-meta-dot">•</span>
-              <span class="venta-meta-item">${v.hora_registro}</span>
+              <span class="venta-meta-item">${fechaMostrar}${horaTexto}</span>
             </div>
           </div>
         `;
-      }
+      });
       cont.innerHTML = html;
     }
 
-    // 11. MODAL DETALLE DE VENTA
+    // ==================================================
+    // 13. DETALLE
+    // ==================================================
     function verDetalleVenta(codigoVenta) {
       const v = todasLasVentas.find(x => x.codigo === codigoVenta) || ventasHoy.find(x => x.codigo === codigoVenta);
       if (!v) return;
+      ventaDetalleActual = v;
 
       document.getElementById('detalleTituloVenta').innerText = `Pedido ${v.codigo}`;
+      document.getElementById('detCodigoVenta').innerText = v.codigo;
       document.getElementById('detClienteNombre').innerText = v.cliente.nombre;
       document.getElementById('detClienteDoc').innerText = `DNI: ${v.cliente.dni} ${v.cliente.ruc !== 'No solicita factura' ? ' • RUC: ' + v.cliente.ruc : ''}`;
       document.getElementById('detClienteTel').innerText = v.cliente.telefono;
       document.getElementById('detClienteDir').innerText = v.cliente.direccion;
       document.getElementById('detFechaEntrega').innerText = v.fecha_entrega_solicitada;
+      document.getElementById('detFechaVenta').innerText = v.fecha_venta ? new Date(v.fecha_venta).toLocaleString('es-PE') : '-';
       document.getElementById('detCondicionPago').innerText = v.condicion_pago;
       document.getElementById('detTarifa').innerText = v.tarifa_aplicada;
+
+      const estadoDiv = document.getElementById('detEstadoPago');
+      if (esPagado(v)) {
+        estadoDiv.innerHTML = '<span class="tag-estado-pago pagado"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Pagado</span>';
+      } else {
+        estadoDiv.innerHTML = '<span class="tag-estado-pago pendiente"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Por cobrar</span>';
+      }
+
+      const mPagado = getMontoPagado(v);
+      const mPendiente = getMontoPendiente(v);
+
+      document.getElementById('detMontoPagado').innerText = `S/ ${mPagado.toFixed(2)}`;
+      document.getElementById('detMontoPendiente').innerText = `S/ ${mPendiente.toFixed(2)}`;
+
+      const btnConf = document.getElementById('btnConfirmarCobroDetalle');
+      btnConf.style.display = mPendiente > 0.01 ? 'flex' : 'none';
 
       const contItems = document.getElementById('detListaItems');
       contItems.innerHTML = v.items.map(it => `
@@ -1856,96 +1659,339 @@
       document.getElementById('modalDetalleVenta').classList.remove('open');
     }
 
-    // 12. ENVÍO DEL CIERRE A KING (+51 922 796 815)
-    function enviarCierreAContabilidad() {
-      if (ventasHoy.length === 0) {
-        mostrarToast("No hay ventas registradas hoy en esta zona");
+    // ==================================================
+    // 14. CONFIRMAR COBRO
+    // ==================================================
+    function abrirModalConfirmarCobroDesdeDetalle() {
+      if (!ventaDetalleActual) return;
+      const v = ventaDetalleActual;
+      const mPendiente = getMontoPendiente(v);
+      if (mPendiente <= 0.01) { mostrarToast("Esta venta ya está pagada"); return; }
+
+      codigoVentaCobrando = v.codigo;
+      document.getElementById('cobroClienteNombre').innerText = v.cliente.nombre;
+      document.getElementById('cobroVentaCodigo').innerText = v.codigo;
+      document.getElementById('cobroMontoTotal').innerText = "S/ " + v.monto_total.toFixed(2);
+      document.getElementById('cobroMontoPendiente').innerText = "S/ " + mPendiente.toFixed(2);
+      document.getElementById('cobroMonto').value = mPendiente.toFixed(2);
+      document.getElementById('cobroMetodo').value = "Efectivo";
+
+      cerrarModalDetalleVenta();
+      document.getElementById('modalConfirmarCobro').classList.add('open');
+    }
+
+    function cerrarModalConfirmarCobro() {
+      document.getElementById('modalConfirmarCobro').classList.remove('open');
+      codigoVentaCobrando = null;
+    }
+
+    function confirmarCobroYNotificar() {
+      if (!codigoVentaCobrando) return;
+      const montoRecibido = parseFloat(document.getElementById('cobroMonto').value) || 0;
+      const metodo = document.getElementById('cobroMetodo').value;
+
+      if (montoRecibido <= 0) { mostrarToast("Ingresa un monto válido"); return; }
+
+      const refs = [];
+      [ventasHoy, todasLasVentas].forEach(arr => {
+        const v = arr.find(x => x.codigo === codigoVentaCobrando);
+        if (v) refs.push(v);
+      });
+      if (refs.length === 0) { mostrarToast("Venta no encontrada"); return; }
+
+      const v = refs[0];
+      const mPendienteAntes = getMontoPendiente(v);
+
+      if (montoRecibido > mPendienteAntes + 0.01) {
+        mostrarToast("El monto excede lo pendiente (S/ " + mPendienteAntes.toFixed(2) + ")");
         return;
       }
-      if (!zonaActivaClave) {
-        mostrarToast("Selecciona tu zona antes de enviar");
-        abrirModalZona();
-        return;
-      }
+
+      const ahora = new Date();
+      const cobro = {
+        fecha: ahora.toISOString(),
+        monto: +montoRecibido.toFixed(2),
+        metodo: metodo,
+        vendedor: v.vendedor
+      };
+
+      const actualizacion = (venta) => {
+        venta.monto_pagado = +((venta.monto_pagado || 0) + montoRecibido).toFixed(2);
+        venta.monto_pendiente = +Math.max(0, venta.monto_total - venta.monto_pagado).toFixed(2);
+        venta.estado_pago = venta.monto_pendiente <= 0.01 ? "PAGADO" : "PARCIAL";
+        if (!venta.cobros) venta.cobros = [];
+        venta.cobros.push(cobro);
+      };
+      refs.forEach(actualizacion);
+
+      localStorage.setItem(`fabrec_ventas_hoy_${zonaActivaClave}`, JSON.stringify(ventasHoy));
+      localStorage.setItem(`fabrec_ventas_todas_${zonaActivaClave}`, JSON.stringify(todasLasVentas));
+
+      cerrarModalConfirmarCobro();
+      renderizarVentasInicio();
+      renderizarDashboard();
+      renderizarRegistrosCierre();
+      mostrarToast("Cobro registrado. Ve a 'Confirmados' para enviarlo a contabilidad.");
+    }
+
+    // ==================================================
+    // 15. ENVIAR PAGOS A CONTABILIDAD
+    // ==================================================
+    function enviarPagosContabilidad() {
+      const pendientes = todasLasVentas.filter(v => esPendienteContabilidad(v));
+      if (pendientes.length === 0) { mostrarToast("No hay pagos pendientes de enviar"); return; }
+      if (!zonaActivaClave) { mostrarToast("Selecciona tu zona"); return; }
 
       const z = ZONAS[zonaActivaClave];
-      let totalSoles = 0;
-      let totalPaquetes = 0;
-      const todasLasProducciones = [];
-
-      ventasHoy.forEach(v => {
-        totalSoles += v.monto_total;
-        totalPaquetes += v.total_paquetes;
-        if (v.tickets_produccion && v.tickets_produccion.length > 0) {
-          todasLasProducciones.push(...v.tickets_produccion);
-        }
-      });
+      const ahora = new Date();
 
       const payload = {
-        empresa: "FABREC",
-        tipo_documento: "registro_ventas_0001",
-        fecha_cierre: new Date().toISOString(),
+        tipo: "actualizacion_pagos",
+        fecha_envio: ahora.toISOString(),
         vendedor: z.asesor,
         zona: z.nombreZona,
-        resumen: {
-          monto_total: totalSoles,
-          total_paquetes: totalPaquetes,
-          cantidad_pedidos: ventasHoy.length,
-          pedidos_produccion_requeridos: todasLasProducciones.length
-        },
-        ventas: ventasHoy,
-        tickets_produccion: todasLasProducciones
+        pagos: pendientes.map(v => ({
+          codigo: v.codigo,
+          estado: "pagado"
+        }))
       };
 
       const jsonStr = JSON.stringify(payload, null, 2);
-      const urlWhatsApp = "https://api.whatsapp.com/send/?phone=" + NUMERO_DESTINO_WHATSAPP + "&text=" + encodeURIComponent(jsonStr);
-      
-      window.open(urlWhatsApp, "_blank");
-      mostrarToast("Abriendo WhatsApp de King...");
+      const url = "https://api.whatsapp.com/send/?phone=" + NUMERO_CONTABILIDAD + "&text=" + encodeURIComponent(jsonStr);
+      window.open(url, '_blank');
+
+      const codigosEnviados = new Set(pendientes.map(v => v.codigo));
+      [todasLasVentas, ventasHoy].forEach(arr => {
+        arr.forEach(v => {
+          if (codigosEnviados.has(v.codigo)) v.contabilidad_enviada = true;
+        });
+      });
+
+      localStorage.setItem(`fabrec_ventas_hoy_${zonaActivaClave}`, JSON.stringify(ventasHoy));
+      localStorage.setItem(`fabrec_ventas_todas_${zonaActivaClave}`, JSON.stringify(todasLasVentas));
+
+      renderizarVentasInicio();
+      mostrarToast(pendientes.length + " pagos enviados a contabilidad");
     }
 
-    // 13. DASHBOARD COMERCIAL POR ZONA (CHARTS NATIVOS)
+    // ==================================================
+    // 16. ENVIAR RECIBO AL CLIENTE POR WHATSAPP
+    // ==================================================
+    function formatearTelefonoPeru(tel) {
+      const digits = (tel || '').replace(/\D/g, '');
+      if (digits.length === 9 && digits.startsWith('9')) return '51' + digits;
+      if (digits.length === 11 && digits.startsWith('51')) return digits;
+      return digits;
+    }
+
+    function enviarReciboCliente() {
+      if (!ventaDetalleActual) return;
+      const v = ventaDetalleActual;
+
+      const tel = formatearTelefonoPeru(v.cliente.telefono);
+
+      const itemsTexto = v.items.map(it =>
+        `  - ${it.paquetes_totales} paq ${it.producto} (S/ ${it.precio_unitario.toFixed(2)} c/u) = S/ ${it.subtotal.toFixed(2)}`
+      ).join('\n');
+
+      const fechaVenta = v.fecha_venta
+        ? new Date(v.fecha_venta).toLocaleString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+        : '';
+      const estadoTexto = esPagado(v) ? 'PAGADO' : 'POR COBRAR';
+      const saldoPendiente = getMontoPendiente(v);
+
+      let texto =
+        `RECIBO DE VENTA - FABREC\n` +
+        `------------------------------------\n` +
+        `Codigo: ${v.codigo}\n` +
+        `Fecha: ${fechaVenta}\n` +
+        `Cliente: ${v.cliente.nombre}\n` +
+        `DNI: ${v.cliente.dni}\n` +
+        `Direccion: ${v.cliente.direccion}\n` +
+        `------------------------------------\n` +
+        `Productos:\n${itemsTexto}\n` +
+        `------------------------------------\n` +
+        `TOTAL: S/ ${v.monto_total.toFixed(2)}\n` +
+        `Estado: ${estadoTexto}\n`;
+
+      if (!esPagado(v)) {
+        texto += `Saldo pendiente: S/ ${saldoPendiente.toFixed(2)}\n`;
+      }
+
+      texto +=
+        `Fecha de entrega: ${v.fecha_entrega_solicitada}\n` +
+        `------------------------------------\n` +
+        `Gracias por su compra.\n` +
+        `Conserve este codigo para cualquier consulta.`;
+
+      let url;
+      if (tel && tel.length >= 11) {
+        url = "https://api.whatsapp.com/send/?phone=" + tel + "&text=" + encodeURIComponent(texto);
+      } else {
+        url = "https://api.whatsapp.com/send/?text=" + encodeURIComponent(texto);
+      }
+      window.open(url, '_blank');
+      mostrarToast("Abriendo WhatsApp...");
+    }
+
+    // ==================================================
+    // 17. CIERRE / REGISTROS DE VENTAS
+    // ==================================================
+    function agruparVentasPorFecha(ventas) {
+      const grupos = {};
+      ventas.forEach(v => {
+        if (!v.fecha_venta) return;
+        const d = new Date(v.fecha_venta);
+        const key = d.toLocaleDateString('es-PE');
+        if (!grupos[key]) grupos[key] = { fechaObj: d, ventas: [] };
+        grupos[key].ventas.push(v);
+      });
+      return grupos;
+    }
+
+    function construirPayloadRegistro(fechaObj, ventasDelDia) {
+      const z = ZONAS[zonaActivaClave];
+      let totalSoles = 0, totalCobrado = 0, totalPorCobrar = 0, totalPaquetes = 0, pendientesCount = 0;
+      const todasLasProducciones = [];
+
+      ventasDelDia.forEach(v => {
+        totalSoles += v.monto_total;
+        totalPaquetes += v.total_paquetes;
+        const pagado = getMontoPagado(v);
+        const pendiente = getMontoPendiente(v);
+        totalCobrado += pagado;
+        totalPorCobrar += pendiente;
+        if (pendiente > 0.01) pendientesCount++;
+        if (v.tickets_produccion && v.tickets_produccion.length > 0) todasLasProducciones.push(...v.tickets_produccion);
+      });
+
+      return {
+        codigo_registro: generarCodigoRegistroParaFecha(fechaObj),
+        fecha_registro: fechaObj.toISOString(),
+        vendedor: z.asesor,
+        zona: z.nombreZona,
+        resumen: {
+          monto_total: +totalSoles.toFixed(2),
+          monto_cobrado: +totalCobrado.toFixed(2),
+          monto_por_cobrar: +totalPorCobrar.toFixed(2),
+          total_paquetes: totalPaquetes,
+          cantidad_pedidos: ventasDelDia.length,
+          pedidos_con_saldo_pendiente: pendientesCount,
+          pedidos_produccion_requeridos: todasLasProducciones.length
+        },
+        ventas: ventasDelDia,
+        tickets_produccion: todasLasProducciones
+      };
+    }
+
+    function enviarCierreAContabilidad() {
+      if (ventasHoy.length === 0) { mostrarToast("No hay ventas registradas hoy en esta zona"); return; }
+      if (!zonaActivaClave) { mostrarToast("Selecciona tu zona antes de enviar"); abrirModalZona(); return; }
+
+      const ahora = new Date();
+      const payload = construirPayloadRegistro(ahora, ventasHoy);
+
+      const jsonStr = JSON.stringify(payload, null, 2);
+      const urlWhatsApp = "https://api.whatsapp.com/send/?phone=" + NUMERO_CIERRE_KING + "&text=" + encodeURIComponent(jsonStr);
+      window.open(urlWhatsApp, "_blank");
+      mostrarToast("Registro " + payload.codigo_registro + " enviado a King");
+    }
+
+    function renderizarRegistrosCierre() {
+      const cont = document.getElementById('contenedorRegistrosCierre');
+      if (!cont) return;
+      if (!zonaActivaClave) {
+        cont.innerHTML = '<div style="font-size:11px; color:var(--text-soft); text-align:center; padding:10px;">Selecciona una zona.</div>';
+        return;
+      }
+
+      const hoyStr = new Date().toLocaleDateString('es-PE');
+      const grupos = agruparVentasPorFecha(todasLasVentas);
+
+      const fechasPrevias = Object.keys(grupos)
+        .filter(f => f !== hoyStr)
+        .sort((a, b) => grupos[b].fechaObj - grupos[a].fechaObj);
+
+      if (fechasPrevias.length === 0) {
+        cont.innerHTML = '<div style="font-size:11px; color:var(--text-soft); text-align:center; padding:12px;">Aún no hay registros de días anteriores. Las ventas de días previos aparecerán aquí automáticamente.</div>';
+        return;
+      }
+
+      let html = "";
+      fechasPrevias.slice(0, 15).forEach(fecha => {
+        const grupo = grupos[fecha];
+        const ventasDia = grupo.ventas;
+        let totalSoles = 0, totalCobrado = 0, totalPorCobrar = 0, pendientesCount = 0;
+
+        ventasDia.forEach(v => {
+          totalSoles += v.monto_total;
+          const pagado = getMontoPagado(v);
+          const pendiente = getMontoPendiente(v);
+          totalCobrado += pagado;
+          totalPorCobrar += pendiente;
+          if (pendiente > 0.01) pendientesCount++;
+        });
+
+        const codigo = generarCodigoRegistroParaFecha(grupo.fechaObj);
+
+        html += `
+          <div class="registro-row">
+            <div class="registro-row-top">
+              <span class="registro-codigo">${codigo}</span>
+              <span class="registro-monto">S/ ${totalSoles.toFixed(2)}</span>
+            </div>
+            <div class="registro-row-sub">
+              ${fecha} • ${ventasDia.length} pedidos • Cobrado S/ ${totalCobrado.toFixed(2)}
+              ${totalPorCobrar > 0 ? ` • <span class="registro-saldo">Por cobrar S/ ${totalPorCobrar.toFixed(2)}${pendientesCount > 0 ? ' (' + pendientesCount + ')' : ''}</span>` : ''}
+            </div>
+          </div>
+        `;
+      });
+      cont.innerHTML = html;
+    }
+
+    // ==================================================
+    // 18. DASHBOARD
+    // ==================================================
     function cambiarFiltroDashboard(tipo) {
       filtroDashboardActivo = tipo;
       ['btnDashHoy', 'btnDashSemana', 'btnDashMes', 'btnDashTodo'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.remove('active');
       });
-
       if (tipo === 'hoy') document.getElementById('btnDashHoy').classList.add('active');
       if (tipo === 'semana') document.getElementById('btnDashSemana').classList.add('active');
       if (tipo === 'mes') document.getElementById('btnDashMes').classList.add('active');
       if (tipo === 'todo') document.getElementById('btnDashTodo').classList.add('active');
-
       renderizarDashboard();
     }
 
     function renderizarDashboard() {
       const ahora = new Date();
       const hoyStr = ahora.toLocaleDateString('es-PE');
-      
       const ventasFiltradas = todasLasVentas.filter(v => {
-        if (!v.timestampISO) return true;
-        const fVenta = new Date(v.timestampISO);
-
-        if (filtroDashboardActivo === 'hoy') {
-          return fVenta.toLocaleDateString('es-PE') === hoyStr;
-        } else if (filtroDashboardActivo === 'semana') {
+        if (!v.fecha_venta) return false;
+        const fVenta = new Date(v.fecha_venta);
+        if (filtroDashboardActivo === 'hoy') return fVenta.toLocaleDateString('es-PE') === hoyStr;
+        if (filtroDashboardActivo === 'semana') {
           const hace7dias = new Date(ahora.getTime() - (7 * 24 * 60 * 60 * 1000));
           return fVenta >= hace7dias;
-        } else if (filtroDashboardActivo === 'mes') {
-          return fVenta.getMonth() === ahora.getMonth() && fVenta.getFullYear() === ahora.getFullYear();
         }
+        if (filtroDashboardActivo === 'mes') return fVenta.getMonth() === ahora.getMonth() && fVenta.getFullYear() === ahora.getFullYear();
         return true;
       });
 
-      let totalSoles = 0;
+      let totalSoles = 0, totalCobrado = 0, totalPorCobrar = 0;
       ventasFiltradas.forEach(v => {
         totalSoles += v.monto_total;
+        totalCobrado += getMontoPagado(v);
+        totalPorCobrar += getMontoPendiente(v);
       });
 
-      document.getElementById('dashTotalSoles').innerText = "S/ " + totalSoles.toFixed(2);
+      document.getElementById('dashTotalSoles').innerText = formatearMonto(totalSoles);
       document.getElementById('dashTotalPedidos').innerText = ventasFiltradas.length;
+      document.getElementById('dashCobrado').innerText = formatearMonto(totalCobrado);
+      document.getElementById('dashPorCobrar').innerText = formatearMonto(totalPorCobrar);
 
       dibujarBarChart('canvasChartMonto', ventasFiltradas, 'monto_total', '#059669', 'S/');
       dibujarBarChart('canvasChartPedidos', ventasFiltradas, 'conteo', '#2563eb', '');
@@ -1956,12 +2002,10 @@
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
       const dpr = window.devicePixelRatio || 1;
-      
       const rect = canvas.getBoundingClientRect();
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
       ctx.scale(dpr, dpr);
-
       const w = rect.width;
       const h = rect.height;
       ctx.clearRect(0, 0, w, h);
@@ -1976,7 +2020,8 @@
 
       const mapaAgrupado = {};
       dataset.forEach(d => {
-        const clave = d.fecha_registro || 'Hoy';
+        if (!d.fecha_venta) return;
+        const clave = new Date(d.fecha_venta).toLocaleDateString('es-PE');
         if (!mapaAgrupado[clave]) mapaAgrupado[clave] = { monto: 0, conteo: 0 };
         mapaAgrupado[clave].monto += d.monto_total;
         mapaAgrupado[clave].conteo += 1;
@@ -1985,9 +2030,7 @@
       const etiquetas = Object.keys(mapaAgrupado);
       const valores = etiquetas.map(k => propiedad === 'monto_total' ? mapaAgrupado[k].monto : mapaAgrupado[k].conteo);
       const maxVal = Math.max(...valores, 1);
-
-      const paddingBottom = 26;
-      const paddingTop = 20;
+      const paddingBottom = 26, paddingTop = 20;
       const chartHeight = h - paddingBottom - paddingTop;
       const barWidth = Math.min(36, (w / (valores.length || 1)) - 14);
       const gap = w / valores.length;
@@ -1996,7 +2039,6 @@
         const barHeight = (val / maxVal) * chartHeight;
         const x = (i * gap) + (gap / 2) - (barWidth / 2);
         const y = h - paddingBottom - barHeight;
-
         ctx.fillStyle = colorHex;
         ctx.beginPath();
         const r = 5;
@@ -2012,7 +2054,13 @@
         ctx.fillStyle = '#0f172a';
         ctx.font = '800 10px Montserrat';
         ctx.textAlign = 'center';
-        const txtVal = prefijo ? `${prefijo} ${val.toFixed(0)}` : `${val}`;
+        // Uso del formateador corto en las etiquetas de las barras
+        let txtVal;
+        if (propiedad === 'monto_total') {
+          txtVal = formatearMonto(val);
+        } else {
+          txtVal = `${val}`;
+        }
         ctx.fillText(txtVal, x + (barWidth / 2), y - 6);
 
         ctx.fillStyle = '#64748b';
@@ -2022,47 +2070,50 @@
       });
     }
 
-    // 14. STOCK EN PLANTA
-    function renderizarListaStock() {
-      const cont = document.getElementById('contenedorListaStock');
-      const q = (document.getElementById('buscadorStock').value || '').toLowerCase();
-      let html = "";
+    // ==================================================
+    // 19. LISTA DE PRECIOS
+    // ==================================================
+    function renderizarListaPrecios() {
+      const cont = document.getElementById('contenedorListaPrecios');
+      if (!cont) return;
+      const q = (document.getElementById('buscadorPrecios').value || '').toLowerCase();
 
       if (CATALOGO_FABREC.length === 0) {
         cont.innerHTML = '<div style="text-align: center; color: var(--text-soft); padding: 30px; font-size: 12px;">Cargando catálogo...</div>';
         return;
       }
 
+      let html = "";
       CATALOGO_FABREC.forEach(p => {
         if (p.producto.toLowerCase().includes(q)) {
-          const stock = inventarioLocal[p.producto] || 0;
-          const tagClase = stock > 0 ? "stock-tag stock-tag-ok" : "stock-tag stock-tag-cero";
-          const tagTexto = stock > 0 ? (stock + " paq") : "Pedir";
-
           html += `
-            <div class="product-stock-card">
-              <div class="stock-product-name">${p.producto}</div>
-              <div>
-                <span class="${tagClase}">${tagTexto}</span>
+            <div class="precio-card">
+              <div class="precio-card-header">
+                <div class="precio-card-nombre">${p.producto}</div>
+                <div class="precio-card-units">${p.unidades} u/paq</div>
+              </div>
+              <div class="precio-grid">
+                <div class="precio-item menor">
+                  <span class="precio-label">Menor</span>
+                  <span class="precio-value">S/ ${p.menor.toFixed(2)}</span>
+                </div>
+                <div class="precio-item mayor">
+                  <span class="precio-label">Mayor</span>
+                  <span class="precio-value">S/ ${p.mayor.toFixed(2)}</span>
+                </div>
               </div>
             </div>
           `;
         }
       });
-      cont.innerHTML = html;
-    }
-
-    function filtrarListaStock() {
-      renderizarListaStock();
+      cont.innerHTML = html || '<div class="empty-state">No hay productos que coincidan con la búsqueda.</div>';
     }
 
     function mostrarToast(msg) {
       const toast = document.getElementById('toast');
       toast.innerText = msg;
       toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 2400);
+      setTimeout(() => { toast.classList.remove('show'); }, 2400);
     }
 
     // EXPOSICIÓN GLOBAL
@@ -2082,21 +2133,22 @@
     window.cargarItemParaEditar = cargarItemParaEditar;
     window.eliminarItemModal = eliminarItemModal;
     window.finalizarRegistroVenta = finalizarRegistroVenta;
-    window.filtrarListaStock = filtrarListaStock;
     window.enviarCierreAContabilidad = enviarCierreAContabilidad;
     window.cambiarFiltroDashboard = cambiarFiltroDashboard;
     window.seleccionarClienteAntiguo = seleccionarClienteAntiguo;
     window.verDetalleVenta = verDetalleVenta;
     window.cerrarModalDetalleVenta = cerrarModalDetalleVenta;
+    window.cambiarFiltroVentas = cambiarFiltroVentas;
+    window.abrirModalConfirmarCobroDesdeDetalle = abrirModalConfirmarCobroDesdeDetalle;
+    window.cerrarModalConfirmarCobro = cerrarModalConfirmarCobro;
+    window.confirmarCobroYNotificar = confirmarCobroYNotificar;
+    window.enviarPagosContabilidad = enviarPagosContabilidad;
+    window.enviarReciboCliente = enviarReciboCliente;
 
-    // INICIALIZACIÓN
     window.addEventListener('DOMContentLoaded', async () => {
       await cargarDatosExternos();
-      if (zonaActivaClave && ZONAS[zonaActivaClave]) {
-        seleccionarZona(zonaActivaClave);
-      } else {
-        seleccionarZona("");
-      }
+      if (zonaActivaClave && ZONAS[zonaActivaClave]) seleccionarZona(zonaActivaClave);
+      else seleccionarZona("");
     });
   </script>
 </body>
