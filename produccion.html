@@ -2,39 +2,33 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Fabrec | Producción</title>
-  <!-- Fuente Montserrat -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- localForage CDN (IndexedDB) -->
   <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Montserrat', 'sans-serif'],
-          }
-        }
-      }
+      theme: { extend: { fontFamily: { sans: ['Montserrat', 'sans-serif'] } } }
     }
   </script>
   <style>
     body { font-family: 'Montserrat', sans-serif; }
     details summary::-webkit-details-marker { display: none; }
+    .safe-bottom { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
+    .bottom-nav { padding-bottom: env(safe-area-inset-bottom, 0px); }
+    .nav-tab { transition: all 0.15s ease; }
+    .nav-tab.active { color: #2563eb; }
+    .dark .nav-tab.active { color: #60a5fa; }
   </style>
 </head>
-<body class="transition-colors duration-300 min-h-screen pb-14 bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100">
+<body class="transition-colors duration-300 min-h-screen safe-bottom bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100">
 
-  <!-- AVISO FLOTANTE DE ACCIÓN (TOAST INTEGRADO) -->
-  <div id="toastNotificacion" class="fixed top-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 transition-all duration-300 opacity-0 pointer-events-none z-50">
+  <div id="toastNotificacion" class="fixed top-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 transition-all duration-300 opacity-0 pointer-events-none z-[80]">
     <svg class="w-4 h-4 text-emerald-500 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
       <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
     </svg>
@@ -43,15 +37,12 @@
 
   <div class="max-w-md mx-auto p-4">
 
-    <!-- BARRA SUPERIOR -->
     <header class="flex justify-between items-center mb-4 pt-1">
       <div>
         <span class="text-xs font-extrabold tracking-widest uppercase text-blue-600 dark:text-blue-400">Fabrec</span>
         <h1 id="txtSaludo" class="text-xl font-bold tracking-tight">Buenos días</h1>
       </div>
-
       <div class="flex items-center gap-2">
-        <!-- Configuración -->
         <button onclick="abrirConfiguracion()" class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition active:scale-95 text-slate-600 dark:text-slate-300" title="Configuración de Máquinas">
           <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -61,55 +52,7 @@
       </div>
     </header>
 
-    <!-- NAVEGACIÓN EN 4 PESTAÑAS -->
-    <nav class="flex bg-slate-200/80 dark:bg-slate-900 p-1 rounded-2xl mb-4 text-[11px] font-bold border border-slate-200 dark:border-slate-800 gap-1">
-      <button id="btnTabProd" onclick="cambiarTab('produccion')" class="flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm">
-        <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-        </svg>
-        Registro
-      </button>
-
-      <button id="btnTabSolicitudes" onclick="cambiarTab('solicitudes')" class="flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
-        <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-        </svg>
-        Solicitudes
-        <span id="badgeSolicitudesCount" class="text-[9px] px-1.5 py-0.2 rounded-full bg-amber-200 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 font-extrabold">0</span>
-      </button>
-
-      <button id="btnTabReporte" onclick="cambiarTab('reporte')" class="flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
-        <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-        Reporte
-        <span id="badgeTabCount" class="text-[9px] px-1.5 py-0.2 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-extrabold">0</span>
-      </button>
-
-      <button id="btnTabDashboard" onclick="cambiarTab('dashboard')" class="flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1 text-slate-500 dark:text-slate-400">
-        <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        Dashboard
-      </button>
-    </nav>
-
-    <!-- PESTAÑA 1: REGISTRO DE PRODUCCIÓN -->
     <main id="seccionProduccion" class="space-y-4">
-      <div id="avisoSinMaquinas" class="hidden bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 p-4 rounded-2xl text-xs text-amber-700 dark:text-amber-300">
-        <div class="flex items-start gap-2.5">
-          <svg class="w-5 h-5 shrink-0 stroke-current text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-          <div>
-            <p class="font-bold mb-1">No hay máquinas configuradas</p>
-            <p>Ingresa a configuración para registrar tus máquinas y asociar los modelos.</p>
-            <button onclick="abrirConfiguracion()" class="mt-2 font-bold underline hover:text-amber-900 dark:hover:text-amber-100">Abrir Configuración</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Banner de Demanda Pendiente para el Modelo Seleccionado -->
       <div id="bannerDemandaProducto" class="hidden bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-900 p-3 rounded-2xl text-xs flex justify-between items-center">
         <div>
           <span class="text-[10px] font-bold uppercase text-blue-600 dark:text-blue-400">Demanda Pendiente</span>
@@ -119,27 +62,22 @@
       </div>
 
       <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-3.5">
-        <!-- Máquina -->
         <div>
           <div class="flex justify-between items-center mb-1">
             <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400">Máquina</label>
             <span id="badgeFactorMaquina" class="text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded border border-blue-200/50">Factor: 1x golpe</span>
           </div>
-          <select id="selectMaquina" onchange="alCambiarMaquina()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </select>
+          <select id="selectMaquina" onchange="alCambiarMaquina()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
         </div>
 
-        <!-- Modelo de Envase -->
         <div>
           <div class="flex justify-between items-center mb-1">
             <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400">Modelo de Envase</label>
             <span id="badgeDivisorModelo" class="text-[10px] font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">100 un/paquete</span>
           </div>
-          <select id="selectProducto" onchange="actualizarCalculoEnVivo()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </select>
+          <select id="selectProducto" onchange="actualizarCalculoEnVivo()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
         </div>
 
-        <!-- Producción y Merma -->
         <div class="grid grid-cols-2 gap-3 pt-1">
           <div>
             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
@@ -148,7 +86,6 @@
             </label>
             <input type="number" id="inProduccion" oninput="actualizarCalculoEnVivo()" placeholder="0" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-center text-xl font-black text-blue-600 dark:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
           </div>
-          
           <div>
             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               Merma (Opcional)
@@ -158,7 +95,6 @@
           </div>
         </div>
 
-        <!-- CÁLCULO EN TIEMPO REAL -->
         <div class="p-3 bg-blue-50/70 dark:bg-blue-950/40 rounded-xl border border-blue-200/80 dark:border-blue-900/60">
           <div class="flex justify-between items-center text-[11px] text-slate-500 dark:text-slate-400 mb-1">
             <span>Cálculo automático:</span>
@@ -182,16 +118,13 @@
       </div>
     </main>
 
-    <!-- PESTAÑA 2: SOLICITUDES DE PRODUCCIÓN -->
     <main id="seccionSolicitudes" class="hidden space-y-4">
       <div class="flex justify-between items-center px-1">
         <div>
           <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Solicitudes de Producción</h2>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400">Demandas registradas para planta</p>
         </div>
       </div>
 
-      <!-- Métricas Resumen -->
       <div class="grid grid-cols-3 gap-2">
         <div class="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
           <p class="text-[10px] text-slate-400 uppercase font-semibold">Total Paq</p>
@@ -207,37 +140,22 @@
         </div>
       </div>
 
-      <!-- Tarjetas de Solicitudes -->
       <div id="contenedorSolicitudesLista" class="space-y-3 max-h-[62vh] overflow-y-auto pr-0.5">
-        <p class="text-xs text-slate-400 dark:text-slate-600 text-center py-12">No hay solicitudes cargadas en production.json.</p>
+        <p class="text-xs text-slate-400 dark:text-slate-600 text-center py-12">No hay solicitudes cargadas.</p>
       </div>
     </main>
 
-    <!-- PESTAÑA 3: REPORTE ACTUAL -->
     <main id="seccionReporte" class="hidden space-y-4">
       <div class="flex justify-between items-center px-1">
         <div>
           <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Reporte en Curso</h2>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400">Conteos y solicitudes que cubre este turno</p>
         </div>
         <span id="badgeTotalPaquetes" class="text-xs bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-extrabold px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800/50">0 paq</span>
       </div>
 
-      <!-- SECCIÓN: SOLICITUDES CUBIERTAS POR ESTA PRODUCCIÓN -->
-      <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
-        <div class="flex justify-between items-center">
-          <span class="text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">Solicitudes cubiertas en este reporte</span>
-          <span id="badgeTicketsEnReporte" class="text-[10px] font-extrabold px-2 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 rounded-full">0 listos</span>
-        </div>
-        <div id="listaSolicitudesCubiertasReporte" class="space-y-1.5 text-xs">
-          <p class="text-slate-400 text-[11px] italic py-1">Registra producción para cubrir solicitudes pendientes.</p>
-        </div>
-      </div>
-
-      <!-- SECCIÓN: CONTEOS DE MÁQUINA DEL REPORTE -->
       <div class="space-y-1.5">
         <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-1">Máquinas Registradas</span>
-        <div id="contenedorLista" class="space-y-3 max-h-[35vh] overflow-y-auto pr-0.5">
+        <div id="contenedorLista" class="space-y-3 max-h-[55vh] overflow-y-auto pr-0.5">
           <p class="text-xs text-slate-400 dark:text-slate-600 text-center py-6">No hay conteos en el reporte actual.</p>
         </div>
       </div>
@@ -259,7 +177,6 @@
       </div>
     </main>
 
-    <!-- PESTAÑA 4: DASHBOARD & HISTORIAL -->
     <main id="seccionDashboard" class="hidden space-y-4">
       <div class="grid grid-cols-3 gap-2">
         <div class="bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 text-center">
@@ -276,27 +193,20 @@
         </div>
       </div>
 
-      <!-- GRÁFICO DE LÍNEAS: TENDENCIA DE MERMA Y RENDIMIENTO -->
       <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
         <div class="flex justify-between items-center mb-1">
           <h3 class="text-xs font-bold uppercase text-slate-400">Evolución de Rendimiento y Merma</h3>
           <span class="text-[10px] font-bold text-rose-500 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded">% de Desperdicio</span>
         </div>
         <p class="text-[11px] text-slate-400 mb-2">Relación de botellas útiles vs defectuosas por registro</p>
-        <div class="h-48">
-          <canvas id="chartLineasMermaRendimiento"></canvas>
-        </div>
+        <div class="h-48"><canvas id="chartLineasMermaRendimiento"></canvas></div>
       </div>
 
-      <!-- Gráfico 2: Producción por Máquina -->
       <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
         <h3 class="text-xs font-bold uppercase text-slate-400 mb-2">Paquetes por Máquina</h3>
-        <div class="h-44">
-          <canvas id="chartProduccionMaquinas"></canvas>
-        </div>
+        <div class="h-44"><canvas id="chartProduccionMaquinas"></canvas></div>
       </div>
 
-      <!-- Lista Histórica de Reportes Cerrados -->
       <div>
         <div class="flex justify-between items-center mb-2 px-1">
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Reportes Cerrados Anteriores</h3>
@@ -307,7 +217,6 @@
         </div>
       </div>
 
-      <!-- BARRA DE ALMACENAMIENTO (INFO SECUNDARIA AL FINAL) -->
       <div class="bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-1.5 opacity-80">
         <div class="flex justify-between items-center text-xs">
           <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Memoria Local (IndexedDB)</span>
@@ -321,7 +230,44 @@
 
   </div>
 
-  <!-- MODAL INTEGRADO DE ALERTAS Y CONFIRMACIÓN -->
+  <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-40">
+    <div class="max-w-md mx-auto flex">
+      <button id="btnTabProd" onclick="cambiarTab('produccion')" class="nav-tab active flex-1 flex flex-col items-center justify-center py-2.5 gap-0.5 text-[10px] font-bold text-blue-600 dark:text-blue-400">
+        <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        <span>Registro</span>
+      </button>
+
+      <button id="btnTabSolicitudes" onclick="cambiarTab('solicitudes')" class="nav-tab flex-1 flex flex-col items-center justify-center py-2.5 gap-0.5 text-[10px] font-bold text-slate-500 dark:text-slate-400">
+        <div class="relative">
+          <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          </svg>
+          <span id="badgeSolicitudesCount" class="absolute -top-1 -right-2 text-[9px] min-w-[15px] h-[15px] px-1 flex items-center justify-center rounded-full bg-amber-500 text-white font-extrabold leading-none">0</span>
+        </div>
+        <span>Solicitudes</span>
+      </button>
+
+      <button id="btnTabReporte" onclick="cambiarTab('reporte')" class="nav-tab flex-1 flex flex-col items-center justify-center py-2.5 gap-0.5 text-[10px] font-bold text-slate-500 dark:text-slate-400">
+        <div class="relative">
+          <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span id="badgeTabCount" class="absolute -top-1 -right-2 text-[9px] min-w-[15px] h-[15px] px-1 flex items-center justify-center rounded-full bg-slate-500 text-white font-extrabold leading-none">0</span>
+        </div>
+        <span>Reporte</span>
+      </button>
+
+      <button id="btnTabDashboard" onclick="cambiarTab('dashboard')" class="nav-tab flex-1 flex flex-col items-center justify-center py-2.5 gap-0.5 text-[10px] font-bold text-slate-500 dark:text-slate-400">
+        <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <span>Dashboard</span>
+      </button>
+    </div>
+  </nav>
+
   <div id="modalDialogo" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-xs p-5 shadow-2xl space-y-4">
       <div class="flex items-start gap-3">
@@ -335,12 +281,10 @@
           <p id="modalDialogoMensaje" class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed"></p>
         </div>
       </div>
-      <div id="modalDialogoBotones" class="flex justify-end gap-2 pt-1">
-      </div>
+      <div id="modalDialogoBotones" class="flex justify-end gap-2 pt-1"></div>
     </div>
   </div>
 
-  <!-- MODAL PARA EDITAR MÁQUINA EXISTENTE -->
   <div id="modalEditarMaquina" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[68] hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-sm p-5 shadow-2xl space-y-4">
       <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
@@ -353,43 +297,30 @@
           <label class="block text-[11px] font-semibold text-slate-500 mb-1">Nombre de la Máquina</label>
           <input type="text" id="editMaquinaNombre" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
-
         <div>
           <label class="block text-[11px] font-semibold text-slate-500 mb-1">Botellas por golpe / cavidad</label>
           <input type="number" id="editMaquinaFactor" min="1" max="12" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2.5 text-xs font-bold text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
-
         <div>
           <label class="block text-[11px] font-semibold text-slate-500 mb-1">Añadir modelo a esta máquina</label>
           <div class="flex gap-2">
-            <select id="editCatalogoSelect" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </select>
-            <button onclick="agregarModeloAEdicion()" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center transition">
-              + Añadir
-            </button>
+            <select id="editCatalogoSelect" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+            <button onclick="agregarModeloAEdicion()" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center transition">+ Añadir</button>
           </div>
         </div>
-
-        <!-- Chips de modelos de la máquina en edición -->
         <div>
           <label class="block text-[11px] font-semibold text-slate-500 mb-1">Modelos asignados actualmente:</label>
-          <div id="chipsEditMaquina" class="flex flex-wrap gap-1.5 min-h-[30px] p-2 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
-          </div>
+          <div id="chipsEditMaquina" class="flex flex-wrap gap-1.5 min-h-[30px] p-2 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700"></div>
         </div>
       </div>
 
       <div class="pt-2 flex gap-2">
-        <button onclick="cerrarEditarMaquina()" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs transition">
-          Cancelar
-        </button>
-        <button onclick="guardarEdicionMaquinaDirecto()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-xs transition">
-          Guardar Cambios
-        </button>
+        <button onclick="cerrarEditarMaquina()" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs transition">Cancelar</button>
+        <button onclick="guardarEdicionMaquinaDirecto()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-xs transition">Guardar Cambios</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL DE DETALLE DE REPORTE HISTÓRICO -->
   <div id="modalDetalleReporte" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[65] hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-sm p-5 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto">
       <div class="flex justify-between items-start border-b border-slate-100 dark:border-slate-800 pb-3">
@@ -413,26 +344,16 @@
 
       <div class="space-y-2">
         <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Conteos por Máquina</h4>
-        <div id="detConteosLista" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
-      </div>
-
-      <div class="space-y-2 pt-1">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Solicitudes que cubrió</h4>
-        <div id="detSolicitudesLista" class="space-y-1.5 max-h-32 overflow-y-auto pr-1"></div>
+        <div id="detConteosLista" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
       </div>
 
       <div class="pt-2 flex gap-2">
-        <button onclick="cerrarDetalleReporte()" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs transition">
-          Cerrar
-        </button>
-        <button id="btnCompartirDesdeDetalle" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5">
-          Compartir
-        </button>
+        <button onclick="cerrarDetalleReporte()" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs transition">Cerrar</button>
+        <button id="btnCompartirDesdeDetalle" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5">Compartir</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL DE CONFIGURACIÓN DE MÁQUINAS -->
   <div id="modalConfig" class="fixed inset-0 w-full h-full bg-slate-100 dark:bg-slate-950 z-50 hidden overflow-y-auto">
     <div class="max-w-md mx-auto p-4 min-h-screen flex flex-col justify-start">
       <div class="space-y-5">
@@ -467,7 +388,6 @@
                 <label class="block text-[11px] font-semibold text-slate-500 mb-1">Nombre de la Máquina</label>
                 <input type="text" id="nuevaMaquinaNombre" placeholder="Nombre o código de máquina" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
               </div>
-
               <div>
                 <label class="block text-[11px] font-semibold text-slate-500 mb-1">
                   Botellas por golpe / cavidad
@@ -475,12 +395,10 @@
                 </label>
                 <input type="number" id="nuevaMaquinaFactor" value="1" min="1" max="12" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2.5 text-xs font-bold text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
               </div>
-
               <div>
                 <label class="block text-[11px] font-semibold text-slate-500 mb-1">Seleccionar modelo (Catálogo Fabrec)</label>
                 <div class="flex gap-2">
-                  <select id="catalogoModelosSelect" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  </select>
+                  <select id="catalogoModelosSelect" class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
                   <button onclick="agregarModeloTemporal()" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition">
                     <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
@@ -489,11 +407,9 @@
                   </button>
                 </div>
               </div>
-
               <div id="chipsModelosNuevaMaquina" class="flex flex-wrap gap-1.5 min-h-[26px]">
                 <span class="text-[11px] text-slate-400 italic">No has seleccionado modelos para esta máquina.</span>
               </div>
-
               <button onclick="guardarMaquinaDirecto()" class="w-full bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 text-white font-bold py-2.5 rounded-lg text-xs flex items-center justify-center gap-1.5 transition">
                 <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -504,8 +420,16 @@
           </details>
 
           <h5 class="text-[11px] font-bold text-slate-400 mb-2 uppercase tracking-wider">Máquinas Activas</h5>
-          <div id="listaMaquinasConfig" class="space-y-2">
-          </div>
+          <div id="listaMaquinasConfig" class="space-y-2"></div>
+        </div>
+
+        <div class="border-t border-slate-200 dark:border-slate-800 pt-4">
+          <button onclick="borrarDatos()" class="w-full bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-950/60 text-rose-600 dark:text-rose-400 font-bold py-3 rounded-xl text-sm transition border border-rose-200 dark:border-rose-900/50 flex items-center justify-center gap-2">
+            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Borrar Datos
+          </button>
         </div>
       </div>
     </div>
@@ -513,17 +437,19 @@
 
   <script>
     const WHATSAPP_COO = "51922796815";
-    
+
     localforage.config({
       name: 'Fabrec_Produccion_DB',
       storeName: 'fabrec_planta_store',
       description: 'Base de datos IndexedDB para Fabrec Planta'
     });
 
-    const KEY_CONFIG = "fabrec_prod_config_v5";
-    const KEY_REPORTE_ACTUAL = "fabrec_prod_reporte_actual_v5";
-    const KEY_HISTORIAL_REPORTES = "fabrec_prod_historial_reportes_v5";
-    const KEY_SOLICITUDES = "fabrec_prod_solicitudes_v2";
+    const KEY_CONFIG = "fabrec_prod_config_v9";
+    const KEY_REPORTE_ACTUAL = "fabrec_prod_reporte_actual_v9";
+    const KEY_HISTORIAL_REPORTES = "fabrec_prod_historial_reportes_v9";
+    const KEY_SOLICITUDES = "fabrec_prod_solicitudes_v6";
+    const KEY_TICKETS_ESTADO = "fabrec_prod_tickets_estado_v2";
+    const KEY_SOLICITUDES_COMPLETADAS = "fabrec_prod_solicitudes_completadas_v1";
 
     const CATALOGO_FABREC = [
       "220 ml", "250 ml", "280 ml", "300 ml", "340 ml", "350 ml",
@@ -535,16 +461,18 @@
     let appConfig = { nombre: "", maquinas: [] };
     let reporteActual = [];
     let historialReportes = [];
-    let solicitudesProduccion = [];
+    let solicitudesProduccion = [];        // Tickets activos (pendiente / produciendo / en_proceso)
+    let solicitudesCompletadas = [];       // Tickets ya cubiertos por producción (silencioso)
+    let ticketsEstadoLocal = {};           // { idTicket: { estado, produciendo, paquetes_en_reporte } }
     let modelosTempParaMaquina = [];
-    
-    // Variables de edición de máquina
+
     let indiceMaquinaEnEdicion = -1;
     let modelosEditTempParaMaquina = [];
 
     let chartMaquinasInstance = null;
     let chartLineasInstance = null;
     let confirmCallback = null;
+    let autoSyncInterval = null;
 
     // --- CARGA INICIAL ---
     async function cargarDatosIniciales() {
@@ -552,32 +480,31 @@
       reporteActual = (await localforage.getItem(KEY_REPORTE_ACTUAL)) || [];
       historialReportes = (await localforage.getItem(KEY_HISTORIAL_REPORTES)) || [];
       solicitudesProduccion = (await localforage.getItem(KEY_SOLICITUDES)) || [];
+      solicitudesCompletadas = (await localforage.getItem(KEY_SOLICITUDES_COMPLETADAS)) || [];
+      ticketsEstadoLocal = (await localforage.getItem(KEY_TICKETS_ESTADO)) || {};
 
       aplicarTemaAutomatico();
       inicializarSelectores();
       renderizarReporteActual();
       actualizarBadgesContadores();
-      
+
+      // Auto-sync siempre activo
       await autoCargarProductionJSON();
-      setInterval(autoCargarProductionJSON, 20000);
+      if (autoSyncInterval) clearInterval(autoSyncInterval);
+      autoSyncInterval = setInterval(autoCargarProductionJSON, 20000);
 
       actualizarBarraAlmacenamiento();
     }
 
-    // --- SINCRONIZACIÓN DE BADGES EN TIEMPO REAL ---
     function actualizarBadgesContadores() {
       const badgeTab = document.getElementById('badgeTabCount');
-      if (badgeTab) {
-        badgeTab.innerText = reporteActual.length;
-      }
+      if (badgeTab) badgeTab.innerText = reporteActual.length;
       const badgeSoli = document.getElementById('badgeSolicitudesCount');
       if (badgeSoli) {
-        const pendientes = solicitudesProduccion.filter(s => s.estado !== "producido").length;
-        badgeSoli.innerText = pendientes;
+        badgeSoli.innerText = solicitudesProduccion.length;
       }
     }
 
-    // --- BARRA DE ALMACENAMIENTO ---
     async function actualizarBarraAlmacenamiento() {
       if (navigator.storage && navigator.storage.estimate) {
         try {
@@ -586,7 +513,6 @@
           const quotaMB = (est.quota / (1024 * 1024)).toFixed(0);
           const quotaGB = (est.quota / (1024 * 1024 * 1024)).toFixed(1);
           const pct = est.quota ? ((est.usage / est.quota) * 100).toFixed(2) : 0;
-
           const txt = document.getElementById('txtStorageInfo');
           const bar = document.getElementById('barStorageProgress');
           if (txt && bar) {
@@ -598,57 +524,112 @@
       }
     }
 
-    // --- LECTURA AUTOMÁTICA DE PRODUCTION.JSON ---
+    // Persiste el estado actual de tickets activos y el historial de completados
+    async function persistirEstados() {
+      // Actualizar mapa de estados locales con los activos
+      solicitudesProduccion.forEach(t => {
+        ticketsEstadoLocal[t.id_ticket_produccion] = {
+          estado: t.estado,
+          produciendo: t.produciendo,
+          paquetes_en_reporte: t.paquetes_en_reporte || 0
+        };
+      });
+      // Limpiar estados huérfanos (tickets que ya no están ni activos)
+      const idsActivos = new Set(solicitudesProduccion.map(t => t.id_ticket_produccion));
+      Object.keys(ticketsEstadoLocal).forEach(id => {
+        if (!idsActivos.has(id)) delete ticketsEstadoLocal[id];
+      });
+
+      await localforage.setItem(KEY_TICKETS_ESTADO, ticketsEstadoLocal);
+      await localforage.setItem(KEY_SOLICITUDES, solicitudesProduccion);
+      await localforage.setItem(KEY_SOLICITUDES_COMPLETADAS, solicitudesCompletadas);
+    }
+
+    // --- AUTO-SYNC ---
     async function autoCargarProductionJSON() {
       try {
         const resp = await fetch('production.json?t=' + Date.now(), { cache: 'no-store' });
-        if (!resp.ok) return;
+
+        if (!resp.ok) {
+          await vaciarSolicitudes();
+          return;
+        }
+
         const data = await resp.json();
         await sincronizarTicketsJSON(data);
-      } catch(e) {}
+      } catch(e) {
+        await vaciarSolicitudes();
+      }
     }
 
+    async function vaciarSolicitudes() {
+      if (solicitudesProduccion.length === 0) return;
+      solicitudesProduccion = [];
+      await persistirEstados();
+      renderizarSolicitudes();
+      actualizarCalculoEnVivo();
+      actualizarBadgesContadores();
+    }
+
+    // El archivo production.json es la fuente de verdad,
+    // pero ignoramos tickets ya completados localmente
     async function sincronizarTicketsJSON(data) {
       let ticketsExternos = [];
       if (Array.isArray(data)) ticketsExternos = data;
       else if (data.tickets && Array.isArray(data.tickets)) ticketsExternos = data.tickets;
 
-      if (ticketsExternos.length === 0) return;
+      if (ticketsExternos.length === 0) {
+        await vaciarSolicitudes();
+        return;
+      }
 
-      let huboCambios = false;
+      // IDs de tickets ya completados → ignorar
+      const idsCompletados = new Set(solicitudesCompletadas.map(s => s.id_ticket_produccion));
 
+      const nuevasSolicitudes = [];
       ticketsExternos.forEach(ext => {
-        const idTicket = ext.id_ticket_produccion;
+        const idTicket = ext.id_ticket_produccion || ext.codigo;
         if (!idTicket) return;
+        if (idsCompletados.has(idTicket)) return; // Ya producido → no volver a mostrarlo
 
-        const existente = solicitudesProduccion.find(s => s.id_ticket_produccion === idTicket);
+        const estadoGuardado = ticketsEstadoLocal[idTicket];
 
-        if (!existente) {
-          solicitudesProduccion.push({
-            id_ticket_produccion: idTicket,
-            producto: ext.producto,
-            paquetes_a_fabricar: parseInt(ext.paquetes_a_fabricar) || 0,
-            fecha_entrega_programada: ext.fecha_entrega_programada || "",
-            estado: "pendiente",
-            produciendo: false
-          });
-          huboCambios = true;
-        } else {
-          if (existente.paquetes_a_fabricar !== parseInt(ext.paquetes_a_fabricar)) {
-            existente.paquetes_a_fabricar = parseInt(ext.paquetes_a_fabricar);
-            huboCambios = true;
-          }
-        }
+        nuevasSolicitudes.push({
+          id_ticket_produccion: idTicket,
+          producto: ext.producto || 'Sin producto',
+          paquetes_a_fabricar: parseInt(ext.paquetes_a_fabricar) || 0,
+          estado: estadoGuardado?.estado || "pendiente",
+          produciendo: estadoGuardado?.produciendo || false,
+          paquetes_en_reporte: estadoGuardado?.paquetes_en_reporte || 0
+        });
       });
 
+      solicitudesProduccion = nuevasSolicitudes;
       actualizarChequeoSolicitudes();
-      if (huboCambios) {
-        await localforage.setItem(KEY_SOLICITUDES, solicitudesProduccion);
-        renderizarSolicitudes();
-        actualizarCalculoEnVivo();
-      }
+      await persistirEstados();
+      renderizarSolicitudes();
+      actualizarCalculoEnVivo();
+      actualizarBadgesContadores();
     }
 
+    // --- BORRAR DATOS ---
+    function borrarDatos() {
+      mostrarConfirmacion(
+        "Esto eliminará PERMANENTEMENTE:\n\n• Reportes en curso y archivados\n• Configuración de máquinas\n• Historial de solicitudes\n\n¿Continuar?",
+        async () => {
+          try {
+            await localforage.clear();
+            mostrarToast("Datos borrados. Reiniciando...");
+            setTimeout(() => location.reload(), 400);
+          } catch (e) {
+            mostrarAlerta("Error al borrar: " + e.message);
+          }
+        },
+        "Borrar Datos"
+      );
+    }
+
+    // --- RESTO DE FUNCIONES ---
     function normalizarNombre(str) {
       return (str || "").trim().toLowerCase().replace(/\s+/g, ' ');
     }
@@ -662,7 +643,7 @@
       return mapa;
     }
 
-    // --- CHEQUEO AUTOMÁTICO: CAMBIA A "PRODUCIDO" SOLO SI SE REGISTRA PRODUCCIÓN ---
+    // Detecta tickets que ya fueron cubiertos por la producción y los mueve a completadas
     function actualizarChequeoSolicitudes() {
       if (solicitudesProduccion.length === 0) {
         actualizarBadgesContadores();
@@ -670,146 +651,125 @@
       }
 
       const pool = obtenerPaquetesPorProductoEnReporte();
+      const restantes = [];
 
       solicitudesProduccion.forEach(ticket => {
         const k = normalizarNombre(ticket.producto);
         const req = ticket.paquetes_a_fabricar;
         const disponible = pool[k] || 0;
 
-        if (disponible >= req && disponible > 0) {
-          ticket.estado = "producido";
-          ticket.paquetes_en_reporte = req;
-          ticket.produciendo = false;
+        if (disponible >= req && req > 0) {
+          // Cubierto → mover a completadas (silencioso)
           pool[k] -= req;
+          solicitudesCompletadas.push({
+            id_ticket_produccion: ticket.id_ticket_produccion,
+            producto: ticket.producto,
+            paquetes_a_fabricar: ticket.paquetes_a_fabricar,
+            fecha_completado: new Date().toISOString()
+          });
+          delete ticketsEstadoLocal[ticket.id_ticket_produccion];
         } else if (disponible > 0) {
+          // Parcial
           ticket.estado = ticket.produciendo ? "produciendo" : "en_proceso";
           ticket.paquetes_en_reporte = disponible;
           pool[k] = 0;
+          restantes.push(ticket);
         } else {
+          // Pendiente
           ticket.estado = ticket.produciendo ? "produciendo" : "pendiente";
           ticket.paquetes_en_reporte = 0;
+          restantes.push(ticket);
         }
       });
 
+      solicitudesProduccion = restantes;
+      // Persistir en background (sin await para no bloquear)
+      localforage.setItem(KEY_SOLICITUDES_COMPLETADAS, solicitudesCompletadas);
       actualizarBadgesContadores();
     }
 
-    // --- ALTERNAR ESTADO "PRODUCIENDO" MANUALMENTE ---
     async function toggleProduciendoSolicitud(idTicket) {
       const ticket = solicitudesProduccion.find(s => s.id_ticket_produccion === idTicket);
       if (!ticket) return;
-
-      if (ticket.estado === 'producido') {
-        mostrarToast("Esta solicitud ya fue cubierta por la producción");
-        return;
-      }
-
       ticket.produciendo = !ticket.produciendo;
       ticket.estado = ticket.produciendo ? "produciendo" : "pendiente";
-
-      await localforage.setItem(KEY_SOLICITUDES, solicitudesProduccion);
+      await persistirEstados();
       renderizarSolicitudes();
       actualizarBadgesContadores();
-
-      if (ticket.produciendo) {
-        mostrarToast(`Solicitud ${ticket.producto} marcada en Producción`);
-      } else {
-        mostrarToast(`Solicitud ${ticket.producto} devuelta a Pendiente`);
-      }
+      mostrarToast(ticket.produciendo
+        ? `Solicitud ${ticket.producto} marcada en Producción`
+        : `Solicitud ${ticket.producto} devuelta a Pendiente`);
     }
 
-    // --- RENDERIZAR VISTA DE SOLICITUDES ---
     function renderizarSolicitudes() {
       const cont = document.getElementById('contenedorSolicitudesLista');
       const totalPaqEl = document.getElementById('kpiDemandaPaquetes');
       const cubiertosEl = document.getElementById('kpiDemandaCubiertos');
       const pendientesEl = document.getElementById('kpiDemandaPendientes');
 
+      actualizarBadgesContadores();
+
+      // KPI Listos = total de tickets completados acumulados (solo conteo, sin detalle)
+      cubiertosEl.innerText = solicitudesCompletadas.length;
+
       if (solicitudesProduccion.length === 0) {
-        cont.innerHTML = '<p class="text-xs text-slate-400 dark:text-slate-600 text-center py-12">No hay solicitudes cargadas en production.json.</p>';
+        cont.innerHTML = '<p class="text-xs text-slate-400 dark:text-slate-600 text-center py-12">No hay solicitudes cargadas.<br><span class="text-[11px]">Se sincronizan automáticamente desde production.json.</span></p>';
         totalPaqEl.innerText = "0";
-        cubiertosEl.innerText = "0";
         pendientesEl.innerText = "0";
         return;
       }
 
       let totReq = 0;
-      let totListos = 0;
+      let totPendientes = 0;
 
       cont.innerHTML = solicitudesProduccion.map(s => {
         totReq += s.paquetes_a_fabricar;
-        const esListo = s.estado === "producido";
         const estaProduciendo = s.produciendo || s.estado === "produciendo";
-        if (esListo) totListos += s.paquetes_a_fabricar;
+        const enProceso = s.estado === "en_proceso";
+        if (!estaProduciendo && !enProceso) totPendientes += s.paquetes_a_fabricar;
 
         let badgeColor = "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-amber-300";
         let badgeTexto = "PENDIENTE";
 
-        if (esListo) {
-          badgeColor = "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300";
-          badgeTexto = "COMPLETADO ✓";
-        } else if (estaProduciendo) {
+        if (estaProduciendo) {
           badgeColor = "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border-blue-300";
-          badgeTexto = `PRODUCIENDO... (${s.paquetes_en_reporte || 0}/${s.paquetes_a_fabricar})`;
-        } else if (s.estado === "en_proceso") {
+          badgeTexto = `PRODUCIENDO (${s.paquetes_en_reporte || 0}/${s.paquetes_a_fabricar})`;
+        } else if (enProceso) {
           badgeColor = "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-amber-300";
           badgeTexto = `EN REPORTE (${s.paquetes_en_reporte || 0}/${s.paquetes_a_fabricar})`;
         }
 
         return `
-          <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border ${esListo ? 'border-emerald-200/80 dark:border-emerald-900/50' : (estaProduciendo ? 'border-blue-300 dark:border-blue-800' : 'border-slate-200 dark:border-slate-800')} shadow-sm space-y-2">
-            <div class="flex justify-between items-center text-xs">
-              <span class="font-extrabold ${badgeColor} px-2.5 py-0.5 rounded-lg border text-[10px] tracking-wider uppercase">
-                ${badgeTexto}
-              </span>
+          <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border ${estaProduciendo ? 'border-blue-300 dark:border-blue-800' : 'border-slate-200 dark:border-slate-800'} shadow-sm space-y-2">
+            <div class="flex justify-between items-center text-xs gap-2">
+              <span class="font-extrabold ${badgeColor} px-2.5 py-0.5 rounded-lg border text-[10px] tracking-wider uppercase">${badgeTexto}</span>
               <span class="text-[11px] font-mono text-slate-400">${s.id_ticket_produccion}</span>
             </div>
 
             <div class="flex justify-between items-end pt-1">
-              <div>
+              <div class="min-w-0">
                 <p class="text-lg font-black text-slate-800 dark:text-slate-100">${s.producto}</p>
-                <p class="text-[11px] text-slate-400">Entrega programada: ${s.fecha_entrega_programada || 'Hoy'}</p>
               </div>
-              <div class="text-right">
-                <span class="text-2xl font-black ${esListo ? 'text-emerald-600 dark:text-emerald-400' : 'text-blue-600 dark:text-blue-400'}">${s.paquetes_a_fabricar}</span>
+              <div class="text-right flex-shrink-0">
+                <span class="text-2xl font-black text-blue-600 dark:text-blue-400">${s.paquetes_a_fabricar}</span>
                 <span class="text-xs font-semibold text-slate-400">paq</span>
               </div>
             </div>
 
-            <!-- Botones de Acción de la Solicitud -->
             <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-end items-center gap-2">
-              ${esListo ? `
-                <button disabled class="bg-emerald-600 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-sm opacity-90 cursor-default">
-                  <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  Completado
-                </button>
-              ` : `
-                <button onclick="toggleProduciendoSolicitud('${s.id_ticket_produccion}')" class="${estaProduciendo ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200'} font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition active:scale-95">
-                  <span class="w-2 h-2 rounded-full ${estaProduciendo ? 'bg-amber-300 animate-ping' : 'bg-slate-400'}"></span>
-                  ${estaProduciendo ? 'Produciendo' : 'Marcar Produciendo'}
-                </button>
-
-                <!-- Botón Gris Inactivo: Se activa solo cuando se registre la producción -->
-                <button disabled class="bg-slate-200 dark:bg-slate-800/80 text-slate-400 dark:text-slate-500 font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 cursor-not-allowed select-none" title="Registra la producción de este modelo para completar automáticamente">
-                  <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  Completado
-                </button>
-              `}
+              <button onclick="toggleProduciendoSolicitud('${s.id_ticket_produccion}')" class="${estaProduciendo ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200'} font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition active:scale-95">
+                <span class="w-2 h-2 rounded-full ${estaProduciendo ? 'bg-amber-300 animate-ping' : 'bg-slate-400'}"></span>
+                ${estaProduciendo ? 'Produciendo' : 'Marcar Produciendo'}
+              </button>
             </div>
           </div>
         `;
       }).join('');
 
       totalPaqEl.innerText = totReq;
-      cubiertosEl.innerText = totListos;
-      pendientesEl.innerText = Math.max(0, totReq - totListos);
+      pendientesEl.innerText = totPendientes;
     }
 
-    // --- REGLAS DE DIVISIÓN Y CONTEO ---
     function obtenerUnidadesPorPaquete(nombreProducto) {
       if (!nombreProducto) return 100;
       const match = nombreProducto.match(/(\d+)\s*(ml|l)/i);
@@ -836,27 +796,21 @@
       const valorContador = parseFloat(document.getElementById('inProduccion').value) || 0;
       const maquinaSel = document.getElementById('selectMaquina').value;
       const productoSel = document.getElementById('selectProducto').value;
-
       const factor = obtenerFactorMaquina(maquinaSel);
       const divisor = obtenerUnidadesPorPaquete(productoSel);
-
       const botellasTotales = valorContador * factor;
       const paquetes = divisor > 0 ? Math.floor(botellasTotales / divisor) : 0;
-
       return { contador: valorContador, factor, divisor, botellasTotales, paquetes };
     }
 
     function actualizarCalculoEnVivo() {
       const calc = calcularProduccionActual();
       const prodSel = document.getElementById('selectProducto').value;
-
       document.getElementById('badgeFactorMaquina').innerText = `Factor: ${calc.factor}x botellas/golpe`;
       document.getElementById('badgeDivisorModelo').innerText = `${calc.divisor} un/paquete`;
-
       document.getElementById('txtPaquetesCalculados').innerText = calc.paquetes.toLocaleString();
       document.getElementById('txtBotellasTotales').innerText = `${calc.botellasTotales.toLocaleString()} botellas`;
       document.getElementById('txtFormulaResumen').innerText = `${calc.contador} pts × ${calc.factor} ÷ ${calc.divisor}`;
-
       const banner = document.getElementById('bannerDemandaProducto');
       const ticketsDelModelo = solicitudesProduccion.filter(t => normalizarNombre(t.producto) === normalizarNombre(prodSel) && t.estado !== 'producido');
       if (ticketsDelModelo.length > 0) {
@@ -873,133 +827,91 @@
       actualizarCalculoEnVivo();
     }
 
-    // --- CONTROL DE PESTAÑAS ---
     function cambiarTab(tab) {
-      const seccionProd = document.getElementById('seccionProduccion');
-      const seccionSoli = document.getElementById('seccionSolicitudes');
-      const seccionRepo = document.getElementById('seccionReporte');
-      const seccionDash = document.getElementById('seccionDashboard');
+      const secciones = {
+        produccion: 'seccionProduccion',
+        solicitudes: 'seccionSolicitudes',
+        reporte: 'seccionReporte',
+        dashboard: 'seccionDashboard'
+      };
+      const botones = {
+        produccion: 'btnTabProd',
+        solicitudes: 'btnTabSolicitudes',
+        reporte: 'btnTabReporte',
+        dashboard: 'btnTabDashboard'
+      };
 
-      const btnProd = document.getElementById('btnTabProd');
-      const btnSoli = document.getElementById('btnTabSolicitudes');
-      const btnRepo = document.getElementById('btnTabReporte');
-      const btnDash = document.getElementById('btnTabDashboard');
+      Object.values(secciones).forEach(id => document.getElementById(id).classList.add('hidden'));
+      document.getElementById(secciones[tab]).classList.remove('hidden');
 
-      const estiloActivo = "flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm";
-      const estiloInactivo = "flex-1 py-2.5 rounded-xl transition flex items-center justify-center gap-1 text-slate-500 dark:text-slate-400";
-
-      seccionProd.classList.add('hidden');
-      seccionSoli.classList.add('hidden');
-      seccionRepo.classList.add('hidden');
-      seccionDash.classList.add('hidden');
-
-      btnProd.className = estiloInactivo;
-      btnSoli.className = estiloInactivo;
-      btnRepo.className = estiloInactivo;
-      btnDash.className = estiloInactivo;
+      Object.values(botones).forEach(id => {
+        const btn = document.getElementById(id);
+        btn.classList.remove('active');
+        btn.classList.remove('text-blue-600', 'dark:text-blue-400');
+        btn.classList.add('text-slate-500', 'dark:text-slate-400');
+      });
+      const btnActivo = document.getElementById(botones[tab]);
+      btnActivo.classList.add('active');
+      btnActivo.classList.remove('text-slate-500', 'dark:text-slate-400');
+      btnActivo.classList.add('text-blue-600', 'dark:text-blue-400');
 
       if (tab === 'produccion') {
-        seccionProd.classList.remove('hidden');
-        btnProd.className = estiloActivo;
         actualizarCalculoEnVivo();
       } else if (tab === 'solicitudes') {
-        seccionSoli.classList.remove('hidden');
-        btnSoli.className = estiloActivo;
         autoCargarProductionJSON();
         actualizarChequeoSolicitudes();
         renderizarSolicitudes();
       } else if (tab === 'reporte') {
-        seccionRepo.classList.remove('hidden');
-        btnRepo.className = estiloActivo;
         renderizarReporteActual();
       } else if (tab === 'dashboard') {
-        seccionDash.classList.remove('hidden');
-        btnDash.className = estiloActivo;
         actualizarBarraAlmacenamiento();
         renderizarDashboard();
       }
-
       actualizarBadgesContadores();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // --- AGREGAR CONTEO AL REPORTE (ACTUALIZA INMEDIATAMENTE EL NÚMERO DEL TAB) ---
     async function agregarTiraje() {
       if (!appConfig.maquinas || appConfig.maquinas.length === 0) {
         mostrarAlerta("Configura al menos una máquina antes de registrar conteos.");
         return;
       }
-
       const calc = calcularProduccionActual();
       const maquina = document.getElementById('selectMaquina').value;
       const producto = document.getElementById('selectProducto').value;
       const merma = parseInt(document.getElementById('inMerma').value) || 0;
-
       if (calc.contador <= 0 && merma <= 0) {
         mostrarAlerta("Ingresa el número que marca la máquina en el campo 'Producción'.");
         document.getElementById('inProduccion').focus();
         return;
       }
-
       const ahora = new Date();
       const fechaExacta = ahora.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' });
       const horaExacta = ahora.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
       reporteActual.push({
-        id: Date.now(),
-        maquina,
-        factor_golpe: calc.factor,
-        contador_maquina: calc.contador,
-        botellas_fabricadas: calc.botellasTotales,
-        producto,
-        paquetes: calc.paquetes,
-        merma: merma,
-        fecha: fechaExacta,
-        hora: horaExacta,
-        timestampISO: ahora.toISOString()
+        id: Date.now(), maquina, factor_golpe: calc.factor,
+        contador_maquina: calc.contador, botellas_fabricadas: calc.botellasTotales,
+        producto, paquetes: calc.paquetes, merma,
+        fecha: fechaExacta, hora: horaExacta, timestampISO: ahora.toISOString()
       });
-
       await localforage.setItem(KEY_REPORTE_ACTUAL, reporteActual);
       document.getElementById('inProduccion').value = '';
       document.getElementById('inMerma').value = '';
-
-      // Verifica y actualiza solicitudes cubiertas automáticamente
+      // Actualizar estados (silencioso, sin toast al completar)
       actualizarChequeoSolicitudes();
-      await localforage.setItem(KEY_SOLICITUDES, solicitudesProduccion);
-
-      // Actualiza en tiempo real los números del tab
+      await persistirEstados();
+      renderizarSolicitudes();
       actualizarBadgesContadores();
       actualizarCalculoEnVivo();
       actualizarBarraAlmacenamiento();
-      
       mostrarToast(`Conteo guardado: ${calc.paquetes} paq en ${maquina}`);
     }
 
-    // --- RENDERIZAR REPORTE ACTUAL ---
     function renderizarReporteActual() {
       const cont = document.getElementById('contenedorLista');
-      const contSoliReporte = document.getElementById('listaSolicitudesCubiertasReporte');
       const badgeTotal = document.getElementById('badgeTotalPaquetes');
-      const badgeTicketsRepo = document.getElementById('badgeTicketsEnReporte');
 
       actualizarBadgesContadores();
-      actualizarChequeoSolicitudes();
-
-      const cubiertas = solicitudesProduccion.filter(s => s.estado === 'producido');
-      badgeTicketsRepo.innerText = `${cubiertas.length} listos`;
-
-      if (cubiertas.length === 0) {
-        contSoliReporte.innerHTML = '<p class="text-slate-400 text-[11px] italic py-1">Aún no hay solicitudes cubiertas con la producción registrada.</p>';
-      } else {
-        contSoliReporte.innerHTML = cubiertas.map(s => `
-          <div class="flex justify-between items-center bg-blue-50/70 dark:bg-blue-950/40 px-2.5 py-1.5 rounded-lg border border-blue-200/60 dark:border-blue-900/40">
-            <div>
-              <span class="font-bold text-slate-800 dark:text-slate-200">${s.producto}</span>
-              <span class="text-[10px] text-slate-400 font-mono ml-1">(${s.id_ticket_produccion})</span>
-            </div>
-            <span class="font-extrabold text-emerald-600 dark:text-emerald-400 text-[11px]">${s.paquetes_a_fabricar} paq cubiertos ✓</span>
-          </div>
-        `).join('');
-      }
 
       if (reporteActual.length === 0) {
         cont.innerHTML = '<p class="text-xs text-slate-400 dark:text-slate-600 text-center py-6">No hay conteos en el reporte actual.</p>';
@@ -1025,7 +937,6 @@
                 </button>
               </div>
             </div>
-
             <div class="flex justify-between items-end pt-0.5">
               <div>
                 <p class="text-sm font-extrabold text-slate-800 dark:text-slate-100">${r.producto}</p>
@@ -1039,7 +950,6 @@
           </div>
         `;
       }).reverse().join('');
-
       badgeTotal.innerText = `${totalPaq} paq`;
     }
 
@@ -1047,37 +957,32 @@
       const indexReal = reporteActual.length - 1 - i;
       reporteActual.splice(indexReal, 1);
       await localforage.setItem(KEY_REPORTE_ACTUAL, reporteActual);
+      // Al eliminar conteos, los tickets que se habían marcado como completados
+      // por esos conteos NO se revierten (la producción ya ocurrió físicamente)
       actualizarChequeoSolicitudes();
-      await localforage.setItem(KEY_SOLICITUDES, solicitudesProduccion);
+      await persistirEstados();
       actualizarBadgesContadores();
       renderizarReporteActual();
       actualizarCalculoEnVivo();
       actualizarBarraAlmacenamiento();
     }
 
-    // --- EXPORTAR STOCK (WHATSAPP) ---
     function exportarStock() {
       if (reporteActual.length === 0) {
         mostrarAlerta("No hay registros en el reporte actual para exportar.");
         return;
       }
-
       actualizarChequeoSolicitudes();
       const ahora = new Date();
       const responsable = (appConfig.nombre && appConfig.nombre.trim() !== "") ? appConfig.nombre.trim() : "Operador";
-
-      let totalPaquetes = 0;
-      let totalMerma = 0;
-      let totalBotellas = 0;
-
+      let totalPaquetes = 0, totalMerma = 0, totalBotellas = 0;
       reporteActual.forEach(r => {
         totalPaquetes += r.paquetes;
         totalMerma += r.merma;
         totalBotellas += r.botellas_fabricadas;
       });
 
-      const ticketsCubiertos = solicitudesProduccion.filter(t => t.estado === 'producido').length;
-
+      // Estructura del payload con solicitudes activas + completadas
       const payloadJSON = {
         empresa: "FABREC",
         tipo_documento: "registro_inventario_0001",
@@ -1089,28 +994,31 @@
           merma_total_unidades: totalMerma,
           botellas_totales: totalBotellas,
           cantidad_conteos: reporteActual.length,
-          solicitudes_totales: solicitudesProduccion.length,
-          solicitudes_producidas: ticketsCubiertos,
-          solicitudes_pendientes: solicitudesProduccion.length - ticketsCubiertos
+          solicitudes_activas: solicitudesProduccion.length,
+          solicitudes_completadas: solicitudesCompletadas.length
         },
         conteos: reporteActual.map(r => ({
-          id: r.id,
-          maquina: r.maquina,
-          factor_golpe: r.factor_golpe,
-          contador_maquina: r.contador_maquina,
-          botellas_fabricadas: r.botellas_fabricadas,
-          producto: r.producto,
-          paquetes: r.paquetes,
-          merma: r.merma,
-          fecha: r.fecha,
-          hora: r.hora
+          id: r.id, maquina: r.maquina, factor_golpe: r.factor_golpe,
+          contador_maquina: r.contador_maquina, botellas_fabricadas: r.botellas_fabricadas,
+          producto: r.producto, paquetes: r.paquetes, merma: r.merma,
+          fecha: r.fecha, hora: r.hora
         })),
+        // Tickets aún pendientes / en proceso
         solicitudes_produccion: solicitudesProduccion.map(t => ({
           id_ticket_produccion: t.id_ticket_produccion,
           producto: t.producto,
           paquetes_a_fabricar: t.paquetes_a_fabricar,
           estado: t.estado,
-          fecha_entrega_programada: t.fecha_entrega_programada
+          paquetes_en_reporte: t.paquetes_en_reporte || 0
+        })),
+        // Tickets ya cubiertos por la producción (para que el Jefe de Ventas
+        // los marque como "producido" en su sistema)
+        solicitudes_completadas: solicitudesCompletadas.map(t => ({
+          id_ticket_produccion: t.id_ticket_produccion,
+          producto: t.producto,
+          paquetes_a_fabricar: t.paquetes_a_fabricar,
+          fecha_completado: t.fecha_completado,
+          estado: "producido"
         }))
       };
 
@@ -1119,27 +1027,14 @@
       window.open(url, '_blank');
     }
 
-    // --- NUEVO REPORTE ---
     function finalizarReporteYCrearNuevo() {
-      if (reporteActual.length === 0) {
-        mostrarAlerta("El reporte actual no tiene datos que archivar.");
-        return;
-      }
-
+      if (reporteActual.length === 0) { mostrarAlerta("El reporte actual no tiene datos que archivar."); return; }
       mostrarConfirmacion(
         "¿Deseas cerrar este turno e iniciar un nuevo reporte? Se archivarán los conteos en el historial.",
         async () => {
           const ahora = new Date();
-          let totalP = 0;
-          let totalM = 0;
-          let totalBot = 0;
-
-          reporteActual.forEach(r => {
-            totalP += r.paquetes;
-            totalM += r.merma;
-            totalBot += r.botellas_fabricadas;
-          });
-
+          let totalP = 0, totalM = 0, totalBot = 0;
+          reporteActual.forEach(r => { totalP += r.paquetes; totalM += r.merma; totalBot += r.botellas_fabricadas; });
           historialReportes.push({
             id: Date.now(),
             fecha: ahora.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' }),
@@ -1147,24 +1042,16 @@
             timestampISO: ahora.toISOString(),
             responsable: appConfig.nombre || "Operador",
             totales: { paquetes: totalP, merma: totalM, botellas: totalBot },
-            conteos: [...reporteActual],
-            solicitudes_producidas: solicitudesProduccion.filter(s => s.estado === 'producido')
+            conteos: [...reporteActual]
           });
-
-          solicitudesProduccion = solicitudesProduccion.filter(s => s.estado !== 'producido');
-
-          await localforage.setItem(KEY_HISTORIAL_REPORTES, historialReportes);
-          await localforage.setItem(KEY_SOLICITUDES, solicitudesProduccion);
-
           reporteActual = [];
+          await localforage.setItem(KEY_HISTORIAL_REPORTES, historialReportes);
           await localforage.setItem(KEY_REPORTE_ACTUAL, reporteActual);
-
           actualizarBadgesContadores();
           renderizarReporteActual();
           actualizarChequeoSolicitudes();
-          renderizarSolicitudes();
+          await persistirEstados();
           actualizarBarraAlmacenamiento();
-
           mostrarToast("Nuevo reporte iniciado");
           cambiarTab('produccion');
         },
@@ -1172,16 +1059,13 @@
       );
     }
 
-    // --- COMPARTIR Y DETALLE DE REPORTES HISTÓRICOS ---
     function abrirDetalleReporte(idReporte) {
       const rep = historialReportes.find(h => h.id === idReporte);
       if (!rep) return;
-
       document.getElementById('detReporteTitulo').innerText = `Reporte: ${rep.fecha} • ${rep.hora}`;
       document.getElementById('detReporteSubtitulo').innerText = `Responsable: ${rep.responsable}`;
       document.getElementById('detTotalPaquetes').innerText = `${rep.totales.paquetes} paq`;
       document.getElementById('detTotalMerma').innerText = `${rep.totales.merma} un.`;
-
       const contLista = document.getElementById('detConteosLista');
       contLista.innerHTML = rep.conteos.map(c => `
         <div class="p-2 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/60 dark:border-slate-800 text-xs flex justify-between items-center">
@@ -1195,22 +1079,6 @@
           </div>
         </div>
       `).join('');
-
-      const soliLista = document.getElementById('detSolicitudesLista');
-      if (rep.solicitudes_producidas && rep.solicitudes_producidas.length > 0) {
-        soliLista.innerHTML = rep.solicitudes_producidas.map(s => `
-          <div class="p-2 bg-emerald-50/60 dark:bg-emerald-950/40 rounded-xl border border-emerald-200/60 dark:border-emerald-900/40 text-xs flex justify-between items-center">
-            <div>
-              <p class="font-bold text-slate-800 dark:text-slate-100">${s.producto}</p>
-              <p class="text-[10px] text-slate-400 font-mono">${s.id_ticket_produccion}</p>
-            </div>
-            <span class="font-black text-emerald-600 dark:text-emerald-400">${s.paquetes_a_fabricar} paq ✓</span>
-          </div>
-        `).join('');
-      } else {
-        soliLista.innerHTML = '<p class="text-slate-400 text-[11px] italic">No se cubrieron solicitudes en este reporte.</p>';
-      }
-
       document.getElementById('btnCompartirDesdeDetalle').onclick = () => compartirReporteHistorial(rep.id);
       document.getElementById('modalDetalleReporte').classList.remove('hidden');
     }
@@ -1222,7 +1090,6 @@
     function compartirReporteHistorial(idReporte) {
       const rep = historialReportes.find(h => h.id === idReporte);
       if (!rep) return;
-
       const payloadJSON = {
         empresa: "FABREC",
         tipo_documento: "registro_inventario_0001",
@@ -1235,54 +1102,38 @@
           botellas_totales: rep.totales.botellas || 0,
           cantidad_conteos: rep.conteos.length
         },
-        conteos: rep.conteos,
-        solicitudes_produccion: rep.solicitudes_producidas || []
+        conteos: rep.conteos
       };
-
       const textoMensaje = JSON.stringify(payloadJSON, null, 2);
       const url = `https://wa.me/${WHATSAPP_COO}?text=${encodeURIComponent(textoMensaje)}`;
       window.open(url, '_blank');
     }
 
-    // --- DASHBOARD: GRÁFICOS Y HISTORIAL ---
     function renderizarDashboard() {
-      let totalPaquetesHist = 0;
-      let totalMermasHist = 0;
+      let totalPaquetesHist = 0, totalMermasHist = 0;
       let porMaquina = {};
-
       const labelsLineas = [];
       const dataTasaMerma = [];
       const dataRendimiento = [];
-
       const todosLosConteos = [];
-      historialReportes.forEach(rep => {
-        rep.conteos.forEach(c => todosLosConteos.push(c));
-      });
+      historialReportes.forEach(rep => rep.conteos.forEach(c => todosLosConteos.push(c)));
       reporteActual.forEach(c => todosLosConteos.push(c));
 
       todosLosConteos.forEach((c, idx) => {
         totalPaquetesHist += c.paquetes;
         totalMermasHist += c.merma;
-
-        if (!porMaquina[c.maquina]) {
-          porMaquina[c.maquina] = { paquetes: 0, merma: 0 };
-        }
+        if (!porMaquina[c.maquina]) porMaquina[c.maquina] = { paquetes: 0, merma: 0 };
         porMaquina[c.maquina].paquetes += c.paquetes;
         porMaquina[c.maquina].merma += c.merma;
-
         const botellasUtiles = c.botellas_fabricadas || 0;
         const merma = c.merma || 0;
         const totalGolpes = botellasUtiles + merma;
-
-        let tasaMermaPct = 0;
-        let rendimientoPct = 100;
-
+        let tasaMermaPct = 0, rendimientoPct = 100;
         if (totalGolpes > 0) {
           tasaMermaPct = parseFloat(((merma / totalGolpes) * 100).toFixed(1));
           rendimientoPct = parseFloat((100 - tasaMermaPct).toFixed(1));
         }
-
-        labelsLineas.push(`${c.maquina} (${c.hora ? c.hora.substring(0, 5) : '#' + (idx+1)})`);
+        labelsLineas.push(`${c.maquina} (${c.hora ? c.hora.substring(0, 5) : '#' + (idx + 1)})`);
         dataTasaMerma.push(tasaMermaPct);
         dataRendimiento.push(rendimientoPct);
       });
@@ -1298,73 +1149,23 @@
         data: {
           labels: labelsLineas.length ? labelsLineas.slice(-10) : ['Sin datos'],
           datasets: [
-            {
-              label: 'Tasa de Merma (%)',
-              data: dataTasaMerma.length ? dataTasaMerma.slice(-10) : [0],
-              borderColor: '#f43f5e',
-              backgroundColor: 'rgba(244, 63, 94, 0.1)',
-              borderWidth: 2.5,
-              tension: 0.35,
-              fill: true,
-              pointRadius: 4,
-              pointBackgroundColor: '#f43f5e'
-            },
-            {
-              label: 'Rendimiento Útil (%)',
-              data: dataRendimiento.length ? dataRendimiento.slice(-10) : [100],
-              borderColor: '#10b981',
-              backgroundColor: 'transparent',
-              borderWidth: 2,
-              borderDash: [4, 4],
-              tension: 0.35,
-              pointRadius: 3,
-              pointBackgroundColor: '#10b981'
-            }
+            { label: 'Tasa de Merma (%)', data: dataTasaMerma.length ? dataTasaMerma.slice(-10) : [0], borderColor: '#f43f5e', backgroundColor: 'rgba(244, 63, 94, 0.1)', borderWidth: 2.5, tension: 0.35, fill: true, pointRadius: 4, pointBackgroundColor: '#f43f5e' },
+            { label: 'Rendimiento Útil (%)', data: dataRendimiento.length ? dataRendimiento.slice(-10) : [100], borderColor: '#10b981', backgroundColor: 'transparent', borderWidth: 2, borderDash: [4, 4], tension: 0.35, pointRadius: 3, pointBackgroundColor: '#10b981' }
           ]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: true,
-              position: 'top',
-              labels: { boxWidth: 12, font: { family: 'Montserrat', size: 10 } }
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 100,
-              ticks: { callback: v => v + '%' }
-            },
-            x: { grid: { display: false } }
-          }
-        }
+        options: { responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: true, position: 'top', labels: { boxWidth: 12, font: { family: 'Montserrat', size: 10 } } } },
+          scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }, x: { grid: { display: false } } } }
       });
 
       const labelsMaq = Object.keys(porMaquina);
       const dataP = labelsMaq.map(m => porMaquina[m].paquetes);
-
       if (chartMaquinasInstance) chartMaquinasInstance.destroy();
       const ctxP = document.getElementById('chartProduccionMaquinas').getContext('2d');
       chartMaquinasInstance = new Chart(ctxP, {
         type: 'bar',
-        data: {
-          labels: labelsMaq.length ? labelsMaq : ['Sin datos'],
-          datasets: [{
-            label: 'Paquetes',
-            data: dataP.length ? dataP : [0],
-            backgroundColor: '#2563eb',
-            borderRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true } }
-        }
+        data: { labels: labelsMaq.length ? labelsMaq : ['Sin datos'], datasets: [{ label: 'Paquetes', data: dataP.length ? dataP : [0], backgroundColor: '#2563eb', borderRadius: 6 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
       });
 
       const contHist = document.getElementById('contenedorHistorialReportes');
@@ -1372,7 +1173,6 @@
         contHist.innerHTML = '<p class="text-xs text-slate-400 text-center py-6">Aún no hay reportes archivados.</p>';
         return;
       }
-
       contHist.innerHTML = historialReportes.slice().reverse().map(h => `
         <div onclick="abrirDetalleReporte(${h.id})" class="cursor-pointer bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-xs shadow-sm flex justify-between items-center transition active:scale-[0.99]">
           <div>
@@ -1390,15 +1190,12 @@
       `).join('');
     }
 
-    // --- MODALES INTEGRADOS ---
     function mostrarAlerta(mensaje, titulo = "Aviso") {
       const modal = document.getElementById('modalDialogo');
       document.getElementById('modalDialogoTitulo').innerText = titulo;
       document.getElementById('modalDialogoMensaje').innerText = mensaje;
       document.getElementById('modalDialogoBotones').innerHTML = `
-        <button onclick="cerrarDialogo()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition">
-          Aceptar
-        </button>
+        <button onclick="cerrarDialogo()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition">Aceptar</button>
       `;
       modal.classList.remove('hidden');
     }
@@ -1409,12 +1206,8 @@
       document.getElementById('modalDialogoTitulo').innerText = titulo;
       document.getElementById('modalDialogoMensaje').innerText = mensaje;
       document.getElementById('modalDialogoBotones').innerHTML = `
-        <button onclick="cerrarDialogo()" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-bold py-2 rounded-xl text-xs transition">
-          Cancelar
-        </button>
-        <button onclick="ejecutarConfirmacion()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition">
-          Confirmar
-        </button>
+        <button onclick="cerrarDialogo()" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-bold py-2 rounded-xl text-xs transition">Cancelar</button>
+        <button onclick="ejecutarConfirmacion()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition">Confirmar</button>
       `;
       modal.classList.remove('hidden');
     }
@@ -1433,17 +1226,13 @@
       const toast = document.getElementById('toastNotificacion');
       document.getElementById('toastTexto').innerText = mensaje;
       toast.classList.remove('opacity-0', 'pointer-events-none');
-      setTimeout(() => {
-        toast.classList.add('opacity-0', 'pointer-events-none');
-      }, 2500);
+      setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 2500);
     }
 
-    // --- MODO CLARO / OSCURO AUTOMÁTICO ---
     function aplicarTemaAutomatico() {
       const hora = new Date().getHours();
       const esDia = hora >= 6 && hora < 16;
       const html = document.documentElement;
-
       if (esDia) html.classList.remove('dark');
       else html.classList.add('dark');
       actualizarSaludo();
@@ -1454,13 +1243,9 @@
       let saludo = "Buenos días";
       if (hora >= 12 && hora < 19) saludo = "Buenas tardes";
       else if (hora >= 19 || hora < 5) saludo = "Buenas noches";
-
       const txt = document.getElementById('txtSaludo');
-      if (appConfig.nombre && appConfig.nombre.trim() !== "") {
-        txt.innerText = `${saludo}, ${appConfig.nombre.trim()}`;
-      } else {
-        txt.innerText = saludo;
-      }
+      if (appConfig.nombre && appConfig.nombre.trim() !== "") txt.innerText = `${saludo}, ${appConfig.nombre.trim()}`;
+      else txt.innerText = saludo;
     }
 
     async function autoGuardarNombre(valor) {
@@ -1469,7 +1254,6 @@
       actualizarSaludo();
     }
 
-    // --- CONFIGURACIÓN DE MÁQUINAS ---
     function abrirConfiguracion() {
       document.getElementById('cfgNombre').value = appConfig.nombre || '';
       inicializarDropdownCatalogo();
@@ -1488,28 +1272,22 @@
 
     function inicializarSelectores() {
       const selectM = document.getElementById('selectMaquina');
-      const aviso = document.getElementById('avisoSinMaquinas');
       selectM.innerHTML = '';
-
       if (!appConfig.maquinas || appConfig.maquinas.length === 0) {
-        aviso.classList.remove('hidden');
         const opt = document.createElement('option');
-        opt.value = "";
-        opt.innerText = "Sin máquinas";
+        opt.value = '';
+        opt.innerText = 'Sin máquinas';
         selectM.appendChild(opt);
         document.getElementById('selectProducto').innerHTML = '<option value="">Sin modelos</option>';
         actualizarCalculoEnVivo();
         return;
       }
-
-      aviso.classList.add('hidden');
       appConfig.maquinas.forEach(m => {
         const opt = document.createElement('option');
         opt.value = m.nombre;
         opt.innerText = m.nombre;
         selectM.appendChild(opt);
       });
-
       cargarModelosPorMaquina();
       actualizarCalculoEnVivo();
     }
@@ -1518,7 +1296,6 @@
       const maquinaSel = document.getElementById('selectMaquina').value;
       const selectP = document.getElementById('selectProducto');
       selectP.innerHTML = '';
-
       const maquina = appConfig.maquinas.find(m => m.nombre === maquinaSel);
       if (maquina && maquina.modelos && maquina.modelos.length > 0) {
         maquina.modelos.forEach(mod => {
@@ -1529,8 +1306,8 @@
         });
       } else {
         const opt = document.createElement('option');
-        opt.value = "Estándar";
-        opt.innerText = "Modelo Estándar";
+        opt.value = 'Estándar';
+        opt.innerText = 'Modelo Estándar';
         selectP.appendChild(opt);
       }
     }
@@ -1544,7 +1321,6 @@
       const selectCat = document.getElementById('catalogoModelosSelect');
       const modelo = selectCat.value;
       if (!modelo) return;
-
       if (!modelosTempParaMaquina.includes(modelo)) {
         modelosTempParaMaquina.push(modelo);
         actualizarChipsModelosTemp();
@@ -1562,7 +1338,6 @@
         cont.innerHTML = '<span class="text-[11px] text-slate-400 italic">No has seleccionado modelos para esta máquina.</span>';
         return;
       }
-
       cont.innerHTML = modelosTempParaMaquina.map((mod, i) => `
         <span class="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-200 text-[11px] font-semibold px-2 py-0.5 rounded-lg border border-blue-200 dark:border-blue-800">
           ${mod}
@@ -1574,53 +1349,31 @@
     async function guardarMaquinaDirecto() {
       const nom = document.getElementById('nuevaMaquinaNombre').value.trim();
       const factor = parseInt(document.getElementById('nuevaMaquinaFactor').value) || 1;
-
-      if (!nom) {
-        mostrarAlerta("Ingresa un nombre o código para la máquina.");
-        return;
-      }
-
-      if (modelosTempParaMaquina.length === 0) {
-        mostrarAlerta("Añade al menos un modelo del catálogo a esta máquina.");
-        return;
-      }
-
+      if (!nom) { mostrarAlerta("Ingresa un nombre o código para la máquina."); return; }
+      if (modelosTempParaMaquina.length === 0) { mostrarAlerta("Añade al menos un modelo del catálogo a esta máquina."); return; }
       if (!appConfig.maquinas) appConfig.maquinas = [];
-      appConfig.maquinas.push({
-        nombre: nom,
-        factorGolpe: factor,
-        modelos: [...modelosTempParaMaquina]
-      });
-
+      appConfig.maquinas.push({ nombre: nom, factorGolpe: factor, modelos: [...modelosTempParaMaquina] });
       await localforage.setItem(KEY_CONFIG, appConfig);
-
       document.getElementById('nuevaMaquinaNombre').value = '';
       document.getElementById('nuevaMaquinaFactor').value = '1';
       modelosTempParaMaquina = [];
       actualizarChipsModelosTemp();
-
       renderizarMaquinasConfig();
       inicializarSelectores();
       actualizarBarraAlmacenamiento();
       mostrarToast(`Máquina "${nom}" guardada`);
     }
 
-    // --- EDICIÓN DE MÁQUINAS ---
     function abrirModalEditarMaquina(index) {
       indiceMaquinaEnEdicion = index;
       const m = appConfig.maquinas[index];
       if (!m) return;
-
       document.getElementById('editMaquinaNombre').value = m.nombre;
       document.getElementById('editMaquinaFactor').value = m.factorGolpe || 1;
-
-      // Cargar catálogo en el dropdown de edición
       const selCat = document.getElementById('editCatalogoSelect');
       selCat.innerHTML = CATALOGO_FABREC.map(mod => `<option value="${mod}">${mod}</option>`).join('');
-
       modelosEditTempParaMaquina = [...(m.modelos || [])];
       actualizarChipsEdicionMaquina();
-
       document.getElementById('modalEditarMaquina').classList.remove('hidden');
     }
 
@@ -1634,7 +1387,6 @@
       const sel = document.getElementById('editCatalogoSelect');
       const val = sel.value;
       if (!val) return;
-
       if (!modelosEditTempParaMaquina.includes(val)) {
         modelosEditTempParaMaquina.push(val);
         actualizarChipsEdicionMaquina();
@@ -1652,7 +1404,6 @@
         cont.innerHTML = '<span class="text-[11px] text-slate-400 italic">No hay modelos asignados a esta máquina.</span>';
         return;
       }
-
       cont.innerHTML = modelosEditTempParaMaquina.map((mod, i) => `
         <span class="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-200 text-[11px] font-semibold px-2 py-0.5 rounded-lg border border-blue-200 dark:border-blue-800">
           ${mod}
@@ -1663,26 +1414,14 @@
 
     async function guardarEdicionMaquinaDirecto() {
       if (indiceMaquinaEnEdicion < 0 || !appConfig.maquinas[indiceMaquinaEnEdicion]) return;
-
       const nuevoNombre = document.getElementById('editMaquinaNombre').value.trim();
       const nuevoFactor = parseInt(document.getElementById('editMaquinaFactor').value) || 1;
-
-      if (!nuevoNombre) {
-        mostrarAlerta("La máquina debe tener un nombre.");
-        return;
-      }
-
-      if (modelosEditTempParaMaquina.length === 0) {
-        mostrarAlerta("Debe tener al menos un modelo asignado.");
-        return;
-      }
-
+      if (!nuevoNombre) { mostrarAlerta("La máquina debe tener un nombre."); return; }
+      if (modelosEditTempParaMaquina.length === 0) { mostrarAlerta("Debe tener al menos un modelo asignado."); return; }
       appConfig.maquinas[indiceMaquinaEnEdicion].nombre = nuevoNombre;
       appConfig.maquinas[indiceMaquinaEnEdicion].factorGolpe = nuevoFactor;
       appConfig.maquinas[indiceMaquinaEnEdicion].modelos = [...modelosEditTempParaMaquina];
-
       await localforage.setItem(KEY_CONFIG, appConfig);
-
       cerrarEditarMaquina();
       renderizarMaquinasConfig();
       inicializarSelectores();
@@ -1709,15 +1448,12 @@
         cont.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">No hay máquinas configuradas aún.</p>';
         return;
       }
-
       cont.innerHTML = appConfig.maquinas.map((m, i) => `
         <div class="flex justify-between items-start bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-xs shadow-sm">
           <div>
             <div class="flex items-center gap-2">
               <p class="font-bold text-slate-800 dark:text-slate-100">${m.nombre}</p>
-              <span class="text-[10px] font-bold text-blue-600 bg-blue-50 dark:bg-blue-950 px-1.5 py-0.5 rounded">
-                ${m.factorGolpe || 1}x botellas
-              </span>
+              <span class="text-[10px] font-bold text-blue-600 bg-blue-50 dark:bg-blue-950 px-1.5 py-0.5 rounded">${m.factorGolpe || 1}x botellas</span>
             </div>
             <p class="text-[11px] text-slate-500 mt-1">${(m.modelos || []).join(', ')}</p>
           </div>

@@ -70,7 +70,7 @@
     .btn-toggle-sidebar:hover { color: var(--text); background: var(--border); }
     .nav-container {
       display: flex; flex-direction: column; gap: 14px; overflow-y: auto;
-      max-height: calc(100vh - 380px); padding-right: 2px;
+      max-height: calc(100vh - 320px); padding-right: 2px;
     }
     .nav-section-title {
       font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
@@ -369,6 +369,114 @@
     .dia-metrica-grande {
       font-size: 24px; font-weight: 900; line-height: 1.1; letter-spacing: -0.5px;
     }
+
+    /* ==========================================
+       REPORTES EN CARDS COLAPSABLES
+    ========================================== */
+    .reporte-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: all 0.15s ease;
+    }
+    .reporte-card-header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s ease;
+    }
+    .reporte-card-header:hover { background: var(--surface-subtle); }
+    .reporte-card-info { flex: 1; min-width: 0; }
+    .reporte-card-fecha {
+      font-size: 13px; font-weight: 800; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .reporte-card-fecha-badge {
+      font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 5px;
+      background: var(--accent-subtle); color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.3px;
+    }
+    .reporte-card-resp {
+      font-size: 11px; color: var(--text-muted); margin-top: 3px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .reporte-card-stats {
+      display: flex; gap: 18px; flex-shrink: 0; align-items: center;
+    }
+    .reporte-card-stat {
+      display: flex; flex-direction: column; align-items: flex-end;
+    }
+    .reporte-card-stat-value {
+      font-size: 16px; font-weight: 800; color: var(--emerald);
+    }
+    .reporte-card-stat-value.rose { color: var(--rose); }
+    .reporte-card-stat-label {
+      font-size: 9.5px; font-weight: 700; color: var(--text-subtle);
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .reporte-card-chevron {
+      width: 18px; height: 18px; stroke: var(--text-muted);
+      fill: none; stroke-width: 2; flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+    .reporte-card.expanded .reporte-card-chevron { transform: rotate(180deg); }
+    .reporte-card-body {
+      display: none;
+      border-top: 1px solid var(--border);
+      background: var(--surface-subtle);
+    }
+    .reporte-card.expanded .reporte-card-body { display: block; }
+    .reporte-card-body table { background: var(--surface); }
+    .reporte-card-body table th { background: transparent; }
+    .reporte-card-empty {
+      padding: 24px; text-align: center; font-size: 11px;
+      color: var(--text-subtle); font-style: italic;
+    }
+    @media (max-width: 720px) {
+      .reporte-card-stats { gap: 12px; }
+      .reporte-card-stat-value { font-size: 14px; }
+    }
+
+    /* ============= FUSIÓN ============= */
+    .fusion-candidato {
+      display: flex; gap: 10px; align-items: flex-start; padding: 10px 14px;
+      border-bottom: 1px solid var(--border-subtle); cursor: pointer;
+      transition: background 0.12s ease;
+    }
+    .fusion-candidato:hover { background: var(--surface-subtle); }
+    .fusion-candidato.similar {
+      background: var(--accent-subtle);
+      border-left: 3px solid var(--accent);
+    }
+    .fusion-candidato.similar:hover { background: #d6e4ff; }
+    body.dark .fusion-candidato.similar { background: rgba(138, 180, 248, 0.12); }
+    .fusion-candidato-checkbox { margin-top: 2px; flex-shrink: 0; }
+    .fusion-candidato-info { flex: 1; min-width: 0; }
+    .fusion-candidato-nombre {
+      font-weight: 700; font-size: 12px; color: var(--text);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .fusion-score-badge {
+      font-size: 9px; font-weight: 800; padding: 1px 6px; border-radius: 4px;
+      background: var(--emerald-subtle); color: var(--emerald);
+      border: 1px solid #a7f3d0;
+    }
+    .fusion-candidato-meta {
+      font-size: 10.5px; color: var(--text-muted); margin-top: 2px;
+    }
+    .fusion-razones {
+      font-size: 9.5px; color: var(--accent); margin-top: 3px;
+      display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .fusion-razon-pill {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 1px 6px; border-radius: 4px; font-weight: 700;
+    }
   </style>
 </head>
 <body>
@@ -423,13 +531,13 @@
             <span class="nav-text">Tickets Producción</span>
             <span id="badgeTicketsMenu" class="badge-tickets">0</span>
           </button>
+          <button class="nav-item" id="btnTabReportes" onclick="mostrarPestana('reportes')">
+            <svg viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="nav-text">Historial de Reportes</span>
+          </button>
           <button class="nav-item" id="btnTabMetricas" onclick="mostrarPestana('metricas')">
             <svg viewBox="0 0 24 24"><path d="M3 13l2 2 4-4 4 4 6-6"/></svg>
             <span class="nav-text">Métricas de Máquinas</span>
-          </button>
-          <button class="nav-item" id="btnTabReportes" onclick="mostrarPestana('reportes')">
-            <svg viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span class="nav-text">Historial de Lotes</span>
           </button>
         </div>
       </nav>
@@ -447,13 +555,6 @@
         <div id="txtStorageDetails" style="font-size: 9px; color: var(--text-subtle); margin-top: 4px;">localForage activo</div>
       </div>
 
-      <button onclick="descargarStockJSON()" class="btn btn-outline" style="width: 100%;">
-        <span class="nav-text">stock.json</span>
-      </button>
-      <button onclick="descargarProductionJSON()" class="btn btn-purple" style="width: 100%;">
-        <span class="nav-text">production.json</span>
-      </button>
-
       <button onclick="eliminarTodosLosDatos()" class="btn btn-rose" style="width: 100%;">
         <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
         <span class="nav-text">Eliminar todo</span>
@@ -465,7 +566,6 @@
 
     <!-- PESTAÑA 1: VENTAS DEL DÍA -->
     <section id="paneVentas" class="view-pane active">
-      <!-- Métricas del día -->
       <div class="kpi-grid-3" style="margin-bottom: 22px;">
         <div class="dia-metrica-card m-vendedor">
           <div class="dia-metrica-label">Mejor Vendedor del Día</div>
@@ -672,7 +772,6 @@
         </div>
       </div>
 
-      <!-- RANKING POR VENDEDOR -->
       <div class="panel">
         <div class="panel-header">
           <h2 class="panel-title">Rendimiento por Vendedor</h2>
@@ -694,7 +793,6 @@
         </table>
       </div>
 
-      <!-- HISTÓRICO POR ZONA -->
       <div class="panel">
         <div class="chart-header-row">
           <h2 class="panel-title" style="padding: 0; border: none;">Histórico por Zona</h2>
@@ -710,6 +808,8 @@
                 <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Líneas
               </button>
             </div>
+            <button onclick="exportarGraficoExcel(chartHistoricoZonaInstance, 'Historico_por_Zona', 'Mes')" class="btn btn-outline" style="padding:4px 10px; font-size:10.5px;">Excel</button>
+            <button onclick="exportarGraficoImagen(chartHistoricoZonaInstance, 'Histórico por Zona')" class="btn btn-outline" style="padding:4px 10px; font-size:10.5px;">PNG</button>
           </div>
         </div>
         <div class="panel-body">
@@ -717,7 +817,6 @@
         </div>
       </div>
 
-      <!-- GRÁFICAS POR ZONA -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
         <div class="panel">
           <div class="chart-header-row">
@@ -769,6 +868,10 @@
         <div class="panel-header">
           <h2 class="panel-title">Stock de Planta</h2>
           <div class="panel-actions">
+            <button onclick="descargarStockJSON()" class="btn btn-blue">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Descargar stock.json
+            </button>
             <button onclick="exportarTablaExcel('tablaStockVentas', 'Stock_Vendedores_Fabrec')" class="btn btn-outline">Excel</button>
             <button onclick="exportarTablaImagen('tablaStockVentas', 'Stock Consolidado Fabrec')" class="btn btn-outline">Imagen</button>
           </div>
@@ -779,11 +882,10 @@
             <tr>
               <th>Modelo / Botella</th>
               <th style="text-align: center;">Paquetes Disponibles</th>
-              <th style="text-align: right;" data-export-ignore="true">Acción</th>
             </tr>
           </thead>
           <tbody id="tbodyStock">
-            <tr><td colspan="3" style="text-align: center; padding: 40px; color: var(--text-subtle);">Sin conteos cargados aún.</td></tr>
+            <tr><td colspan="2" style="text-align: center; padding: 40px; color: var(--text-subtle);">Sin datos de stock. Importa el reporte de producción desde el botón flotante.</td></tr>
           </tbody>
         </table>
         <div class="table-pagination" id="paginacionStock"></div>
@@ -796,6 +898,10 @@
         <div class="panel-header">
           <h2 class="panel-title">Tickets de Producción</h2>
           <div class="panel-actions">
+            <button onclick="descargarProductionJSON()" class="btn btn-purple">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Descargar production.json
+            </button>
             <button onclick="exportarTablaExcel('tablaTicketsProduccion', 'Tickets_Produccion_Fabrec')" class="btn btn-outline">Excel</button>
             <button onclick="exportarTablaImagen('tablaTicketsProduccion', 'Tickets de Producción Fabrec')" class="btn btn-outline">Imagen</button>
           </div>
@@ -822,7 +928,17 @@
       </div>
     </section>
 
-    <!-- PESTAÑA 8: MÉTRICAS MÁQUINAS -->
+    <!-- PESTAÑA 8: HISTORIAL DE REPORTES -->
+    <section id="paneReportes" class="view-pane">
+      <div class="panel-header" style="background: transparent; border: none; padding: 0 0 16px;">
+        <h2 class="panel-title">Historial de Reportes</h2>
+      </div>
+      <div id="contenedorHistorialReportes">
+        <p style="text-align: center; padding: 40px; color: var(--text-subtle);">No hay reportes archivados.</p>
+      </div>
+    </section>
+
+    <!-- PESTAÑA 9: MÉTRICAS MÁQUINAS -->
     <section id="paneMetricas" class="view-pane">
 
       <div class="metricas-filter-bar">
@@ -904,8 +1020,8 @@
                 <button data-type="bar" onclick="cambiarTipoGrafico('maquinas','bar')">
                   <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Barras
                 </button>
-                <button data-type="line" onclick="cambiarTipoGrafico('maquinas','line')">
-                  <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Líneas
+                <button data-type="pie" onclick="cambiarTipoGrafico('maquinas','pie')">
+                  <svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>Pastel
                 </button>
               </div>
               <button onclick="exportarGraficoExcel(chartMaqInstance, 'Volumen_por_Maquina', 'Maquina')" class="btn btn-outline" style="padding:4px 10px; font-size:10.5px;">Excel</button>
@@ -944,17 +1060,6 @@
       </div>
     </section>
 
-    <!-- PESTAÑA 9: HISTORIAL REPORTES -->
-    <section id="paneReportes" class="view-pane">
-      <div class="panel-header" style="background: transparent; border: none; padding: 0 0 16px;">
-        <h2 class="panel-title">Historial de Lotes</h2>
-        <button onclick="confirmarVaciarHistorial()" class="btn btn-outline" style="font-size: 11px; color: var(--rose);">Vaciar Reportes</button>
-      </div>
-      <div id="contenedorHistorialReportes">
-        <p style="text-align: center; padding: 40px; color: var(--text-subtle);">No hay reportes archivados.</p>
-      </div>
-    </section>
-
   </main>
 
   <!-- FAB -->
@@ -982,7 +1087,7 @@
         <button onclick="cerrarModalPegarJSON()" class="btn btn-outline" style="padding: 4px 8px;">✕</button>
       </div>
       <div class="modal-body">
-        <textarea id="jsonInput" class="modal-textarea" placeholder="Pega aquí el código JSON (Ventas, Producción o Tarifario) y presiona Enter..."></textarea>
+        <textarea id="jsonInput" class="modal-textarea" placeholder="Pega aquí el código JSON (Ventas, Producción, Tarifario o Precios) y presiona Enter..."></textarea>
       </div>
       <div class="modal-footer">
         <button onclick="cerrarModalPegarJSON()" class="btn btn-outline">Cancelar</button>
@@ -1091,9 +1196,6 @@
       </div>
       <div class="modal-body">
         <input type="hidden" id="fusionIdPrincipal">
-        <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 12px;">
-          Selecciona el <strong>contacto maestro</strong> (el que quedará) y marca el o los contactos duplicados que se absorberán. Todos los pedidos, montos y trazabilidad se unificarán.
-        </p>
         <div class="form-group">
           <label class="form-label">Contacto Maestro (Principal)</label>
           <div id="fusionPrincipalBox" style="padding: 10px 14px; background: var(--accent-subtle); border-radius: 8px; font-size: 12px; font-weight: 700; color: var(--accent);"></div>
@@ -1102,7 +1204,7 @@
           <label class="form-label">Buscar duplicados (nombre similar, teléfono o DNI)</label>
           <input type="text" id="fusionBusqueda" class="form-control" oninput="filtrarCandidatosFusion()" placeholder="Escribe un nombre, DNI o teléfono...">
         </div>
-        <div style="max-height: 260px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px;" id="fusionCandidatosBox">
+        <div style="max-height: 320px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px;" id="fusionCandidatosBox">
         </div>
       </div>
       <div class="modal-footer">
@@ -1237,16 +1339,16 @@
   <script>
     const NUMERO_CONTABILIDAD = "51922244819";
 
-    const KEY_REPORTES_PROD = "fabrec_reportes_prod_v22";
-    const KEY_TARIFARIOS = "fabrec_tarifarios_v22";
-    const KEY_CIERRES_VENTAS = "fabrec_cierres_ventas_v22";
-    const KEY_TICKETS_ESTADOS = "fabrec_tickets_estados_v22";
-    const KEY_CLIENTES_EDICION = "fabrec_clientes_editados_v22";
-    const KEY_FUSIONES = "fabrec_fusiones_clientes_v22";
-    const KEY_CLIENTES_MANUALES = "fabrec_clientes_manuales_v22";
-    const KEY_SIDEBAR_STATE = "fabrec_sidebar_collapsed_v22";
-    const KEY_CHART_TYPES = "fabrec_chart_types_v22";
-    const KEY_ACTIVE_TAB = "fabrec_king_active_tab_v22";
+    const KEY_REPORTES_PROD = "fabrec_reportes_prod_v26";
+    const KEY_TARIFARIOS = "fabrec_tarifarios_v26";
+    const KEY_CIERRES_VENTAS = "fabrec_cierres_ventas_v26";
+    const KEY_TICKETS_ESTADOS = "fabrec_tickets_estados_v26";
+    const KEY_CLIENTES_EDICION = "fabrec_clientes_editados_v26";
+    const KEY_FUSIONES = "fabrec_fusiones_clientes_v26";
+    const KEY_CLIENTES_MANUALES = "fabrec_clientes_manuales_v26";
+    const KEY_SIDEBAR_STATE = "fabrec_sidebar_collapsed_v26";
+    const KEY_CHART_TYPES = "fabrec_chart_types_v26";
+    const KEY_ACTIVE_TAB = "fabrec_king_active_tab_v26";
 
     const ZONAS_BASE = [
       "La Parada",
@@ -1274,7 +1376,6 @@
     let busquedaClienteTermino = "";
 
     let catalogoPreciosKing = [];
-    let catalogoStockKing = {};
 
     let itemsVentaOficina = [];
 
@@ -1408,10 +1509,16 @@
     }
     function abrirModalPegarJSON() {
       toggleFabDropup();
+      const ta = document.getElementById('jsonInput');
+      ta.value = '';
       document.getElementById('modalPegarJSON').classList.add('active');
-      document.getElementById('jsonInput').focus();
+      setTimeout(() => ta.focus(), 200);
     }
-    function cerrarModalPegarJSON() { document.getElementById('modalPegarJSON').classList.remove('active'); }
+    function cerrarModalPegarJSON() {
+      const ta = document.getElementById('jsonInput');
+      ta.value = '';
+      document.getElementById('modalPegarJSON').classList.remove('active');
+    }
     function cerrarModalFondo(e) { if (e.target.id === 'modalPegarJSON') cerrarModalPegarJSON(); }
 
     document.addEventListener('click', (e) => {
@@ -1440,7 +1547,14 @@
 
       try {
         const saved = localStorage.getItem(KEY_CHART_TYPES);
-        if (saved) chartTypes = { ...chartTypes, ...JSON.parse(saved) };
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.ventasZona === 'bar' || parsed.ventasZona === 'line') chartTypes.ventasZona = parsed.ventasZona;
+          if (parsed.paquetesZona === 'bar' || parsed.paquetesZona === 'line') chartTypes.paquetesZona = parsed.paquetesZona;
+          if (parsed.historicoZona === 'bar' || parsed.historicoZona === 'line') chartTypes.historicoZona = parsed.historicoZona;
+          if (parsed.comparativo === 'bar' || parsed.comparativo === 'line') chartTypes.comparativo = parsed.comparativo;
+          if (parsed.maquinas === 'bar' || parsed.maquinas === 'pie') chartTypes.maquinas = parsed.maquinas;
+        }
       } catch(e) {}
 
       const sbColapsado = await localforage.getItem(KEY_SIDEBAR_STATE);
@@ -1450,7 +1564,7 @@
       }
 
       aplicarTemaAutomatico();
-      await cargarPreciosYStockExternos();
+      await cargarPreciosExternos();
       actualizarDatalistsZonas();
       aplicarFiltros();
       renderizarTarifarioYPrecios();
@@ -1459,7 +1573,7 @@
       await actualizarMonitorMemoria();
     }
 
-    async function cargarPreciosYStockExternos() {
+    async function cargarPreciosExternos() {
       try {
         const rp = await fetch('price.json', { cache: 'no-store' });
         if (rp.ok) {
@@ -1482,18 +1596,6 @@
           }));
         }
       }
-
-      try {
-        const rs = await fetch('stock.json', { cache: 'no-store' });
-        if (rs.ok) {
-          const data = await rs.json();
-          const lista = Array.isArray(data) ? data : (data.stock || []);
-          catalogoStockKing = {};
-          lista.forEach(s => {
-            catalogoStockKing[s.producto] = parseInt(s.paquetes ?? s.paquetes_disponibles ?? 0);
-          });
-        }
-      } catch (e) {}
 
       poblarSelectProductosVentaOficina();
     }
@@ -1589,8 +1691,8 @@
         metricasVentas: { btn: 'btnTabMetricasVentas', pane: 'paneMetricasVentas', cb: renderizarMetricasVentas },
         stock: { btn: 'btnTabStock', pane: 'paneStock', cb: aplicarFiltros },
         tickets: { btn: 'btnTabTickets', pane: 'paneTickets', cb: aplicarFiltros },
-        metricas: { btn: 'btnTabMetricas', pane: 'paneMetricas', cb: renderizarMetricasMaquinas },
-        reportes: { btn: 'btnTabReportes', pane: 'paneReportes', cb: renderizarHistorialPorReportes }
+        reportes: { btn: 'btnTabReportes', pane: 'paneReportes', cb: renderizarHistorialPorReportes },
+        metricas: { btn: 'btnTabMetricas', pane: 'paneMetricas', cb: renderizarMetricasMaquinas }
       };
 
       if (map[nombre]) {
@@ -1799,10 +1901,21 @@
     function limpiarTextoWhatsApp(bruto) {
       if (!bruto) throw new Error("Texto vacío.");
       const texto = bruto.replace(/\u00A0/g, ' ').trim();
-      const inicio = texto.indexOf('{');
-      const fin = texto.lastIndexOf('}');
-      if (inicio === -1 || fin === -1 || fin <= inicio) throw new Error("No se detectó JSON entre llaves { }.");
-      return JSON.parse(texto.substring(inicio, fin + 1));
+      const inicioArr = texto.indexOf('[');
+      const finArr = texto.lastIndexOf(']');
+      const inicioObj = texto.indexOf('{');
+      const finObj = texto.lastIndexOf('}');
+
+      const esArray = inicioArr !== -1 && finArr !== -1 && (inicioObj === -1 || inicioArr < inicioObj);
+
+      if (esArray) {
+        return JSON.parse(texto.substring(inicioArr, finArr + 1));
+      }
+
+      if (inicioObj === -1 || finObj === -1 || finObj <= inicioObj) {
+        throw new Error("No se detectó JSON válido en el texto.");
+      }
+      return JSON.parse(texto.substring(inicioObj, finObj + 1));
     }
 
     function normalizarTicket(t, ventaPadre, dataRoot) {
@@ -1828,90 +1941,31 @@
       const textarea = document.getElementById('jsonInput');
       let data;
       try { data = limpiarTextoWhatsApp(textarea.value); }
-      catch (err) { mostrarModalAviso("No se pudo interpretar el JSON.", "Error de Formato"); return; }
+      catch (err) {
+        mostrarModalAviso("No se pudo interpretar el JSON. Verifica que sea válido (objeto { } o array [ ]).", "Error de Formato");
+        return;
+      }
+
+      if (Array.isArray(data) && data.length > 0 && data[0].producto && data[0].precio_menor !== undefined) {
+        await procesarPriceJsonDirecto(data);
+        textarea.value = ""; cerrarModalPegarJSON();
+        return;
+      }
+
+      if (data.reportes && Array.isArray(data.reportes)) {
+        await procesarReportesPlanta(data);
+        textarea.value = ""; cerrarModalPegarJSON();
+        return;
+      }
+
+      if (data.tickets && Array.isArray(data.tickets) && (data.codigo_lote || data.total_paquetes_requeridos !== undefined)) {
+        await procesarTicketsProduccion(data);
+        textarea.value = ""; cerrarModalPegarJSON();
+        return;
+      }
 
       if (data.ventas && Array.isArray(data.ventas)) {
-        const codigoRegistro = data.codigo_registro || `registro_venta_manual_${fechaCompacta(new Date())}_${String(historialCierresVentas.length + 1).padStart(2,'0')}`;
-        const fechaCierre = data.fecha_registro || data.fecha_cierre || new Date().toISOString();
-
-        const codigosExistentes = new Set();
-        historialCierresVentas.forEach(c => {
-          (c.ventas || []).forEach(v => { if (v.codigo) codigosExistentes.add(v.codigo); });
-        });
-
-        const todasLasProducciones = [];
-        const ventasEnriquecidas = [];
-        let duplicadasEvitadas = 0;
-
-        data.ventas.forEach(v => {
-          if (v.codigo && codigosExistentes.has(v.codigo)) {
-            duplicadasEvitadas++;
-            return;
-          }
-          if (v.codigo) codigosExistentes.add(v.codigo);
-
-          const ventaCopy = { ...v };
-          if (!ventaCopy.fecha_venta && ventaCopy.timestampISO) ventaCopy.fecha_venta = ventaCopy.timestampISO;
-          if (!ventaCopy.fecha_venta && ventaCopy.fecha_registro) {
-            const d = new Date(ventaCopy.fecha_registro);
-            if (!isNaN(d.getTime())) ventaCopy.fecha_venta = d.toISOString();
-          }
-          if (!ventaCopy.vendedor) ventaCopy.vendedor = data.vendedor || 'Oficina';
-          if (!ventaCopy.zona) ventaCopy.zona = data.zona || 'General';
-
-          if (ventaCopy.tickets_produccion && Array.isArray(ventaCopy.tickets_produccion)) {
-            const ticketsNorm = ventaCopy.tickets_produccion.map(t => normalizarTicket(t, ventaCopy, data));
-            ventaCopy.tickets_produccion = ticketsNorm;
-            todasLasProducciones.push(...ticketsNorm);
-          }
-          ventasEnriquecidas.push(ventaCopy);
-        });
-
-        if (data.tickets_produccion && Array.isArray(data.tickets_produccion)) {
-          data.tickets_produccion.forEach(t => {
-            const ventaPadre = ventasEnriquecidas.find(v => v.codigo === t.venta_codigo);
-            const tNorm = normalizarTicket(t, ventaPadre, data);
-            if (!todasLasProducciones.some(x => x.codigo === tNorm.codigo)) {
-              todasLasProducciones.push(tNorm);
-            }
-          });
-        }
-
-        if (ventasEnriquecidas.length === 0) {
-          textarea.value = "";
-          cerrarModalPegarJSON();
-          mostrarModalAviso(`Todas las ventas del JSON ya existen (${duplicadasEvitadas} duplicadas).`, "Sin datos nuevos");
-          return;
-        }
-
-        historialCierresVentas.unshift({
-          id_cierre: Date.now(),
-          codigo_registro: codigoRegistro,
-          fecha_cierre: fechaCierre,
-          vendedor: data.vendedor || "Asesor",
-          zona: data.zona || "General",
-          resumen: data.resumen || {},
-          ventas: ventasEnriquecidas,
-          tickets_produccion: todasLasProducciones
-        });
-
-        todasLasProducciones.forEach(t => {
-          if (!ticketsEstadosMap[t.id_ticket_produccion]) {
-            ticketsEstadosMap[t.id_ticket_produccion] = 'pendiente';
-          }
-        });
-        await localforage.setItem(KEY_TICKETS_ESTADOS, ticketsEstadosMap);
-        await localforage.setItem(KEY_CIERRES_VENTAS, historialCierresVentas);
-
-        textarea.value = "";
-        cerrarModalPegarJSON();
-        actualizarDatalistsZonas();
-        aplicarFiltros();
-        mostrarPestana('ventas');
-
-        let msg = `Registro ${codigoRegistro} procesado.\n${ventasEnriquecidas.length} ventas importadas.\n${todasLasProducciones.length} tickets de producción.`;
-        if (duplicadasEvitadas > 0) msg += `\n${duplicadasEvitadas} ventas duplicadas omitidas.`;
-        mostrarModalAviso(msg, "Ventas Recibidas");
+        await procesarVentasJson(data, textarea);
         return;
       }
 
@@ -1945,54 +1999,276 @@
       }
 
       if (data.conteos && Array.isArray(data.conteos)) {
-        const conteosNorm = data.conteos.map(item => ({
-          id: item.id || Date.now() + Math.random(),
-          maquina: item.maquina || "General",
-          factor_golpe: item.factor_golpe || 1,
-          contador_maquina: item.contador_maquina || 0,
-          botellas_fabricadas: item.botellas_fabricadas || (item.paquetes * 100),
-          producto: (item.producto || "Botella").trim(),
-          paquetes: parseInt(item.paquetes) || 0,
-          merma: parseInt(item.merma) || 0,
-          fecha: item.fecha || new Date().toLocaleDateString('es-PE'),
-          hora: item.hora || new Date().toLocaleTimeString('es-PE'),
-          timestampISO: item.timestampISO || new Date().toISOString()
-        }));
-        historialReportesProd.unshift({
-          id_reporte: data.id_reporte || Date.now(),
-          fecha_exportacion: data.fecha_exportacion || new Date().toISOString(),
-          responsable: data.responsable || "Jordan",
-          totales: {
-            paquetes_totales: data.totales?.paquetes_totales ?? conteosNorm.reduce((a,c) => a + c.paquetes, 0),
-            merma_total_unidades: data.totales?.merma_total_unidades ?? conteosNorm.reduce((a,c) => a + c.merma, 0),
-            botellas_totales: data.totales?.botellas_totales ?? conteosNorm.reduce((a,c) => a + c.botellas_fabricadas, 0),
-            cantidad_conteos: conteosNorm.length
-          },
-          conteos: conteosNorm
-        });
-        let solicitudesActualizadas = 0;
-        if (data.solicitudes_produccion && Array.isArray(data.solicitudes_produccion)) {
-          data.solicitudes_produccion.forEach(sp => {
-            const idTicket = sp.codigo || sp.id_ticket_produccion;
-            if (idTicket) {
-              ticketsEstadosMap[idTicket] = sp.estado || 'producido';
-              solicitudesActualizadas++;
-            }
-          });
-          await localforage.setItem(KEY_TICKETS_ESTADOS, ticketsEstadosMap);
-        }
-        await localforage.setItem(KEY_REPORTES_PROD, historialReportesProd);
-        textarea.value = "";
-        cerrarModalPegarJSON();
-        aplicarFiltros();
-        mostrarPestana('stock');
-        let msg = `Reporte de producción de ${data.responsable || 'Jordan'} incorporado.`;
-        if (solicitudesActualizadas > 0) msg += ` ${solicitudesActualizadas} tickets marcados como PRODUCIDOS.`;
-        mostrarModalAviso(msg, "Planta Actualizada");
+        await procesarReporteConteos(data);
+        textarea.value = ""; cerrarModalPegarJSON();
         return;
       }
 
       mostrarModalAviso("Estructura JSON no reconocida.", "Formato No Soportado");
+    }
+
+    async function procesarPriceJsonDirecto(data) {
+      const preciosNorm = data.map(p => ({
+        producto: p.producto,
+        precio_menor: parseFloat(p.precio_menor) || 0,
+        precio_mayor: parseFloat(p.precio_mayor) || 0,
+        precio_cliente_final: parseFloat(p.precio_cliente_final) || 0,
+        unidades_paquete: parseInt(p.unidades_paquete) || 100
+      }));
+      historialTarifarios.unshift({
+        id_tarifario: Date.now(),
+        autorizado_por: "Gladys Garro",
+        cargo: "Gerencia General",
+        fecha_emision: new Date().toISOString(),
+        vigencia: { desde: new Date().toISOString().split('T')[0], hasta: "Sin definir" },
+        precios: preciosNorm
+      });
+      await localforage.setItem(KEY_TARIFARIOS, historialTarifarios);
+      catalogoPreciosKing = preciosNorm.map(p => ({
+        producto: p.producto, precio_menor: p.precio_menor, precio_mayor: p.precio_mayor,
+        precio_cliente_final: p.precio_cliente_final, unidades_paquete: p.unidades_paquete
+      }));
+      poblarSelectProductosVentaOficina();
+      renderizarTarifarioYPrecios();
+      mostrarPestana('precios');
+      mostrarModalAviso(`Tarifario con ${preciosNorm.length} modelos registrado exitosamente.`, "Precios Actualizados");
+    }
+
+    async function procesarReportesPlanta(data) {
+      let totalPaquetes = 0;
+      let totalMerma = 0;
+      let totalBotellas = 0;
+      const conteosTodos = [];
+      const solicitudesActualizadas = [];
+
+      (data.reportes || []).forEach(rep => {
+        (rep.conteos || []).forEach(c => {
+          conteosTodos.push(c);
+          totalPaquetes += parseInt(c.paquetes) || 0;
+          totalMerma += parseInt(c.merma) || 0;
+          totalBotellas += parseInt(c.botellas_fabricadas) || 0;
+        });
+        // Solicitudes activas (aún en producción)
+        if (rep.solicitudes_produccion) {
+          rep.solicitudes_produccion.forEach(sp => {
+            const idT = sp.id_ticket_produccion || sp.codigo;
+            if (idT) {
+              ticketsEstadosMap[idT] = sp.estado || 'produciendo';
+              solicitudesActualizadas.push(idT);
+            }
+          });
+        }
+        // Solicitudes ya completadas por producción (lote anterior o parcial)
+        if (rep.solicitudes_completadas) {
+          rep.solicitudes_completadas.forEach(sc => {
+            const idT = sc.id_ticket_produccion || sc.codigo;
+            if (idT) {
+              ticketsEstadosMap[idT] = 'producido';
+              solicitudesActualizadas.push(idT);
+            }
+          });
+        }
+      });
+
+      // También puede venir el array a nivel raíz
+      if (data.solicitudes_completadas && Array.isArray(data.solicitudes_completadas)) {
+        data.solicitudes_completadas.forEach(sc => {
+          const idT = sc.id_ticket_produccion || sc.codigo;
+          if (idT) {
+            ticketsEstadosMap[idT] = 'producido';
+            solicitudesActualizadas.push(idT);
+          }
+        });
+      }
+
+      historialReportesProd.unshift({
+        id_reporte: data.id_reporte || Date.now(),
+        fecha_exportacion: data.fecha_exportacion || new Date().toISOString(),
+        responsable: data.responsable || "Planta",
+        totales: {
+          paquetes_totales: data.totales?.paquetes_totales ?? totalPaquetes,
+          merma_total_unidades: data.totales?.merma_total_unidades ?? totalMerma,
+          botellas_totales: data.totales?.botellas_totales ?? totalBotellas,
+          cantidad_conteos: conteosTodos.length
+        },
+        conteos: conteosTodos
+      });
+
+      await localforage.setItem(KEY_REPORTES_PROD, historialReportesProd);
+      await localforage.setItem(KEY_TICKETS_ESTADOS, ticketsEstadosMap);
+
+      aplicarFiltros();
+      mostrarPestana('stock');
+
+      const completadas = (data.solicitudes_completadas || []).length +
+        (data.reportes || []).reduce((acc, r) => acc + ((r.solicitudes_completadas || []).length), 0);
+
+      let msg = `Reporte de planta procesado.\n• ${totalPaquetes} paquetes\n• ${totalMerma} unidades de merma`;
+      if (completadas > 0) msg += `\n• ${completadas} solicitudes marcadas como PRODUCIDO`;
+      mostrarModalAviso(msg, "Planta Actualizada");
+    }
+
+    async function procesarTicketsProduccion(data) {
+      let agregados = 0;
+      const todosLosTickets = data.tickets || [];
+      todosLosTickets.forEach(t => {
+        const id = t.id_ticket_produccion || t.codigo;
+        if (!id) return;
+        if (!ticketsEstadosMap[id]) {
+          ticketsEstadosMap[id] = 'pendiente';
+          agregados++;
+        }
+      });
+      await localforage.setItem(KEY_TICKETS_ESTADOS, ticketsEstadosMap);
+      aplicarFiltros();
+      mostrarPestana('tickets');
+      mostrarModalAviso(`Producción registrada.\n${todosLosTickets.length} tickets en el lote.\n${agregados} tickets nuevos.`, "Lote de Producción");
+    }
+
+    async function procesarReporteConteos(data) {
+      const conteosNorm = data.conteos.map(item => ({
+        id: item.id || Date.now() + Math.random(),
+        maquina: item.maquina || "General",
+        factor_golpe: item.factor_golpe || 1,
+        contador_maquina: item.contador_maquina || 0,
+        botellas_fabricadas: item.botellas_fabricadas || (item.paquetes * 100),
+        producto: (item.producto || "Botella").trim(),
+        paquetes: parseInt(item.paquetes) || 0,
+        merma: parseInt(item.merma) || 0,
+        fecha: item.fecha || new Date().toLocaleDateString('es-PE'),
+        hora: item.hora || new Date().toLocaleTimeString('es-PE'),
+        timestampISO: item.timestampISO || new Date().toISOString()
+      }));
+      historialReportesProd.unshift({
+        id_reporte: data.id_reporte || Date.now(),
+        fecha_exportacion: data.fecha_exportacion || new Date().toISOString(),
+        responsable: data.responsable || "Jordan",
+        totales: {
+          paquetes_totales: data.totales?.paquetes_totales ?? conteosNorm.reduce((a,c) => a + c.paquetes, 0),
+          merma_total_unidades: data.totales?.merma_total_unidades ?? conteosNorm.reduce((a,c) => a + c.merma, 0),
+          botellas_totales: data.totales?.botellas_totales ?? conteosNorm.reduce((a,c) => a + c.botellas_fabricadas, 0),
+          cantidad_conteos: conteosNorm.length
+        },
+        conteos: conteosNorm
+      });
+
+      let solicitudesActualizadas = 0;
+      let completadas = 0;
+
+      // Solicitudes activas
+      if (data.solicitudes_produccion && Array.isArray(data.solicitudes_produccion)) {
+        data.solicitudes_produccion.forEach(sp => {
+          const idTicket = sp.codigo || sp.id_ticket_produccion;
+          if (idTicket) {
+            ticketsEstadosMap[idTicket] = sp.estado || 'produciendo';
+            solicitudesActualizadas++;
+          }
+        });
+      }
+
+      // Solicitudes completadas (marcar como producido)
+      if (data.solicitudes_completadas && Array.isArray(data.solicitudes_completadas)) {
+        data.solicitudes_completadas.forEach(sc => {
+          const idTicket = sc.codigo || sc.id_ticket_produccion;
+          if (idTicket) {
+            ticketsEstadosMap[idTicket] = 'producido';
+            completadas++;
+          }
+        });
+      }
+
+      await localforage.setItem(KEY_TICKETS_ESTADOS, ticketsEstadosMap);
+      await localforage.setItem(KEY_REPORTES_PROD, historialReportesProd);
+      aplicarFiltros();
+      mostrarPestana('stock');
+      let msg = `Reporte de producción de ${data.responsable || 'Jordan'} incorporado.`;
+      if (solicitudesActualizadas > 0) msg += ` ${solicitudesActualizadas} tickets actualizados.`;
+      if (completadas > 0) msg += ` ${completadas} tickets marcados como PRODUCIDO.`;
+      mostrarModalAviso(msg, "Planta Actualizada");
+    }
+
+    async function procesarVentasJson(data, textarea) {
+      const codigoRegistro = data.codigo_registro || `registro_venta_manual_${fechaCompacta(new Date())}_${String(historialCierresVentas.length + 1).padStart(2,'0')}`;
+      const fechaCierre = data.fecha_registro || data.fecha_cierre || new Date().toISOString();
+
+      const codigosExistentes = new Set();
+      historialCierresVentas.forEach(c => {
+        (c.ventas || []).forEach(v => { if (v.codigo) codigosExistentes.add(v.codigo); });
+      });
+
+      const todasLasProducciones = [];
+      const ventasEnriquecidas = [];
+      let duplicadasEvitadas = 0;
+
+      data.ventas.forEach(v => {
+        if (v.codigo && codigosExistentes.has(v.codigo)) {
+          duplicadasEvitadas++;
+          return;
+        }
+        if (v.codigo) codigosExistentes.add(v.codigo);
+
+        const ventaCopy = { ...v };
+        if (!ventaCopy.fecha_venta && ventaCopy.timestampISO) ventaCopy.fecha_venta = ventaCopy.timestampISO;
+        if (!ventaCopy.fecha_venta && ventaCopy.fecha_registro) {
+          const d = new Date(ventaCopy.fecha_registro);
+          if (!isNaN(d.getTime())) ventaCopy.fecha_venta = d.toISOString();
+        }
+        if (!ventaCopy.vendedor) ventaCopy.vendedor = data.vendedor || 'Oficina';
+        if (!ventaCopy.zona) ventaCopy.zona = data.zona || 'General';
+
+        if (ventaCopy.tickets_produccion && Array.isArray(ventaCopy.tickets_produccion)) {
+          const ticketsNorm = ventaCopy.tickets_produccion.map(t => normalizarTicket(t, ventaCopy, data));
+          ventaCopy.tickets_produccion = ticketsNorm;
+          todasLasProducciones.push(...ticketsNorm);
+        }
+        ventasEnriquecidas.push(ventaCopy);
+      });
+
+      if (data.tickets_produccion && Array.isArray(data.tickets_produccion)) {
+        data.tickets_produccion.forEach(t => {
+          const ventaPadre = ventasEnriquecidas.find(v => v.codigo === t.venta_codigo);
+          const tNorm = normalizarTicket(t, ventaPadre, data);
+          if (!todasLasProducciones.some(x => x.codigo === tNorm.codigo)) {
+            todasLasProducciones.push(tNorm);
+          }
+        });
+      }
+
+      if (ventasEnriquecidas.length === 0) {
+        textarea.value = "";
+        cerrarModalPegarJSON();
+        mostrarModalAviso(`Todas las ventas del JSON ya existen (${duplicadasEvitadas} duplicadas).`, "Sin datos nuevos");
+        return;
+      }
+
+      historialCierresVentas.unshift({
+        id_cierre: Date.now(),
+        codigo_registro: codigoRegistro,
+        fecha_cierre: fechaCierre,
+        vendedor: data.vendedor || "Asesor",
+        zona: data.zona || "General",
+        resumen: data.resumen || {},
+        ventas: ventasEnriquecidas,
+        tickets_produccion: todasLasProducciones
+      });
+
+      todasLasProducciones.forEach(t => {
+        if (!ticketsEstadosMap[t.id_ticket_produccion]) {
+          ticketsEstadosMap[t.id_ticket_produccion] = 'pendiente';
+        }
+      });
+      await localforage.setItem(KEY_TICKETS_ESTADOS, ticketsEstadosMap);
+      await localforage.setItem(KEY_CIERRES_VENTAS, historialCierresVentas);
+
+      textarea.value = "";
+      cerrarModalPegarJSON();
+      actualizarDatalistsZonas();
+      aplicarFiltros();
+      mostrarPestana('ventas');
+
+      let msg = `Registro ${codigoRegistro} procesado.\n${ventasEnriquecidas.length} ventas importadas.\n${todasLasProducciones.length} tickets de producción.`;
+      if (duplicadasEvitadas > 0) msg += `\n${duplicadasEvitadas} ventas duplicadas omitidas.`;
+      mostrarModalAviso(msg, "Ventas Recibidas");
     }
 
     document.getElementById('jsonInput').addEventListener('keydown', function(e) {
@@ -2016,7 +2292,7 @@
 
       const ticketsPendientesCount = ticketsTodos.filter(t => {
         const est = ticketsEstadosMap[t.id_ticket_produccion || t.codigo] || 'pendiente';
-        return est === 'pendiente' || est === 'produciendo';
+        return est === 'pendiente';
       }).length;
       actualizarBadgeTickets(ticketsPendientesCount);
       actualizarStockConsolidado(conteosTodos);
@@ -2039,7 +2315,6 @@
 
     // ==== MÉTRICAS DEL DÍA ====
     function actualizarMetricasDelDia(ventasHoy) {
-      // Mejor vendedor
       const vendedoresMap = {};
       ventasHoy.forEach(v => {
         const vend = v.vendedor || 'Oficina';
@@ -2060,7 +2335,6 @@
         document.getElementById('diaMejorVendedorDetalle').innerText = 'Sin ventas registradas hoy';
       }
 
-      // Zona top
       const zonasMap = {};
       ventasHoy.forEach(v => {
         const z = v.zona || 'General';
@@ -2081,7 +2355,6 @@
         document.getElementById('diaZonaTopDetalle').innerText = 'Sin ventas registradas hoy';
       }
 
-      // Producto top
       const productosMap = {};
       ventasHoy.forEach(v => {
         (v.items || []).forEach(it => {
@@ -2195,59 +2468,62 @@
       );
     }
 
-    function obtenerStockAgrupado(conteos) {
-      const mapa = {};
-      conteos.forEach(c => { mapa[c.producto] = (mapa[c.producto] || 0) + c.paquetes; });
-      return Object.entries(mapa).map(([producto, paquetes]) => ({ producto, paquetes })).sort((a,b) => b.paquetes - a.paquetes);
+    // ==== STOCK ====
+    function calcularStockDisponible() {
+      const stockMap = {};
+
+      historialReportesProd.forEach(r => {
+        (r.conteos || []).forEach(c => {
+          const prod = c.producto || 'Sin modelo';
+          stockMap[prod] = (stockMap[prod] || 0) + (parseInt(c.paquetes) || 0);
+        });
+      });
+
+      historialCierresVentas.forEach(cierre => {
+        (cierre.ventas || []).forEach(v => {
+          const fechaRef = v.fecha_venta || v.timestampISO || v.fecha_registro;
+          if (esDeHoy(fechaRef)) {
+            (v.items || []).forEach(it => {
+              const p = it.producto;
+              if (stockMap[p] === undefined) return;
+              stockMap[p] -= (it.paquetes_totales || it.paquetes || 0);
+            });
+          }
+        });
+      });
+
+      Object.keys(stockMap).forEach(p => {
+        if (stockMap[p] < 0) stockMap[p] = 0;
+      });
+
+      return Object.entries(stockMap)
+        .map(([producto, paquetes]) => ({ producto, paquetes }))
+        .sort((a, b) => b.paquetes - a.paquetes);
     }
 
     function actualizarStockConsolidado(conteos) {
-      const stock = obtenerStockAgrupado(conteos);
+      const stock = calcularStockDisponible();
       registrarCallback('stock', () => actualizarStockConsolidado(conteos));
       renderPaginador(stock.length, 'stock', 'paginacionStock');
       const itemsPaginados = rebanarParaPagina(stock, 'stock');
       const tbody = document.getElementById('tbodyStock');
       if (stock.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 40px; color: var(--text-subtle);">Sin conteos cargados.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; padding: 40px; color: var(--text-subtle);">Sin datos de stock. Importa el reporte de producción desde el botón flotante.</td></tr>';
         return;
       }
       tbody.innerHTML = itemsPaginados.map(s => `
         <tr>
           <td style="font-weight: 700;">${s.producto}</td>
           <td style="text-align: center;"><span class="tag-paquetes">${s.paquetes} paq</span></td>
-          <td style="text-align: right;" data-export-ignore="true">
-            <button onclick="ajustarStockManual('${s.producto}')" class="btn btn-outline" style="padding: 4px 8px; font-size: 10px;">Ajustar</button>
-          </td>
         </tr>`).join('');
     }
 
-    async function ajustarStockManual(producto) {
-      const entrada = prompt(`Ajustar paquetes disponibles para "${producto}":`);
-      if (entrada === null) return;
-      const num = parseInt(entrada);
-      if (isNaN(num) || num < 0) return;
-      const ahora = new Date();
-      historialReportesProd.unshift({
-        id_reporte: Date.now(),
-        fecha_exportacion: ahora.toISOString(),
-        responsable: "King (Ajuste)",
-        totales: { paquetes_totales: num, merma_total_unidades: 0, botellas_totales: num * 100, cantidad_conteos: 1 },
-        conteos: [{
-          id: Date.now(), maquina: "Ajuste Directo", factor_golpe: 1,
-          contador_maquina: num * 100, botellas_fabricadas: num * 100,
-          producto: producto, paquetes: num, merma: 0,
-          fecha: ahora.toLocaleDateString('es-PE'), hora: ahora.toLocaleTimeString('es-PE'),
-          timestampISO: ahora.toISOString()
-        }]
-      });
-      await localforage.setItem(KEY_REPORTES_PROD, historialReportesProd);
-      aplicarFiltros();
-    }
-
     function descargarStockJSON() {
-      const conteos = [];
-      historialReportesProd.forEach(r => r.conteos.forEach(c => conteos.push(c)));
-      const stock = obtenerStockAgrupado(conteos);
+      const stock = calcularStockDisponible();
+      if (stock.length === 0) {
+        mostrarModalAviso("No hay datos de stock para exportar.", "Atención");
+        return;
+      }
       const payload = stock.map(s => ({ producto: s.producto, paquetes: s.paquetes }));
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -2262,7 +2538,7 @@
       const ventasOrdenadas = ventasHoy.slice().sort((a, b) => {
         const ta = new Date(a.fecha_venta || a.timestampISO || 0).getTime();
         const tb = new Date(b.fecha_venta || b.timestampISO || 0).getTime();
-        return tb - ta; // más recientes primero
+        return tb - ta;
       });
 
       registrarCallback('ventas', () => actualizarPanelVentasDia(ventasHoy));
@@ -2390,7 +2666,6 @@
         'Paquetes', 'paquetesZona', (inst) => chartPaquetesZonaInstance = inst);
     }
 
-    // ==== HISTÓRICO POR ZONA ====
     function renderizarHistoricoZona(ventasFiltradas) {
       const zona = document.getElementById('selectZonaHistorico').value;
       const canvas = document.getElementById('chartHistoricoZona');
@@ -2637,6 +2912,7 @@
       historialCierresVentas.forEach(c => {
         if (c.tickets_produccion) c.tickets_produccion.forEach(t => tickets.push(t));
       });
+      // Excluir tickets ya producidos: solo exportamos pendientes y produciendo
       const ticketsParaProducir = tickets.filter(t => {
         const id = t.id_ticket_produccion || t.codigo;
         const est = ticketsEstadosMap[id] || 'pendiente';
@@ -2659,34 +2935,30 @@
         total_paquetes_requeridos: totalPaquetes,
         tickets: ticketsParaProducir.map(t => ({
           codigo: t.codigo || t.id_ticket_produccion,
+          id_ticket_produccion: t.codigo || t.id_ticket_produccion,
           producto: t.producto,
           paquetes_a_fabricar: t.paquetes_a_fabricar,
           venta_codigo: t.venta_codigo || null,
-          fecha_solicitud: t.fecha_solicitud || null
+          fecha_solicitud: t.fecha_solicitud || null,
+          fecha_entrega_programada: t.fecha_entrega_programada || null
         }))
       };
 
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url; a.download = `production_${codigoLote}.json`;
+      a.href = url; a.download = "production.json";
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      let marcados = 0;
       ticketsParaProducir.forEach(t => {
         const id = t.id_ticket_produccion || t.codigo;
         if (ticketsEstadosMap[id] !== 'produciendo') {
           ticketsEstadosMap[id] = 'produciendo';
-          marcados++;
         }
       });
       localforage.setItem(KEY_TICKETS_ESTADOS, ticketsEstadosMap).then(() => {
         aplicarFiltros();
-        mostrarModalAviso(
-          `Se descargó el archivo de producción.\n\nCódigo de lote: ${codigoLote}\nTickets: ${ticketsParaProducir.length}\nPaquetes: ${totalPaquetes}\n\n${marcados} tickets marcados como "Produciendo".`,
-          "Producción Exportada"
-        );
       });
     }
 
@@ -2895,6 +3167,79 @@
       mostrarModalAviso(`Cliente "${nombre}" creado correctamente.`, "Cliente Creado");
     }
 
+    // ==================================================
+    // FUSIÓN DE CLIENTES CON SIMILITUD
+    // ==================================================
+    function calcularSimilitudCliente(principal, candidato) {
+      let score = 0;
+      const razones = [];
+
+      const norm = (s) => (s || '').toString().toLowerCase().trim()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+      const pNom = norm(principal.nombre);
+      const cNom = norm(candidato.nombre);
+      const pTel = (principal.telefono || '').replace(/\D/g, '');
+      const cTel = (candidato.telefono || '').replace(/\D/g, '');
+      const pDni = (principal.dni || '').trim();
+      const cDni = (candidato.dni || '').trim();
+      const pRuc = (principal.ruc || '').trim();
+      const cRuc = (candidato.ruc || '').trim();
+
+      // Primer nombre idéntico
+      const pPalabras = pNom.split(/\s+/).filter(w => w.length >= 2);
+      const cPalabras = cNom.split(/\s+/).filter(w => w.length >= 2);
+      const pPrimer = pPalabras[0] || '';
+      const cPrimer = cPalabras[0] || '';
+      if (pPrimer && cPrimer && pPrimer === cPrimer && pPrimer.length >= 3) {
+        score += 5;
+        razones.push('Mismo primer nombre');
+      }
+
+      // Palabras en común (nombre y apellido)
+      const comunes = pPalabras.filter(w => w.length >= 3 && cPalabras.includes(w));
+      if (comunes.length > 0) {
+        score += comunes.length * 3;
+        if (!razones.includes('Mismo primer nombre')) {
+          razones.push(comunes.length === 1 ? '1 palabra en común' : comunes.length + ' palabras en común');
+        }
+      }
+
+      // Teléfono
+      if (pTel && cTel && pTel.length >= 7) {
+        if (pTel === cTel) {
+          score += 12;
+          razones.push('Mismo teléfono');
+        } else if (pTel.endsWith(cTel) || cTel.endsWith(pTel)) {
+          score += 6;
+          razones.push('Teléfono similar');
+        }
+      }
+
+      // DNI
+      if (pDni && cDni && pDni !== 'SN' && cDni !== 'SN') {
+        if (pDni === cDni) {
+          score += 15;
+          razones.push('Mismo DNI');
+        }
+      }
+
+      // RUC
+      if (pRuc && cRuc) {
+        if (pRuc === cRuc) {
+          score += 15;
+          razones.push('Mismo RUC');
+        }
+      }
+
+      // Misma zona
+      if (principal.zona && candidato.zona && principal.zona === candidato.zona) {
+        score += 1;
+      }
+
+      return { score, razones };
+    }
+
     function abrirModalFusion(clienteJSONEscapado) {
       const c = JSON.parse(decodeURIComponent(clienteJSONEscapado));
       clienteFusionPrincipal = c;
@@ -2902,6 +3247,15 @@
       document.getElementById('fusionIdPrincipal').value = c.idUnico;
       document.getElementById('fusionPrincipalBox').innerText = `${c.nombre} • ${c.dni !== 'SN' ? 'DNI ' + c.dni : ''} ${c.telefono ? '• ' + c.telefono : ''} — S/ ${c.monto_acumulado.toFixed(2)}`;
       document.getElementById('fusionBusqueda').value = "";
+
+      // Pre-seleccionar los candidatos con alta similitud (score >= 10)
+      const todos = obtenerListaClientesConsolidada();
+      todos.forEach(cand => {
+        if (cand.idUnico === c.idUnico) return;
+        const { score } = calcularSimilitudCliente(c, cand);
+        if (score >= 10) fusionCandidatosSeleccionados.add(cand.idUnico);
+      });
+
       filtrarCandidatosFusion();
       document.getElementById('modalFusionar').classList.add('active');
     }
@@ -2918,6 +3272,13 @@
       const box = document.getElementById('fusionCandidatosBox');
       let lista = todos.filter(c => c.idUnico !== principal.idUnico);
 
+      // Calcular score para cada candidato
+      lista = lista.map(c => {
+        const sim = calcularSimilitudCliente(principal, c);
+        return { ...c, _score: sim.score, _razones: sim.razones };
+      });
+
+      // Si hay búsqueda, filtrar por nombre/dni/tel
       if (q) {
         lista = lista.filter(c =>
           c.nombre.toLowerCase().includes(q) ||
@@ -2926,6 +3287,9 @@
         );
       }
 
+      // Ordenar por score descendente (más similares primero)
+      lista.sort((a, b) => b._score - a._score);
+
       if (lista.length === 0) {
         box.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-subtle); font-size: 12px;">Sin candidatos para fusionar.</div>';
         return;
@@ -2933,14 +3297,23 @@
 
       box.innerHTML = lista.map(c => {
         const marcado = fusionCandidatosSeleccionados.has(c.idUnico) ? 'checked' : '';
+        const esSimilar = c._score >= 10;
+        const tieneScore = c._score > 0;
         return `
-          <label style="display: flex; gap: 10px; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--border-subtle); cursor: pointer;">
-            <input type="checkbox" ${marcado} onchange="toggleCandidatoFusion('${c.idUnico}', this.checked)">
-            <div style="flex: 1;">
-              <div style="font-weight: 700; font-size: 12px;">${c.nombre}</div>
-              <div style="font-size: 10.5px; color: var(--text-muted);">
+          <label class="fusion-candidato ${esSimilar ? 'similar' : ''}">
+            <input type="checkbox" class="fusion-candidato-checkbox" ${marcado} onchange="toggleCandidatoFusion('${c.idUnico}', this.checked)">
+            <div class="fusion-candidato-info">
+              <div class="fusion-candidato-nombre">
+                ${c.nombre}
+                ${esSimilar ? `<span class="fusion-score-badge">${c._score} pts</span>` : ''}
+              </div>
+              <div class="fusion-candidato-meta">
                 ${c.dni !== 'SN' ? 'DNI ' + c.dni : ''} ${c.telefono && c.telefono !== '—' ? '• ' + c.telefono : ''} • ${c.pedidos} pedidos • S/ ${c.monto_acumulado.toFixed(2)}
               </div>
+              ${tieneScore && c._razones.length > 0 ? `
+                <div class="fusion-razones">
+                  ${c._razones.map(r => `<span class="fusion-razon-pill">${r}</span>`).join('')}
+                </div>` : ''}
             </div>
           </label>`;
       }).join('');
@@ -3020,8 +3393,10 @@
         sel.innerHTML = '<option value="">Sin tarifario cargado — sube price.json</option>';
         return;
       }
+      const stockMap = {};
+      calcularStockDisponible().forEach(s => { stockMap[s.producto] = s.paquetes; });
       sel.innerHTML = catalogoPreciosKing.map(p => {
-        const stock = catalogoStockKing[p.producto] || 0;
+        const stock = stockMap[p.producto] || 0;
         return `<option value="${p.producto}">${p.producto} — Stock: ${stock} paq</option>`;
       }).join('');
     }
@@ -3030,7 +3405,9 @@
       const prod = this.value;
       const box = document.getElementById('ofInfoStock');
       if (!box) return;
-      const st = catalogoStockKing[prod] || 0;
+      const stockMap = {};
+      calcularStockDisponible().forEach(s => { stockMap[s.producto] = s.paquetes; });
+      const st = stockMap[prod] || 0;
       const item = catalogoPreciosKing.find(p => p.producto === prod);
       if (item) {
         box.innerHTML = `Stock: <strong>${st} paq</strong> | Menor: S/ ${item.precio_menor.toFixed(2)} | Mayor: S/ ${item.precio_mayor.toFixed(2)}`;
@@ -3111,6 +3488,9 @@
       const itemsFinal = [];
       const ticketsProduccion = [];
 
+      const stockMap = {};
+      calcularStockDisponible().forEach(s => { stockMap[s.producto] = s.paquetes; });
+
       const ahora = new Date();
       const fechaCorta = fechaCompacta(ahora);
       const abrevZona = (zona.toLowerCase().replace(/\s+/g, '') || 'gen').substring(0, 6);
@@ -3123,7 +3503,7 @@
         if (!p) return;
         const pu = esMayor ? p.precio_mayor : p.precio_menor;
         const sub = it.paquetes * pu;
-        const stockDisp = catalogoStockKing[it.producto] || 0;
+        const stockDisp = stockMap[it.producto] || 0;
         const faltante = Math.max(0, it.paquetes - stockDisp);
         const desdeStock = it.paquetes - faltante;
         totalMonto += sub;
@@ -3233,6 +3613,8 @@
     }
 
     function renderizarTarifarioYPrecios() {
+      registrarCallback('precios', () => renderizarTarifarioYPrecios());
+
       const vigente = obtenerTarifarioVigente();
       const tbody = document.getElementById('tbodyPreciosVigentes');
       const subtitulo = document.getElementById('subtituloTarifario');
@@ -3240,6 +3622,7 @@
       if (!vigente) {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: var(--text-subtle);">Aún no se ha cargado tarifario. Sube el price.json desde el botón flotante.</td></tr>';
         subtitulo.innerText = "Sin tarifario vigente";
+        renderPaginador(0, 'precios', 'paginacionPrecios');
         return;
       }
 
@@ -3350,7 +3733,7 @@
       }
       const pendientes = tickets.filter(t => {
         const est = ticketsEstadosMap[t.id_ticket_produccion || t.codigo] || 'pendiente';
-        return est === 'pendiente' || est === 'produciendo';
+        return est === 'pendiente';
       });
       document.getElementById('kpiBotellasFabricadas').innerText = abreviarNumero(totalBotellas);
       document.getElementById('kpiTopMaquina').innerText = topMaq;
@@ -3450,22 +3833,63 @@
       const canvas2 = document.getElementById('chartMaquinas');
       const existing2 = Chart.getChart(canvas2);
       if (existing2) existing2.destroy();
-      chartMaqInstance = new Chart(canvas2.getContext('2d'), {
-        type: chartTypes.maquinas,
-        data: {
-          labels: labelsM.length ? labelsM : ['Sin datos'],
-          datasets: [{ label: 'Botellas', data: dataBot.length ? dataBot : [0],
-            backgroundColor: chartTypes.maquinas === 'line' ? (esOscuro ? '#81c99533' : '#13733333') : (esOscuro ? '#81c995' : '#137333'),
-            borderColor: esOscuro ? '#81c995' : '#137333',
-            borderWidth: chartTypes.maquinas === 'line' ? 2 : 0,
-            borderRadius: chartTypes.maquinas === 'bar' ? 4 : 0,
-            tension: 0.3, fill: false,
-            pointRadius: chartTypes.maquinas === 'line' ? 4 : 0 }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-          scales: { x: { grid: { display: false }, ticks: { color: esOscuro ? '#9aa0a6' : '#64748b', font: { family: 'Montserrat', size: 9 } } },
-                    y: { beginAtZero: true, grid: { color: esOscuro ? '#2e3238' : '#edf2f7' }, ticks: { color: esOscuro ? '#9aa0a6' : '#64748b', font: { family: 'Montserrat', size: 9 } } } } }
-      });
+
+      if (chartTypes.maquinas === 'pie') {
+        const colores = ['#1a73e8', '#8430ce', '#137333', '#b06000', '#c5221f', '#64748b', '#0891b2', '#be185d', '#65a30d', '#d97706', '#7c3aed', '#059669'];
+        chartMaqInstance = new Chart(canvas2.getContext('2d'), {
+          type: 'pie',
+          data: {
+            labels: labelsM.length ? labelsM : ['Sin datos'],
+            datasets: [{
+              data: dataBot.length ? dataBot : [0],
+              backgroundColor: labelsM.length ? colores.slice(0, labelsM.length) : ['#94a3b8'],
+              borderColor: esOscuro ? '#1a1c20' : '#ffffff',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'right',
+                labels: {
+                  color: esOscuro ? '#9aa0a6' : '#64748b',
+                  boxWidth: 12,
+                  font: { family: 'Montserrat', size: 10, weight: '600' }
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => {
+                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                    const pct = total > 0 ? ((ctx.parsed / total) * 100).toFixed(1) : '0';
+                    return ` ${ctx.label}: ${ctx.parsed.toLocaleString()} botellas (${pct}%)`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      } else {
+        chartMaqInstance = new Chart(canvas2.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: labelsM.length ? labelsM : ['Sin datos'],
+            datasets: [{
+              label: 'Botellas',
+              data: dataBot.length ? dataBot : [0],
+              backgroundColor: esOscuro ? '#81c995' : '#137333',
+              borderRadius: 4
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { display: false }, ticks: { color: esOscuro ? '#9aa0a6' : '#64748b', font: { family: 'Montserrat', size: 9 } } },
+                      y: { beginAtZero: true, grid: { color: esOscuro ? '#2e3238' : '#edf2f7' }, ticks: { color: esOscuro ? '#9aa0a6' : '#64748b', font: { family: 'Montserrat', size: 9 } } } } }
+        });
+      }
 
       let totalBotellas = 0, totalMerma = 0;
       const maqKPIMap = {};
@@ -3507,13 +3931,18 @@
       renderizarMetricasMaquinas();
     }
 
+    // ==== HISTORIAL DE REPORTES ====
     function renderizarHistorialPorReportes() {
       const cont = document.getElementById('contenedorHistorialReportes');
       if (historialReportesProd.length === 0) {
         cont.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-subtle);">No hay reportes archivados.</p>';
         return;
       }
-      cont.innerHTML = historialReportesProd.map(rep => {
+      cont.innerHTML = historialReportesProd.map((rep, idx) => {
+        const fecha = new Date(rep.fecha_exportacion);
+        const fechaStr = isNaN(fecha.getTime()) ? rep.fecha_exportacion : fecha.toLocaleString('es-PE', {
+          day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
         const filas = rep.conteos.map(c => `
           <tr>
             <td style="font-weight: 700;">${c.maquina}</td>
@@ -3524,34 +3953,52 @@
             <td style="text-align: center; color: var(--rose); font-weight: 700;">${c.merma} un.</td>
           </tr>`).join('');
         return `
-          <div class="panel" style="margin-bottom: 14px;">
-            <div class="panel-header" style="background: var(--surface-subtle);">
-              <div>
-                <strong style="font-size: 12px;">Reporte #${rep.id_reporte}</strong>
-                <span style="font-size: 11px; color: var(--text-muted); margin-left: 10px;">${new Date(rep.fecha_exportacion).toLocaleString('es-PE')} • ${rep.responsable}</span>
+          <div class="reporte-card" data-idx="${idx}">
+            <div class="reporte-card-header" onclick="toggleReporte(this)">
+              <div class="reporte-card-info">
+                <div class="reporte-card-fecha">
+                  <span>${fechaStr}</span>
+                  <span class="reporte-card-fecha-badge">Reporte</span>
+                </div>
+                <div class="reporte-card-resp">Responsable: ${rep.responsable || '—'} • ${rep.conteos.length} conteo${rep.conteos.length === 1 ? '' : 's'}</div>
               </div>
-              <span class="tag-paquetes">${rep.totales.paquetes_totales} Paquetes</span>
+              <div class="reporte-card-stats">
+                <div class="reporte-card-stat">
+                  <span class="reporte-card-stat-value">${rep.totales.paquetes_totales}</span>
+                  <span class="reporte-card-stat-label">paquetes</span>
+                </div>
+                <div class="reporte-card-stat">
+                  <span class="reporte-card-stat-value rose">${rep.totales.merma_total_unidades}</span>
+                  <span class="reporte-card-stat-label">merma</span>
+                </div>
+              </div>
+              <svg class="reporte-card-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
-            <table>
-              <thead><tr><th>Máquina</th><th>Modelo</th><th style="text-align: center;">Contador</th><th style="text-align: center;">Botellas</th><th style="text-align: center;">Paquetes</th><th style="text-align: center;">Merma</th></tr></thead>
-              <tbody>${filas}</tbody>
-            </table>
+            <div class="reporte-card-body">
+              ${filas ? `
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Máquina</th>
+                      <th>Modelo</th>
+                      <th style="text-align: center;">Contador</th>
+                      <th style="text-align: center;">Botellas</th>
+                      <th style="text-align: center;">Paquetes</th>
+                      <th style="text-align: center;">Merma</th>
+                    </tr>
+                  </thead>
+                  <tbody>${filas}</tbody>
+                </table>` : '<div class="reporte-card-empty">Sin conteos registrados en este reporte.</div>'}
+            </div>
           </div>`;
       }).join('');
     }
 
-    async function confirmarVaciarHistorial() {
-      mostrarModalConfirmacion(
-        "¿Vaciar todos los reportes de producción archivados?",
-        async () => {
-          historialReportesProd = [];
-          await localforage.removeItem(KEY_REPORTES_PROD);
-          aplicarFiltros();
-        },
-        "Vaciar Historial"
-      );
+    function toggleReporte(header) {
+      header.parentElement.classList.toggle('expanded');
     }
 
+    // ==== EQUIPO DE VENTAS ====
     function renderizarEquipoVentas() {
       const cont = document.getElementById('contenedorVendedores');
       cont.innerHTML = EQUIPO_VENTAS.map((v, i) => `
@@ -3724,20 +4171,38 @@
       if (!chartInstance || !chartInstance.data) { mostrarModalAviso("No hay gráfico para exportar.", "Atención"); return; }
       const labels = chartInstance.data.labels || [];
       const datasets = chartInstance.data.datasets || [];
+
       let csv = "\uFEFF";
-      const headers = [nombreColumnaCategoria, ...datasets.map(d => `"${d.label || 'Valor'}"`)];
-      csv += headers.join(";") + "\r\n";
-      labels.forEach((label, i) => {
-        const fila = [`"${label}"`];
-        datasets.forEach(d => { fila.push(d.data[i] !== undefined ? d.data[i] : 0); });
-        csv += fila.join(";") + "\r\n";
-      });
+      if (chartInstance.config && chartInstance.config.type === 'pie') {
+        csv += `${nombreColumnaCategoria};"Botellas";"Porcentaje"`;
+        const values = datasets[0]?.data || [];
+        const total = values.reduce((a, b) => a + b, 0);
+        csv += "\r\n";
+        labels.forEach((label, i) => {
+          const val = values[i] !== undefined ? values[i] : 0;
+          const pct = total > 0 ? ((val / total) * 100).toFixed(2) : '0';
+          csv += `"${label}";${val};${pct}%\r\n`;
+        });
+      } else {
+        const headers = [nombreColumnaCategoria, ...datasets.map(d => `"${d.label || 'Valor'}"`)];
+        csv += headers.join(";") + "\r\n";
+        labels.forEach((label, i) => {
+          const fila = [`"${label}"`];
+          datasets.forEach(d => { fila.push(d.data[i] !== undefined ? d.data[i] : 0); });
+          csv += fila.join(";") + "\r\n";
+        });
+      }
+
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url; a.download = `${nombreArchivo}_${new Date().toISOString().slice(0, 10)}.csv`;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       URL.revokeObjectURL(url);
+    }
+
+    function renderizarGraficosPlanta() {
+      renderizarMetricasMaquinas();
     }
 
     // ==== INIT ====
