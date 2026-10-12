@@ -307,6 +307,58 @@
       letter-spacing: -0.2px;
     }
 
+    /* Items (modelos) list */
+    .order-items-list {
+      display: flex; flex-wrap: wrap; gap: 5px;
+      margin-top: 2px;
+    }
+    .order-item-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 700;
+      background: var(--bg); border: 1px solid var(--border);
+      padding: 2px 3px 2px 8px; border-radius: 6px;
+      color: var(--text-muted);
+    }
+    .order-item-chip .order-item-model {
+      color: var(--text);
+      font-weight: 800;
+    }
+    .order-item-chip .order-item-qty {
+      background: var(--primary-subtle); color: var(--primary);
+      border-radius: 4px; padding: 1px 6px;
+      font-weight: 900;
+      font-size: 10px;
+    }
+    .partial-tag {
+      font-size: 9px; font-weight: 900;
+      background: var(--amber-bg); color: var(--amber);
+      border: 1px solid var(--amber-border);
+      padding: 2px 6px; border-radius: 4px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* Asignación a carros (en Pedidos tab) */
+    .order-assign-row {
+      display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
+      margin-top: 4px;
+      padding-top: 6px;
+      border-top: 1px dashed var(--border);
+    }
+    .order-assign-label {
+      font-size: 10px; font-weight: 900; color: var(--text-soft);
+    }
+    .order-assign-chip {
+      font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: 5px;
+      background: var(--surface); 
+      border: 1.5px solid var(--border);
+      color: var(--text-muted);
+    }
+    .order-assign-chip strong {
+      color: var(--text); font-weight: 900; margin-left: 2px;
+    }
+
     /* ==========================================
        CAR CARD (Carros tab)
     ========================================== */
@@ -387,6 +439,37 @@
       font-size: 11px; font-weight: 600; color: var(--text-soft);
     }
 
+    /* Desglose de modelos por carro */
+    .car-models-summary {
+      padding: 12px 15px 10px;
+      border-bottom: 1px dashed var(--border);
+      display: flex; flex-direction: column; gap: 7px;
+    }
+    .car-models-title {
+      font-size: 9.5px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--text-muted);
+    }
+    .car-models-chips {
+      display: flex; flex-wrap: wrap; gap: 5px;
+    }
+    .car-model-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--primary-subtle);
+      border: 1px solid var(--primary-border);
+      padding: 3px 4px 3px 9px; border-radius: 6px;
+      font-size: 10.5px; font-weight: 700;
+    }
+    .car-model-chip .model-name {
+      color: #1e40af;
+      font-weight: 800;
+    }
+    .car-model-chip .model-qty {
+      background: var(--primary); color: #fff;
+      padding: 1px 7px; border-radius: 4px;
+      font-weight: 900;
+      font-size: 10px;
+    }
+
     /* ==========================================
        CONFIG — CAR FORMS / LIST
     ========================================== */
@@ -416,6 +499,66 @@
     }
     .input-field:focus { border-color: var(--primary); }
     .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    select.input-field {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 13px;
+      padding-right: 34px;
+    }
+
+    /* --- Details desplegable (Agregar Carro) --- */
+    .details-carro {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .details-carro > summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 12.5px;
+      font-weight: 800;
+      letter-spacing: -0.1px;
+      color: var(--text);
+      transition: background 0.15s ease;
+    }
+    .details-carro > summary::-webkit-details-marker { display: none; }
+    .details-carro > summary:hover { background: var(--bg); }
+    .details-carro > summary:active { background: var(--bg); }
+    .details-icon {
+      width: 26px; height: 26px; border-radius: 9px;
+      background: var(--primary-subtle);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 16px; line-height: 1;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+    .details-carro[open] .details-icon { transform: rotate(45deg); }
+    .details-carro > summary .details-hint {
+      margin-left: auto;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .details-body {
+      padding: 14px 16px 16px;
+      border-top: 1px solid var(--border);
+    }
 
     .zona-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
     .zona-chip {
@@ -541,21 +684,90 @@
     }
 
     /* ==========================================
-       FAB
+       FAB DROPUP
     ========================================== */
+    .fab-wrap {
+      position: fixed;
+      bottom: 84px;
+      right: 20px;
+      z-index: 45;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .fab-menu {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      opacity: 0;
+      transform: translateY(12px) scale(0.9);
+      transform-origin: bottom right;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .fab-wrap.open .fab-menu {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    .fab-menu-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px 15px;
+      border-radius: 30px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: -0.1px;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      white-space: nowrap;
+      transition: transform 0.1s ease, background 0.15s ease;
+      pointer-events: auto;
+    }
+    .fab-menu-item:active { transform: scale(0.96); background: var(--bg); }
+    .fab-menu-item svg {
+      width: 15px; height: 15px; stroke: var(--primary); fill: none;
+      stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
     .fab {
-      position: fixed; bottom: 84px; right: 20px;
       width: 54px; height: 54px;
       background: var(--primary); color: #fff;
       border: none; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
       box-shadow: 0 10px 24px rgba(37,99,235,0.35);
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 45;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease;
+      pointer-events: auto;
+      flex-shrink: 0;
     }
     .fab:active { transform: scale(0.94); }
-    .fab svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2.6; }
+    .fab svg {
+      width: 22px; height: 22px; stroke: currentColor; fill: none;
+      stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .fab-wrap.open .fab { background: #1d4ed8; }
+    .fab-wrap.open .fab svg { transform: rotate(135deg); }
+
+    .fab-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(15,23,42,0.18);
+      z-index: 44;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .fab-backdrop.open { opacity: 1; pointer-events: auto; }
 
     /* ==========================================
        MODALS
@@ -763,31 +975,39 @@
          TAB: CONFIG
     ========================================== -->
     <section id="paneConfig" class="view-pane">
-      <div class="config-block">
-        <div class="config-title" id="configFormTitle">Agregar Carro</div>
 
-        <div class="form-group">
-          <label class="form-label">Nombre del Carro</label>
-          <input type="text" id="carNombre" class="input-field" placeholder="Ej. Camión 1 - Junior">
+      <!-- Form desplegable: Agregar / Editar Carro -->
+      <details class="details-carro" id="detailsFormCarro">
+        <summary>
+          <span class="details-icon">+</span>
+          <span id="configFormTitle">Agregar Carro</span>
+          <span class="details-hint">Configurar</span>
+        </summary>
+
+        <div class="details-body">
+          <div class="form-group">
+            <label class="form-label">Nombre del Carro</label>
+            <input type="text" id="carNombre" class="input-field" placeholder="Ej. Camión 1 - Junior">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Máximo de Paquetes</label>
+            <input type="number" id="carMaxPaq" class="input-field" min="1" step="1" placeholder="Ej. 300" inputmode="numeric">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Zonas que Atiende</label>
+            <div class="zona-chips" id="zonaChipsBox"></div>
+          </div>
+
+          <button class="btn-primary-lg" onclick="guardarCarroForm()" id="btnGuardarCarro">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span id="btnGuardarCarroText">Agregar Carro</span>
+          </button>
+
+          <button id="btnCancelarEdicion" style="display:none;width:100%;margin-top:8px;background:var(--bg);border:1px solid var(--border);padding:11px;border-radius:var(--radius-sm);font-family:inherit;font-size:12px;font-weight:800;color:var(--text-muted);cursor:pointer;" onclick="cancelarEdicionCarro()">Cancelar edición</button>
         </div>
-
-        <div class="form-group">
-          <label class="form-label">Máximo de Paquetes</label>
-          <input type="number" id="carMaxPaq" class="input-field" min="1" step="1" placeholder="Ej. 300" inputmode="numeric">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Zonas que Atiende</label>
-          <div class="zona-chips" id="zonaChipsBox"></div>
-        </div>
-
-        <button class="btn-primary-lg" onclick="guardarCarroForm()" id="btnGuardarCarro">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span id="btnGuardarCarroText">Agregar Carro</span>
-        </button>
-
-        <button id="btnCancelarEdicion" style="display:none;width:100%;margin-top:8px;background:var(--bg);border:1px solid var(--border);padding:11px;border-radius:var(--radius-sm);font-family:inherit;font-size:12px;font-weight:800;color:var(--text-muted);cursor:pointer;" onclick="cancelarEdicionCarro()">Cancelar edición</button>
-      </div>
+      </details>
 
       <div class="section-header">
         <span class="section-title">Carros Configurados</span>
@@ -799,10 +1019,25 @@
 
   </main>
 
-  <!-- FAB -->
-  <button class="fab" onclick="abrirModalImport()" title="Importar pedidos">
-    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-  </button>
+  <!-- FAB BACKDROP -->
+  <div class="fab-backdrop" id="fabBackdrop" onclick="cerrarFabMenu()"></div>
+
+  <!-- FAB DROPUP -->
+  <div class="fab-wrap" id="fabWrap">
+    <div class="fab-menu" id="fabMenu">
+      <button class="fab-menu-item" onclick="fabAction('json')">
+        <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        <span>Pegar JSON</span>
+      </button>
+      <button class="fab-menu-item" onclick="fabAction('venta')">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span>Nueva Venta</span>
+      </button>
+    </div>
+    <button class="fab" id="fabBtn" onclick="toggleFabMenu()" aria-label="Acciones">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </div>
 
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
@@ -847,19 +1082,79 @@
     </div>
   </div>
 
-  <!-- MODAL: CAR DETAIL -->
-  <div id="modalCarDetail" class="modal-overlay" onclick="cerrarModalFondo(event, 'modalCarDetail')">
+  <!-- MODAL: NUEVA VENTA -->
+  <div id="modalVenta" class="modal-overlay" onclick="cerrarModalFondo(event, 'modalVenta')">
     <div class="modal-sheet">
       <div class="modal-header">
         <div>
-          <div class="modal-title" id="carDetailTitle">Carro</div>
-          <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-top:2px;" id="carDetailSub"></div>
+          <div class="modal-title">Nueva Venta</div>
+          <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-top:2px;">Registrar un pedido manualmente</div>
         </div>
-        <button class="modal-close" onclick="cerrarModal('modalCarDetail')">
+        <button class="modal-close" onclick="cerrarModal('modalVenta')">
           <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <div id="carDetailContent"></div>
+
+      <div class="form-group">
+        <label class="form-label">Zona</label>
+        <input type="text" id="ventaZona" class="input-field" list="zonasDatalist" placeholder="Ej. Cono Norte" autocomplete="off">
+        <datalist id="zonasDatalist"></datalist>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Cliente</label>
+        <input type="text" id="ventaCliente" class="input-field" placeholder="Nombre o razón social">
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">DNI / RUC</label>
+          <input type="text" id="ventaDni" class="input-field" inputmode="numeric" placeholder="Opcional">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Teléfono</label>
+          <input type="text" id="ventaTelefono" class="input-field" inputmode="tel" placeholder="Opcional">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Dirección</label>
+        <input type="text" id="ventaDireccion" class="input-field" placeholder="Opcional">
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Modelo de Envase</label>
+          <input type="text" id="ventaModelo" class="input-field" list="modelosDatalist" placeholder="Ej. 400 ml" autocomplete="off">
+          <datalist id="modelosDatalist"></datalist>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Paquetes</label>
+          <input type="number" id="ventaPaquetes" class="input-field" inputmode="numeric" min="1" step="1" placeholder="0">
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Monto (S/)</label>
+          <input type="number" id="ventaMonto" class="input-field" inputmode="decimal" min="0" step="0.01" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estado de Pago</label>
+          <select id="ventaEstado" class="input-field">
+            <option value="Pagado">Pagado</option>
+            <option value="Pendiente">Por cobrar</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="cerrarModal('modalVenta')">Cancelar</button>
+        <button class="btn-primary" onclick="guardarVenta()">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Guardar Venta
+        </button>
+      </div>
     </div>
   </div>
 
@@ -897,6 +1192,13 @@
       'Oficina'
     ];
 
+    const MODELOS_BASE = [
+      '220 ml', '250 ml', '280 ml', '300 ml', '340 ml', '350 ml',
+      '400 ml', '400 ml Gorda', '450 ml', '500 ml Néctar', '500 ml Gorda',
+      '500 ml GH', '625 ml', '750 ml', '900 ml', '1000 ml', '1500 ml',
+      '2500 ml', '3000 ml', '3000 ml (verde)', 'Bolsas de tapas', 'Preformas'
+    ];
+
     const COLORES_CARRO = [
       '#2563eb', '#059669', '#7c3aed', '#ea580c',
       '#0891b2', '#be185d', '#65a30d', '#d97706',
@@ -917,7 +1219,6 @@
       const nb = normalizarZona(b);
       if (!na || !nb) return false;
       if (na === nb) return true;
-      // Match if one fully contains the other (as a whole segment)
       return na.includes(nb) || nb.includes(na);
     }
 
@@ -965,6 +1266,43 @@
     }
 
     /* ============================================================
+       HELPERS DE ASIGNACIÓN
+    ============================================================ */
+    function paquetesAsignadosDeOrden(orden) {
+      return (orden.asignaciones || []).reduce((a, x) => a + (x.paquetes || 0), 0);
+    }
+
+    function estaCompletamenteAsignada(orden) {
+      return paquetesAsignadosDeOrden(orden) >= (orden.total_paquetes || 0);
+    }
+
+    function estaParcialmenteAsignada(orden) {
+      const a = paquetesAsignadosDeOrden(orden);
+      return a > 0 && a < (orden.total_paquetes || 0);
+    }
+
+    function estaSinAsignar(orden) {
+      return (orden.asignaciones || []).length === 0;
+    }
+
+    function ordenesDeCarro(carroId) {
+      return ordenes.filter(o => (o.asignaciones || []).some(a => a.carroId === carroId));
+    }
+
+    function asignacionDeCarro(orden, carroId) {
+      return (orden.asignaciones || []).find(a => a.carroId === carroId) || null;
+    }
+
+    function totalPaquetesEnCarro(carroId) {
+      let t = 0;
+      ordenes.forEach(o => {
+        const a = asignacionDeCarro(o, carroId);
+        if (a) t += a.paquetes;
+      });
+      return t;
+    }
+
+    /* ============================================================
        SALUDO
     ============================================================ */
     function actualizarSaludo() {
@@ -983,6 +1321,13 @@
       try { ordenes = JSON.parse(localStorage.getItem(KEY_ORDENES)) || []; } catch (e) { ordenes = []; }
       fechaActual = localStorage.getItem(KEY_FECHA) || '';
       try { resumenActual = JSON.parse(localStorage.getItem(KEY_RESUMEN)); } catch (e) { resumenActual = null; }
+
+      // Normalizar órdenes (por si vienen del modelo antiguo con carroId)
+      ordenes.forEach(o => {
+        if (!Array.isArray(o.asignaciones)) o.asignaciones = [];
+        if (!Array.isArray(o.items)) o.items = [];
+        delete o.carroId;
+      });
     }
 
     function guardarCarros() {
@@ -1020,6 +1365,7 @@
        MODALES
     ============================================================ */
     function abrirModal(id) {
+      cerrarFabMenu();
       const el = document.getElementById(id);
       if (el) el.classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -1033,6 +1379,33 @@
       if (e.target.id === id) cerrarModal(id);
     }
 
+    /* ============================================================
+       FAB DROPUP
+    ============================================================ */
+    function toggleFabMenu() {
+      const wrap = document.getElementById('fabWrap');
+      const backdrop = document.getElementById('fabBackdrop');
+      const abrir = !wrap.classList.contains('open');
+      wrap.classList.toggle('open', abrir);
+      backdrop.classList.toggle('open', abrir);
+    }
+
+    function cerrarFabMenu() {
+      const wrap = document.getElementById('fabWrap');
+      const backdrop = document.getElementById('fabBackdrop');
+      if (wrap) wrap.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('open');
+    }
+
+    function fabAction(accion) {
+      cerrarFabMenu();
+      if (accion === 'json') abrirModalImport();
+      else if (accion === 'venta') abrirModalVenta();
+    }
+
+    /* ============================================================
+       IMPORTAR JSON
+    ============================================================ */
     function abrirModalImport() {
       document.getElementById('jsonInput').value = '';
       abrirModal('modalImport');
@@ -1040,9 +1413,89 @@
     }
 
     /* ============================================================
+       NUEVA VENTA (manual)
+    ============================================================ */
+    function limpiarFormVenta() {
+      ['ventaZona','ventaCliente','ventaDni','ventaTelefono','ventaDireccion','ventaModelo','ventaPaquetes','ventaMonto'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      const est = document.getElementById('ventaEstado');
+      if (est) est.value = 'Pagado';
+    }
+
+    function abrirModalVenta() {
+      limpiarFormVenta();
+
+      const zonasSet = new Set(ZONAS_BASE);
+      ordenes.forEach(o => { if (o.zona) zonasSet.add(o.zona); });
+      carros.forEach(c => (c.zonas || []).forEach(z => zonasSet.add(z)));
+      document.getElementById('zonasDatalist').innerHTML =
+        Array.from(zonasSet).sort().map(z => `<option value="${escaparHTML(z)}"></option>`).join('');
+
+      // Modelos: base + los que ya aparecen en pedidos
+      const modelosSet = new Set(MODELOS_BASE);
+      ordenes.forEach(o => (o.items || []).forEach(it => { if (it.producto) modelosSet.add(it.producto); }));
+      document.getElementById('modelosDatalist').innerHTML =
+        Array.from(modelosSet).sort().map(m => `<option value="${escaparHTML(m)}"></option>`).join('');
+
+      abrirModal('modalVenta');
+      setTimeout(() => document.getElementById('ventaZona').focus(), 300);
+    }
+
+    function guardarVenta() {
+      const zona = document.getElementById('ventaZona').value.trim();
+      const nombreCliente = document.getElementById('ventaCliente').value.trim();
+      const modelo = document.getElementById('ventaModelo').value.trim();
+      const paquetes = parseInt(document.getElementById('ventaPaquetes').value) || 0;
+      const monto = parseFloat(document.getElementById('ventaMonto').value) || 0;
+      const estadoPago = document.getElementById('ventaEstado').value || 'Pagado';
+
+      if (!zona) { toast('Ingresa la zona', 'error'); return; }
+      if (!nombreCliente) { toast('Ingresa el nombre del cliente', 'error'); return; }
+      if (paquetes <= 0) { toast('Los paquetes deben ser mayor a 0', 'error'); return; }
+
+      const hoyISO = new Date().toISOString().split('T')[0];
+      if (!fechaActual) fechaActual = hoyISO;
+
+      const codigo = 'MAN-' + Date.now().toString(36).toUpperCase().slice(-6);
+      const items = modelo
+        ? [{ producto: modelo, paquetes_totales: paquetes }]
+        : [{ producto: 'General', paquetes_totales: paquetes }];
+
+      ordenes.push({
+        codigo: codigo,
+        fecha: hoyISO,
+        fecha_entrega_solicitada: '',
+        zona: zona,
+        cliente: {
+          nombre: nombreCliente,
+          dni: document.getElementById('ventaDni').value.trim(),
+          telefono: document.getElementById('ventaTelefono').value.trim(),
+          direccion: document.getElementById('ventaDireccion').value.trim()
+        },
+        condicion_pago: '',
+        estado_pago: estadoPago,
+        total_paquetes: paquetes,
+        monto_total: monto,
+        items: items,
+        asignaciones: [],
+        manual: true
+      });
+
+      autoAsignar();
+      guardarOrdenes();
+      renderizarTodo();
+      cerrarModal('modalVenta');
+      limpiarFormVenta();
+      toast('Venta registrada: ' + nombreCliente, 'success');
+    }
+
+    /* ============================================================
        TABS
     ============================================================ */
     function cambiarTab(tab, btn) {
+      cerrarFabMenu();
       document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.getElementById('pane' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
@@ -1053,40 +1506,74 @@
     }
 
     /* ============================================================
-       AUTO-ASIGNACIÓN (First Fit Decreasing)
+       AUTO-ASIGNACIÓN CON DIVISIÓN
+       Distribuye los items de cada pedido entre los carros de la
+       misma zona. Si un carro no alcanza, el resto pasa al siguiente.
     ============================================================ */
     function autoAsignar() {
-      ordenes.forEach(o => { o.carroId = null; });
+      // Reset asignaciones
+      ordenes.forEach(o => { o.asignaciones = []; });
       if (carros.length === 0) return;
 
-      const carga = {};
-      carros.forEach(c => { carga[c.id] = 0; });
+      const cargaActual = {};
+      carros.forEach(c => { cargaActual[c.id] = 0; });
 
-      // Ordenar pedidos de mayor a menor (First Fit Decreasing)
+      // Ordenamos pedidos por tamaño descendente (los grandes primero)
       const ordenesOrd = [...ordenes].sort((a, b) =>
         (b.total_paquetes || 0) - (a.total_paquetes || 0)
       );
 
-      for (const o of ordenesOrd) {
-        const paq = parseInt(o.total_paquetes) || 0;
-        if (paq <= 0) continue;
+      for (const orden of ordenesOrd) {
+        // Items del pedido. Si no tiene items, usamos el total como "General".
+        const items = (Array.isArray(orden.items) && orden.items.length > 0)
+          ? orden.items.map(it => ({
+              producto: it.producto || 'General',
+              paquetes: parseInt(it.paquetes_totales ?? it.paquetes ?? it.cantidad) || 0
+            })).filter(it => it.paquetes > 0)
+          : [{ producto: 'General', paquetes: parseInt(orden.total_paquetes) || 0 }];
 
-        // Buscar el primer carro (en orden definido) con capacidad y zona compatible
-        const carroElegido = carros.find(c => {
-          const capLibre = c.maxPaquetes - carga[c.id];
-          if (paq > capLibre) return false;
-          return c.zonas.some(z => zonasCoinciden(z, o.zona));
-        });
+        // Carros compatibles con la zona del pedido
+        const carrosZona = carros.filter(c =>
+          (c.zonas || []).some(z => zonasCoinciden(z, orden.zona))
+        );
 
-        if (carroElegido) {
-          o.carroId = carroElegido.id;
-          carga[carroElegido.id] += paq;
+        const asigMap = {}; // carroId → { items: [], paquetes: 0 }
+
+        for (const item of items) {
+          let restante = item.paquetes;
+
+          for (const carro of carrosZona) {
+            if (restante <= 0) break;
+            const capLibre = carro.maxPaquetes - cargaActual[carro.id];
+            if (capLibre <= 0) continue;
+
+            const poner = Math.min(restante, capLibre);
+            if (poner <= 0) continue;
+
+            if (!asigMap[carro.id]) asigMap[carro.id] = { items: [], paquetes: 0 };
+            asigMap[carro.id].items.push({ producto: item.producto, paquetes: poner });
+            asigMap[carro.id].paquetes += poner;
+            cargaActual[carro.id] += poner;
+            restante -= poner;
+          }
+          // Si restante > 0 → no hay capacidad, se queda sin asignar
         }
+
+        // Monto proporcional por paquete
+        const totalPaq = orden.total_paquetes || 0;
+        const montoUnit = totalPaq > 0 ? (orden.monto_total / totalPaq) : 0;
+
+        orden.asignaciones = Object.entries(asigMap).map(([carroId, d]) => ({
+          carroId,
+          items: d.items,
+          paquetes: d.paquetes,
+          monto: d.paquetes * montoUnit
+        }));
       }
     }
 
     /* ============================================================
-       IMPORTAR JSON
+       PROCESAR IMPORT
     ============================================================ */
     function procesarImport() {
       const txt = document.getElementById('jsonInput').value.trim();
@@ -1104,10 +1591,8 @@
         return;
       }
 
-      // Validar estructura
       let pedidos = data.pedidos_para_despacho;
       if (!Array.isArray(pedidos)) {
-        // Compatibilidad con formato antiguo
         if (Array.isArray(data.ventas)) {
           pedidos = data.ventas.map(v => ({
             codigo: v.codigo,
@@ -1132,7 +1617,6 @@
         return;
       }
 
-      // Cargar pedidos
       ordenes = pedidos.map(p => ({
         codigo: p.codigo || '',
         fecha: p.fecha || '',
@@ -1143,8 +1627,11 @@
         estado_pago: p.estado_pago || '',
         total_paquetes: parseInt(p.total_paquetes) || 0,
         monto_total: parseFloat(p.monto_total) || 0,
-        items: Array.isArray(p.items) ? p.items : [],
-        carroId: null
+        items: Array.isArray(p.items) ? p.items.map(it => ({
+          producto: it.producto || it.modelo || 'General',
+          paquetes_totales: parseInt(it.paquetes_totales ?? it.paquetes ?? it.cantidad) || 0
+        })) : [],
+        asignaciones: []
       }));
 
       fechaActual = data.fecha_del_dia || new Date().toISOString().split('T')[0];
@@ -1156,9 +1643,9 @@
       cerrarModal('modalImport');
       renderizarTodo();
 
-      const sinAsig = ordenes.filter(o => !o.carroId).length;
+      const sinAsigTotal = ordenes.filter(o => !estaCompletamenteAsignada(o)).length;
       let msg = `${ordenes.length} pedido${ordenes.length === 1 ? '' : 's'} cargado${ordenes.length === 1 ? '' : 's'}`;
-      if (sinAsig > 0) msg += ` • ${sinAsig} sin asignar`;
+      if (sinAsigTotal > 0) msg += ` • ${sinAsigTotal} incompleto${sinAsigTotal === 1 ? '' : 's'}`;
       toast(msg, 'success');
     }
 
@@ -1183,11 +1670,12 @@
     }
 
     function actualizarBadges() {
-      const totalSinAsignar = ordenes.filter(o => !o.carroId).length;
+      // Badge = pedidos con algo sin asignar (parcial o total)
+      const incompletos = ordenes.filter(o => !estaCompletamenteAsignada(o) && (o.total_paquetes || 0) > 0).length;
       const badgeCarros = document.getElementById('badgeCarros');
-      if (totalSinAsignar > 0) {
+      if (incompletos > 0) {
         badgeCarros.style.display = '';
-        badgeCarros.innerText = totalSinAsignar;
+        badgeCarros.innerText = incompletos;
       } else {
         badgeCarros.style.display = 'none';
       }
@@ -1197,7 +1685,6 @@
        TAB PEDIDOS
     ============================================================ */
     function renderizarPedidos() {
-      // KPIs
       const totalPedidos = ordenes.length;
       const totalPaq = ordenes.reduce((a, o) => a + (o.total_paquetes || 0), 0);
       const totalMonto = ordenes.reduce((a, o) => a + (o.monto_total || 0), 0);
@@ -1205,7 +1692,6 @@
       document.getElementById('kpiPaquetes').innerText = totalPaq.toLocaleString();
       document.getElementById('kpiMonto').innerText = formatearMonto(totalMonto);
 
-      // Agrupar por zona
       const porZona = {};
       ordenes.forEach(o => {
         const z = o.zona || 'General';
@@ -1215,9 +1701,8 @@
         porZona[z].monto += (o.monto_total || 0);
       });
 
-      // Zonas sin carro
       const zonasSinCarro = Object.keys(porZona).filter(z => {
-        return !carros.some(c => c.zonas.some(cz => zonasCoinciden(cz, z)));
+        return !carros.some(c => (c.zonas || []).some(cz => zonasCoinciden(cz, z)));
       });
       const alertBox = document.getElementById('alertZonasSinCarro');
       if (zonasSinCarro.length > 0 && carros.length > 0) {
@@ -1236,7 +1721,6 @@
         alertBox.innerHTML = '';
       }
 
-      // Lista de zonas
       const cont = document.getElementById('listaZonas');
       const zonasArr = Object.keys(porZona).sort();
 
@@ -1245,7 +1729,7 @@
           <div class="empty-state">
             <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div>
             <div class="empty-title">Sin pedidos cargados</div>
-            <div class="empty-sub">Presiona el botón <strong>+</strong> para pegar el JSON de pedidos del día.</div>
+            <div class="empty-sub">Usa el botón <strong>+</strong> y elige <strong>Pegar JSON</strong> o <strong>Nueva Venta</strong>.</div>
           </div>`;
         document.getElementById('countZonas').innerText = '0 zonas';
         return;
@@ -1272,14 +1756,19 @@
               <svg class="zone-chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
             </div>
             <div class="zone-body">
-              ${info.pedidos.map(o => renderOrderItem(o, color)).join('')}
+              ${info.pedidos.map(o => renderOrderItem(o, color, null)).join('')}
             </div>
           </div>`;
       });
       cont.innerHTML = html;
     }
 
-    function renderOrderItem(o, color) {
+    /* ============================================================
+       RENDER ORDER ITEM
+       - asignacion = null → vista de Pedidos (muestra pedido completo + a qué carros va)
+       - asignacion presente → vista de Carros (muestra solo la porción asignada)
+    ============================================================ */
+    function renderOrderItem(o, color, asignacion) {
       const cli = o.cliente || {};
       const pagado = (o.estado_pago || '').toLowerCase().includes('pag');
       const payClass = pagado ? 'pagado' : 'pendiente';
@@ -1289,12 +1778,57 @@
         : '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>';
       const colorHex = color || 'var(--primary)';
 
+      const itemsMostrar = asignacion
+        ? (asignacion.items || [])
+        : (Array.isArray(o.items) && o.items.length > 0
+            ? o.items.map(it => ({
+                producto: it.producto || 'General',
+                paquetes: parseInt(it.paquetes_totales ?? it.paquetes) || 0
+              }))
+            : [{ producto: 'General', paquetes: parseInt(o.total_paquetes) || 0 }]);
+
+      const paquetesMostrar = asignacion ? asignacion.paquetes : (o.total_paquetes || 0);
+      const montoMostrar = asignacion ? asignacion.monto : (o.monto_total || 0);
+      const esParcial = !!asignacion && asignacion.paquetes < (o.total_paquetes || 0);
+
+      const itemsHtml = (itemsMostrar.length > 0 && !(itemsMostrar.length === 1 && itemsMostrar[0].producto === 'General')) ? `
+        <div class="order-items-list">
+          ${itemsMostrar.filter(it => (it.paquetes || 0) > 0).map(it => `
+            <span class="order-item-chip">
+              <span class="order-item-model">${escaparHTML(it.producto)}</span>
+              <span class="order-item-qty">${it.paquetes}</span>
+            </span>
+          `).join('')}
+        </div>` : '';
+
+      // En vista Pedidos: mostrar a qué carro(s) fue
+      let asignRow = '';
+      if (!asignacion && (o.asignaciones || []).length > 0) {
+        const chips = o.asignaciones.map(a => {
+          const car = carros.find(c => c.id === a.carroId);
+          return `<span class="order-assign-chip" style="border-color:${car?.color || 'var(--border)'};">
+            ${escaparHTML(car?.nombre || '?')}<strong>${a.paquetes}</strong>
+          </span>`;
+        }).join('');
+        const totalAsig = paquetesAsignadosDeOrden(o);
+        const parcial = totalAsig < (o.total_paquetes || 0);
+        asignRow = `
+          <div class="order-assign-row">
+            <span class="order-assign-label">→</span>
+            ${chips}
+            ${parcial ? `<span class="partial-tag">Faltan ${(o.total_paquetes||0) - totalAsig}</span>` : ''}
+          </div>`;
+      }
+
       return `
         <div class="order-item">
           <div class="order-top">
             <div class="order-client">${escaparHTML(cli.nombre || 'Sin nombre')}</div>
-            <span class="order-paq-badge" style="background:${colorHex};">${(o.total_paquetes || 0)} paq</span>
+            <span class="order-paq-badge" style="background:${colorHex};">
+              ${paquetesMostrar}${esParcial ? ' / ' + o.total_paquetes : ''} paq
+            </span>
           </div>
+          ${itemsHtml}
           ${cli.direccion ? `
             <div class="order-address">
               <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1303,7 +1837,8 @@
           <div class="order-meta-row">
             ${cli.dni ? `<span>DNI ${escaparHTML(cli.dni)}</span><span class="dot">•</span>` : ''}
             ${cli.telefono ? `<span>${escaparHTML(cli.telefono)}</span><span class="dot">•</span>` : ''}
-            <span>${formatearMontoExacto(o.monto_total)}</span>
+            <span>${formatearMontoExacto(montoMostrar)}</span>
+            ${esParcial ? '<span class="partial-tag">Parcial</span>' : ''}
           </div>
           <div class="order-tags">
             <span class="tag-pay ${payClass}">
@@ -1312,6 +1847,7 @@
             </span>
             <span class="order-code">${escaparHTML(o.codigo || '')}</span>
           </div>
+          ${asignRow}
         </div>`;
     }
 
@@ -1325,8 +1861,9 @@
     ============================================================ */
     function renderizarCarros() {
       const totalCarros = carros.length;
-      const totalAsignados = ordenes.filter(o => o.carroId).reduce((a, o) => a + (o.total_paquetes || 0), 0);
-      const totalSinAsignar = ordenes.filter(o => !o.carroId).reduce((a, o) => a + (o.total_paquetes || 0), 0);
+      const totalSolicitados = ordenes.reduce((a, o) => a + (o.total_paquetes || 0), 0);
+      const totalAsignados = ordenes.reduce((a, o) => a + paquetesAsignadosDeOrden(o), 0);
+      const totalSinAsignar = totalSolicitados - totalAsignados;
 
       document.getElementById('kpiCarros').innerText = totalCarros;
       document.getElementById('kpiAsignados').innerText = totalAsignados.toLocaleString();
@@ -1340,11 +1877,11 @@
             <div class="alert-text">Ve a <strong>Config</strong> para crear tus carros y asignarles zonas.</div>
           </div>`;
       } else if (totalSinAsignar > 0) {
-        const sinAsignar = ordenes.filter(o => !o.carroId).length;
+        const incompletos = ordenes.filter(o => !estaCompletamenteAsignada(o)).length;
         alertBox.innerHTML = `
           <div class="alert-banner">
             <svg class="alert-icon" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-            <div class="alert-text"><strong>${sinAsignar} pedido${sinAsignar === 1 ? '' : 's'}</strong> (${totalSinAsignar} paq) no se pudieron asignar. Aumenta la capacidad de un carro o agrega uno nuevo para esas zonas.</div>
+            <div class="alert-text"><strong>${incompletos} pedido${incompletos === 1 ? '' : 's'}</strong> incompleto${incompletos === 1 ? '' : 's'} — faltan <strong>${totalSinAsignar} paq</strong> por asignar. Aumenta la capacidad o agrega otro carro para esas zonas.</div>
           </div>`;
       } else {
         alertBox.innerHTML = '';
@@ -1363,17 +1900,41 @@
 
       let html = '';
       carros.forEach(carro => {
-        const pedidosCarro = ordenes.filter(o => o.carroId === carro.id);
-        const carga = pedidosCarro.reduce((a, o) => a + (o.total_paquetes || 0), 0);
+        const pedidosCarro = ordenesDeCarro(carro.id);
+        const carga = totalPaquetesEnCarro(carro.id);
         const pct = carro.maxPaquetes > 0 ? Math.min(100, Math.round((carga / carro.maxPaquetes) * 100)) : 0;
         const color = carro.color || '#2563eb';
 
-        // Determinar color de progreso
         let barColor = '#059669';
         if (pct >= 95) barColor = '#e11d48';
         else if (pct >= 80) barColor = '#d97706';
 
         const zonasTexto = carro.zonas.join(' • ');
+
+        // Resumen por modelo en este carro
+        const modelosCarro = {};
+        pedidosCarro.forEach(o => {
+          const asig = asignacionDeCarro(o, carro.id);
+          if (!asig) return;
+          (asig.items || []).forEach(it => {
+            if (it.producto === 'General') return;
+            modelosCarro[it.producto] = (modelosCarro[it.producto] || 0) + (it.paquetes || 0);
+          });
+        });
+        const modelosArr = Object.entries(modelosCarro).sort((a, b) => b[1] - a[1]);
+
+        const modelsSummaryHtml = modelosArr.length > 0 ? `
+          <div class="car-models-summary">
+            <div class="car-models-title">Modelos en este carro</div>
+            <div class="car-models-chips">
+              ${modelosArr.map(([mod, qty]) => `
+                <span class="car-model-chip">
+                  <span class="model-name">${escaparHTML(mod)}</span>
+                  <span class="model-qty">${qty}</span>
+                </span>
+              `).join('')}
+            </div>
+          </div>` : '';
 
         html += `
           <div class="car-card" data-carro="${carro.id}">
@@ -1396,15 +1957,16 @@
                   <div class="car-progress-fill" style="width:${pct}%;background:${barColor};"></div>
                 </div>
                 <div class="car-progress-row">
-                  <span>${pedidosCarro.length} pedido${pedidosCarro.length === 1 ? '' : 's'}</span>
+                  <span>${pedidosCarro.length} cliente${pedidosCarro.length === 1 ? '' : 's'}</span>
                   <span class="pct">${pct}%</span>
                 </div>
               </div>
             </div>
             <div class="car-body">
+              ${modelsSummaryHtml}
               ${pedidosCarro.length === 0
                 ? '<div class="car-empty">Sin pedidos asignados</div>'
-                : pedidosCarro.map(o => renderOrderItem(o, color)).join('')}
+                : pedidosCarro.map(o => renderOrderItem(o, color, asignacionDeCarro(o, carro.id))).join('')}
             </div>
           </div>`;
       });
@@ -1420,12 +1982,10 @@
        TAB CONFIG
     ============================================================ */
     function renderizarConfig() {
-      // Zonas disponibles: base + zonas en pedidos actuales
       const zonasSet = new Set(ZONAS_BASE);
       ordenes.forEach(o => { if (o.zona) zonasSet.add(o.zona); });
       const zonasDisponibles = Array.from(zonasSet).sort();
 
-      // Chips
       const chipsBox = document.getElementById('zonaChipsBox');
       chipsBox.innerHTML = zonasDisponibles.map(z => `
         <span class="zona-chip ${zonasSeleccionadasForm.has(z) ? 'selected' : ''}" data-zona="${escaparHTML(z)}" onclick="toggleZonaChip('${escaparHTML(z)}')">
@@ -1433,7 +1993,6 @@
         </span>
       `).join('');
 
-      // Lista de carros configurados
       document.getElementById('countCarros').innerText = carros.length;
       const cont = document.getElementById('listaCarrosConfig');
       if (carros.length === 0) {
@@ -1441,7 +2000,7 @@
           <div class="empty-state">
             <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
             <div class="empty-title">Sin carros</div>
-            <div class="empty-sub">Agrega tu primer carro usando el formulario de arriba.</div>
+            <div class="empty-sub">Despliega el formulario de arriba para agregar tu primer carro.</div>
           </div>`;
         return;
       }
@@ -1478,7 +2037,6 @@
       if (zonasSeleccionadasForm.size === 0) { toast('Selecciona al menos una zona', 'error'); return; }
 
       if (editandoCarroId) {
-        // Editar
         const idx = carros.findIndex(c => c.id === editandoCarroId);
         if (idx !== -1) {
           carros[idx].nombre = nombre;
@@ -1488,7 +2046,6 @@
         toast('Carro actualizado', 'success');
         cancelarEdicionCarro();
       } else {
-        // Nuevo
         const color = COLORES_CARRO[carros.length % COLORES_CARRO.length];
         carros.push({
           id: generarId('carro'),
@@ -1515,6 +2072,8 @@
       document.getElementById('configFormTitle').innerText = 'Agregar Carro';
       document.getElementById('btnGuardarCarroText').innerText = 'Agregar Carro';
       document.getElementById('btnCancelarEdicion').style.display = 'none';
+      const det = document.getElementById('detailsFormCarro');
+      if (det) det.open = false;
     }
 
     function editarCarro(id) {
@@ -1527,6 +2086,8 @@
       document.getElementById('configFormTitle').innerText = 'Editar Carro';
       document.getElementById('btnGuardarCarroText').innerText = 'Guardar Cambios';
       document.getElementById('btnCancelarEdicion').style.display = '';
+      const det = document.getElementById('detailsFormCarro');
+      if (det) det.open = true;
       renderizarConfig();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -1539,9 +2100,8 @@
     function eliminarCarro(id) {
       const c = carros.find(x => x.id === id);
       if (!c) return;
-      if (!confirm(`¿Eliminar el carro "${c.nombre}"? Los pedidos asignados quedarán sin asignar.`)) return;
+      if (!confirm(`¿Eliminar el carro "${c.nombre}"? Los pedidos asignados se redistribuirán.`)) return;
       carros = carros.filter(x => x.id !== id);
-      ordenes.forEach(o => { if (o.carroId === id) o.carroId = null; });
       guardarCarros();
       autoAsignar();
       guardarOrdenes();
@@ -1558,9 +2118,9 @@
       autoAsignar();
       guardarOrdenes();
       renderizarTodo();
-      const sinAsig = ordenes.filter(o => !o.carroId).length;
-      if (sinAsig === 0) toast('Pedidos reasignados correctamente', 'success');
-      else toast(`Reasignado. ${sinAsig} sin espacio.`, 'error');
+      const incompletos = ordenes.filter(o => !estaCompletamenteAsignada(o)).length;
+      if (incompletos === 0) toast('Pedidos reasignados correctamente', 'success');
+      else toast(`Reasignado. ${incompletos} pedido${incompletos === 1 ? '' : 's'} sin cupo total.`, 'error');
     });
 
     /* ============================================================
@@ -1569,8 +2129,16 @@
     window.addEventListener('DOMContentLoaded', () => {
       actualizarSaludo();
       cargarTodo();
+      // Recalculamos asignaciones al iniciar por si la data guardada
+      // venía del modelo antiguo o cambió la config de carros.
+      autoAsignar();
+      guardarOrdenes();
       renderizarTodo();
       setInterval(actualizarSaludo, 60000);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') cerrarFabMenu();
+      });
     });
 
     // Exponer funciones para handlers inline
@@ -1586,6 +2154,11 @@
     window.editarCarro = editarCarro;
     window.eliminarCarro = eliminarCarro;
     window.cancelarEdicionCarro = cancelarEdicionCarro;
+    window.toggleFabMenu = toggleFabMenu;
+    window.cerrarFabMenu = cerrarFabMenu;
+    window.fabAction = fabAction;
+    window.abrirModalVenta = abrirModalVenta;
+    window.guardarVenta = guardarVenta;
   </script>
 </body>
 </html>
