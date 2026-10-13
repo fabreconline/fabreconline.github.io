@@ -147,6 +147,12 @@
     .tag-estado-pago.pendiente { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
     .tag-estado-pago svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 3; }
 
+    .tag-individual {
+      background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe;
+      font-size: 9.5px; font-weight: 800; padding: 2.5px 7px; border-radius: 6px;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+
     .venta-meta-item { font-size: 11px; font-weight: 600; color: var(--text-muted); }
     .venta-meta-dot { color: var(--text-soft); font-size: 9px; }
 
@@ -251,9 +257,6 @@
       display: inline-flex; align-items: center; justify-content: center; border-radius: 4px;
     }
 
-    /* ================================================
-       NUEVO ESTILO PARA LA LISTA DE PRECIOS
-       ================================================ */
     .precio-card {
       background: var(--surface);
       border: 1px solid var(--border-strong);
@@ -353,11 +356,19 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 4px; font-family: inherit; font-size: 10px; font-weight: 700;
       color: var(--text-soft); cursor: pointer; touch-action: manipulation;
+      position: relative;
     }
     .nav-btn.active { color: var(--primary); }
     .nav-btn svg {
       width: 19px; height: 19px; stroke: currentColor; fill: none;
       stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .nav-badge {
+      position: absolute; top: 6px; right: calc(50% - 20px);
+      font-size: 9px; font-weight: 900;
+      background: var(--rose); color: #fff;
+      padding: 1px 5px; border-radius: 10px; min-width: 16px; text-align: center;
+      border: 2px solid var(--surface);
     }
 
     .toast {
@@ -366,6 +377,7 @@
       color: #ffffff; padding: 10px 18px; border-radius: 30px; font-size: 12px;
       font-weight: 700; z-index: 200; opacity: 0; pointer-events: none;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 90vw; text-align: center;
     }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
@@ -392,6 +404,472 @@
       color: var(--text-muted); margin-top: 3px; font-size: 10.5px; font-weight: 600;
     }
     .registro-saldo { color: var(--amber); font-weight: 700; }
+
+    /* ==================================================
+       CARGUILLO
+    ================================================== */
+    .carguillo-acciones {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .btn-carguillo-add {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 13px 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.1s ease;
+    }
+    .btn-carguillo-add:active { transform: scale(0.97); }
+    .btn-carguillo-add svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.6; }
+
+    .btn-carguillo-send {
+      background: var(--primary-subtle);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      padding: 13px 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.1s ease;
+    }
+    .btn-carguillo-send:active { transform: scale(0.97); }
+    .btn-carguillo-send svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.6; }
+
+    .btn-enviar-todo {
+      width: 100%;
+      background: linear-gradient(135deg, #1e40af 0%, #047857 100%);
+      color: #fff;
+      border: none;
+      padding: 15px 12px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      border-radius: var(--radius);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.1s ease;
+      box-shadow: 0 4px 14px rgba(30, 64, 175, 0.25);
+      letter-spacing: 0.2px;
+      margin-bottom: 12px;
+    }
+    .btn-enviar-todo:active { transform: scale(0.98); }
+    .btn-enviar-todo svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.6; }
+
+    .config-carro-card {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 12px 13px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .config-carro-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .config-carro-info { flex: 1; min-width: 0; }
+    .config-carro-nombre {
+      font-size: 12.5px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .config-carro-meta {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .icon-btn-mini {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: background 0.15s ease;
+      flex-shrink: 0;
+    }
+    .icon-btn-mini:active { background: var(--border); }
+    .icon-btn-mini.danger { color: var(--rose); }
+    .icon-btn-mini svg {
+      width: 14px; height: 14px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .carguillo-resumen-global {
+      background: var(--surface);
+      border: 2px solid var(--primary-border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .carguillo-resumen-titulo {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--primary);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .carguillo-resumen-paq {
+      background: var(--primary);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 900;
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .carguillo-card {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .carguillo-card.individual {
+      border: 2px solid #ddd6fe;
+      background: #faf9ff;
+    }
+    .carguillo-card-header {
+      padding: 13px 15px 8px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .carguillo-card-header:active { background: var(--primary-subtle); }
+    .carguillo-card.individual .carguillo-card-header:active { background: #f5f3ff; }
+    .carguillo-car-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #fff;
+      font-weight: 900;
+      font-size: 14px;
+    }
+    .carguillo-car-icon.individual { background: #7c3aed; }
+    .carguillo-car-info { flex: 1; min-width: 0; }
+    .carguillo-car-nombre {
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: -0.2px;
+    }
+    .carguillo-car-meta {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .carguillo-car-carga {
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--primary);
+      flex-shrink: 0;
+      text-align: right;
+      line-height: 1.2;
+    }
+    .carguillo-car-carga small {
+      display: block;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .carguillo-progress {
+      height: 6px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 4px 15px 12px;
+    }
+    .carguillo-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+      background: var(--primary);
+    }
+
+    .carguillo-body {
+      display: none;
+      border-top: 1px solid var(--border);
+      padding: 10px 15px 14px;
+    }
+    .carguillo-card.expanded .carguillo-body { display: block; }
+
+    .carguillo-tabla {
+      display: flex;
+      flex-direction: column;
+    }
+    .carguillo-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 7px 0;
+      font-size: 12px;
+      border-bottom: 1px dashed var(--border-strong);
+      align-items: center;
+    }
+    .carguillo-row:last-child { border-bottom: none; }
+    .carguillo-row-name { font-weight: 700; color: var(--text); }
+    .carguillo-row-qty { font-weight: 900; color: var(--primary); }
+    .carguillo-row-total {
+      border-top: 2px solid var(--border-strong);
+      margin-top: 4px;
+      padding-top: 8px;
+      font-size: 12.5px;
+    }
+    .carguillo-row-total .carguillo-row-name { font-weight: 900; }
+    .carguillo-row-total .carguillo-row-qty { color: var(--text); font-size: 14px; }
+
+    .carguillo-vacio {
+      padding: 14px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .carguillo-alerta {
+      background: var(--amber-bg);
+      border: 1px solid #fde68a;
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #78350f;
+      line-height: 1.4;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .carguillo-alerta svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.4;
+      flex-shrink: 0;
+    }
+
+    .clientes-lista {
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-strong);
+    }
+    .clientes-lista-titulo {
+      font-size: 9.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .cliente-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px dashed var(--border-strong);
+      font-size: 11.5px;
+      align-items: flex-start;
+    }
+    .cliente-row:last-child { border-bottom: none; }
+    .cliente-row-nombre {
+      font-weight: 700;
+      color: var(--text);
+      flex-shrink: 0;
+      max-width: 45%;
+    }
+    .cliente-row-dir {
+      color: var(--text-muted);
+      text-align: right;
+      font-weight: 600;
+      flex: 1;
+      line-height: 1.4;
+    }
+
+    /* Toggle switch */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .toggle-row:active { transform: scale(0.99); }
+    .toggle-row.active {
+      background: #f5f3ff;
+      border-color: #ddd6fe;
+    }
+    .toggle-row-info { flex: 1; min-width: 0; }
+    .toggle-row-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .toggle-row-sub {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+    .toggle-switch {
+      width: 42px;
+      height: 24px;
+      background: var(--border-strong);
+      border-radius: 999px;
+      position: relative;
+      flex-shrink: 0;
+      transition: background 0.2s ease;
+    }
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .toggle-row.active .toggle-switch { background: #7c3aed; }
+    .toggle-row.active .toggle-switch::after { transform: translateX(18px); }
+
+    .btn-recibo-img {
+      background: #f5f3ff;
+      color: #7c3aed;
+      border: 1px solid #ddd6fe;
+      height: 46px;
+      font-size: 12px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      width: 100%;
+      transition: opacity 0.15s;
+    }
+    .btn-recibo-img:active { opacity: 0.7; }
+    .btn-recibo-img svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+    .recibo-acciones-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    /* Items en modal editar */
+    .edit-item-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg);
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+    }
+    .edit-item-info { flex: 1; min-width: 0; }
+    .edit-item-nombre {
+      font-weight: 800;
+      font-size: 11.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .edit-item-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .edit-item-cant {
+      width: 72px;
+      padding: 6px 8px;
+      font-weight: 800;
+      font-size: 12px;
+      text-align: center;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      color: var(--text);
+      outline: none;
+    }
+    .edit-item-cant:focus { border-color: var(--primary); }
   </style>
 </head>
 <body>
@@ -432,11 +910,6 @@
           <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Nueva venta
         </button>
-
-        <button onclick="enviarCierreAContabilidad()" class="btn-cierre-ventas" id="btnEnviarCierre">
-          <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          Cierre de ventas
-        </button>
       </div>
 
       <div class="seccion-header">
@@ -471,6 +944,39 @@
       <div class="seccion-header"><span>Lista de Precios</span></div>
       <input type="text" id="buscadorPrecios" oninput="renderizarListaPrecios()" placeholder="Buscar botella..." class="input-field" style="margin-bottom: 14px;">
       <div id="contenedorListaPrecios"></div>
+    </section>
+
+    <!-- TAB: CARGUILLO -->
+    <section id="paneCarguillo" class="view-pane">
+      <div class="carguillo-acciones">
+        <button class="btn-carguillo-add" onclick="abrirModalCarroConfig()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Agregar Carro
+        </button>
+        <button class="btn-carguillo-send" onclick="navegarA('paneInicio', document.getElementById('btnNavInicio'))">
+          <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Ir a Ventas
+        </button>
+      </div>
+
+      <div class="seccion-header">
+        <span>Capacidad de Carros</span>
+        <span class="badge-count" id="carguilloCountCarros">0</span>
+      </div>
+      <div id="listaCarrosConfig"></div>
+
+      <div class="seccion-header" style="margin-top: 22px;">
+        <span>Carguillo del Día</span>
+        <span class="badge-count" id="carguilloFechaBadge">-</span>
+      </div>
+      <div id="carguilloContenido"></div>
+
+      <div style="margin-top: 16px; padding-top: 4px;">
+        <button class="btn-enviar-todo" onclick="enviarTodoAKing()">
+          <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Enviar Cierre y Carguillo
+        </button>
+      </div>
     </section>
 
     <section id="paneDashboard" class="view-pane">
@@ -545,8 +1051,12 @@
           <span id="detClienteDoc">-</span>
         </div>
         <div class="detalle-bloque-item">
-          <span style="color:var(--text-muted);">Teléfono:</span>
+          <span style="color:var(--text-muted);">WhatsApp (Comprador):</span>
           <span id="detClienteTel">-</span>
+        </div>
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Tel. Llegada (Agencia):</span>
+          <span id="detClienteTelLlegada">-</span>
         </div>
         <div class="detalle-bloque-item">
           <span style="color:var(--text-muted);">Dirección de Entrega:</span>
@@ -563,6 +1073,10 @@
         <div class="detalle-bloque-item">
           <span style="color:var(--text-muted);">Condición de Pago:</span>
           <span id="detCondicionPago">-</span>
+        </div>
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Tipo de Envío:</span>
+          <span id="detTipoEnvio">-</span>
         </div>
         <div class="detalle-bloque-item">
           <span style="color:var(--text-muted);">Tarifa:</span>
@@ -589,6 +1103,11 @@
         Confirmar Cobro Recibido
       </button>
 
+      <button onclick="abrirModalEditarVenta()" class="btn-action-cuenta" style="height: 44px; font-size: 12px; border-radius: var(--radius); margin-top: 4px; background: #fef3c7; color: #92400e; border-color: #fde68a;">
+        <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Editar venta
+      </button>
+
       <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-top:2px;">
         Botellas en este pedido
       </div>
@@ -599,14 +1118,77 @@
         <strong id="detMontoTotal" style="font-size:18px; color:var(--primary);">S/ 0.00</strong>
       </div>
 
-      <button onclick="enviarReciboCliente()" class="btn-action-cuenta" style="height:46px; font-size:12px; border-radius:var(--radius); margin-top:4px; background: var(--success-bg); color: var(--success); border-color: #a7f3d0;">
-        <svg style="width: 15px; height: 15px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-        Enviar recibo al cliente
-      </button>
+      <div class="recibo-acciones-grid">
+        <button onclick="enviarReciboCliente()" class="btn-action-cuenta" style="height:46px; font-size:11.5px; border-radius:var(--radius); background: var(--success-bg); color: var(--success); border-color: #a7f3d0;">
+          <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          Enviar
+        </button>
+        <button onclick="descargarReciboImagen()" class="btn-recibo-img" style="height:46px; border-radius:var(--radius);">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Descargar
+        </button>
+      </div>
 
       <button onclick="cerrarModalDetalleVenta()" class="btn-action-cuenta" style="height:44px; font-size:12px; border-radius:var(--radius); margin-top:4px;">
         Cerrar Detalle
       </button>
+    </div>
+  </div>
+
+  <!-- MODAL: EDITAR VENTA -->
+  <div id="modalEditarVenta" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">Editar Venta</h3>
+        <button onclick="cerrarModalEditarVenta()" class="btn-close">✕</button>
+      </div>
+
+      <div style="background: var(--bg); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-strong); font-size: 11.5px; line-height: 1.7;">
+        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">Código:</span> <strong id="editVentaCodigo" style="font-family: ui-monospace, monospace; font-size: 11px;">-</strong></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">Cliente:</span> <strong id="editVentaCliente">-</strong></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">Total:</span> <strong id="editVentaTotal" style="color:var(--primary); font-size:13px;">S/ 0.00</strong></div>
+      </div>
+
+      <div>
+        <label class="form-label">Estado de Pago</label>
+        <div class="segmented-control" style="margin-bottom: 0;">
+          <button type="button" class="segmented-btn" id="editEstadoPagado" onclick="seleccionarEstadoEdicion('PAGADO')">Pagado</button>
+          <button type="button" class="segmented-btn" id="editEstadoPendiente" onclick="seleccionarEstadoEdicion('PENDIENTE')">Por cobrar</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="form-label">Tipo de Envío</label>
+        <div class="segmented-control" style="margin-bottom: 0;">
+          <button type="button" class="segmented-btn" id="editTipoCarro" onclick="seleccionarTipoEnvioEdicion('carro')">Carro de reparto</button>
+          <button type="button" class="segmented-btn" id="editTipoIndividual" onclick="seleccionarTipoEnvioEdicion('individual')">Individual</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="form-label">Productos del pedido</label>
+        <div id="editItemsLista" style="display:flex; flex-direction:column; gap:6px;"></div>
+        <button onclick="abrirAgregarItemEdicion()" class="btn-action-cuenta" style="width:100%; margin-top:8px; height:38px;">
+          <svg style="width:13px; height:13px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Agregar producto
+        </button>
+      </div>
+
+      <div id="editAgregarItemPanel" style="display:none; background:var(--bg); border:1px solid var(--border-strong); padding:12px; border-radius:var(--radius-sm);">
+        <label class="form-label">Modelo de Botella</label>
+        <select id="editItemProducto" class="input-field" style="margin-bottom:10px;"></select>
+        <label class="form-label">Cantidad (paquetes)</label>
+        <input type="number" id="editItemCantidad" class="input-field" min="1" step="1" placeholder="0" style="margin-bottom:10px; font-weight:800;">
+        <div class="form-grid-2">
+          <button onclick="cancelarAgregarItemEdicion()" class="btn-action-cuenta" style="height:38px;">Cancelar</button>
+          <button onclick="confirmarAgregarItemEdicion()" class="btn-nueva-venta" style="height:38px; margin:0; padding:0; font-size:12px;">Añadir</button>
+        </div>
+      </div>
+
+      <div class="form-grid-2" style="margin-top: 4px;">
+        <button onclick="cerrarModalEditarVenta()" class="btn-action-cuenta" style="height: 46px; border-radius: var(--radius); font-size: 12px;">Cancelar</button>
+        <button onclick="guardarEdicionVenta()" class="btn-nueva-venta" style="margin-bottom: 0; height: 46px; font-size: 12px; padding: 0;">Guardar cambios</button>
+      </div>
     </div>
   </div>
 
@@ -729,16 +1311,20 @@
 
         <div class="form-grid-2">
           <div>
-            <label class="form-label">Teléfono *</label>
+            <label class="form-label">WhatsApp Comprador *</label>
             <input type="tel" id="ventaTelefono" placeholder="987654321" class="input-field">
           </div>
           <div>
-            <label class="form-label">Fecha de Entrega *</label>
-            <input type="date" id="ventaFechaEntrega" class="input-field" style="font-weight: 700;">
+            <label class="form-label">Tel. Llegada (Agencia)</label>
+            <input type="tel" id="ventaTelefonoLlegada" placeholder="Opcional" class="input-field">
           </div>
         </div>
 
         <div class="form-grid-2">
+          <div>
+            <label class="form-label">Fecha de Entrega *</label>
+            <input type="date" id="ventaFechaEntrega" class="input-field" style="font-weight: 700;">
+          </div>
           <div>
             <label class="form-label">Condición Pago *</label>
             <select id="ventaCondicion" class="input-field" style="font-weight: 700;">
@@ -753,10 +1339,19 @@
               </optgroup>
             </select>
           </div>
-          <div>
-            <label class="form-label">Dirección de Entrega *</label>
-            <input type="text" id="ventaDireccion" placeholder="Av. Los Laureles 321" class="input-field">
+        </div>
+
+        <div>
+          <label class="form-label">Dirección de Entrega *</label>
+          <input type="text" id="ventaDireccion" placeholder="Av. Los Laureles 321" class="input-field">
+        </div>
+
+        <div class="toggle-row" id="toggleEnvioIndividual" onclick="toggleEnvioIndividual()">
+          <div class="toggle-row-info">
+            <div class="toggle-row-title">Envío Individual (Indrive / Cliente recoge)</div>
+            <div class="toggle-row-sub">Esta venta NO se mete en los carros. Se genera su propio carguillo unitario listo para entregar.</div>
           </div>
+          <div class="toggle-switch"></div>
         </div>
 
         <div class="form-grid-2" style="margin-top: 6px;">
@@ -812,6 +1407,26 @@
     </div>
   </div>
 
+  <!-- MODAL: CONFIGURAR CARRO -->
+  <div id="modalCarroConfig" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalCarroTitulo">Agregar Carro</h3>
+        <button onclick="cerrarModalCarroConfig()" class="btn-close">✕</button>
+      </div>
+
+      <div>
+        <label class="form-label">Máximo de Paquetes *</label>
+        <input type="number" id="carroMaxPaq" min="1" step="1" class="input-field" placeholder="Ej. 300" inputmode="numeric" style="font-weight: 800; font-size: 15px;">
+      </div>
+
+      <div class="form-grid-2" style="margin-top: 4px;">
+        <button onclick="cerrarModalCarroConfig()" class="btn-action-cuenta" style="height: 46px; border-radius: var(--radius); font-size: 12px;">Cancelar</button>
+        <button onclick="guardarCarroConfig()" class="btn-nueva-venta" style="margin-bottom: 0; height: 46px; font-size: 12px; padding: 0;">Guardar</button>
+      </div>
+    </div>
+  </div>
+
   <nav class="bottom-navbar">
     <button class="nav-btn active" id="btnNavInicio" onclick="navegarA('paneInicio', this)">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -820,6 +1435,11 @@
     <button class="nav-btn" id="btnNavPrecios" onclick="navegarA('panePrecios', this)">
       <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
       <span>Precios</span>
+    </button>
+    <button class="nav-btn" id="btnNavCarguillo" onclick="navegarA('paneCarguillo', this)">
+      <svg viewBox="0 0 24 24"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      <span>Carguillo</span>
+      <span class="nav-badge" id="badgeCarguillo" style="display:none;">0</span>
     </button>
     <button class="nav-btn" id="btnNavDashboard" onclick="navegarA('paneDashboard', this)">
       <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
@@ -871,6 +1491,21 @@
     let filtroVentasActivo = 'todas';
     let codigoVentaCobrando = null;
     let ventaDetalleActual = null;
+    let envioIndividualActivo = false;
+
+    /* ==================================================
+       EDITAR VENTA: ESTADO
+    ================================================== */
+    let ventaEditandoCodigo = null;
+    let editandoEstadoPago = 'PAGADO';
+    let editandoTipoEnvio = 'carro';
+    let itemsEdicionVenta = [];
+
+    /* ==================================================
+       CARGUILLO: ESTADO
+    ================================================== */
+    let carros = [];
+    let editandoCarroId = null;
 
     // ==================================================
     // HELPERS DE ESTADO DE PAGO
@@ -901,8 +1536,6 @@
       return getMontoPendiente(v) <= 0.01;
     }
 
-    // Venta que nació como "por cobrar" y ahora está completamente pagada,
-    // y todavía no ha sido sincronizada con contabilidad.
     function esPendienteContabilidad(v) {
       return esPagado(v) && !v.contabilidad_enviada;
     }
@@ -922,6 +1555,27 @@
         return 'S/ ' + num + 'k';
       }
       return 'S/ ' + n.toFixed(2);
+    }
+
+    function formatearFechaBonita(iso) {
+      if (!iso) return '';
+      try {
+        const d = new Date(iso + 'T00:00:00');
+        if (isNaN(d.getTime())) return iso;
+        const dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+        const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        return `${dias[d.getDay()]} ${d.getDate()} ${meses[d.getMonth()]}`;
+      } catch (e) { return iso; }
+    }
+
+    function escaparHTML(s) {
+      return String(s || '').replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+
+    function generarId(prefijo) {
+      return (prefijo || 'id') + '_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
     }
 
     // ==================================================
@@ -973,22 +1627,52 @@
     // ==================================================
     function cargarDatosDeZonaActiva() {
       if (!zonaActivaClave) {
-        ventasHoy = []; todasLasVentas = []; directorioClientes = [];
+        ventasHoy = []; todasLasVentas = []; directorioClientes = []; carros = [];
       } else {
         ventasHoy = JSON.parse(localStorage.getItem(`fabrec_ventas_hoy_${zonaActivaClave}`)) || [];
         todasLasVentas = JSON.parse(localStorage.getItem(`fabrec_ventas_todas_${zonaActivaClave}`)) || [];
         directorioClientes = JSON.parse(localStorage.getItem(`fabrec_clientes_${zonaActivaClave}`)) || [];
+        carros = JSON.parse(localStorage.getItem(`fabrec_carros_${zonaActivaClave}`)) || [];
+
+        carros = carros.map((c, i) => {
+          if (!c.numero) c.numero = String(i + 1);
+          if (!c.maxPaquetes && c.maxPaquetes !== 0) c.maxPaquetes = 100;
+          return c;
+        });
+
+        todasLasVentas = todasLasVentas.map(v => {
+          if (!v.tipo_envio) v.tipo_envio = 'carro';
+          if (v.cliente) {
+            if (!v.cliente.telefono_contacto && v.cliente.telefono) {
+              v.cliente.telefono_contacto = v.cliente.telefono;
+            }
+            if (!v.cliente.telefono_llegada) v.cliente.telefono_llegada = '';
+          }
+          return v;
+        });
 
         const hoyStr = new Date().toLocaleDateString('es-PE');
         ventasHoy = ventasHoy.filter(v => {
           if (!v.fecha_venta) return false;
           return new Date(v.fecha_venta).toLocaleDateString('es-PE') === hoyStr;
+        }).map(v => {
+          if (!v.tipo_envio) v.tipo_envio = 'carro';
+          if (v.cliente) {
+            if (!v.cliente.telefono_contacto && v.cliente.telefono) {
+              v.cliente.telefono_contacto = v.cliente.telefono;
+            }
+            if (!v.cliente.telefono_llegada) v.cliente.telefono_llegada = '';
+          }
+          return v;
         });
       }
+      autoAsignarVentas();
       renderizarVentasInicio();
       renderizarDashboard();
       poblarSelectorClientesAntiguos();
       renderizarRegistrosCierre();
+      renderizarCarguillo();
+      actualizarBadgeCarguillo();
     }
 
     // ==================================================
@@ -1002,6 +1686,7 @@
       if (btnElemento) btnElemento.classList.add('active');
       if (idPanel === 'panePrecios') renderizarListaPrecios();
       if (idPanel === 'paneDashboard') { renderizarDashboard(); renderizarRegistrosCierre(); }
+      if (idPanel === 'paneCarguillo') { autoAsignarVentas(); renderizarCarguillo(); actualizarBadgeCarguillo(); }
       window.scrollTo(0, 0);
     }
 
@@ -1078,6 +1763,12 @@
       const abrev = ZONA_ABREV[zonaActivaClave] || "gen";
       const fecha = fechaCompacta(fechaObj);
       return `registro_venta_${abrev}_${fecha}_01`;
+    }
+
+    function generarCodigoCarguillo() {
+      const abrev = ZONA_ABREV[zonaActivaClave] || "gen";
+      const fecha = fechaCompacta(new Date());
+      return `carguillo_${abrev}_${fecha}_01`;
     }
 
     function extraerSecuenciaVenta(codigoVenta) {
@@ -1189,12 +1880,14 @@
       }
       itemsVentaTemporal = [];
       indiceEditandoItem = -1;
+      envioIndividualActivo = false;
       resetearFormularioItem();
       limpiarCamposCliente();
       const hoyISO = new Date().toISOString().split('T')[0];
       document.getElementById('ventaFechaEntrega').value = hoyISO;
       document.getElementById('ventaCondicion').value = "Efectivo";
       cambiarUnidadMedida('paquetes');
+      actualizarToggleIndividual();
       irAPaso1();
       renderizarItemsModal();
       actualizarInfoProductoModal();
@@ -1219,6 +1912,17 @@
       document.getElementById('pillPaso1').classList.add('active');
       document.getElementById('pillPaso2').classList.add('active');
       document.getElementById('tituloModalVenta').innerText = "Datos del Cliente";
+    }
+
+    function toggleEnvioIndividual() {
+      envioIndividualActivo = !envioIndividualActivo;
+      actualizarToggleIndividual();
+    }
+
+    function actualizarToggleIndividual() {
+      const el = document.getElementById('toggleEnvioIndividual');
+      if (envioIndividualActivo) el.classList.add('active');
+      else el.classList.remove('active');
     }
 
     function poblarSelectBotellasModal() {
@@ -1347,8 +2051,9 @@
       if (c) {
         document.getElementById('ventaCliente').value = c.nombre;
         document.getElementById('ventaDni').value = c.dni;
-        document.getElementById('ventaRuc').value = c.ruc === "No solicita factura" ? "" : c.ruc;
-        document.getElementById('ventaTelefono').value = c.telefono;
+        document.getElementById('ventaRuc').value = c.ruc === "No solicita factura" ? "" : (c.ruc || '');
+        document.getElementById('ventaTelefono').value = c.telefono_contacto || c.telefono || '';
+        document.getElementById('ventaTelefonoLlegada').value = c.telefono_llegada || '';
         document.getElementById('ventaDireccion').value = c.direccion;
         mostrarToast("Datos de " + c.nombre + " cargados");
       }
@@ -1359,6 +2064,7 @@
       document.getElementById('ventaDni').value = "";
       document.getElementById('ventaRuc').value = "";
       document.getElementById('ventaTelefono').value = "";
+      document.getElementById('ventaTelefonoLlegada').value = "";
       document.getElementById('ventaDireccion').value = "";
       document.getElementById('selectClienteAntiguo').value = "";
     }
@@ -1377,14 +2083,15 @@
       const cliente = document.getElementById('ventaCliente').value.trim();
       const dni = document.getElementById('ventaDni').value.trim();
       const ruc = document.getElementById('ventaRuc').value.trim();
-      const telefono = document.getElementById('ventaTelefono').value.trim();
+      const telefonoContacto = document.getElementById('ventaTelefono').value.trim();
+      const telefonoLlegada = document.getElementById('ventaTelefonoLlegada').value.trim();
       const fechaEntrega = document.getElementById('ventaFechaEntrega').value;
       const direccion = document.getElementById('ventaDireccion').value.trim();
       const condicion = document.getElementById('ventaCondicion').value;
 
       if (!cliente) { mostrarToast("Escribe el nombre o razón social"); return; }
       if (!dni) { mostrarToast("Ingresa el DNI del cliente"); return; }
-      if (!telefono) { mostrarToast("Ingresa el teléfono de contacto"); return; }
+      if (!telefonoContacto) { mostrarToast("Ingresa el WhatsApp del comprador"); return; }
       if (!fechaEntrega) { mostrarToast("Selecciona la fecha de entrega"); return; }
       if (!direccion) { mostrarToast("Ingresa la dirección para el envío"); return; }
       if (itemsVentaTemporal.length === 0) { mostrarToast("No hay botellas en el pedido"); return; }
@@ -1421,12 +2128,17 @@
       const montoPagado = +(totalSoles * config.ratio).toFixed(2);
       const montoPendiente = +(totalSoles - montoPagado).toFixed(2);
 
-      // Si la venta nació ya pagada (Efectivo/Transferencia), no necesita
-      // pasar por el flujo de "Confirmados" ni enviarse como actualización
-      // de pago a contabilidad. Se marca como ya sincronizada.
       const esPagoInmediato = (condicion === "Efectivo" || condicion === "Transferencia");
 
-      const clienteDatos = { nombre: cliente, dni, ruc: ruc || "No solicita factura", telefono, direccion };
+      const clienteDatos = {
+        nombre: cliente,
+        dni,
+        ruc: ruc || "No solicita factura",
+        telefono_contacto: telefonoContacto,
+        telefono_llegada: telefonoLlegada,
+        telefono: telefonoContacto,
+        direccion
+      };
 
       const nuevaVenta = {
         codigo: codigoVenta,
@@ -1442,6 +2154,7 @@
         monto_pagado: montoPagado,
         monto_pendiente: montoPendiente,
         contabilidad_enviada: esPagoInmediato,
+        tipo_envio: envioIndividualActivo ? 'individual' : 'carro',
         cobros: montoPagado > 0 ? [{
           fecha: ahora.toISOString(),
           monto: montoPagado,
@@ -1452,11 +2165,15 @@
         items: itemsVentaTemporal.slice(),
         total_paquetes: totalPaquetes,
         monto_total: totalSoles,
-        tickets_produccion: ticketsProduccion
+        tickets_produccion: ticketsProduccion,
+        asignaciones: []
       };
 
       ventasHoy.push(nuevaVenta);
       todasLasVentas.push(nuevaVenta);
+
+      autoAsignarVentas();
+
       localStorage.setItem(`fabrec_ventas_hoy_${zonaActivaClave}`, JSON.stringify(ventasHoy));
       localStorage.setItem(`fabrec_ventas_todas_${zonaActivaClave}`, JSON.stringify(todasLasVentas));
 
@@ -1465,6 +2182,8 @@
       cerrarModalVenta();
       mostrarToast("Venta " + codigoVenta + " registrada");
       renderizarVentasInicio();
+      renderizarCarguillo();
+      actualizarBadgeCarguillo();
     }
 
     // ==================================================
@@ -1482,12 +2201,10 @@
       renderizarVentasInicio();
     }
 
-    // Por cobrar = cualquier venta con saldo pendiente, sin importar la fecha
     function contarPendientes() {
       return todasLasVentas.filter(v => !esPagado(v)).length;
     }
 
-    // Confirmados = pagadas (que antes eran por cobrar) y sin sincronizar
     function contarConfirmados() {
       return todasLasVentas.filter(v => esPendienteContabilidad(v)).length;
     }
@@ -1498,7 +2215,6 @@
     function renderizarVentasInicio() {
       const cont = document.getElementById('listaVentasDia');
       const badgeCant = document.getElementById('cantVentasBadge');
-      const btnEnviar = document.getElementById('btnEnviarCierre');
       const pillPendientes = document.getElementById('pillPendientesCount');
       const pillConfirmados = document.getElementById('pillConfirmadosCount');
       const panelAcciones = document.getElementById('panelAccionesConfirmados');
@@ -1522,14 +2238,8 @@
         pillConfirmados.style.display = 'none';
       }
 
-      // Panel de envío a contabilidad solo en Confirmados
       panelAcciones.style.display = (filtroVentasActivo === 'confirmados') ? 'block' : 'none';
 
-      // El botón de cierre de ventas aparece siempre que haya ventas hoy,
-      // sin importar el tab activo.
-      btnEnviar.style.display = ventasHoy.length > 0 ? 'flex' : 'none';
-
-      // Título dinámico según tab
       if (filtroVentasActivo === 'todas') tituloSeccion.innerText = 'Ventas del Día';
       else if (filtroVentasActivo === 'pendientes') tituloSeccion.innerText = 'Ventas por Cobrar';
       else if (filtroVentasActivo === 'confirmados') tituloSeccion.innerText = 'Pagos Confirmados';
@@ -1542,7 +2252,6 @@
       if (filtroVentasActivo === 'todas') {
         lista = ventasHoy.slice().reverse();
       } else if (filtroVentasActivo === 'pendientes') {
-        // Pendientes de cualquier fecha
         lista = todasLasVentas.filter(v => !esPagado(v));
         lista.sort((a, b) => new Date(b.fecha_venta) - new Date(a.fecha_venta));
         mostrarFecha = true;
@@ -1598,6 +2307,7 @@
               ${pagado
                 ? `<span class="tag-estado-pago pagado"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Pagado</span>`
                 : `<span class="tag-estado-pago pendiente"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Por cobrar</span>`}
+              ${v.tipo_envio === 'individual' ? '<span class="tag-individual">Individual</span>' : ''}
               <span class="venta-meta-item">${metaTexto}</span>
               <span class="venta-meta-dot">•</span>
               <span class="venta-meta-item">${fechaMostrar}${horaTexto}</span>
@@ -1616,15 +2326,22 @@
       if (!v) return;
       ventaDetalleActual = v;
 
+      const telContacto = (v.cliente.telefono_contacto || v.cliente.telefono || '');
+      const telLlegada = v.cliente.telefono_llegada || '';
+
       document.getElementById('detalleTituloVenta').innerText = `Pedido ${v.codigo}`;
       document.getElementById('detCodigoVenta').innerText = v.codigo;
       document.getElementById('detClienteNombre').innerText = v.cliente.nombre;
-      document.getElementById('detClienteDoc').innerText = `DNI: ${v.cliente.dni} ${v.cliente.ruc !== 'No solicita factura' ? ' • RUC: ' + v.cliente.ruc : ''}`;
-      document.getElementById('detClienteTel').innerText = v.cliente.telefono;
+      document.getElementById('detClienteDoc').innerText = `DNI: ${v.cliente.dni} ${v.cliente.ruc && v.cliente.ruc !== 'No solicita factura' ? ' • RUC: ' + v.cliente.ruc : ''}`;
+      document.getElementById('detClienteTel').innerText = telContacto || '-';
+      document.getElementById('detClienteTelLlegada').innerText = telLlegada || '-';
       document.getElementById('detClienteDir').innerText = v.cliente.direccion;
       document.getElementById('detFechaEntrega').innerText = v.fecha_entrega_solicitada;
       document.getElementById('detFechaVenta').innerText = v.fecha_venta ? new Date(v.fecha_venta).toLocaleString('es-PE') : '-';
       document.getElementById('detCondicionPago').innerText = v.condicion_pago;
+      document.getElementById('detTipoEnvio').innerHTML = v.tipo_envio === 'individual'
+        ? '<span class="tag-individual">Individual (Indrive / Cliente recoge)</span>'
+        : '<span class="venta-meta-item">Carro de reparto</span>';
       document.getElementById('detTarifa').innerText = v.tarifa_aplicada;
 
       const estadoDiv = document.getElementById('detEstadoPago');
@@ -1660,7 +2377,274 @@
     }
 
     // ==================================================
-    // 14. CONFIRMAR COBRO
+    // 14. EDITAR VENTA (con edición de productos)
+    // ==================================================
+    function abrirModalEditarVenta() {
+      if (!ventaDetalleActual) return;
+      const v = ventaDetalleActual;
+      ventaEditandoCodigo = v.codigo;
+
+      editandoEstadoPago = esPagado(v) ? 'PAGADO' : 'PENDIENTE';
+      editandoTipoEnvio = v.tipo_envio || 'carro';
+
+      // Clonar items para edición
+      itemsEdicionVenta = (v.items || []).map(it => ({ ...it }));
+
+      document.getElementById('editVentaCodigo').innerText = v.codigo;
+      document.getElementById('editVentaCliente').innerText = v.cliente.nombre;
+
+      poblarSelectProductosEdicion();
+      renderizarItemsEdicion();
+      actualizarBotonesEdicionVenta();
+      document.getElementById('editAgregarItemPanel').style.display = 'none';
+
+      cerrarModalDetalleVenta();
+      document.getElementById('modalEditarVenta').classList.add('open');
+    }
+
+    function cerrarModalEditarVenta() {
+      document.getElementById('modalEditarVenta').classList.remove('open');
+      ventaEditandoCodigo = null;
+      itemsEdicionVenta = [];
+    }
+
+    function seleccionarEstadoEdicion(estado) {
+      editandoEstadoPago = estado;
+      actualizarBotonesEdicionVenta();
+    }
+
+    function seleccionarTipoEnvioEdicion(tipo) {
+      editandoTipoEnvio = tipo;
+      actualizarBotonesEdicionVenta();
+    }
+
+    function actualizarBotonesEdicionVenta() {
+      const b1 = document.getElementById('editEstadoPagado');
+      const b2 = document.getElementById('editEstadoPendiente');
+      const b3 = document.getElementById('editTipoCarro');
+      const b4 = document.getElementById('editTipoIndividual');
+      if (editandoEstadoPago === 'PAGADO') { b1.classList.add('active'); b2.classList.remove('active'); }
+      else { b1.classList.remove('active'); b2.classList.add('active'); }
+      if (editandoTipoEnvio === 'carro') { b3.classList.add('active'); b4.classList.remove('active'); }
+      else { b3.classList.remove('active'); b4.classList.add('active'); }
+    }
+
+    function poblarSelectProductosEdicion() {
+      const sel = document.getElementById('editItemProducto');
+      if (!sel) return;
+      sel.innerHTML = CATALOGO_FABREC.map(p => `<option value="${p.producto}">${p.producto}</option>`).join('');
+    }
+
+    function recalcularItemsEdicion() {
+      let totalPaq = 0;
+      itemsEdicionVenta.forEach(it => { totalPaq += it.paquetes_totales || 0; });
+      const esMayor = totalPaq >= 100;
+      itemsEdicionVenta.forEach(it => {
+        const itemCat = obtenerItemCatalogo(it.producto);
+        if (itemCat) {
+          it.tipo_tarifa = esMayor ? "Mayor" : "Menor";
+          it.precio_unitario = esMayor ? itemCat.mayor : itemCat.menor;
+          it.subtotal = (it.paquetes_totales || 0) * it.precio_unitario;
+        }
+      });
+      return { totalPaquetes: totalPaq, esMayor };
+    }
+
+    function actualizarTotalEdicion() {
+      const total = itemsEdicionVenta.reduce((a, it) => a + (it.subtotal || 0), 0);
+      document.getElementById('editVentaTotal').innerText = 'S/ ' + total.toFixed(2);
+    }
+
+    function renderizarItemsEdicion() {
+      recalcularItemsEdicion();
+      const cont = document.getElementById('editItemsLista');
+      if (!cont) return;
+
+      if (itemsEdicionVenta.length === 0) {
+        cont.innerHTML = '<div style="text-align:center; padding:14px; font-size:11px; color:var(--text-soft); font-weight:600;">Sin productos. Agrega al menos uno.</div>';
+        actualizarTotalEdicion();
+        return;
+      }
+
+      cont.innerHTML = itemsEdicionVenta.map((it, i) => `
+        <div class="edit-item-row">
+          <div class="edit-item-info">
+            <div class="edit-item-nombre">${escaparHTML(it.producto)}</div>
+            <div class="edit-item-sub">S/ ${(it.precio_unitario || 0).toFixed(2)} c/u • S/ ${(it.subtotal || 0).toFixed(2)}</div>
+          </div>
+          <input type="number" min="1" step="1" value="${it.paquetes_totales}"
+            onchange="cambiarCantidadItemEdicion(${i}, this.value)"
+            class="edit-item-cant">
+          <button onclick="eliminarItemEdicion(${i})" class="icon-btn-mini danger" style="padding:6px;" title="Quitar">
+            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
+          </button>
+        </div>
+      `).join('');
+
+      actualizarTotalEdicion();
+    }
+
+    function cambiarCantidadItemEdicion(idx, valor) {
+      const cant = parseInt(valor) || 0;
+      if (cant <= 0) { mostrarToast("La cantidad debe ser mayor a 0"); renderizarItemsEdicion(); return; }
+      const it = itemsEdicionVenta[idx];
+      it.paquetes_totales = cant;
+      it.valor_origen = cant;
+      it.unidad_origen = 'paquetes';
+      const stockActual = inventarioLocal[it.producto] || 0;
+      const paraProduccion = cant > stockActual ? (cant - stockActual) : 0;
+      it.paquetes_produccion = paraProduccion;
+      it.paquetes_stock = cant - paraProduccion;
+      renderizarItemsEdicion();
+    }
+
+    function eliminarItemEdicion(idx) {
+      if (itemsEdicionVenta.length <= 1) { mostrarToast("Debe haber al menos un producto"); return; }
+      itemsEdicionVenta.splice(idx, 1);
+      renderizarItemsEdicion();
+    }
+
+    function abrirAgregarItemEdicion() {
+      document.getElementById('editAgregarItemPanel').style.display = 'block';
+      document.getElementById('editItemCantidad').value = '';
+      document.getElementById('editItemCantidad').focus();
+    }
+
+    function cancelarAgregarItemEdicion() {
+      document.getElementById('editAgregarItemPanel').style.display = 'none';
+    }
+
+    function confirmarAgregarItemEdicion() {
+      const prod = document.getElementById('editItemProducto').value;
+      const cant = parseInt(document.getElementById('editItemCantidad').value) || 0;
+      if (!prod) { mostrarToast("Selecciona un producto"); return; }
+      if (cant <= 0) { mostrarToast("Cantidad debe ser mayor a 0"); return; }
+
+      const existente = itemsEdicionVenta.findIndex(it => it.producto === prod);
+      const stockActual = inventarioLocal[prod] || 0;
+
+      if (existente >= 0) {
+        const nuevoTotal = itemsEdicionVenta[existente].paquetes_totales + cant;
+        itemsEdicionVenta[existente].paquetes_totales = nuevoTotal;
+        itemsEdicionVenta[existente].valor_origen = nuevoTotal;
+        const nuevoProd = nuevoTotal > stockActual ? (nuevoTotal - stockActual) : 0;
+        itemsEdicionVenta[existente].paquetes_produccion = nuevoProd;
+        itemsEdicionVenta[existente].paquetes_stock = nuevoTotal - nuevoProd;
+      } else {
+        const paraProduccion = cant > stockActual ? (cant - stockActual) : 0;
+        itemsEdicionVenta.push({
+          producto: prod,
+          paquetes_totales: cant,
+          paquetes_stock: cant - paraProduccion,
+          paquetes_produccion: paraProduccion,
+          unidad_origen: 'paquetes',
+          valor_origen: cant,
+          tipo_tarifa: 'Menor',
+          precio_unitario: 0,
+          subtotal: 0
+        });
+      }
+
+      cancelarAgregarItemEdicion();
+      renderizarItemsEdicion();
+      mostrarToast("Producto agregado");
+    }
+
+    function guardarEdicionVenta() {
+      if (!ventaEditandoCodigo) return;
+      if (itemsEdicionVenta.length === 0) { mostrarToast("Debe haber al menos un producto"); return; }
+
+      recalcularItemsEdicion();
+      const totalPaquetes = itemsEdicionVenta.reduce((a, it) => a + (it.paquetes_totales || 0), 0);
+      const totalSoles = itemsEdicionVenta.reduce((a, it) => a + (it.subtotal || 0), 0);
+
+      const refs = [];
+      [ventasHoy, todasLasVentas].forEach(arr => {
+        const v = arr.find(x => x.codigo === ventaEditandoCodigo);
+        if (v) refs.push(v);
+      });
+      if (refs.length === 0) { mostrarToast("Venta no encontrada"); return; }
+
+      const ahora = new Date();
+      const abrev = ZONA_ABREV[zonaActivaClave] || "gen";
+      const fechaCorta = fechaCompacta(ahora);
+
+      refs.forEach(v => {
+        const estabaPagado = esPagado(v);
+        const seraPagado = (editandoEstadoPago === 'PAGADO');
+
+        // Actualizar items y totales
+        v.items = itemsEdicionVenta.map(it => ({ ...it }));
+        v.total_paquetes = totalPaquetes;
+        v.monto_total = +totalSoles.toFixed(2);
+        v.tarifa_aplicada = totalPaquetes >= 100 ? "Al por mayor" : "Al por menor";
+
+        // Ajustar estado de pago y montos
+        if (seraPagado && !estabaPagado) {
+          v.monto_pagado = +totalSoles.toFixed(2);
+          v.monto_pendiente = 0;
+          v.estado_pago = 'PAGADO';
+          if (!v.cobros) v.cobros = [];
+          v.cobros.push({
+            fecha: ahora.toISOString(),
+            monto: +totalSoles.toFixed(2),
+            metodo: 'Ajuste manual',
+            vendedor: v.vendedor,
+            nota: 'Marcado como pagado desde edición'
+          });
+          v.contabilidad_enviada = false;
+        } else if (!seraPagado && estabaPagado) {
+          v.monto_pagado = 0;
+          v.monto_pendiente = +totalSoles.toFixed(2);
+          v.estado_pago = 'PENDIENTE';
+          v.contabilidad_enviada = true;
+        } else if (seraPagado && estabaPagado) {
+          v.monto_pagado = +totalSoles.toFixed(2);
+          v.monto_pendiente = 0;
+          v.estado_pago = 'PAGADO';
+        } else {
+          // Pendiente sigue pendiente
+          v.monto_pagado = 0;
+          v.monto_pendiente = +totalSoles.toFixed(2);
+          v.estado_pago = 'PENDIENTE';
+        }
+
+        // Recalcular tickets de producción
+        const tickets = [];
+        let prodSeq = 0;
+        const seqVenta = extraerSecuenciaVenta(v.codigo);
+        v.items.forEach(it => {
+          if (it.paquetes_produccion > 0) {
+            prodSeq++;
+            tickets.push({
+              codigo: `produccion_${abrev}_${fechaCorta}_${seqVenta}_${String(prodSeq).padStart(2,'0')}`,
+              fecha_solicitud: ahora.toISOString(),
+              producto: it.producto,
+              paquetes_a_fabricar: it.paquetes_produccion,
+              venta_codigo: v.codigo
+            });
+          }
+        });
+        v.tickets_produccion = tickets;
+
+        v.tipo_envio = editandoTipoEnvio;
+      });
+
+      localStorage.setItem(`fabrec_ventas_hoy_${zonaActivaClave}`, JSON.stringify(ventasHoy));
+      localStorage.setItem(`fabrec_ventas_todas_${zonaActivaClave}`, JSON.stringify(todasLasVentas));
+
+      autoAsignarVentas();
+
+      cerrarModalEditarVenta();
+      renderizarVentasInicio();
+      renderizarCarguillo();
+      renderizarDashboard();
+      actualizarBadgeCarguillo();
+      mostrarToast("Venta actualizada");
+    }
+
+    // ==================================================
+    // 15. CONFIRMAR COBRO
     // ==================================================
     function abrirModalConfirmarCobroDesdeDetalle() {
       if (!ventaDetalleActual) return;
@@ -1735,7 +2719,7 @@
     }
 
     // ==================================================
-    // 15. ENVIAR PAGOS A CONTABILIDAD
+    // 16. ENVIAR PAGOS A CONTABILIDAD
     // ==================================================
     function enviarPagosContabilidad() {
       const pendientes = todasLasVentas.filter(v => esPendienteContabilidad(v));
@@ -1775,7 +2759,7 @@
     }
 
     // ==================================================
-    // 16. ENVIAR RECIBO AL CLIENTE POR WHATSAPP
+    // 17. RECIBO: IMAGEN + ENVÍO
     // ==================================================
     function formatearTelefonoPeru(tel) {
       const digits = (tel || '').replace(/\D/g, '');
@@ -1784,58 +2768,349 @@
       return digits;
     }
 
-    function enviarReciboCliente() {
+    async function generarReciboCanvas(venta) {
+      if (document.fonts && document.fonts.ready) {
+        try { await document.fonts.ready; } catch (e) {}
+      }
+
+      const dpr = 2;
+      const W = 440;
+      const padding = 26;
+      const d = venta;
+      const cli = d.cliente || {};
+      const items = d.items || [];
+
+      const EST_H = 900 + items.length * 30;
+
+      const temp = document.createElement('canvas');
+      temp.width = W * dpr;
+      temp.height = EST_H * dpr;
+      const ctx = temp.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, W, EST_H);
+
+      ctx.fillStyle = '#2563eb';
+      ctx.fillRect(0, 0, W, 6);
+
+      const FONT_REG = 'Montserrat, Arial, sans-serif';
+      const FONT_MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
+
+      let y = 42;
+
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#0f172a';
+      ctx.font = `900 26px ${FONT_REG}`;
+      ctx.fillText('FABREC', padding, y);
+
+      ctx.font = `600 11px ${FONT_REG}`;
+      ctx.fillStyle = '#64748b';
+      ctx.fillText('Recibo de Venta', padding, y + 18);
+
+      ctx.textAlign = 'right';
+      ctx.font = `800 12px ${FONT_MONO}`;
+      ctx.fillStyle = '#2563eb';
+      ctx.fillText(d.codigo || '-', W - padding, y);
+
+      const fv = d.fecha_venta ? new Date(d.fecha_venta).toLocaleString('es-PE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '-';
+      ctx.font = `600 10px ${FONT_REG}`;
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(fv, W - padding, y + 18);
+
+      y += 38;
+
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padding, y);
+      ctx.lineTo(W - padding, y);
+      ctx.stroke();
+      y += 26;
+
+      function drawField(label, value, yPos, valueColor) {
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = `800 9px ${FONT_REG}`;
+        ctx.fillText(label, padding, yPos);
+        ctx.fillStyle = valueColor || '#0f172a';
+        ctx.font = `700 12px ${FONT_REG}`;
+        ctx.fillText(value || '-', padding, yPos + 15);
+      }
+
+      drawField('CLIENTE', cli.nombre, y);
+      y += 32;
+
+      const halfW = (W - padding * 2) / 2;
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = `800 9px ${FONT_REG}`;
+      ctx.fillText('DNI / RUC', padding, y);
+      ctx.fillStyle = '#0f172a';
+      ctx.font = `700 12px ${FONT_REG}`;
+      ctx.fillText(cli.dni || '-', padding, y + 15);
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = `800 9px ${FONT_REG}`;
+      ctx.fillText('WHATSAPP', padding + halfW, y);
+      ctx.fillStyle = '#0f172a';
+      ctx.font = `700 12px ${FONT_REG}`;
+      ctx.fillText(cli.telefono_contacto || cli.telefono || '-', padding + halfW, y + 15);
+      y += 32;
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = `800 9px ${FONT_REG}`;
+      ctx.fillText('DIRECCIÓN', padding, y);
+      y += 15;
+      ctx.fillStyle = '#0f172a';
+      ctx.font = `600 11px ${FONT_REG}`;
+      const dir = cli.direccion || '-';
+      const words = dir.split(' ');
+      let line = '';
+      const maxW = W - padding * 2;
+      for (const w of words) {
+        const test = line ? line + ' ' + w : w;
+        if (ctx.measureText(test).width > maxW) {
+          ctx.fillText(line, padding, y);
+          y += 15;
+          line = w;
+        } else line = test;
+      }
+      if (line) { ctx.fillText(line, padding, y); y += 15; }
+      y += 8;
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = `800 9px ${FONT_REG}`;
+      ctx.fillText('FECHA DE ENTREGA', padding, y);
+      ctx.fillStyle = '#2563eb';
+      ctx.font = `800 12px ${FONT_REG}`;
+      ctx.fillText(d.fecha_entrega_solicitada || '-', padding, y + 15);
+      y += 32;
+
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.beginPath();
+      ctx.moveTo(padding, y);
+      ctx.lineTo(W - padding, y);
+      ctx.stroke();
+      y += 20;
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = `800 9px ${FONT_REG}`;
+      ctx.textAlign = 'left';
+      ctx.fillText('PRODUCTO', padding, y);
+      ctx.textAlign = 'right';
+      ctx.fillText('PAQ', W - padding - 90, y);
+      ctx.fillText('SUBTOTAL', W - padding, y);
+      y += 10;
+
+      ctx.beginPath();
+      ctx.moveTo(padding, y);
+      ctx.lineTo(W - padding, y);
+      ctx.stroke();
+      y += 20;
+
+      items.forEach(it => {
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#0f172a';
+        ctx.font = `700 11px ${FONT_REG}`;
+        let prod = it.producto || '-';
+        while (ctx.measureText(prod).width > (W - padding * 2 - 130) && prod.length > 6) {
+          prod = prod.slice(0, -2);
+        }
+        if (prod !== it.producto) prod = prod.slice(0, -1) + '…';
+        ctx.fillText(prod, padding, y);
+
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#64748b';
+        ctx.font = `700 11px ${FONT_REG}`;
+        ctx.fillText(String(it.paquetes_totales || 0), W - padding - 90, y);
+
+        ctx.fillStyle = '#0f172a';
+        ctx.font = `800 11px ${FONT_REG}`;
+        ctx.fillText('S/ ' + (it.subtotal || 0).toFixed(2), W - padding, y);
+        y += 24;
+      });
+
+      y += 6;
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.beginPath();
+      ctx.moveTo(padding, y);
+      ctx.lineTo(W - padding, y);
+      ctx.stroke();
+      y += 28;
+
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#64748b';
+      ctx.font = `900 10px ${FONT_REG}`;
+      ctx.fillText('TOTAL', padding, y);
+
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#2563eb';
+      ctx.font = `900 24px ${FONT_REG}`;
+      ctx.fillText('S/ ' + (d.monto_total || 0).toFixed(2), W - padding, y + 4);
+      y += 34;
+
+      const pagado = esPagado(d);
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#64748b';
+      ctx.font = `800 10px ${FONT_REG}`;
+      ctx.fillText('ESTADO DE PAGO', padding, y);
+      ctx.textAlign = 'right';
+      ctx.fillStyle = pagado ? '#059669' : '#d97706';
+      ctx.font = `900 12px ${FONT_REG}`;
+      ctx.fillText(pagado ? 'PAGADO' : 'POR COBRAR', W - padding, y);
+      y += 24;
+
+      if (!pagado) {
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#64748b';
+        ctx.font = `800 10px ${FONT_REG}`;
+        ctx.fillText('SALDO PENDIENTE', padding, y);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#d97706';
+        ctx.font = `900 12px ${FONT_REG}`;
+        ctx.fillText('S/ ' + getMontoPendiente(d).toFixed(2), W - padding, y);
+        y += 24;
+      }
+
+      y += 6;
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.beginPath();
+      ctx.moveTo(padding, y);
+      ctx.lineTo(W - padding, y);
+      ctx.stroke();
+      y += 24;
+
+      drawField('ZONA', d.zona, y);
+      y += 32;
+      drawField('VENDEDOR', d.vendedor, y);
+      y += 32;
+
+      if (d.tipo_envio === 'individual') {
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#7c3aed';
+        ctx.font = `800 9px ${FONT_REG}`;
+        ctx.fillText('ENVÍO INDIVIDUAL', padding, y);
+        y += 18;
+      }
+
+      y += 8;
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = `700 11px ${FONT_REG}`;
+      ctx.fillText('¡Gracias por su compra!', W / 2, y);
+      y += 20;
+      ctx.font = `600 9px ${FONT_REG}`;
+      ctx.fillText('Conserve este recibo para cualquier consulta', W / 2, y);
+      y += 30;
+
+      const finalH = y;
+      const finalCanvas = document.createElement('canvas');
+      finalCanvas.width = W * dpr;
+      finalCanvas.height = finalH * dpr;
+      const fctx = finalCanvas.getContext('2d');
+      fctx.fillStyle = '#ffffff';
+      fctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+      fctx.drawImage(temp, 0, 0);
+
+      return finalCanvas;
+    }
+
+    function nombreArchivoRecibo(v) {
+      return `recibo_${(v.codigo || 'venta').replace(/[^a-z0-9_-]/gi, '_')}.png`;
+    }
+
+    async function descargarReciboImagen() {
+      if (!ventaDetalleActual) return;
+      try {
+        mostrarToast("Generando imagen...");
+        const canvas = await generarReciboCanvas(ventaDetalleActual);
+        canvas.toBlob(blob => {
+          if (!blob) { mostrarToast("Error generando imagen"); return; }
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = nombreArchivoRecibo(ventaDetalleActual);
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 2000);
+          mostrarToast("Recibo descargado");
+        }, 'image/png');
+      } catch (e) {
+        console.error(e);
+        mostrarToast("Error generando imagen");
+      }
+    }
+
+    async function enviarReciboCliente() {
       if (!ventaDetalleActual) return;
       const v = ventaDetalleActual;
+      const telRaw = v.cliente.telefono_contacto || v.cliente.telefono || '';
+      const tel = formatearTelefonoPeru(telRaw);
 
-      const tel = formatearTelefonoPeru(v.cliente.telefono);
+      const texto = `Recibo de venta *${v.codigo}* - FABREC\n` +
+                    `Cliente: ${v.cliente.nombre}\n` +
+                    `Total: S/ ${v.monto_total.toFixed(2)}\n` +
+                    `Estado: ${esPagado(v) ? 'PAGADO' : 'POR COBRAR'}\n\n` +
+                    `Te envío la imagen del recibo adjunta.`;
 
-      const itemsTexto = v.items.map(it =>
-        `  - ${it.paquetes_totales} paq ${it.producto} (S/ ${it.precio_unitario.toFixed(2)} c/u) = S/ ${it.subtotal.toFixed(2)}`
-      ).join('\n');
+      let compartido = false;
 
-      const fechaVenta = v.fecha_venta
-        ? new Date(v.fecha_venta).toLocaleString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-        : '';
-      const estadoTexto = esPagado(v) ? 'PAGADO' : 'POR COBRAR';
-      const saldoPendiente = getMontoPendiente(v);
-
-      let texto =
-        `RECIBO DE VENTA - FABREC\n` +
-        `------------------------------------\n` +
-        `Codigo: ${v.codigo}\n` +
-        `Fecha: ${fechaVenta}\n` +
-        `Cliente: ${v.cliente.nombre}\n` +
-        `DNI: ${v.cliente.dni}\n` +
-        `Direccion: ${v.cliente.direccion}\n` +
-        `------------------------------------\n` +
-        `Productos:\n${itemsTexto}\n` +
-        `------------------------------------\n` +
-        `TOTAL: S/ ${v.monto_total.toFixed(2)}\n` +
-        `Estado: ${estadoTexto}\n`;
-
-      if (!esPagado(v)) {
-        texto += `Saldo pendiente: S/ ${saldoPendiente.toFixed(2)}\n`;
+      try {
+        if (navigator.canShare && navigator.share) {
+          const canvas = await generarReciboCanvas(v);
+          const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+          if (blob) {
+            const file = new File([blob], nombreArchivoRecibo(v), { type: 'image/png' });
+            if (navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                files: [file],
+                title: 'Recibo FABREC',
+                text: `Recibo de venta ${v.codigo} - ${v.cliente.nombre}`
+              });
+              compartido = true;
+              mostrarToast("Recibo compartido");
+            }
+          }
+        }
+      } catch (e) {
+        if (e && e.name === 'AbortError') {
+          return;
+        }
       }
 
-      texto +=
-        `Fecha de entrega: ${v.fecha_entrega_solicitada}\n` +
-        `------------------------------------\n` +
-        `Gracias por su compra.\n` +
-        `Conserve este codigo para cualquier consulta.`;
+      if (compartido) return;
 
-      let url;
+      try {
+        const canvas = await generarReciboCanvas(v);
+        canvas.toBlob(blob => {
+          if (!blob) return;
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = nombreArchivoRecibo(v);
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 2000);
+        }, 'image/png');
+      } catch (e) {
+        console.error(e);
+      }
+
+      let waUrl;
       if (tel && tel.length >= 11) {
-        url = "https://api.whatsapp.com/send/?phone=" + tel + "&text=" + encodeURIComponent(texto);
+        waUrl = "https://api.whatsapp.com/send/?phone=" + tel + "&text=" + encodeURIComponent(texto);
       } else {
-        url = "https://api.whatsapp.com/send/?text=" + encodeURIComponent(texto);
+        waUrl = "https://api.whatsapp.com/send/?text=" + encodeURIComponent(texto);
       }
-      window.open(url, '_blank');
-      mostrarToast("Abriendo WhatsApp...");
+      window.open(waUrl, '_blank');
+      mostrarToast("Imagen descargada. Adjúntala en WhatsApp.");
     }
 
     // ==================================================
-    // 17. CIERRE / REGISTROS DE VENTAS
+    // 18. CIERRE / REGISTROS DE VENTAS
     // ==================================================
     function agruparVentasPorFecha(ventas) {
       const grupos = {};
@@ -1882,19 +3157,6 @@
         ventas: ventasDelDia,
         tickets_produccion: todasLasProducciones
       };
-    }
-
-    function enviarCierreAContabilidad() {
-      if (ventasHoy.length === 0) { mostrarToast("No hay ventas registradas hoy en esta zona"); return; }
-      if (!zonaActivaClave) { mostrarToast("Selecciona tu zona antes de enviar"); abrirModalZona(); return; }
-
-      const ahora = new Date();
-      const payload = construirPayloadRegistro(ahora, ventasHoy);
-
-      const jsonStr = JSON.stringify(payload, null, 2);
-      const urlWhatsApp = "https://api.whatsapp.com/send/?phone=" + NUMERO_CIERRE_KING + "&text=" + encodeURIComponent(jsonStr);
-      window.open(urlWhatsApp, "_blank");
-      mostrarToast("Registro " + payload.codigo_registro + " enviado a King");
     }
 
     function renderizarRegistrosCierre() {
@@ -1951,7 +3213,7 @@
     }
 
     // ==================================================
-    // 18. DASHBOARD
+    // 19. DASHBOARD
     // ==================================================
     function cambiarFiltroDashboard(tipo) {
       filtroDashboardActivo = tipo;
@@ -2054,7 +3316,6 @@
         ctx.fillStyle = '#0f172a';
         ctx.font = '800 10px Montserrat';
         ctx.textAlign = 'center';
-        // Uso del formateador corto en las etiquetas de las barras
         let txtVal;
         if (propiedad === 'monto_total') {
           txtVal = formatearMonto(val);
@@ -2071,7 +3332,7 @@
     }
 
     // ==================================================
-    // 19. LISTA DE PRECIOS
+    // 20. LISTA DE PRECIOS
     // ==================================================
     function renderizarListaPrecios() {
       const cont = document.getElementById('contenedorListaPrecios');
@@ -2116,6 +3377,564 @@
       setTimeout(() => { toast.classList.remove('show'); }, 2400);
     }
 
+    /* ==================================================
+       ============ CARGUILLO: LÓGICA ===================
+       ================================================== */
+
+    function guardarCarros() {
+      if (!zonaActivaClave) return;
+      localStorage.setItem(`fabrec_carros_${zonaActivaClave}`, JSON.stringify(carros));
+    }
+
+    function autoAsignarVentas() {
+      ventasHoy.forEach(v => { v.asignaciones = []; });
+
+      const ventasParaCarros = ventasHoy.filter(v => v.tipo_envio !== 'individual');
+
+      if (carros.length === 0 || ventasParaCarros.length === 0) {
+        sincronizarAsignacionesConTodas();
+        return;
+      }
+
+      const cargaActual = {};
+      carros.forEach(c => { cargaActual[c.id] = 0; });
+
+      const ventasOrd = [...ventasParaCarros].sort((a, b) => (b.total_paquetes || 0) - (a.total_paquetes || 0));
+
+      ventasOrd.forEach(venta => {
+        const items = (venta.items || []).map(it => ({
+          producto: it.producto,
+          paquetes: parseInt(it.paquetes_totales) || 0
+        })).filter(it => it.paquetes > 0);
+
+        if (items.length === 0) return;
+
+        const asigMap = {};
+
+        for (const item of items) {
+          let restante = item.paquetes;
+          for (const carro of carros) {
+            if (restante <= 0) break;
+            const capLibre = (carro.maxPaquetes || 0) - cargaActual[carro.id];
+            if (capLibre <= 0) continue;
+            const poner = Math.min(restante, capLibre);
+            if (poner <= 0) continue;
+            if (!asigMap[carro.id]) asigMap[carro.id] = { items: [], paquetes: 0 };
+            asigMap[carro.id].items.push({ producto: item.producto, paquetes: poner });
+            asigMap[carro.id].paquetes += poner;
+            cargaActual[carro.id] += poner;
+            restante -= poner;
+          }
+        }
+
+        venta.asignaciones = Object.entries(asigMap).map(([carroId, d]) => ({
+          carroId,
+          items: d.items,
+          paquetes: d.paquetes
+        }));
+      });
+
+      sincronizarAsignacionesConTodas();
+
+      if (zonaActivaClave) {
+        localStorage.setItem(`fabrec_ventas_hoy_${zonaActivaClave}`, JSON.stringify(ventasHoy));
+        localStorage.setItem(`fabrec_ventas_todas_${zonaActivaClave}`, JSON.stringify(todasLasVentas));
+      }
+    }
+
+    function sincronizarAsignacionesConTodas() {
+      ventasHoy.forEach(vh => {
+        const vt = todasLasVentas.find(x => x.codigo === vh.codigo);
+        if (vt) vt.asignaciones = JSON.parse(JSON.stringify(vh.asignaciones || []));
+      });
+    }
+
+    function totalPaquetesAsignadosAVenta(v) {
+      return (v.asignaciones || []).reduce((a, x) => a + (x.paquetes || 0), 0);
+    }
+
+    function totalPaquetesEnCarro(carroId) {
+      let t = 0;
+      ventasHoy.forEach(v => {
+        const a = (v.asignaciones || []).find(x => x.carroId === carroId);
+        if (a) t += a.paquetes;
+      });
+      return t;
+    }
+
+    function productosEnCarro(carroId) {
+      const productos = {};
+      ventasHoy.forEach(v => {
+        const a = (v.asignaciones || []).find(x => x.carroId === carroId);
+        if (!a) return;
+        (a.items || []).forEach(it => {
+          productos[it.producto] = (productos[it.producto] || 0) + it.paquetes;
+        });
+      });
+      return Object.entries(productos).sort((a, b) => b[1] - a[1]);
+    }
+
+    function clientesEnCarro(carroId) {
+      const lista = [];
+      ventasHoy.forEach(v => {
+        const a = (v.asignaciones || []).find(x => x.carroId === carroId);
+        if (a) {
+          lista.push({
+            nombre: (v.cliente && v.cliente.nombre) || '-',
+            direccion: (v.cliente && v.cliente.direccion) || '-',
+            paquetes: a.paquetes
+          });
+        }
+      });
+      return lista;
+    }
+
+    function resumenProductosGlobal() {
+      const productos = {};
+      ventasHoy.forEach(v => {
+        (v.asignaciones || []).forEach(a => {
+          (a.items || []).forEach(it => {
+            productos[it.producto] = (productos[it.producto] || 0) + it.paquetes;
+          });
+        });
+      });
+      ventasHoy.filter(v => v.tipo_envio === 'individual').forEach(v => {
+        (v.items || []).forEach(it => {
+          const paq = parseInt(it.paquetes_totales) || 0;
+          if (paq > 0) {
+            productos[it.producto] = (productos[it.producto] || 0) + paq;
+          }
+        });
+      });
+      return Object.entries(productos).sort((a, b) => b[1] - a[1]);
+    }
+
+    function totalPaquetesSinAsignar() {
+      let t = 0;
+      ventasHoy.filter(v => v.tipo_envio !== 'individual').forEach(v => {
+        const asig = totalPaquetesAsignadosAVenta(v);
+        const pedido = v.total_paquetes || 0;
+        if (asig < pedido) t += (pedido - asig);
+      });
+      return t;
+    }
+
+    function renderizarCarguillo() {
+      const contConfig = document.getElementById('listaCarrosConfig');
+      const countCarros = document.getElementById('carguilloCountCarros');
+      if (countCarros) countCarros.innerText = carros.length;
+
+      if (!zonaActivaClave) {
+        if (contConfig) contConfig.innerHTML = '<div class="empty-state">Selecciona una zona para empezar.</div>';
+        const contCarg = document.getElementById('carguilloContenido');
+        if (contCarg) contCarg.innerHTML = '';
+        return;
+      }
+
+      if (contConfig) {
+        if (carros.length === 0) {
+          contConfig.innerHTML = `<div class="empty-state">Aún no has agregado carros.<br>Presiona <strong>Agregar Carro</strong> y define cuántos paquetes caben.</div>`;
+        } else {
+          contConfig.innerHTML = carros.map((c, i) => `
+            <div class="config-carro-card">
+              <div class="config-carro-num">${escaparHTML(c.numero || (i + 1))}</div>
+              <div class="config-carro-info">
+                <div class="config-carro-nombre">Carro ${escaparHTML(c.numero || (i + 1))}</div>
+                <div class="config-carro-meta">Capacidad máxima: ${c.maxPaquetes} paq</div>
+              </div>
+              <button class="icon-btn-mini" onclick="editarCarroConfig('${c.id}')" title="Editar">
+                <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+              <button class="icon-btn-mini danger" onclick="eliminarCarroConfig('${c.id}')" title="Eliminar">
+                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              </button>
+            </div>
+          `).join('');
+        }
+      }
+
+      const fechaBadge = document.getElementById('carguilloFechaBadge');
+      if (fechaBadge) {
+        fechaBadge.innerText = formatearFechaBonita(new Date().toISOString().split('T')[0]);
+      }
+
+      const cont = document.getElementById('carguilloContenido');
+      if (!cont) return;
+
+      const ventasIndividuales = ventasHoy.filter(v => v.tipo_envio === 'individual');
+      const ventasCarro = ventasHoy.filter(v => v.tipo_envio !== 'individual');
+
+      if (carros.length === 0 && ventasIndividuales.length === 0) {
+        cont.innerHTML = '<div class="empty-state">Configura al menos un carro o registra una venta con envío individual.</div>';
+        return;
+      }
+
+      if (ventasHoy.length === 0) {
+        cont.innerHTML = '<div class="empty-state">Aún no hay ventas registradas hoy.<br>Cuando registres ventas, se distribuirán automáticamente en tus carros.</div>';
+        return;
+      }
+
+      let html = '';
+
+      const sinAsignar = totalPaquetesSinAsignar();
+      if (sinAsignar > 0) {
+        html += `<div class="carguillo-alerta">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span><strong>${sinAsignar} paq</strong> sin asignar</span>
+        </div>`;
+      }
+
+      const resumen = resumenProductosGlobal();
+      const totalAsignado = resumen.reduce((a, x) => a + x[1], 0);
+
+      if (resumen.length > 0) {
+        html += `<div class="carguillo-resumen-global">
+          <div class="carguillo-resumen-titulo">
+            <span>Totales del Carguillo</span>
+            <span class="carguillo-resumen-paq">${totalAsignado} paq</span>
+          </div>
+          <div class="carguillo-tabla">
+            ${resumen.map(([prod, qty]) => `
+              <div class="carguillo-row">
+                <span class="carguillo-row-name">${escaparHTML(prod)}</span>
+                <span class="carguillo-row-qty">${qty}</span>
+              </div>
+            `).join('')}
+            <div class="carguillo-row carguillo-row-total">
+              <span class="carguillo-row-name">TOTAL</span>
+              <span class="carguillo-row-qty">${totalAsignado} paq</span>
+            </div>
+          </div>
+        </div>`;
+      }
+
+      if (carros.length > 0 && ventasCarro.length > 0) {
+        carros.forEach((carro, idx) => {
+          const carga = totalPaquetesEnCarro(carro.id);
+          const max = carro.maxPaquetes || 0;
+          const pct = max > 0 ? Math.min(100, Math.round((carga / max) * 100)) : 0;
+          const productos = productosEnCarro(carro.id);
+          const clientes = clientesEnCarro(carro.id);
+          const totalPedidosCarro = clientes.length;
+
+          html += `
+            <div class="carguillo-card" data-carro="${carro.id}">
+              <div class="carguillo-card-header" onclick="toggleCarguilloCard(this)">
+                <div class="carguillo-car-icon">${escaparHTML(carro.numero || (idx + 1))}</div>
+                <div class="carguillo-car-info">
+                  <div class="carguillo-car-nombre">Carro ${escaparHTML(carro.numero || (idx + 1))}</div>
+                  <div class="carguillo-car-meta">${totalPedidosCarro} cliente${totalPedidosCarro === 1 ? '' : 's'} asignado${totalPedidosCarro === 1 ? '' : 's'}</div>
+                </div>
+                <div class="carguillo-car-carga">
+                  ${carga} / ${max}
+                  <small>paquetes</small>
+                </div>
+              </div>
+              <div class="carguillo-progress">
+                <div class="carguillo-progress-fill" style="width:${pct}%; background:${pct >= 95 ? 'var(--rose)' : (pct >= 80 ? 'var(--amber)' : 'var(--primary)')};"></div>
+              </div>
+              <div class="carguillo-body">
+                ${productos.length === 0
+                  ? '<div class="carguillo-vacio">Sin paquetes asignados a este carro</div>'
+                  : `<div class="carguillo-tabla">
+                      ${productos.map(([prod, qty]) => `
+                        <div class="carguillo-row">
+                          <span class="carguillo-row-name">${escaparHTML(prod)}</span>
+                          <span class="carguillo-row-qty">${qty}</span>
+                        </div>
+                      `).join('')}
+                      <div class="carguillo-row carguillo-row-total">
+                        <span class="carguillo-row-name">TOTAL CARRO</span>
+                        <span class="carguillo-row-qty">${carga} paq</span>
+                      </div>
+                    </div>`
+                }
+                ${clientes.length > 0 ? `
+                  <div class="clientes-lista">
+                    <div class="clientes-lista-titulo">Clientes / Direcciones</div>
+                    ${clientes.map(c => `
+                      <div class="cliente-row">
+                        <span class="cliente-row-nombre">${escaparHTML(c.nombre)}</span>
+                        <span class="cliente-row-dir">${escaparHTML(c.direccion)}</span>
+                      </div>
+                    `).join('')}
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      if (ventasIndividuales.length > 0) {
+        html += `<div class="seccion-header" style="margin-top:20px;">
+          <span style="color:#7c3aed;">Envíos Individuales</span>
+          <span class="badge-count" style="background:#f5f3ff; color:#7c3aed; border-color:#ddd6fe;">${ventasIndividuales.length}</span>
+        </div>`;
+
+        ventasIndividuales.forEach(v => {
+          const prodList = (v.items || []).map(it => `
+            <div class="carguillo-row">
+              <span class="carguillo-row-name">${escaparHTML(it.producto)}</span>
+              <span class="carguillo-row-qty">${it.paquetes_totales || 0}</span>
+            </div>
+          `).join('');
+          const totalPaq = v.total_paquetes || 0;
+
+          html += `
+            <div class="carguillo-card individual" data-carro="ind_${v.codigo}">
+              <div class="carguillo-card-header" onclick="toggleCarguilloCard(this)">
+                <div class="carguillo-car-icon individual">
+                  <svg style="width:18px; height:18px; stroke:#fff; fill:none; stroke-width:2.2;" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                </div>
+                <div class="carguillo-car-info">
+                  <div class="carguillo-car-nombre">${escaparHTML(v.cliente.nombre)}</div>
+                  <div class="carguillo-car-meta">${escaparHTML(v.codigo)} • ${escaparHTML(v.cliente.telefono_contacto || v.cliente.telefono || '')}</div>
+                </div>
+                <div class="carguillo-car-carga" style="color:#7c3aed;">
+                  ${totalPaq}
+                  <small>paquetes</small>
+                </div>
+              </div>
+              <div class="carguillo-progress">
+                <div class="carguillo-progress-fill" style="width:100%; background:#7c3aed;"></div>
+              </div>
+              <div class="carguillo-body">
+                <div class="carguillo-tabla">
+                  ${prodList}
+                  <div class="carguillo-row carguillo-row-total">
+                    <span class="carguillo-row-name">TOTAL</span>
+                    <span class="carguillo-row-qty">${totalPaq} paq</span>
+                  </div>
+                </div>
+                <div style="margin-top:10px; font-size:11px; color:var(--text-muted); font-weight:600; line-height:1.5;">
+                  <strong style="color:var(--text);">Dirección:</strong> ${escaparHTML(v.cliente.direccion || '-')}<br>
+                  ${v.cliente.telefono_llegada ? `<strong style="color:var(--text);">Tel. Llegada:</strong> ${escaparHTML(v.cliente.telefono_llegada)}<br>` : ''}
+                  <strong style="color:var(--text);">Monto:</strong> S/ ${(v.monto_total || 0).toFixed(2)}
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      cont.innerHTML = html;
+    }
+
+    function toggleCarguilloCard(header) {
+      const block = header.parentElement;
+      block.classList.toggle('expanded');
+    }
+
+    function abrirModalCarroConfig(idEditar) {
+      if (!zonaActivaClave) { mostrarToast("Selecciona tu zona primero"); abrirModalZona(); return; }
+      editandoCarroId = idEditar || null;
+      const titulo = document.getElementById('modalCarroTitulo');
+      const maxEl = document.getElementById('carroMaxPaq');
+
+      if (editandoCarroId) {
+        const c = carros.find(x => x.id === editandoCarroId);
+        if (!c) return;
+        titulo.innerText = "Editar Carro " + (c.numero || '');
+        maxEl.value = c.maxPaquetes || '';
+      } else {
+        titulo.innerText = "Agregar Carro " + (carros.length + 1);
+        maxEl.value = '';
+      }
+
+      document.getElementById('modalCarroConfig').classList.add('open');
+    }
+
+    function cerrarModalCarroConfig() {
+      document.getElementById('modalCarroConfig').classList.remove('open');
+      editandoCarroId = null;
+    }
+
+    function guardarCarroConfig() {
+      const maxPaq = parseInt(document.getElementById('carroMaxPaq').value) || 0;
+
+      if (maxPaq <= 0) { mostrarToast("El máximo de paquetes debe ser mayor a 0"); return; }
+
+      if (editandoCarroId) {
+        const idx = carros.findIndex(x => x.id === editandoCarroId);
+        if (idx !== -1) {
+          carros[idx].maxPaquetes = maxPaq;
+        }
+        mostrarToast("Carro actualizado");
+      } else {
+        carros.push({
+          id: generarId('carro'),
+          numero: String(carros.length + 1),
+          maxPaquetes: maxPaq
+        });
+        mostrarToast("Carro " + carros.length + " agregado");
+      }
+
+      guardarCarros();
+      autoAsignarVentas();
+      cerrarModalCarroConfig();
+      renderizarCarguillo();
+      actualizarBadgeCarguillo();
+    }
+
+    function editarCarroConfig(id) {
+      abrirModalCarroConfig(id);
+    }
+
+    function eliminarCarroConfig(id) {
+      const c = carros.find(x => x.id === id);
+      if (!c) return;
+      if (!confirm(`¿Eliminar el carro ${c.numero || ''}? Las ventas se redistribuirán entre los demás carros.`)) return;
+      carros = carros.filter(x => x.id !== id);
+      carros.forEach((cc, i) => { cc.numero = String(i + 1); });
+      guardarCarros();
+      autoAsignarVentas();
+      renderizarCarguillo();
+      actualizarBadgeCarguillo();
+      mostrarToast("Carro eliminado");
+    }
+
+    function construirPayloadCarguillo() {
+      const z = ZONAS[zonaActivaClave] || {};
+      const ahora = new Date();
+      const hoyStr = ahora.toISOString().split('T')[0];
+
+      const carrosPayload = carros.map(c => {
+        const productos = productosEnCarro(c.id).map(([prod, qty]) => ({ producto: prod, paquetes: qty }));
+        const clientes = clientesEnCarro(c.id).map(cl => ({
+          nombre: cl.nombre,
+          direccion: cl.direccion,
+          paquetes: cl.paquetes
+        }));
+        const carga = totalPaquetesEnCarro(c.id);
+        return {
+          id: c.id,
+          numero: c.numero || '',
+          max_paquetes: c.maxPaquetes,
+          paquetes_asignados: carga,
+          porcentaje_uso: c.maxPaquetes > 0 ? Math.round((carga / c.maxPaquetes) * 100) : 0,
+          productos: productos,
+          clientes: clientes
+        };
+      });
+
+      const individuales = ventasHoy.filter(v => v.tipo_envio === 'individual').map(v => ({
+        codigo: v.codigo,
+        cliente: v.cliente ? v.cliente.nombre : '',
+        telefono_contacto: v.cliente ? (v.cliente.telefono_contacto || v.cliente.telefono || '') : '',
+        telefono_llegada: v.cliente ? (v.cliente.telefono_llegada || '') : '',
+        direccion: v.cliente ? v.cliente.direccion : '',
+        total_paquetes: v.total_paquetes,
+        monto_total: v.monto_total,
+        condicion_pago: v.condicion_pago,
+        estado_pago: v.estado_pago,
+        items: v.items || []
+      }));
+
+      const resumen = resumenProductosGlobal().map(([prod, qty]) => ({ producto: prod, paquetes: qty }));
+      const totalAsignado = resumen.reduce((a, x) => a + x.paquetes, 0);
+      const totalPedidos = ventasHoy.reduce((a, v) => a + (v.total_paquetes || 0), 0);
+      const sinAsignar = totalPedidos - totalAsignado;
+
+      const pedidos = ventasHoy.map(v => ({
+        codigo: v.codigo,
+        cliente: v.cliente ? v.cliente.nombre : '',
+        telefono_contacto: v.cliente ? (v.cliente.telefono_contacto || v.cliente.telefono || '') : '',
+        telefono_llegada: v.cliente ? (v.cliente.telefono_llegada || '') : '',
+        direccion: v.cliente ? v.cliente.direccion : '',
+        zona: v.zona || '',
+        tipo_envio: v.tipo_envio || 'carro',
+        total_paquetes: v.total_paquetes,
+        monto_total: v.monto_total,
+        condicion_pago: v.condicion_pago,
+        estado_pago: v.estado_pago,
+        asignaciones: (v.asignaciones || []).map(a => {
+          const car = carros.find(c => c.id === a.carroId);
+          return {
+            carro: car ? `Carro ${car.numero || ''}` : '?',
+            paquetes: a.paquetes,
+            items: a.items
+          };
+        })
+      }));
+
+      return {
+        tipo: "carguillo",
+        codigo_carguillo: generarCodigoCarguillo(),
+        fecha: hoyStr,
+        fecha_envio: ahora.toISOString(),
+        vendedor: z.asesor || '',
+        zona: z.nombreZona || '',
+        zonaClave: zonaActivaClave,
+        carros: carrosPayload,
+        envios_individuales: individuales,
+        resumen_productos: resumen,
+        total_paquetes_asignados: totalAsignado,
+        total_paquetes_pedidos: totalPedidos,
+        paquetes_sin_asignar: sinAsignar,
+        cantidad_pedidos: ventasHoy.length,
+        cantidad_envios_individuales: individuales.length,
+        pedidos: pedidos
+      };
+    }
+
+    // ==================================================
+    // ENVÍO UNIFICADO: Cierre + Carguillo
+    // Solo se envía si el carguillo está completo.
+    // ==================================================
+    function enviarTodoAKing() {
+      if (!zonaActivaClave) { mostrarToast("Selecciona tu zona"); abrirModalZona(); return; }
+      if (ventasHoy.length === 0) { mostrarToast("No hay ventas registradas hoy"); return; }
+
+      const hayIndividuales = ventasHoy.filter(v => v.tipo_envio === 'individual').length > 0;
+      if (carros.length === 0 && !hayIndividuales) {
+        mostrarToast("Agrega al menos un carro o registra una venta individual");
+        return;
+      }
+
+      autoAsignarVentas();
+
+      const sinAsignar = totalPaquetesSinAsignar();
+      if (sinAsignar > 0) {
+        mostrarToast(`Carguillo incompleto: ${sinAsignar} paq sin asignar`);
+        return;
+      }
+
+      const z = ZONAS[zonaActivaClave];
+      const ahora = new Date();
+
+      const payloadCierre = construirPayloadRegistro(ahora, ventasHoy);
+      const payloadCarguillo = construirPayloadCarguillo();
+
+      const payloadUnificado = {
+        tipo: "cierre_carguillo",
+        fecha_envio: ahora.toISOString(),
+        vendedor: z.asesor,
+        zona: z.nombreZona,
+        cierre_ventas: payloadCierre,
+        carguillo: payloadCarguillo
+      };
+
+      const jsonStr = JSON.stringify(payloadUnificado, null, 2);
+      const url = "https://api.whatsapp.com/send/?phone=" + NUMERO_CIERRE_KING + "&text=" + encodeURIComponent(jsonStr);
+      window.open(url, '_blank');
+      mostrarToast("Cierre y Carguillo enviados");
+    }
+
+    function actualizarBadgeCarguillo() {
+      const badge = document.getElementById('badgeCarguillo');
+      if (!badge) return;
+      const indiv = ventasHoy.filter(v => v.tipo_envio === 'individual').length;
+      const total = carros.length + indiv;
+      if (total > 0 && ventasHoy.length > 0) {
+        badge.style.display = '';
+        badge.innerText = total;
+        badge.style.background = 'var(--primary)';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
     // EXPOSICIÓN GLOBAL
     window.navegarA = navegarA;
     window.abrirModalZona = abrirModalZona;
@@ -2133,7 +3952,6 @@
     window.cargarItemParaEditar = cargarItemParaEditar;
     window.eliminarItemModal = eliminarItemModal;
     window.finalizarRegistroVenta = finalizarRegistroVenta;
-    window.enviarCierreAContabilidad = enviarCierreAContabilidad;
     window.cambiarFiltroDashboard = cambiarFiltroDashboard;
     window.seleccionarClienteAntiguo = seleccionarClienteAntiguo;
     window.verDetalleVenta = verDetalleVenta;
@@ -2144,11 +3962,33 @@
     window.confirmarCobroYNotificar = confirmarCobroYNotificar;
     window.enviarPagosContabilidad = enviarPagosContabilidad;
     window.enviarReciboCliente = enviarReciboCliente;
+    window.descargarReciboImagen = descargarReciboImagen;
+    window.toggleEnvioIndividual = toggleEnvioIndividual;
+    window.abrirModalEditarVenta = abrirModalEditarVenta;
+    window.cerrarModalEditarVenta = cerrarModalEditarVenta;
+    window.seleccionarEstadoEdicion = seleccionarEstadoEdicion;
+    window.seleccionarTipoEnvioEdicion = seleccionarTipoEnvioEdicion;
+    window.guardarEdicionVenta = guardarEdicionVenta;
+    window.cambiarCantidadItemEdicion = cambiarCantidadItemEdicion;
+    window.eliminarItemEdicion = eliminarItemEdicion;
+    window.abrirAgregarItemEdicion = abrirAgregarItemEdicion;
+    window.cancelarAgregarItemEdicion = cancelarAgregarItemEdicion;
+    window.confirmarAgregarItemEdicion = confirmarAgregarItemEdicion;
+
+    // Carguillo expuestos
+    window.abrirModalCarroConfig = abrirModalCarroConfig;
+    window.cerrarModalCarroConfig = cerrarModalCarroConfig;
+    window.guardarCarroConfig = guardarCarroConfig;
+    window.editarCarroConfig = editarCarroConfig;
+    window.eliminarCarroConfig = eliminarCarroConfig;
+    window.enviarTodoAKing = enviarTodoAKing;
+    window.toggleCarguilloCard = toggleCarguilloCard;
 
     window.addEventListener('DOMContentLoaded', async () => {
       await cargarDatosExternos();
       if (zonaActivaClave && ZONAS[zonaActivaClave]) seleccionarZona(zonaActivaClave);
       else seleccionarZona("");
+      actualizarBadgeCarguillo();
     });
   </script>
 </body>
