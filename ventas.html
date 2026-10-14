@@ -14,6 +14,8 @@
       --primary: #475569;
       --primary-subtle: #f1f5f9;
       --primary-border: #cbd5e1;
+      --primary-ink: #475569;
+      --on-primary: #ffffff;
       --bg: #f8fafc;
       --surface: #ffffff;
       --border: #f1f5f9;
@@ -30,10 +32,10 @@
       --radius-sm: 10px;
     }
 
-    body[data-zona="la_parada"] { --primary: #2563eb; --primary-subtle: #eff6ff; --primary-border: #bfdbfe; }
-    body[data-zona="cono_norte"] { --primary: #059669; --primary-subtle: #ecfdf5; --primary-border: #a7f3d0; }
-    body[data-zona="santa_anita"] { --primary: #7c3aed; --primary-subtle: #f5f3ff; --primary-border: #ddd6fe; }
-    body[data-zona="cono_sur"] { --primary: #16a34a; --primary-subtle: #f0fdf4; --primary-border: #bbf7d0; }
+    body[data-zona="la_parada"]   { --primary: #eab308; --primary-subtle: #fefce8; --primary-border: #fde68a; --primary-ink: #a16207; --on-primary: #1f2937; }
+    body[data-zona="cono_norte"]  { --primary: #2563eb; --primary-subtle: #eff6ff; --primary-border: #bfdbfe; --primary-ink: #1d4ed8; --on-primary: #ffffff; }
+    body[data-zona="santa_anita"] { --primary: #7c3aed; --primary-subtle: #f5f3ff; --primary-border: #ddd6fe; --primary-ink: #6d28d9; --on-primary: #ffffff; }
+    body[data-zona="cono_sur"]    { --primary: #16a34a; --primary-subtle: #f0fdf4; --primary-border: #bbf7d0; --primary-ink: #15803d; --on-primary: #ffffff; }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -59,7 +61,7 @@
     .header-inner { max-width: 520px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
     .saludo-usuario { font-size: 15px; font-weight: 800; letter-spacing: -0.3px; }
     .badge-zona-activa {
-      font-size: 11px; font-weight: 800; background: var(--primary-subtle); color: var(--primary);
+      font-size: 11px; font-weight: 800; background: var(--primary-subtle); color: var(--primary-ink);
       padding: 6px 12px; border-radius: 20px; border: 1px solid var(--primary-border);
       cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s ease; user-select: none;
     }
@@ -81,7 +83,7 @@
       border-top: 1px solid var(--border); padding-top: 12px;
     }
     .btn-action-cuenta {
-      background: var(--primary-subtle); color: var(--primary); border: 1px solid var(--primary-border);
+      background: var(--primary-subtle); color: var(--primary-ink); border: 1px solid var(--primary-border);
       padding: 9px 12px; font-size: 11px; font-weight: 800; border-radius: var(--radius-sm);
       cursor: pointer; font-family: inherit; display: inline-flex; align-items: center;
       justify-content: center; gap: 6px; transition: opacity 0.15s;
@@ -90,7 +92,7 @@
 
     .contenedor-botones-principales { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
     .btn-nueva-venta {
-      background: var(--primary); color: #ffffff; border: none; width: 100%; padding: 15px;
+      background: var(--primary); color: var(--on-primary); border: none; width: 100%; padding: 15px;
       font-size: 13px; font-weight: 800; border-radius: var(--radius); cursor: pointer;
       font-family: inherit; display: flex; align-items: center; justify-content: center;
       gap: 8px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05); transition: transform 0.1s ease;
@@ -109,7 +111,7 @@
       color: var(--text-muted); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
     }
     .seccion-header .badge-count {
-      font-size: 10px; font-weight: 800; background: var(--primary-subtle); color: var(--primary);
+      font-size: 10px; font-weight: 800; background: var(--primary-subtle); color: var(--primary-ink);
       padding: 3px 9px; border-radius: 20px; border: 1px solid var(--primary-border);
       text-transform: none; letter-spacing: 0;
     }
@@ -126,7 +128,7 @@
     .seccion-colapsable > summary::-webkit-details-marker { display: none; }
     .seccion-colapsable > summary::-moz-list-bullet { list-style-type: none; }
     .seccion-colapsable > summary .badge-count {
-      font-size: 10px; font-weight: 800; background: var(--primary-subtle); color: var(--primary);
+      font-size: 10px; font-weight: 800; background: var(--primary-subtle); color: var(--primary-ink);
       padding: 3px 9px; border-radius: 20px; border: 1px solid var(--primary-border);
       text-transform: none; letter-spacing: 0;
     }
@@ -154,7 +156,7 @@
     }
     .venta-simple-precio-group { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
     .venta-simple-monto {
-      font-size: 14.5px; font-weight: 900; color: var(--primary);
+      font-size: 14.5px; font-weight: 900; color: var(--primary-ink);
       white-space: nowrap; letter-spacing: -0.3px;
     }
     .icon-chevron {
@@ -201,7 +203,7 @@
     .grid-kpis-dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .kpi-card-dash { background: var(--surface); border: 1px solid var(--border-strong); padding: 15px; border-radius: var(--radius); }
     .kpi-title-dash { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .kpi-value-dash { font-size: 19px; font-weight: 900; margin-top: 4px; color: var(--primary); letter-spacing: -0.5px; }
+    .kpi-value-dash { font-size: 19px; font-weight: 900; margin-top: 4px; color: var(--primary-ink); letter-spacing: -0.5px; }
     .kpi-card-comision { background: linear-gradient(135deg, var(--primary-subtle) 0%, #ffffff 100%); border: 1.5px solid var(--primary-border); }
 
     .chart-container-box {
@@ -226,7 +228,7 @@
       color: var(--text-muted); transition: all 0.15s ease; font-family: inherit;
     }
     .chart-toggle-btn.active {
-      background: var(--surface); color: var(--primary);
+      background: var(--surface); color: var(--primary-ink);
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
     .chart-toggle-btn svg {
@@ -256,7 +258,7 @@
     .wizard-steps-indicator { display: flex; gap: 8px; align-items: center; }
     .step-pill { flex: 1; height: 4px; border-radius: 4px; background: var(--border-strong); transition: background 0.2s ease; }
     .step-pill.active { background: var(--primary); }
-    .step-label-header { font-size: 11px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+    .step-label-header { font-size: 11px; font-weight: 800; color: var(--primary-ink); text-transform: uppercase; letter-spacing: 0.5px; }
 
     .input-field {
       width: 100%; background: var(--bg); border: 1px solid var(--border-strong);
@@ -279,7 +281,7 @@
       border: none; background: transparent; color: var(--text-muted);
       border-radius: 7px; cursor: pointer; font-family: inherit; transition: all 0.15s ease;
     }
-    .unit-switch-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .unit-switch-btn.active { background: var(--surface); color: var(--primary-ink); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
 
     .tag-tarifa-simple {
       display: inline-flex; align-items: center; justify-content: center;
@@ -289,7 +291,7 @@
       transition: transform 0.1s ease;
     }
     .tag-tarifa-simple:active { transform: scale(0.98); }
-    .tarifa-menor { background: var(--primary-subtle); color: var(--primary); border: 1px dashed var(--primary-border); }
+    .tarifa-menor { background: var(--primary-subtle); color: var(--primary-ink); border: 1px dashed var(--primary-border); }
     .tarifa-mayor { background: var(--success-bg); color: var(--success); border: 1px solid #a7f3d0; }
     .tarifa-final { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
 
@@ -345,13 +347,13 @@
       font-size: 9px; font-weight: 800; text-transform: uppercase;
       letter-spacing: 0.4px; opacity: 0.7;
     }
-    .precio-item.menor .precio-label { color: var(--primary); }
+    .precio-item.menor .precio-label { color: var(--primary-ink); }
     .precio-item.mayor .precio-label { color: var(--success); }
     .precio-item.final .precio-label { color: #92400e; }
     .precio-value {
       font-size: 14px; font-weight: 900; letter-spacing: -0.5px; line-height: 1.1;
     }
-    .precio-item.menor .precio-value { color: var(--primary); }
+    .precio-item.menor .precio-value { color: var(--primary-ink); }
     .precio-item.mayor .precio-value { color: var(--success); }
     .precio-item.final .precio-value { color: #92400e; }
 
@@ -386,7 +388,7 @@
       color: var(--text-soft); cursor: pointer; touch-action: manipulation;
       position: relative;
     }
-    .nav-btn.active { color: var(--primary); }
+    .nav-btn.active { color: var(--primary-ink); }
     .nav-btn svg {
       width: 19px; height: 19px; stroke: currentColor; fill: none;
       stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
@@ -425,7 +427,7 @@
     .registro-row-top { display: flex; justify-content: space-between; align-items: center; }
     .registro-codigo {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 10.5px; color: var(--primary); font-weight: 800;
+      font-size: 10.5px; color: var(--primary-ink); font-weight: 800;
     }
     .registro-monto { font-weight: 800; font-size: 12.5px; }
     .registro-row-sub {
@@ -434,7 +436,7 @@
     .registro-saldo { color: var(--amber); font-weight: 700; }
 
     .btn-carguillo-add {
-      background: var(--primary); color: #fff; border: none; width: 100%;
+      background: var(--primary); color: var(--on-primary); border: none; width: 100%;
       padding: 13px 10px; font-family: inherit; font-size: 12px; font-weight: 800;
       border-radius: var(--radius-sm); cursor: pointer;
       display: inline-flex; align-items: center; justify-content: center;
@@ -444,7 +446,7 @@
     .btn-carguillo-add svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.6; }
 
     .btn-enviar-todo {
-      width: 100%; background: var(--primary); color: #fff; border: none;
+      width: 100%; background: var(--primary); color: var(--on-primary); border: none;
       padding: 15px 12px; font-family: inherit; font-size: 13px; font-weight: 800;
       border-radius: var(--radius); cursor: pointer;
       display: inline-flex; align-items: center; justify-content: center;
@@ -462,7 +464,7 @@
     }
     .config-carro-num {
       width: 34px; height: 34px; border-radius: 10px; background: var(--primary);
-      color: #fff; display: flex; align-items: center; justify-content: center;
+      color: var(--on-primary); display: flex; align-items: center; justify-content: center;
       font-weight: 900; font-size: 13px; flex-shrink: 0;
     }
     .config-carro-info { flex: 1; min-width: 0; }
@@ -492,11 +494,11 @@
     }
     .carguillo-resumen-titulo {
       font-size: 11px; font-weight: 800; text-transform: uppercase;
-      letter-spacing: 0.5px; color: var(--primary); margin-bottom: 10px;
+      letter-spacing: 0.5px; color: var(--primary-ink); margin-bottom: 10px;
       display: flex; justify-content: space-between; align-items: center; gap: 8px;
     }
     .carguillo-resumen-paq {
-      background: var(--primary); color: #fff; font-size: 10px; font-weight: 900;
+      background: var(--primary); color: var(--on-primary); font-size: 10px; font-weight: 900;
       padding: 3px 10px; border-radius: 20px; white-space: nowrap;
     }
 
@@ -514,7 +516,7 @@
     .carguillo-car-icon {
       width: 38px; height: 38px; border-radius: 11px; background: var(--primary);
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-      color: #fff; font-weight: 900; font-size: 14px;
+      color: var(--on-primary); font-weight: 900; font-size: 14px;
     }
     .carguillo-car-icon.individual { background: #7c3aed; }
     .carguillo-car-info { flex: 1; min-width: 0; }
@@ -528,7 +530,7 @@
       margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .carguillo-car-carga {
-      font-size: 11px; font-weight: 900; color: var(--primary);
+      font-size: 11px; font-weight: 900; color: var(--primary-ink);
       flex-shrink: 0; text-align: right; line-height: 1.2;
     }
     .carguillo-car-carga small {
@@ -558,7 +560,7 @@
     }
     .carguillo-row:last-child { border-bottom: none; }
     .carguillo-row-name { font-weight: 700; color: var(--text); }
-    .carguillo-row-qty { font-weight: 900; color: var(--primary); }
+    .carguillo-row-qty { font-weight: 900; color: var(--primary-ink); }
     .carguillo-row-total {
       border-top: 2px solid var(--border-strong); margin-top: 4px;
       padding-top: 8px; font-size: 12.5px;
@@ -700,7 +702,7 @@
       font-size: 10.5px; color: var(--text-muted); font-weight: 600; margin-top: 2px;
     }
     .venta-registro-monto {
-      font-size: 13px; font-weight: 900; color: var(--primary);
+      font-size: 13px; font-weight: 900; color: var(--primary-ink);
       flex-shrink: 0; margin-left: 10px;
     }
     .registro-resumen-mini {
@@ -716,7 +718,7 @@
       letter-spacing: 0.3px; color: var(--text-muted); margin-bottom: 3px;
     }
     .registro-resumen-val {
-      font-size: 13px; font-weight: 900; color: var(--primary); letter-spacing: -0.3px;
+      font-size: 13px; font-weight: 900; color: var(--primary-ink); letter-spacing: -0.3px;
     }
 
     .nav-registro-venta {
@@ -726,7 +728,7 @@
     }
     .nav-reg-btn {
       background: var(--surface); border: 1px solid var(--primary-border);
-      color: var(--primary); padding: 7px 10px; border-radius: 8px;
+      color: var(--primary-ink); padding: 7px 10px; border-radius: 8px;
       font-family: inherit; font-size: 11px; font-weight: 800;
       cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
       transition: all 0.15s ease; flex-shrink: 0;
@@ -739,7 +741,26 @@
     }
     .nav-reg-info {
       flex: 1; text-align: center; font-size: 10.5px;
-      font-weight: 800; color: var(--primary); letter-spacing: 0.3px;
+      font-weight: 800; color: var(--primary-ink); letter-spacing: 0.3px;
+    }
+
+    .zona-color-dot {
+      width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.06);
+    }
+
+    .btn-borrar-datos {
+      width: 100%; background: #fff1f2; color: #be123c;
+      border: 1px solid #fecdd3; padding: 13px;
+      border-radius: var(--radius); font-family: inherit;
+      font-size: 12px; font-weight: 800; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px; transition: transform 0.1s ease, background 0.15s ease;
+    }
+    .btn-borrar-datos:active { transform: scale(0.98); background: #ffe4e6; }
+    .btn-borrar-datos svg {
+      width: 15px; height: 15px; stroke: currentColor; fill: none;
+      stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
     }
   </style>
 </head>
@@ -878,7 +899,7 @@
         </div>
         <div class="kpi-card-dash kpi-card-comision">
           <div class="kpi-title-dash">Tu Comisión</div>
-          <div class="kpi-value-dash" id="dashComision" style="color: var(--primary);">S/ 0.00</div>
+          <div class="kpi-value-dash" id="dashComision" style="color: var(--primary-ink);">S/ 0.00</div>
         </div>
       </div>
 
@@ -954,7 +975,7 @@
         </div>
         <div class="detalle-bloque-item">
           <span style="color:var(--text-muted);">Fecha de Entrega:</span>
-          <strong id="detFechaEntrega" style="color:var(--primary);">-</strong>
+          <strong id="detFechaEntrega" style="color:var(--primary-ink);">-</strong>
         </div>
         <div class="detalle-bloque-item">
           <span style="color:var(--text-muted);">Fecha de Venta:</span>
@@ -1010,7 +1031,7 @@
 
       <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 4px 0;">
         <span style="font-size:13px; font-weight:800;">Total Pagado / Pactado:</span>
-        <strong id="detMontoTotal" style="font-size:18px; color:var(--primary);">S/ 0.00</strong>
+        <strong id="detMontoTotal" style="font-size:18px; color:var(--primary-ink);">S/ 0.00</strong>
       </div>
 
       <div class="recibo-acciones-grid">
@@ -1060,7 +1081,7 @@
       <div style="background: var(--bg); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-strong); font-size: 11.5px; line-height: 1.7;">
         <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">Código:</span> <strong id="editVentaCodigo" style="font-family: ui-monospace, monospace; font-size: 11px;">-</strong></div>
         <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">Cliente:</span> <strong id="editVentaCliente">-</strong></div>
-        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">Total:</span> <strong id="editVentaTotal" style="color:var(--primary); font-size:13px;">S/ 0.00</strong></div>
+        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">Total:</span> <strong id="editVentaTotal" style="color:var(--primary-ink); font-size:13px;">S/ 0.00</strong></div>
       </div>
 
       <div>
@@ -1173,7 +1194,7 @@
               <label class="form-label" id="lblCantidadUnidad">Cantidad (Paquetes)</label>
               <input type="number" id="ventaCantidad" min="1" step="any" value="" placeholder="0" oninput="actualizarInfoProductoModal()" class="input-field">
             </div>
-            <button onclick="guardarItemVenta()" id="btnAccionAgregarItem" class="btn-action-cuenta" style="width: 100%; height: 38px; background: var(--primary); color: #fff; border: none;">
+            <button onclick="guardarItemVenta()" id="btnAccionAgregarItem" class="btn-action-cuenta" style="width: 100%; height: 38px; background: var(--primary); color: var(--on-primary); border: none;">
               + Añadir
             </button>
           </div>
@@ -1189,7 +1210,7 @@
           <div id="modalCartItems"></div>
           <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 13px; font-weight: 800; padding-top: 8px; border-top: 1px solid var(--primary-border);">
             <span>Total:</span>
-            <span id="modalTotalMonto" style="color: var(--primary); font-size: 16px;">S/ 0.00</span>
+            <span id="modalTotalMonto" style="color: var(--primary-ink); font-size: 16px;">S/ 0.00</span>
           </div>
         </div>
 
@@ -1202,7 +1223,7 @@
         <div class="step-label-header">Paso 2: Datos del Comprador</div>
 
         <div style="background: var(--surface); border: 1px solid var(--border-strong); padding: 10px 12px; border-radius: var(--radius-sm);">
-          <label class="form-label" style="color: var(--primary);">Elegir Comprador de Esta Zona</label>
+          <label class="form-label" style="color: var(--primary-ink);">Elegir Comprador de Esta Zona</label>
           <select id="selectClienteAntiguo" onchange="seleccionarClienteAntiguo(this.value)" class="input-field" style="font-weight: 700;">
             <option value="">-- Nuevo Comprador --</option>
           </select>
@@ -1291,32 +1312,54 @@
       </div>
       <div style="display: flex; flex-direction: column; gap: 10px;">
         <div class="zona-option-card" onclick="seleccionarZona('la_parada')">
-          <div>
-            <div class="zona-option-nombre">La Parada</div>
-            <div class="zona-option-sub">Junior • BCP / BBVA / Yape</div>
+          <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+            <span class="zona-color-dot" style="background:#eab308;"></span>
+            <div>
+              <div class="zona-option-nombre">La Parada</div>
+              <div class="zona-option-sub">Junior • Recibos amarillos</div>
+            </div>
+          </div>
+          <svg style="width: 16px; height: 16px; color: #eab308;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="zona-option-card" onclick="seleccionarZona('cono_norte')">
+          <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+            <span class="zona-color-dot" style="background:#2563eb;"></span>
+            <div>
+              <div class="zona-option-nombre">Cono Norte</div>
+              <div class="zona-option-sub">Yolanda • Recibos azules</div>
+            </div>
           </div>
           <svg style="width: 16px; height: 16px; color: #2563eb;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
-        <div class="zona-option-card" onclick="seleccionarZona('cono_norte')">
-          <div>
-            <div class="zona-option-nombre">Cono Norte</div>
-            <div class="zona-option-sub">Yolanda • BCP / Yape</div>
-          </div>
-          <svg style="width: 16px; height: 16px; color: #059669;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
         <div class="zona-option-card" onclick="seleccionarZona('santa_anita')">
-          <div>
-            <div class="zona-option-nombre">Santa Anita / Huaycán / Chosica</div>
-            <div class="zona-option-sub">Gerald • BCP / Yape</div>
+          <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+            <span class="zona-color-dot" style="background:#7c3aed;"></span>
+            <div>
+              <div class="zona-option-nombre">Santa Anita / Huaycán / Chosica</div>
+              <div class="zona-option-sub">Gerald • Recibos morados</div>
+            </div>
           </div>
           <svg style="width: 16px; height: 16px; color: #7c3aed;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
         <div class="zona-option-card" onclick="seleccionarZona('cono_sur')">
-          <div>
-            <div class="zona-option-nombre">Cono Sur</div>
-            <div class="zona-option-sub">Orlenis • BCP / Yape</div>
+          <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+            <span class="zona-color-dot" style="background:#16a34a;"></span>
+            <div>
+              <div class="zona-option-nombre">Cono Sur</div>
+              <div class="zona-option-sub">Orlenis • Recibos verdes</div>
+            </div>
           </div>
           <svg style="width: 16px; height: 16px; color: #16a34a;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+
+      <div style="margin-top: 12px; padding-top: 16px; border-top: 1px solid var(--border-strong);">
+        <button onclick="borrarTodosLosDatos()" class="btn-borrar-datos">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          Borrar todos los datos de la app
+        </button>
+        <div style="font-size:10px; color:var(--text-soft); text-align:center; margin-top:8px; font-weight:600; line-height:1.4;">
+          Elimina ventas, clientes, carros y configuración de todas las zonas.
         </div>
       </div>
     </div>
@@ -1370,10 +1413,34 @@
     const COMISION_POR_PAQUETE = 0.12;
 
     const ZONAS = {
-      la_parada: { nombreZona: "La Parada", asesor: "Junior", titular: "INVERSIONES GARRO E.I.R.L.", bcp: "191-9286644-0-82", cci: "002-191-00928664408-256", yape: "926 385 215", bbva: "0011-0157-54-0100060005" },
-      cono_norte: { nombreZona: "Cono Norte", asesor: "Yolanda", titular: "INVERSIONES COMPLAPS", bcp: "191-9405093-0-38", cci: "002-191-00940509303-850", yape: "955 144 286", bbva: null },
-      santa_anita: { nombreZona: "Santa Anita/Huaycán/Chosica", asesor: "Gerald", titular: "TRANSPORTE HERMANOS", bcp: "191-9905241-0-38", cci: "002-191-00990524103-850", yape: "920 883 350", bbva: null },
-      cono_sur: { nombreZona: "Cono Sur", asesor: "Orlenis", titular: "PLASTIK PET E.I.R.L.", bcp: "191-9870837-0-21", cci: "002-191-00987083702-152", yape: "904 888 872", bbva: null }
+      la_parada: {
+        nombreZona: "La Parada", asesor: "Junior",
+        color: "#eab308", colorTexto: "#1f2937", colorInk: "#a16207", colorNombre: "Amarillo",
+        titular: "INVERSIONES GARRO E.I.R.L.",
+        bcp: "191-9286644-0-82", cci: "002-191-00928664408-256", yape: "926 385 215",
+        bbva: "0011-0157-54-0100060005"
+      },
+      cono_norte: {
+        nombreZona: "Cono Norte", asesor: "Yolanda",
+        color: "#2563eb", colorTexto: "#ffffff", colorInk: "#1d4ed8", colorNombre: "Azul",
+        titular: "INVERSIONES COMPLAPS",
+        bcp: "191-9405093-0-38", cci: "002-191-00940509303-850", yape: "955 144 286",
+        bbva: null
+      },
+      santa_anita: {
+        nombreZona: "Santa Anita/Huaycán/Chosica", asesor: "Gerald",
+        color: "#7c3aed", colorTexto: "#ffffff", colorInk: "#6d28d9", colorNombre: "Morado",
+        titular: "TRANSPORTE HERMANOS",
+        bcp: "191-9905241-0-38", cci: "002-191-00990524103-850", yape: "920 883 350",
+        bbva: null
+      },
+      cono_sur: {
+        nombreZona: "Cono Sur", asesor: "Orlenis",
+        color: "#16a34a", colorTexto: "#ffffff", colorInk: "#15803d", colorNombre: "Verde",
+        titular: "PLASTIK PET E.I.R.L.",
+        bcp: "191-9870837-0-21", cci: "002-191-00987083702-152", yape: "904 888 872",
+        bbva: null
+      }
     };
 
     const ZONA_ABREV = { la_parada: "parada", cono_norte: "norte", santa_anita: "anita", cono_sur: "sur" };
@@ -1386,7 +1453,6 @@
       "Crédito":             { estado: "PENDIENTE", ratio: 0 }
     };
 
-    // Keys de persistencia
     const KEY_TAB = 'fabrec_tab_activo';
     const KEY_FILTRO_DASH = 'fabrec_filtro_dashboard';
     const KEY_TIPO_GRAFICO = 'fabrec_tipo_grafico';
@@ -1409,8 +1475,7 @@
     let ventaDetalleActual = null;
     let envioIndividualActivo = false;
 
-    // Modo de tarifa manual (null = auto)
-    let modoTarifaManual = null; // 'menor' | 'mayor' | 'final' | null
+    let modoTarifaManual = null;
 
     let ventaEditandoCodigo = null;
     let editandoEstadoPago = 'PAGADO';
@@ -1475,8 +1540,6 @@
       return (prefijo || 'id') + '_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
     }
 
-    // Normaliza un nombre de producto para comparar entre price.json y stock.json:
-    // - quita acentos, pasa a minúsculas, convierte guiones/underscores a espacios, colapsa espacios.
     function normalizarNombre(s) {
       return String(s || '')
         .normalize('NFD')
@@ -1488,7 +1551,7 @@
     }
 
     // ==================================================
-    // 1. CARGA EXTERNA (price.json + stock.json fusionados con nombres normalizados)
+    // 1. CARGA EXTERNA
     // ==================================================
     async function cargarDatosExternos() {
       let listaPrecios = [];
@@ -1514,7 +1577,6 @@
         }
       } catch (err) { console.error("Error stock.json:", err); }
 
-      // Índice de stock por nombre normalizado (para tolerar guiones/acentos distintos)
       const stockPorNombreNorm = {};
       listaStock.forEach(item => {
         const nombre = item && item.producto;
@@ -1527,7 +1589,6 @@
       CATALOGO_FABREC = [];
       const nombresNormUsados = new Set();
 
-      // 1) Productos con precio (price.json)
       listaPrecios.forEach(p => {
         const nombre = p && p.producto;
         if (!nombre) return;
@@ -1545,7 +1606,6 @@
         });
       });
 
-      // 2) Productos que solo están en stock.json (modelos nuevos agregados recientemente)
       listaStock.forEach(item => {
         const nombre = item && item.producto;
         if (!nombre) return;
@@ -1556,9 +1616,7 @@
         inventarioLocal[nombre] = cant;
         CATALOGO_FABREC.push({
           producto: nombre,
-          menor: 0,
-          mayor: 0,
-          final: 0,
+          menor: 0, mayor: 0, final: 0,
           unidades: 100,
           sinPrecio: true
         });
@@ -1620,7 +1678,7 @@
     }
 
     // ==================================================
-    // 3. NAVEGACIÓN (con persistencia de tab)
+    // 3. NAVEGACIÓN
     // ==================================================
     function navegarA(idPanel, btnElemento) {
       document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
@@ -1810,12 +1868,10 @@
       } else { divEq.style.display = "none"; }
     }
 
-    // Determina el modo efectivo (auto si no hay override manual)
     function determinarModoEfectivo(totalPaquetes, modoManual) {
       if (modoManual === 'final') return 'final';
       if (modoManual === 'mayor') return 'mayor';
       if (modoManual === 'menor') return 'menor';
-      // auto
       return totalPaquetes >= 100 ? 'mayor' : 'menor';
     }
 
@@ -1851,7 +1907,6 @@
       itemsVentaTemporal.forEach(it => { totalPaquetesEnPedido += it.paquetes_totales; });
       const modoActual = determinarModoEfectivo(totalPaquetesEnPedido, modoTarifaManual);
 
-      // Ciclo limpio de 3 estados: Menor -> Mayor -> Final -> Menor
       if (modoActual === 'menor') {
         modoTarifaManual = 'mayor';
       } else if (modoActual === 'mayor') {
@@ -2009,7 +2064,6 @@
       if (itemsVentaTemporal.length === 0) { box.style.display = "none"; return; }
       box.style.display = "block";
       const infoPedido = recalcularTarifasDelPedido();
-      // Actualizar badge según modo
       badgeTarifa.className = 'tag-tarifa-simple ' + (infoPedido.modo === 'final' ? 'tarifa-final' : (infoPedido.modo === 'mayor' ? 'tarifa-mayor' : 'tarifa-menor'));
       badgeTarifa.innerText = etiquetaModo(infoPedido.modo);
 
@@ -2025,7 +2079,7 @@
             </div>
             <div style="display:flex; align-items:center; gap:6px;">
               <span style="font-weight:700;">S/ ${it.subtotal.toFixed(2)}</span>
-              <button onclick="cargarItemParaEditar(${i})" class="cart-btn-action" style="color:var(--primary);" title="Editar">
+              <button onclick="cargarItemParaEditar(${i})" class="cart-btn-action" style="color:var(--primary-ink);" title="Editar">
                 <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
               </button>
               <button onclick="eliminarItemModal(${i})" class="cart-btn-action" style="color:var(--rose);" title="Eliminar">✕</button>
@@ -2443,7 +2497,6 @@
       editandoEstadoPago = esPagado(v) ? 'PAGADO' : 'PENDIENTE';
       editandoTipoEnvio = v.tipo_envio || 'carro';
 
-      // Determinar modo de tarifa desde el primer item
       const primerItem = (v.items && v.items[0]);
       if (primerItem) {
         const t = primerItem.tipo_tarifa || '';
@@ -2816,6 +2869,14 @@
       const padding = 26;
       const d = venta;
       const cli = d.cliente || {};
+
+      const zonaInfo = (d.zonaClave && ZONAS[d.zonaClave]) || Object.values(ZONAS).find(z => z.asesor === d.vendedor);
+      const COLOR_MARCA     = (zonaInfo && zonaInfo.color)      || '#2563eb';
+      const COLOR_MARCA_TXT = (zonaInfo && zonaInfo.colorTexto) || '#ffffff';
+      const COLOR_MARCA_INK = (zonaInfo && zonaInfo.colorInk)   || '#2563eb';
+      const NOMBRE_ZONA     = (zonaInfo && zonaInfo.nombreZona) || d.zona || '';
+      const NOMBRE_COLOR    = (zonaInfo && zonaInfo.colorNombre) || '';
+
       const items = d.items || [];
       const EST_H = 900 + items.length * 30;
 
@@ -2827,7 +2888,7 @@
 
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, W, EST_H);
-      ctx.fillStyle = '#2563eb';
+      ctx.fillStyle = COLOR_MARCA;
       ctx.fillRect(0, 0, W, 6);
 
       const FONT_REG = 'Montserrat, Arial, sans-serif';
@@ -2845,7 +2906,7 @@
 
       ctx.textAlign = 'right';
       ctx.font = `800 12px ${FONT_MONO}`;
-      ctx.fillStyle = '#2563eb';
+      ctx.fillStyle = COLOR_MARCA_INK;
       ctx.fillText(d.codigo || '-', W - padding, y);
 
       const fv = d.fecha_venta ? new Date(d.fecha_venta).toLocaleString('es-PE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '-';
@@ -2913,7 +2974,7 @@
       ctx.fillStyle = '#94a3b8';
       ctx.font = `800 9px ${FONT_REG}`;
       ctx.fillText('FECHA DE ENTREGA', padding, y);
-      ctx.fillStyle = '#2563eb';
+      ctx.fillStyle = COLOR_MARCA_INK;
       ctx.font = `800 12px ${FONT_REG}`;
       ctx.fillText(d.fecha_entrega_solicitada || '-', padding, y + 15);
       y += 32;
@@ -2973,7 +3034,7 @@
       ctx.font = `900 10px ${FONT_REG}`;
       ctx.fillText('TOTAL', padding, y);
       ctx.textAlign = 'right';
-      ctx.fillStyle = '#2563eb';
+      ctx.fillStyle = COLOR_MARCA_INK;
       ctx.font = `900 24px ${FONT_REG}`;
       ctx.fillText('S/ ' + (d.monto_total || 0).toFixed(2), W - padding, y + 4);
       y += 34;
@@ -3011,7 +3072,7 @@
 
       drawField('ZONA', d.zona, y);
       y += 32;
-      drawField('VENDEDOR', d.vendedor, y);
+      drawField('VENDEDOR', d.vendedor, y, COLOR_MARCA_INK);
       y += 32;
 
       if (d.tipo_envio === 'individual') {
@@ -3021,6 +3082,24 @@
         ctx.fillText('ENVÍO INDIVIDUAL', padding, y);
         y += 18;
       }
+
+      // Sello de color del vendedor (para clasificar recibos por color)
+      y += 12;
+      const selloTxt = (d.vendedor || '') + (NOMBRE_COLOR ? ' • ' + NOMBRE_COLOR : '');
+      ctx.font = `800 11px ${FONT_REG}`;
+      let selloAncho = ctx.measureText(selloTxt).width + 34;
+      selloAncho = Math.min(selloAncho, W - padding * 2);
+      const selloAlto = 28;
+      const selloX = (W - selloAncho) / 2;
+      ctx.fillStyle = COLOR_MARCA;
+      dibujarRectRedondeado(ctx, selloX, y, selloAncho, selloAlto, 14);
+      ctx.fill();
+      ctx.fillStyle = COLOR_MARCA_TXT;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(selloTxt, W / 2, y + selloAlto / 2 + 1);
+      ctx.textBaseline = 'alphabetic';
+      y += selloAlto + 16;
 
       y += 8;
       ctx.textAlign = 'center';
@@ -3041,7 +3120,25 @@
       fctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
       fctx.drawImage(temp, 0, 0);
 
+      // Barra inferior del color del vendedor
+      fctx.fillStyle = COLOR_MARCA;
+      fctx.fillRect(0, finalCanvas.height - (6 * dpr), finalCanvas.width, 6 * dpr);
+
       return finalCanvas;
+    }
+
+    function dibujarRectRedondeado(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
     }
 
     function nombreArchivoRecibo(v) { return `recibo_${(v.codigo || 'venta').replace(/[^a-z0-9_-]/gi, '_')}.png`; }
@@ -3386,7 +3483,7 @@
       ctx.clearRect(0, 0, w, h);
 
       const ahora = new Date();
-      const colorPrimario = getComputedStyle(document.body).getPropertyValue('--primary').trim() || '#2563eb';
+      const colorPrimario = getComputedStyle(document.body).getPropertyValue('--primary-ink').trim() || '#2563eb';
 
       const padL = 36, padR = 16, padT = 30, padB = 28;
       const chartW = w - padL - padR;
@@ -3399,7 +3496,6 @@
       ctx.lineTo(w - padR, h - padB);
       ctx.stroke();
 
-      // HOY: una sola barra/punto
       if (filtroDashboardActivo === 'hoy') {
         let hoyPaq = 0;
         todasLasVentas.forEach(v => {
@@ -3446,7 +3542,6 @@
           }
         } else {
           const y = h - padB - (hoyPaq / maxVal) * chartH;
-          // Área
           const grad = ctx.createLinearGradient(0, padT, 0, h - padB);
           grad.addColorStop(0, hexToRgba(colorPrimario, 0.25));
           grad.addColorStop(1, hexToRgba(colorPrimario, 0));
@@ -3458,7 +3553,6 @@
           ctx.closePath();
           ctx.fill();
 
-          // Punto
           ctx.fillStyle = '#fff';
           ctx.beginPath();
           ctx.arc(cx, y, 7, 0, Math.PI * 2);
@@ -3482,7 +3576,6 @@
         return;
       }
 
-      // SEMANA: esta semana vs semana pasada
       if (filtroDashboardActivo === 'semana') {
         const inicioActual = getStartOfWeek(ahora);
         const inicioPasado = new Date(inicioActual);
@@ -3509,7 +3602,6 @@
         return;
       }
 
-      // MES: este mes vs mes pasado
       if (filtroDashboardActivo === 'mes') {
         const diasMesActual = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0).getDate();
         const mesPasado = new Date(ahora.getFullYear(), ahora.getMonth() - 1, 1);
@@ -3544,7 +3636,6 @@
         return;
       }
 
-      // AÑO: este año vs año pasado
       if (filtroDashboardActivo === 'anio') {
         const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
         const datosActual = new Array(12).fill(0);
@@ -3570,14 +3661,12 @@
       const allVals = [...datosActual, ...datosPasado];
       const maxVal = Math.max(...allVals, 1);
 
-      // Y labels
       ctx.fillStyle = '#94a3b8';
       ctx.font = '600 9px Montserrat';
       ctx.textAlign = 'right';
       ctx.fillText(String(maxVal), padL - 4, padT + 4);
       ctx.fillText('0', padL - 4, h - padB + 4);
 
-      // Leyenda
       ctx.textAlign = 'left';
       ctx.font = '700 10px Montserrat';
       ctx.fillStyle = colorPrimario;
@@ -3594,7 +3683,6 @@
       const n = etiquetas.length;
       const gap = chartW / n;
 
-      // X labels
       ctx.fillStyle = '#94a3b8';
       ctx.font = '600 9px Montserrat';
       ctx.textAlign = 'center';
@@ -3612,7 +3700,6 @@
         datosActual.forEach((val, i) => {
           const cx = padL + (i * gap) + (gap / 2);
 
-          // Barra del mes/semana pasado (izquierda)
           const barHP = (datosPasado[i] / maxVal) * chartH;
           if (barHP > 0) {
             const xP = cx - pairWidth / 2;
@@ -3634,7 +3721,6 @@
             }
           }
 
-          // Barra del actual (derecha)
           const barHA = (val / maxVal) * chartH;
           if (barHA > 0) {
             const xA = cx + 1;
@@ -4308,6 +4394,60 @@
       } else { badge.style.display = 'none'; }
     }
 
+    // ==================================================
+    // BORRAR TODOS LOS DATOS
+    // ==================================================
+    function borrarTodosLosDatos() {
+      if (!confirm("⚠️ ¿Borrar TODOS los datos de la app?\n\nSe eliminarán ventas, clientes, carros y configuración de TODAS las zonas.")) return;
+      if (!confirm("Esta acción es IRREVERSIBLE y no se puede deshacer.\n\n¿Confirmas que deseas borrar todo definitivamente?")) return;
+
+      try {
+        Object.keys(localStorage)
+          .filter(k => k.indexOf('fabrec_') === 0)
+          .forEach(k => localStorage.removeItem(k));
+      } catch (e) { console.error(e); }
+
+      zonaActivaClave = "";
+      ventasHoy = [];
+      todasLasVentas = [];
+      directorioClientes = [];
+      carros = [];
+      itemsVentaTemporal = [];
+      itemsEdicionVenta = [];
+      ventaDetalleActual = null;
+      ventaEditandoCodigo = null;
+      codigoVentaCobrando = null;
+      editandoCarroId = null;
+      filtroVentasActivo = 'todas';
+      filtroDashboardActivo = 'hoy';
+      modoTarifaManual = null;
+      modoTarifaEdicion = null;
+      unidadSeleccionada = 'paquetes';
+      envioIndividualActivo = false;
+
+      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+
+      document.body.removeAttribute('data-zona');
+      document.getElementById('txtNombrePillZona').innerText = "Seleccionar zona";
+      document.getElementById('cuentaTitular').innerText = "TITULAR: SELECCIONA UNA ZONA";
+      document.getElementById('cuentaDetalles').innerHTML = "Presiona el botón de zona arriba a la derecha para cargar las cuentas oficiales.";
+      document.getElementById('contenedorBotonesCuenta').style.display = 'none';
+
+      ['btnFiltroTodas', 'btnFiltroPendientes', 'btnFiltroConfirmados'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+      });
+      const btnTodas = document.getElementById('btnFiltroTodas');
+      if (btnTodas) btnTodas.classList.add('active');
+
+      actualizarSaludo();
+      actualizarBotonesFiltroDash();
+      cargarDatosDeZonaActiva();
+      renderizarRegistrosCierre();
+      renderizarListaPrecios();
+      mostrarToast("Todos los datos fueron eliminados");
+    }
+
     // EXPOSICIÓN GLOBAL
     window.navegarA = navegarA;
     window.abrirModalZona = abrirModalZona;
@@ -4365,6 +4505,8 @@
     window.eliminarCarroConfig = eliminarCarroConfig;
     window.enviarTodoAKing = enviarTodoAKing;
     window.toggleCarguilloCard = toggleCarguilloCard;
+
+    window.borrarTodosLosDatos = borrarTodosLosDatos;
 
     window.addEventListener('DOMContentLoaded', async () => {
       await cargarDatosExternos();
