@@ -33,7 +33,7 @@
     body[data-zona="la_parada"] { --primary: #2563eb; --primary-subtle: #eff6ff; --primary-border: #bfdbfe; }
     body[data-zona="cono_norte"] { --primary: #059669; --primary-subtle: #ecfdf5; --primary-border: #a7f3d0; }
     body[data-zona="santa_anita"] { --primary: #7c3aed; --primary-subtle: #f5f3ff; --primary-border: #ddd6fe; }
-    body[data-zona="cono_sur"] { --primary: #ea580c; --primary-subtle: #fff7ed; --primary-border: #fed7aa; }
+    body[data-zona="cono_sur"] { --primary: #16a34a; --primary-subtle: #f0fdf4; --primary-border: #bbf7d0; }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -114,6 +114,30 @@
       text-transform: none; letter-spacing: 0;
     }
 
+    .seccion-colapsable { margin-bottom: 16px; }
+    .seccion-colapsable > summary {
+      list-style: none; cursor: pointer; user-select: none;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
+      padding: 6px 2px; font-size: 12px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);
+      transition: opacity 0.15s ease;
+    }
+    .seccion-colapsable > summary:active { opacity: 0.65; }
+    .seccion-colapsable > summary::-webkit-details-marker { display: none; }
+    .seccion-colapsable > summary::-moz-list-bullet { list-style-type: none; }
+    .seccion-colapsable > summary .badge-count {
+      font-size: 10px; font-weight: 800; background: var(--primary-subtle); color: var(--primary);
+      padding: 3px 9px; border-radius: 20px; border: 1px solid var(--primary-border);
+      text-transform: none; letter-spacing: 0;
+    }
+    .seccion-colapsable > summary .chevron-sec {
+      width: 14px; height: 14px; stroke: var(--text-soft); fill: none;
+      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+      transition: transform 0.2s ease; flex-shrink: 0;
+    }
+    .seccion-colapsable:not([open]) > summary .chevron-sec { transform: rotate(-90deg); }
+    .seccion-colapsable > .seccion-colapsable-body { padding-top: 10px; }
+
     .card-venta-simple {
       background: var(--surface); border: 1px solid var(--border-strong);
       border-radius: 14px; padding: 13px 16px; margin-bottom: 9px; cursor: pointer;
@@ -178,6 +202,7 @@
     .kpi-card-dash { background: var(--surface); border: 1px solid var(--border-strong); padding: 15px; border-radius: var(--radius); }
     .kpi-title-dash { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
     .kpi-value-dash { font-size: 19px; font-weight: 900; margin-top: 4px; color: var(--primary); letter-spacing: -0.5px; }
+    .kpi-card-comision { background: linear-gradient(135deg, var(--primary-subtle) 0%, #ffffff 100%); border: 1.5px solid var(--primary-border); }
 
     .chart-container-box {
       background: var(--surface); border: 1px solid var(--border-strong);
@@ -185,7 +210,28 @@
     }
     .chart-header-title {
       font-size: 11px; font-weight: 800; text-transform: uppercase;
-      letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 12px;
+      letter-spacing: 0.5px; color: var(--text-muted);
+    }
+    .chart-header-with-toggle {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 8px; margin-bottom: 12px;
+    }
+    .chart-toggle {
+      display: flex; background: var(--border-strong); padding: 2px;
+      border-radius: 8px; gap: 2px;
+    }
+    .chart-toggle-btn {
+      background: transparent; border: none; padding: 5px 8px; border-radius: 6px;
+      cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+      color: var(--text-muted); transition: all 0.15s ease; font-family: inherit;
+    }
+    .chart-toggle-btn.active {
+      background: var(--surface); color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .chart-toggle-btn svg {
+      width: 13px; height: 13px; stroke: currentColor; fill: none;
+      stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
     }
 
     .modal-overlay {
@@ -237,11 +283,24 @@
 
     .tag-tarifa-simple {
       display: inline-flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 6px;
+      font-size: 11px; font-weight: 800; padding: 7px 12px; border-radius: 6px;
       width: 100%; margin: 6px 0; letter-spacing: 0.3px;
+      cursor: pointer; user-select: none;
+      transition: transform 0.1s ease;
     }
+    .tag-tarifa-simple:active { transform: scale(0.98); }
     .tarifa-menor { background: var(--primary-subtle); color: var(--primary); border: 1px dashed var(--primary-border); }
     .tarifa-mayor { background: var(--success-bg); color: var(--success); border: 1px solid #a7f3d0; }
+    .tarifa-final { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+
+    .tarifa-hint {
+      text-align: center;
+      font-size: 9.5px;
+      color: var(--text-soft);
+      font-weight: 600;
+      margin-top: -4px;
+      margin-bottom: 4px;
+    }
 
     .cart-box {
       background: var(--primary-subtle); border: 1px solid var(--primary-border);
@@ -258,74 +317,43 @@
     }
 
     .precio-card {
-      background: var(--surface);
-      border: 1px solid var(--border-strong);
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin-bottom: 9px;
-      transition: border-color 0.15s ease, transform 0.1s ease;
+      background: var(--surface); border: 1px solid var(--border-strong);
+      border-radius: 14px; padding: 14px 16px; margin-bottom: 9px;
     }
-    .precio-card:hover { border-color: var(--primary-border); }
-
     .precio-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 11px;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 10px; margin-bottom: 11px;
     }
     .precio-card-nombre {
-      font-size: 13.5px;
-      font-weight: 800;
-      color: var(--text);
-      letter-spacing: -0.2px;
-      line-height: 1.3;
+      font-size: 13.5px; font-weight: 800; color: var(--text);
+      letter-spacing: -0.2px; line-height: 1.3;
     }
     .precio-card-units {
-      font-size: 10px;
-      font-weight: 800;
-      color: var(--text-muted);
-      background: var(--bg);
-      padding: 3px 9px;
-      border-radius: 20px;
-      border: 1px solid var(--border-strong);
-      flex-shrink: 0;
-      white-space: nowrap;
+      font-size: 10px; font-weight: 800; color: var(--text-muted);
+      background: var(--bg); padding: 3px 9px; border-radius: 20px;
+      border: 1px solid var(--border-strong); flex-shrink: 0; white-space: nowrap;
     }
-
-    .precio-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
+    .precio-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
     .precio-item {
-      padding: 9px 12px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+      padding: 9px 10px; border-radius: var(--radius-sm);
+      display: flex; flex-direction: column; gap: 2px;
     }
     .precio-item.menor { background: var(--primary-subtle); border: 1px solid var(--primary-border); }
     .precio-item.mayor { background: var(--success-bg); border: 1px solid #a7f3d0; }
-
+    .precio-item.final { background: #fef3c7; border: 1px solid #fde68a; }
     .precio-label {
-      font-size: 9px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      opacity: 0.7;
+      font-size: 9px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.4px; opacity: 0.7;
     }
     .precio-item.menor .precio-label { color: var(--primary); }
     .precio-item.mayor .precio-label { color: var(--success); }
-
+    .precio-item.final .precio-label { color: #92400e; }
     .precio-value {
-      font-size: 16px;
-      font-weight: 900;
-      letter-spacing: -0.5px;
-      line-height: 1.1;
+      font-size: 14px; font-weight: 900; letter-spacing: -0.5px; line-height: 1.1;
     }
     .precio-item.menor .precio-value { color: var(--primary); }
     .precio-item.mayor .precio-value { color: var(--success); }
+    .precio-item.final .precio-value { color: #92400e; }
 
     .zona-option-card {
       background: var(--bg); border: 1px solid var(--border-strong); padding: 14px;
@@ -390,11 +418,11 @@
     .registro-row {
       border-bottom: 1px dashed var(--border-strong);
       padding: 10px 0; font-size: 11.5px;
+      cursor: pointer; transition: background 0.15s ease; border-radius: 6px;
     }
     .registro-row:last-child { border-bottom: none; }
-    .registro-row-top {
-      display: flex; justify-content: space-between; align-items: center;
-    }
+    .registro-row:active { background: var(--primary-subtle); }
+    .registro-row-top { display: flex; justify-content: space-between; align-items: center; }
     .registro-codigo {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 10.5px; color: var(--primary); font-weight: 800;
@@ -405,400 +433,202 @@
     }
     .registro-saldo { color: var(--amber); font-weight: 700; }
 
-    /* ==================================================
-       CARGUILLO
-    ================================================== */
-    .carguillo-acciones {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
     .btn-carguillo-add {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      padding: 13px 10px;
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 800;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: transform 0.1s ease;
+      background: var(--primary); color: #fff; border: none; width: 100%;
+      padding: 13px 10px; font-family: inherit; font-size: 12px; font-weight: 800;
+      border-radius: var(--radius-sm); cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 6px; transition: transform 0.1s ease; margin-bottom: 16px;
     }
     .btn-carguillo-add:active { transform: scale(0.97); }
     .btn-carguillo-add svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.6; }
 
-    .btn-carguillo-send {
-      background: var(--primary-subtle);
-      color: var(--primary);
-      border: 1px solid var(--primary-border);
-      padding: 13px 10px;
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 800;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: transform 0.1s ease;
-    }
-    .btn-carguillo-send:active { transform: scale(0.97); }
-    .btn-carguillo-send svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.6; }
-
     .btn-enviar-todo {
-      width: 100%;
-      background: linear-gradient(135deg, #1e40af 0%, #047857 100%);
-      color: #fff;
-      border: none;
-      padding: 15px 12px;
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 800;
-      border-radius: var(--radius);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: transform 0.1s ease;
-      box-shadow: 0 4px 14px rgba(30, 64, 175, 0.25);
-      letter-spacing: 0.2px;
-      margin-bottom: 12px;
+      width: 100%; background: var(--primary); color: #fff; border: none;
+      padding: 15px 12px; font-family: inherit; font-size: 13px; font-weight: 800;
+      border-radius: var(--radius); cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px; transition: transform 0.1s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      letter-spacing: 0.2px; margin-bottom: 12px;
     }
     .btn-enviar-todo:active { transform: scale(0.98); }
     .btn-enviar-todo svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.6; }
 
     .config-carro-card {
-      background: var(--surface);
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius-sm);
-      padding: 12px 13px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      background: var(--surface); border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm); padding: 12px 13px; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 10px;
     }
     .config-carro-num {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background: var(--primary);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 13px;
-      flex-shrink: 0;
+      width: 34px; height: 34px; border-radius: 10px; background: var(--primary);
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 13px; flex-shrink: 0;
     }
     .config-carro-info { flex: 1; min-width: 0; }
     .config-carro-nombre {
-      font-size: 12.5px;
-      font-weight: 800;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 12.5px; font-weight: 800;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .config-carro-meta {
-      font-size: 10.5px;
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-top: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 10.5px; color: var(--text-muted); font-weight: 600;
+      margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .icon-btn-mini {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      padding: 6px;
-      border-radius: 6px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      transition: background 0.15s ease;
-      flex-shrink: 0;
+      background: transparent; border: none; cursor: pointer; padding: 6px;
+      border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;
+      color: var(--text-muted); transition: background 0.15s ease; flex-shrink: 0;
     }
     .icon-btn-mini:active { background: var(--border); }
     .icon-btn-mini.danger { color: var(--rose); }
     .icon-btn-mini svg {
-      width: 14px; height: 14px;
-      stroke: currentColor; fill: none;
+      width: 14px; height: 14px; stroke: currentColor; fill: none;
       stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
     }
 
     .carguillo-resumen-global {
-      background: var(--surface);
-      border: 2px solid var(--primary-border);
-      border-radius: var(--radius);
-      padding: 14px 16px;
-      margin-bottom: 12px;
+      background: var(--surface); border: 2px solid var(--primary-border);
+      border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px;
     }
     .carguillo-resumen-titulo {
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--primary);
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--primary); margin-bottom: 10px;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
     }
     .carguillo-resumen-paq {
-      background: var(--primary);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 900;
-      padding: 3px 10px;
-      border-radius: 20px;
-      white-space: nowrap;
+      background: var(--primary); color: #fff; font-size: 10px; font-weight: 900;
+      padding: 3px 10px; border-radius: 20px; white-space: nowrap;
     }
 
     .carguillo-card {
-      background: var(--surface);
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius);
-      margin-bottom: 12px;
-      overflow: hidden;
+      background: var(--surface); border: 1px solid var(--border-strong);
+      border-radius: var(--radius); margin-bottom: 12px; overflow: hidden;
     }
-    .carguillo-card.individual {
-      border: 2px solid #ddd6fe;
-      background: #faf9ff;
-    }
+    .carguillo-card.individual { border: 2px solid #ddd6fe; background: #faf9ff; }
     .carguillo-card-header {
-      padding: 13px 15px 8px;
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      cursor: pointer;
-      user-select: none;
+      padding: 13px 15px 8px; display: flex; align-items: center; gap: 11px;
+      cursor: pointer; user-select: none;
     }
     .carguillo-card-header:active { background: var(--primary-subtle); }
     .carguillo-card.individual .carguillo-card-header:active { background: #f5f3ff; }
     .carguillo-car-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 11px;
-      background: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      color: #fff;
-      font-weight: 900;
-      font-size: 14px;
+      width: 38px; height: 38px; border-radius: 11px; background: var(--primary);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      color: #fff; font-weight: 900; font-size: 14px;
     }
     .carguillo-car-icon.individual { background: #7c3aed; }
     .carguillo-car-info { flex: 1; min-width: 0; }
     .carguillo-car-nombre {
-      font-size: 13px;
-      font-weight: 900;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 13px; font-weight: 900;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       letter-spacing: -0.2px;
     }
     .carguillo-car-meta {
-      font-size: 10.5px;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-top: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 10.5px; font-weight: 600; color: var(--text-muted);
+      margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .carguillo-car-carga {
-      font-size: 11px;
-      font-weight: 900;
-      color: var(--primary);
-      flex-shrink: 0;
-      text-align: right;
-      line-height: 1.2;
+      font-size: 11px; font-weight: 900; color: var(--primary);
+      flex-shrink: 0; text-align: right; line-height: 1.2;
     }
     .carguillo-car-carga small {
-      display: block;
-      font-size: 9px;
-      font-weight: 700;
-      color: var(--text-soft);
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
+      display: block; font-size: 9px; font-weight: 700;
+      color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.3px;
     }
 
     .carguillo-progress {
-      height: 6px;
-      background: var(--border);
-      border-radius: 999px;
-      overflow: hidden;
-      margin: 4px 15px 12px;
+      height: 6px; background: var(--border); border-radius: 999px;
+      overflow: hidden; margin: 4px 15px 12px;
     }
     .carguillo-progress-fill {
-      height: 100%;
-      border-radius: 999px;
-      transition: width 0.3s ease;
-      background: var(--primary);
+      height: 100%; border-radius: 999px;
+      transition: width 0.3s ease; background: var(--primary);
     }
 
     .carguillo-body {
-      display: none;
-      border-top: 1px solid var(--border);
-      padding: 10px 15px 14px;
+      display: none; border-top: 1px solid var(--border); padding: 10px 15px 14px;
     }
     .carguillo-card.expanded .carguillo-body { display: block; }
 
-    .carguillo-tabla {
-      display: flex;
-      flex-direction: column;
-    }
+    .carguillo-tabla { display: flex; flex-direction: column; }
     .carguillo-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 7px 0;
-      font-size: 12px;
-      border-bottom: 1px dashed var(--border-strong);
+      display: flex; justify-content: space-between; padding: 7px 0;
+      font-size: 12px; border-bottom: 1px dashed var(--border-strong);
       align-items: center;
     }
     .carguillo-row:last-child { border-bottom: none; }
     .carguillo-row-name { font-weight: 700; color: var(--text); }
     .carguillo-row-qty { font-weight: 900; color: var(--primary); }
     .carguillo-row-total {
-      border-top: 2px solid var(--border-strong);
-      margin-top: 4px;
-      padding-top: 8px;
-      font-size: 12.5px;
+      border-top: 2px solid var(--border-strong); margin-top: 4px;
+      padding-top: 8px; font-size: 12.5px;
     }
     .carguillo-row-total .carguillo-row-name { font-weight: 900; }
     .carguillo-row-total .carguillo-row-qty { color: var(--text); font-size: 14px; }
 
     .carguillo-vacio {
-      padding: 14px;
-      text-align: center;
-      color: var(--text-soft);
-      font-size: 11px;
-      font-weight: 600;
+      padding: 14px; text-align: center; color: var(--text-soft);
+      font-size: 11px; font-weight: 600;
     }
 
     .carguillo-alerta {
-      background: var(--amber-bg);
-      border: 1px solid #fde68a;
-      border-radius: var(--radius-sm);
-      padding: 11px 13px;
-      font-size: 11.5px;
-      font-weight: 800;
-      color: #78350f;
-      line-height: 1.4;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      background: var(--amber-bg); border: 1px solid #fde68a;
+      border-radius: var(--radius-sm); padding: 11px 13px;
+      font-size: 11.5px; font-weight: 800; color: #78350f;
+      line-height: 1.4; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
     }
     .carguillo-alerta svg {
-      width: 16px;
-      height: 16px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2.4;
-      flex-shrink: 0;
+      width: 16px; height: 16px; stroke: currentColor; fill: none;
+      stroke-width: 2.4; flex-shrink: 0;
     }
 
     .clientes-lista {
-      margin-top: 14px;
-      padding-top: 10px;
+      margin-top: 14px; padding-top: 10px;
       border-top: 1px dashed var(--border-strong);
     }
     .clientes-lista-titulo {
-      font-size: 9.5px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      margin-bottom: 6px;
+      font-size: 9.5px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 6px;
     }
     .cliente-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 7px 0;
-      border-bottom: 1px dashed var(--border-strong);
-      font-size: 11.5px;
-      align-items: flex-start;
+      display: flex; justify-content: space-between; gap: 10px;
+      padding: 7px 0; border-bottom: 1px dashed var(--border-strong);
+      font-size: 11.5px; align-items: flex-start;
     }
     .cliente-row:last-child { border-bottom: none; }
     .cliente-row-nombre {
-      font-weight: 700;
-      color: var(--text);
-      flex-shrink: 0;
-      max-width: 45%;
+      font-weight: 700; color: var(--text); flex-shrink: 0; max-width: 45%;
     }
     .cliente-row-dir {
-      color: var(--text-muted);
-      text-align: right;
-      font-weight: 600;
-      flex: 1;
-      line-height: 1.4;
+      color: var(--text-muted); text-align: right;
+      font-weight: 600; flex: 1; line-height: 1.4;
     }
 
-    /* Toggle switch */
     .toggle-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: var(--bg);
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.15s ease;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; background: var(--bg); border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm); padding: 12px 14px;
+      cursor: pointer; user-select: none; transition: all 0.15s ease;
     }
     .toggle-row:active { transform: scale(0.99); }
-    .toggle-row.active {
-      background: #f5f3ff;
-      border-color: #ddd6fe;
-    }
+    .toggle-row.active { background: #f5f3ff; border-color: #ddd6fe; }
     .toggle-row-info { flex: 1; min-width: 0; }
     .toggle-row-title {
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--text);
-      line-height: 1.3;
+      font-size: 12.5px; font-weight: 800; color: var(--text); line-height: 1.3;
     }
     .toggle-row-sub {
-      font-size: 10.5px;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-top: 3px;
-      line-height: 1.4;
+      font-size: 10.5px; font-weight: 500; color: var(--text-muted);
+      margin-top: 3px; line-height: 1.35;
     }
     .toggle-switch {
-      width: 42px;
-      height: 24px;
-      background: var(--border-strong);
-      border-radius: 999px;
-      position: relative;
-      flex-shrink: 0;
+      width: 42px; height: 24px; background: var(--border-strong);
+      border-radius: 999px; position: relative; flex-shrink: 0;
       transition: background 0.2s ease;
     }
     .toggle-switch::after {
-      content: '';
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 20px;
-      height: 20px;
-      background: #fff;
-      border-radius: 50%;
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 20px; height: 20px; background: #fff; border-radius: 50%;
       transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       box-shadow: 0 1px 3px rgba(0,0,0,0.15);
     }
@@ -806,70 +636,111 @@
     .toggle-row.active .toggle-switch::after { transform: translateX(18px); }
 
     .btn-recibo-img {
-      background: #f5f3ff;
-      color: #7c3aed;
-      border: 1px solid #ddd6fe;
-      height: 46px;
-      font-size: 12px;
-      border-radius: var(--radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      font-weight: 800;
-      font-family: inherit;
-      cursor: pointer;
-      width: 100%;
-      transition: opacity 0.15s;
+      background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe;
+      height: 46px; font-size: 12px; border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; font-weight: 800; font-family: inherit;
+      cursor: pointer; width: 100%; transition: opacity 0.15s;
     }
     .btn-recibo-img:active { opacity: 0.7; }
     .btn-recibo-img svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.5; }
 
     .recibo-acciones-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 4px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px;
     }
 
-    /* Items en modal editar */
+    .btn-whatsapp {
+      width: 100%; min-height: 46px; padding: 12px 16px;
+      background: #dcfce7; color: #166534; border: 1px solid #86efac;
+      border-radius: var(--radius); font-family: inherit; font-size: 12px;
+      font-weight: 800; line-height: 1.3; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px; transition: transform 0.1s ease, background 0.15s ease;
+      margin-top: 4px;
+    }
+    .btn-whatsapp:active { transform: scale(0.98); background: #bbf7d0; }
+    .btn-whatsapp svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
     .edit-item-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--bg);
-      padding: 8px 10px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-strong);
+      display: flex; align-items: center; gap: 6px;
+      background: var(--bg); padding: 8px 10px;
+      border-radius: var(--radius-sm); border: 1px solid var(--border-strong);
     }
     .edit-item-info { flex: 1; min-width: 0; }
     .edit-item-nombre {
-      font-weight: 800;
-      font-size: 11.5px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-weight: 800; font-size: 11.5px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .edit-item-sub {
-      font-size: 10px;
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-top: 2px;
+      font-size: 10px; color: var(--text-muted); font-weight: 600; margin-top: 2px;
     }
     .edit-item-cant {
-      width: 72px;
-      padding: 6px 8px;
-      font-weight: 800;
-      font-size: 12px;
-      text-align: center;
-      background: var(--surface);
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius-sm);
-      font-family: inherit;
-      color: var(--text);
-      outline: none;
+      width: 72px; padding: 6px 8px; font-weight: 800; font-size: 12px;
+      text-align: center; background: var(--surface); border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm); font-family: inherit; color: var(--text); outline: none;
     }
     .edit-item-cant:focus { border-color: var(--primary); }
+
+    .venta-registro-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 11px 12px; background: var(--bg);
+      border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+      margin-bottom: 6px; cursor: pointer; transition: all 0.15s ease;
+    }
+    .venta-registro-row:active {
+      transform: scale(0.985); background: var(--primary-subtle);
+      border-color: var(--primary-border);
+    }
+    .venta-registro-info { flex: 1; min-width: 0; }
+    .venta-registro-nombre {
+      font-size: 12.5px; font-weight: 800;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .venta-registro-meta {
+      font-size: 10.5px; color: var(--text-muted); font-weight: 600; margin-top: 2px;
+    }
+    .venta-registro-monto {
+      font-size: 13px; font-weight: 900; color: var(--primary);
+      flex-shrink: 0; margin-left: 10px;
+    }
+    .registro-resumen-mini {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px; margin-bottom: 14px;
+    }
+    .registro-resumen-item {
+      background: var(--bg); border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm); padding: 10px; text-align: center;
+    }
+    .registro-resumen-lbl {
+      font-size: 9px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.3px; color: var(--text-muted); margin-bottom: 3px;
+    }
+    .registro-resumen-val {
+      font-size: 13px; font-weight: 900; color: var(--primary); letter-spacing: -0.3px;
+    }
+
+    .nav-registro-venta {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--primary-subtle); border: 1px solid var(--primary-border);
+      border-radius: var(--radius-sm); padding: 8px 10px;
+    }
+    .nav-reg-btn {
+      background: var(--surface); border: 1px solid var(--primary-border);
+      color: var(--primary); padding: 7px 10px; border-radius: 8px;
+      font-family: inherit; font-size: 11px; font-weight: 800;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+      transition: all 0.15s ease; flex-shrink: 0;
+    }
+    .nav-reg-btn:active { transform: scale(0.96); }
+    .nav-reg-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .nav-reg-btn svg {
+      width: 13px; height: 13px; stroke: currentColor; fill: none;
+      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .nav-reg-info {
+      flex: 1; text-align: center; font-size: 10.5px;
+      font-weight: 800; color: var(--primary); letter-spacing: 0.3px;
+    }
   </style>
 </head>
 <body>
@@ -948,28 +819,28 @@
 
     <!-- TAB: CARGUILLO -->
     <section id="paneCarguillo" class="view-pane">
-      <div class="carguillo-acciones">
-        <button class="btn-carguillo-add" onclick="abrirModalCarroConfig()">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Agregar Carro
-        </button>
-        <button class="btn-carguillo-send" onclick="navegarA('paneInicio', document.getElementById('btnNavInicio'))">
-          <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-          Ir a Ventas
-        </button>
-      </div>
+      <button class="btn-carguillo-add" onclick="abrirModalCarroConfig()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Agregar Carro
+      </button>
 
-      <div class="seccion-header">
-        <span>Capacidad de Carros</span>
-        <span class="badge-count" id="carguilloCountCarros">0</span>
-      </div>
-      <div id="listaCarrosConfig"></div>
+      <details class="seccion-colapsable" data-seccion="capacidad">
+        <summary>
+          <span style="flex:1;">Capacidad de Carros</span>
+          <span class="badge-count" id="carguilloCountCarros">0</span>
+          <svg class="chevron-sec" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="seccion-colapsable-body" id="listaCarrosConfig"></div>
+      </details>
 
-      <div class="seccion-header" style="margin-top: 22px;">
-        <span>Carguillo del Día</span>
-        <span class="badge-count" id="carguilloFechaBadge">-</span>
-      </div>
-      <div id="carguilloContenido"></div>
+      <details class="seccion-colapsable" data-seccion="carguillo">
+        <summary>
+          <span style="flex:1;">Carguillo del Día</span>
+          <span class="badge-count" id="carguilloFechaBadge">-</span>
+          <svg class="chevron-sec" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="seccion-colapsable-body" id="carguilloContenido"></div>
+      </details>
 
       <div style="margin-top: 16px; padding-top: 4px;">
         <button class="btn-enviar-todo" onclick="enviarTodoAKing()">
@@ -980,24 +851,13 @@
     </section>
 
     <section id="paneDashboard" class="view-pane">
-      <div class="seccion-header"><span>Rendimiento de Ventas</span></div>
+      <div class="seccion-header"><span>Mis Resultados</span></div>
 
       <div class="segmented-control">
         <button class="segmented-btn active" id="btnDashHoy" onclick="cambiarFiltroDashboard('hoy')">Hoy</button>
         <button class="segmented-btn" id="btnDashSemana" onclick="cambiarFiltroDashboard('semana')">Semana</button>
         <button class="segmented-btn" id="btnDashMes" onclick="cambiarFiltroDashboard('mes')">Mes</button>
-        <button class="segmented-btn" id="btnDashTodo" onclick="cambiarFiltroDashboard('todo')">Todo</button>
-      </div>
-
-      <div class="grid-kpis-dashboard">
-        <div class="kpi-card-dash">
-          <div class="kpi-title-dash">Monto Vendido</div>
-          <div class="kpi-value-dash" id="dashTotalSoles">S/ 0.00</div>
-        </div>
-        <div class="kpi-card-dash">
-          <div class="kpi-title-dash">Ventas Hechas</div>
-          <div class="kpi-value-dash" id="dashTotalPedidos">0</div>
-        </div>
+        <button class="segmented-btn" id="btnDashAnio" onclick="cambiarFiltroDashboard('anio')">Año</button>
       </div>
 
       <div class="grid-kpis-dashboard">
@@ -1011,14 +871,30 @@
         </div>
       </div>
 
-      <div class="chart-container-box">
-        <div class="chart-header-title">Evolución de Ingresos (S/)</div>
-        <canvas id="canvasChartMonto" height="160" style="width: 100%; height: 160px;"></canvas>
+      <div class="grid-kpis-dashboard">
+        <div class="kpi-card-dash">
+          <div class="kpi-title-dash">Paquetes Vendidos</div>
+          <div class="kpi-value-dash" id="dashPaquetes">0</div>
+        </div>
+        <div class="kpi-card-dash kpi-card-comision">
+          <div class="kpi-title-dash">Tu Comisión</div>
+          <div class="kpi-value-dash" id="dashComision" style="color: var(--primary);">S/ 0.00</div>
+        </div>
       </div>
 
       <div class="chart-container-box">
-        <div class="chart-header-title">Cantidad de Pedidos Realizados</div>
-        <canvas id="canvasChartPedidos" height="140" style="width: 100%; height: 140px;"></canvas>
+        <div class="chart-header-with-toggle">
+          <div class="chart-header-title" id="chartTituloPaquetes">Paquetes de Hoy</div>
+          <div class="chart-toggle">
+            <button id="btnChartBarras" onclick="cambiarTipoGrafico('bar')" class="chart-toggle-btn" title="Barras">
+              <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </button>
+            <button id="btnChartLineas" onclick="cambiarTipoGrafico('line')" class="chart-toggle-btn" title="Líneas">
+              <svg viewBox="0 0 24 24"><polyline points="3 17 9 11 13 15 21 7"/></svg>
+            </button>
+          </div>
+        </div>
+        <canvas id="canvasChartPaquetes" height="200" style="width: 100%; height: 200px;"></canvas>
       </div>
 
       <div class="chart-container-box">
@@ -1035,6 +911,20 @@
       <div class="modal-header">
         <h3 class="modal-title" id="detalleTituloVenta">Detalle de Venta</h3>
         <button onclick="cerrarModalDetalleVenta()" class="btn-close">✕</button>
+      </div>
+
+      <div id="navRegistroVenta" class="nav-registro-venta" style="display: none;">
+        <button onclick="volverAlRegistro()" class="nav-reg-btn">
+          <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Volver
+        </button>
+        <div class="nav-reg-info" id="navRegInfo">1 / 1</div>
+        <button id="btnRegAnterior" onclick="irVentaAnterior()" class="nav-reg-btn" title="Anterior">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button id="btnRegSiguiente" onclick="irVentaSiguiente()" class="nav-reg-btn" title="Siguiente">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
       </div>
 
       <div class="detalle-bloque">
@@ -1083,6 +973,11 @@
           <span id="detTarifa">-</span>
         </div>
       </div>
+
+      <button id="btnWhatsAppDetalle" onclick="abrirWhatsAppCliente()" class="btn-whatsapp">
+        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        Escribir por WhatsApp
+      </button>
 
       <div class="detalle-bloque" id="bloqueEstadoPago" style="background: var(--primary-subtle); border-color: var(--primary-border);">
         <div class="detalle-bloque-item">
@@ -1135,6 +1030,25 @@
     </div>
   </div>
 
+  <!-- MODAL: REGISTRO DETALLE -->
+  <div id="modalRegistroDetalle" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" id="registroDetalleTitulo">Registro</h3>
+        <button onclick="cerrarModalRegistroDetalle()" class="btn-close">✕</button>
+      </div>
+
+      <div id="registroDetalleResumen" class="registro-resumen-mini"></div>
+
+      <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted);">Ventas de este registro</div>
+      <div id="registroDetalleVentas"></div>
+
+      <button onclick="cerrarModalRegistroDetalle()" class="btn-action-cuenta" style="height:44px; font-size:12px; border-radius:var(--radius); margin-top:6px;">
+        Cerrar Registro
+      </button>
+    </div>
+  </div>
+
   <!-- MODAL: EDITAR VENTA -->
   <div id="modalEditarVenta" class="modal-overlay">
     <div class="modal-sheet">
@@ -1167,6 +1081,7 @@
 
       <div>
         <label class="form-label">Productos del pedido</label>
+        <div id="badgeTarifaEdicion" class="tag-tarifa-simple tarifa-menor" onclick="ciclarModoTarifaEdicion()">Al por menor</div>
         <div id="editItemsLista" style="display:flex; flex-direction:column; gap:6px;"></div>
         <button onclick="abrirAgregarItemEdicion()" class="btn-action-cuenta" style="width:100%; margin-top:8px; height:38px;">
           <svg style="width:13px; height:13px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -1270,7 +1185,7 @@
         </div>
 
         <div id="modalCartBox" class="cart-box" style="display: none;">
-          <div id="badgeTarifaSimple" class="tag-tarifa-simple tarifa-menor">Al por menor</div>
+          <div id="badgeTarifaSimple" class="tag-tarifa-simple tarifa-menor" onclick="ciclarModoTarifa()">Al por menor</div>
           <div id="modalCartItems"></div>
           <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 13px; font-weight: 800; padding-top: 8px; border-top: 1px solid var(--primary-border);">
             <span>Total:</span>
@@ -1348,8 +1263,8 @@
 
         <div class="toggle-row" id="toggleEnvioIndividual" onclick="toggleEnvioIndividual()">
           <div class="toggle-row-info">
-            <div class="toggle-row-title">Envío Individual (Indrive / Cliente recoge)</div>
-            <div class="toggle-row-sub">Esta venta NO se mete en los carros. Se genera su propio carguillo unitario listo para entregar.</div>
+            <div class="toggle-row-title">Envío individual</div>
+            <div class="toggle-row-sub">No entra al carro. Se entrega por separado.</div>
           </div>
           <div class="toggle-switch"></div>
         </div>
@@ -1401,7 +1316,7 @@
             <div class="zona-option-nombre">Cono Sur</div>
             <div class="zona-option-sub">Orlenis • BCP / Yape</div>
           </div>
-          <svg style="width: 16px; height: 16px; color: #ea580c;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          <svg style="width: 16px; height: 16px; color: #16a34a;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
       </div>
     </div>
@@ -1452,6 +1367,7 @@
   <script>
     const NUMERO_CIERRE_KING = "51922796815";
     const NUMERO_CONTABILIDAD = "51922244819";
+    const COMISION_POR_PAQUETE = 0.12;
 
     const ZONAS = {
       la_parada: { nombreZona: "La Parada", asesor: "Junior", titular: "INVERSIONES GARRO E.I.R.L.", bcp: "191-9286644-0-82", cci: "002-191-00928664408-256", yape: "926 385 215", bbva: "0011-0157-54-0100060005" },
@@ -1460,12 +1376,7 @@
       cono_sur: { nombreZona: "Cono Sur", asesor: "Orlenis", titular: "PLASTIK PET E.I.R.L.", bcp: "191-9870837-0-21", cci: "002-191-00987083702-152", yape: "904 888 872", bbva: null }
     };
 
-    const ZONA_ABREV = {
-      la_parada: "parada",
-      cono_norte: "norte",
-      santa_anita: "anita",
-      cono_sur: "sur"
-    };
+    const ZONA_ABREV = { la_parada: "parada", cono_norte: "norte", santa_anita: "anita", cono_sur: "sur" };
 
     const CONDICION_A_ESTADO = {
       "Efectivo":            { estado: "PAGADO",    ratio: 1 },
@@ -1474,6 +1385,11 @@
       "Adelanto 50%":        { estado: "PARCIAL",   ratio: 0.5 },
       "Crédito":             { estado: "PENDIENTE", ratio: 0 }
     };
+
+    // Keys de persistencia
+    const KEY_TAB = 'fabrec_tab_activo';
+    const KEY_FILTRO_DASH = 'fabrec_filtro_dashboard';
+    const KEY_TIPO_GRAFICO = 'fabrec_tipo_grafico';
 
     let CATALOGO_FABREC = [];
     let inventarioLocal = {};
@@ -1487,38 +1403,38 @@
     let itemsVentaTemporal = [];
     let indiceEditandoItem = -1;
     let unidadSeleccionada = 'paquetes';
-    let filtroDashboardActivo = 'hoy';
+    let filtroDashboardActivo = localStorage.getItem(KEY_FILTRO_DASH) || 'hoy';
     let filtroVentasActivo = 'todas';
     let codigoVentaCobrando = null;
     let ventaDetalleActual = null;
     let envioIndividualActivo = false;
 
-    /* ==================================================
-       EDITAR VENTA: ESTADO
-    ================================================== */
+    // Modo de tarifa manual (null = auto)
+    let modoTarifaManual = null; // 'menor' | 'mayor' | 'final' | null
+
     let ventaEditandoCodigo = null;
     let editandoEstadoPago = 'PAGADO';
     let editandoTipoEnvio = 'carro';
     let itemsEdicionVenta = [];
+    let modoTarifaEdicion = null;
 
-    /* ==================================================
-       CARGUILLO: ESTADO
-    ================================================== */
     let carros = [];
     let editandoCarroId = null;
 
+    let tipoGraficoActual = localStorage.getItem(KEY_TIPO_GRAFICO) || 'bar';
+
+    let registroOrigenFechaKey = null;
+    let registroOrigenCodigos = [];
+    let registroOrigenIndice = -1;
+
     // ==================================================
-    // HELPERS DE ESTADO DE PAGO
+    // HELPERS
     // ==================================================
     function derivarEstadoDesdeCondicion(cond) {
       const c = CONDICION_A_ESTADO[cond];
       return c ? c.estado : "PENDIENTE";
     }
-
-    function getEstadoPago(v) {
-      return v.estado_pago || derivarEstadoDesdeCondicion(v.condicion_pago);
-    }
-
+    function getEstadoPago(v) { return v.estado_pago || derivarEstadoDesdeCondicion(v.condicion_pago); }
     function getMontoPagado(v) {
       if (v.monto_pagado !== undefined) return v.monto_pagado;
       const e = getEstadoPago(v);
@@ -1526,37 +1442,20 @@
       if (e === "PARCIAL") return +(v.monto_total * 0.5).toFixed(2);
       return 0;
     }
-
     function getMontoPendiente(v) {
       if (v.monto_pendiente !== undefined) return v.monto_pendiente;
       return +(v.monto_total - getMontoPagado(v)).toFixed(2);
     }
+    function esPagado(v) { return getMontoPendiente(v) <= 0.01; }
+    function esPendienteContabilidad(v) { return esPagado(v) && !v.contabilidad_enviada; }
 
-    function esPagado(v) {
-      return getMontoPendiente(v) <= 0.01;
-    }
-
-    function esPendienteContabilidad(v) {
-      return esPagado(v) && !v.contabilidad_enviada;
-    }
-
-    // ==================================================
-    // HELPERS DE FORMATO
-    // ==================================================
     function formatearMonto(v) {
       const n = Number(v) || 0;
       const abs = Math.abs(n);
-      if (abs >= 1000000) {
-        const num = (n / 1000000).toFixed(1).replace(/\.0$/, '');
-        return 'S/ ' + num + 'M';
-      }
-      if (abs >= 1000) {
-        const num = (n / 1000).toFixed(1).replace(/\.0$/, '');
-        return 'S/ ' + num + 'k';
-      }
+      if (abs >= 1000000) return 'S/ ' + (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+      if (abs >= 1000) return 'S/ ' + (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
       return 'S/ ' + n.toFixed(2);
     }
-
     function formatearFechaBonita(iso) {
       if (!iso) return '';
       try {
@@ -1567,13 +1466,11 @@
         return `${dias[d.getDay()]} ${d.getDate()} ${meses[d.getMonth()]}`;
       } catch (e) { return iso; }
     }
-
     function escaparHTML(s) {
       return String(s || '').replace(/[&<>"']/g, c => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
       }[c]));
     }
-
     function generarId(prefijo) {
       return (prefijo || 'id') + '_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
     }
@@ -1591,6 +1488,7 @@
             producto: p.producto,
             menor: p.precio_menor !== undefined ? p.precio_menor : (p.menor || 0),
             mayor: p.precio_mayor !== undefined ? p.precio_mayor : (p.mayor || 0),
+            final: p.precio_cliente_final !== undefined ? p.precio_cliente_final : (p.final || 0),
             unidades: p.unidades_paquete || p.unidades || 100
           }));
         }
@@ -1643,9 +1541,7 @@
         todasLasVentas = todasLasVentas.map(v => {
           if (!v.tipo_envio) v.tipo_envio = 'carro';
           if (v.cliente) {
-            if (!v.cliente.telefono_contacto && v.cliente.telefono) {
-              v.cliente.telefono_contacto = v.cliente.telefono;
-            }
+            if (!v.cliente.telefono_contacto && v.cliente.telefono) v.cliente.telefono_contacto = v.cliente.telefono;
             if (!v.cliente.telefono_llegada) v.cliente.telefono_llegada = '';
           }
           return v;
@@ -1658,9 +1554,7 @@
         }).map(v => {
           if (!v.tipo_envio) v.tipo_envio = 'carro';
           if (v.cliente) {
-            if (!v.cliente.telefono_contacto && v.cliente.telefono) {
-              v.cliente.telefono_contacto = v.cliente.telefono;
-            }
+            if (!v.cliente.telefono_contacto && v.cliente.telefono) v.cliente.telefono_contacto = v.cliente.telefono;
             if (!v.cliente.telefono_llegada) v.cliente.telefono_llegada = '';
           }
           return v;
@@ -1673,10 +1567,11 @@
       renderizarRegistrosCierre();
       renderizarCarguillo();
       actualizarBadgeCarguillo();
+      restaurarEstadoSecciones();
     }
 
     // ==================================================
-    // 3. NAVEGACIÓN
+    // 3. NAVEGACIÓN (con persistencia de tab)
     // ==================================================
     function navegarA(idPanel, btnElemento) {
       document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
@@ -1684,10 +1579,28 @@
       const target = document.getElementById(idPanel);
       if (target) target.classList.add('active');
       if (btnElemento) btnElemento.classList.add('active');
+      localStorage.setItem(KEY_TAB, idPanel);
       if (idPanel === 'panePrecios') renderizarListaPrecios();
       if (idPanel === 'paneDashboard') { renderizarDashboard(); renderizarRegistrosCierre(); }
-      if (idPanel === 'paneCarguillo') { autoAsignarVentas(); renderizarCarguillo(); actualizarBadgeCarguillo(); }
+      if (idPanel === 'paneCarguillo') { autoAsignarVentas(); renderizarCarguillo(); actualizarBadgeCarguillo(); restaurarEstadoSecciones(); }
       window.scrollTo(0, 0);
+    }
+
+    function restaurarTabActivo() {
+      const tabGuardado = localStorage.getItem(KEY_TAB) || 'paneInicio';
+      const navMap = {
+        'paneInicio': 'btnNavInicio',
+        'panePrecios': 'btnNavPrecios',
+        'paneCarguillo': 'btnNavCarguillo',
+        'paneDashboard': 'btnNavDashboard'
+      };
+      const paneGuardado = document.getElementById(tabGuardado);
+      if (!paneGuardado) return;
+      document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      paneGuardado.classList.add('active');
+      const navBtn = document.getElementById(navMap[tabGuardado]);
+      if (navBtn) navBtn.classList.add('active');
     }
 
     // ==================================================
@@ -1743,7 +1656,7 @@
     }
 
     // ==================================================
-    // 5. GENERACIÓN DE CÓDIGOS
+    // 5. CÓDIGOS
     // ==================================================
     function fechaCompacta(d) {
       const dd = String(d.getDate()).padStart(2, '0');
@@ -1751,26 +1664,22 @@
       const yy = String(d.getFullYear()).slice(-2);
       return dd + mm + yy;
     }
-
     function generarCodigoVenta() {
       const abrev = ZONA_ABREV[zonaActivaClave] || "gen";
       const fecha = fechaCompacta(new Date());
       const num = String(ventasHoy.length + 1).padStart(2, '0');
       return `venta_${abrev}_${fecha}_${num}`;
     }
-
     function generarCodigoRegistroParaFecha(fechaObj) {
       const abrev = ZONA_ABREV[zonaActivaClave] || "gen";
       const fecha = fechaCompacta(fechaObj);
       return `registro_venta_${abrev}_${fecha}_01`;
     }
-
     function generarCodigoCarguillo() {
       const abrev = ZONA_ABREV[zonaActivaClave] || "gen";
       const fecha = fechaCompacta(new Date());
       return `carguillo_${abrev}_${fecha}_01`;
     }
-
     function extraerSecuenciaVenta(codigoVenta) {
       const partes = codigoVenta.split('_');
       return partes[partes.length - 1] || "01";
@@ -1790,13 +1699,11 @@
       if (z.bbva) t += "\nBBVA: " + z.bbva;
       return t;
     }
-
     function copiarDatosBancariosCompletos() {
       const t = generarTextoDatosBancarios();
       if (!t) { mostrarToast("Selecciona primero una zona"); return; }
       navigator.clipboard.writeText(t).then(() => mostrarToast("Cuentas copiadas al portapapeles"));
     }
-
     function compartirDatosBancariosWhatsApp() {
       const t = generarTextoDatosBancarios();
       if (!t) { mostrarToast("Selecciona primero una zona"); return; }
@@ -1804,7 +1711,7 @@
     }
 
     // ==================================================
-    // 7. UNIDADES
+    // 7. UNIDADES Y TARIFAS
     // ==================================================
     function cambiarUnidadMedida(unidad) {
       unidadSeleccionada = unidad;
@@ -1854,19 +1761,71 @@
       } else { divEq.style.display = "none"; }
     }
 
+    // Determina el modo efectivo (auto si no hay override manual)
+    function determinarModoEfectivo(totalPaquetes, modoManual) {
+      if (modoManual === 'final') return 'final';
+      if (modoManual === 'mayor') return 'mayor';
+      if (modoManual === 'menor') return 'menor';
+      // auto
+      return totalPaquetes >= 100 ? 'mayor' : 'menor';
+    }
+
+    function etiquetaModo(modo) {
+      if (modo === 'final') return 'Cliente final';
+      if (modo === 'mayor') return 'Al por mayor';
+      return 'Al por menor';
+    }
+
+    function tarifaAplicadaTexto(modo) {
+      if (modo === 'final') return 'Cliente final';
+      if (modo === 'mayor') return 'Al por mayor';
+      return 'Al por menor';
+    }
+
     function recalcularTarifasDelPedido() {
       let totalPaquetesEnPedido = 0;
       itemsVentaTemporal.forEach(it => { totalPaquetesEnPedido += it.paquetes_totales; });
-      const esMayor = totalPaquetesEnPedido >= 100;
+      const modo = determinarModoEfectivo(totalPaquetesEnPedido, modoTarifaManual);
       itemsVentaTemporal.forEach(it => {
         const itemCat = obtenerItemCatalogo(it.producto);
         if (itemCat) {
-          it.tipo_tarifa = esMayor ? "Mayor" : "Menor";
-          it.precio_unitario = esMayor ? itemCat.mayor : itemCat.menor;
+          it.tipo_tarifa = etiquetaModo(modo);
+          it.precio_unitario = modo === 'final' ? itemCat.final : (modo === 'mayor' ? itemCat.mayor : itemCat.menor);
           it.subtotal = it.paquetes_totales * it.precio_unitario;
         }
       });
-      return { totalPaquetes: totalPaquetesEnPedido, esMayor: esMayor };
+      return { totalPaquetes: totalPaquetesEnPedido, modo };
+    }
+
+    function ciclarModoTarifa() {
+      let totalPaquetesEnPedido = 0;
+      itemsVentaTemporal.forEach(it => { totalPaquetesEnPedido += it.paquetes_totales; });
+      const modoActual = determinarModoEfectivo(totalPaquetesEnPedido, modoTarifaManual);
+
+      // Ciclo limpio de 3 estados: Menor -> Mayor -> Final -> Menor
+      if (modoActual === 'menor') {
+        modoTarifaManual = 'mayor';
+      } else if (modoActual === 'mayor') {
+        modoTarifaManual = 'final';
+      } else {
+        modoTarifaManual = 'menor';
+      }
+      renderizarItemsModal();
+    }
+
+    function ciclarModoTarifaEdicion() {
+      let totalPaq = 0;
+      itemsEdicionVenta.forEach(it => { totalPaq += it.paquetes_totales || 0; });
+      const modoActual = determinarModoEfectivo(totalPaq, modoTarifaEdicion);
+
+      if (modoActual === 'menor') {
+        modoTarifaEdicion = 'mayor';
+      } else if (modoActual === 'mayor') {
+        modoTarifaEdicion = 'final';
+      } else {
+        modoTarifaEdicion = 'menor';
+      }
+      renderizarItemsEdicion();
     }
 
     // ==================================================
@@ -1881,6 +1840,7 @@
       itemsVentaTemporal = [];
       indiceEditandoItem = -1;
       envioIndividualActivo = false;
+      modoTarifaManual = null;
       resetearFormularioItem();
       limpiarCamposCliente();
       const hoyISO = new Date().toISOString().split('T')[0];
@@ -1904,7 +1864,6 @@
       document.getElementById('pillPaso2').classList.remove('active');
       document.getElementById('tituloModalVenta').innerText = "Cotizar Pedido";
     }
-
     function irAPaso2() {
       if (itemsVentaTemporal.length === 0) { mostrarToast("Agrega al menos una botella a la cotización"); return; }
       document.getElementById('wizardPaso1').style.display = 'none';
@@ -1913,12 +1872,10 @@
       document.getElementById('pillPaso2').classList.add('active');
       document.getElementById('tituloModalVenta').innerText = "Datos del Cliente";
     }
-
     function toggleEnvioIndividual() {
       envioIndividualActivo = !envioIndividualActivo;
       actualizarToggleIndividual();
     }
-
     function actualizarToggleIndividual() {
       const el = document.getElementById('toggleEnvioIndividual');
       if (envioIndividualActivo) el.classList.add('active');
@@ -1997,13 +1954,10 @@
       if (itemsVentaTemporal.length === 0) { box.style.display = "none"; return; }
       box.style.display = "block";
       const infoPedido = recalcularTarifasDelPedido();
-      if (infoPedido.esMayor) {
-        badgeTarifa.className = "tag-tarifa-simple tarifa-mayor";
-        badgeTarifa.innerText = "Al por mayor";
-      } else {
-        badgeTarifa.className = "tag-tarifa-simple tarifa-menor";
-        badgeTarifa.innerText = "Al por menor";
-      }
+      // Actualizar badge según modo
+      badgeTarifa.className = 'tag-tarifa-simple ' + (infoPedido.modo === 'final' ? 'tarifa-final' : (infoPedido.modo === 'mayor' ? 'tarifa-mayor' : 'tarifa-menor'));
+      badgeTarifa.innerText = etiquetaModo(infoPedido.modo);
+
       let totalMonto = 0;
       let html = "";
       itemsVentaTemporal.forEach((it, i) => {
@@ -2044,7 +1998,6 @@
       directorioClientes.forEach(c => { opts += `<option value="${c.dni}">${c.nombre} (${c.dni})</option>`; });
       sel.innerHTML = opts;
     }
-
     function seleccionarClienteAntiguo(dniBuscado) {
       if (!dniBuscado) { limpiarCamposCliente(); return; }
       const c = directorioClientes.find(x => x.dni === dniBuscado);
@@ -2058,7 +2011,6 @@
         mostrarToast("Datos de " + c.nombre + " cargados");
       }
     }
-
     function limpiarCamposCliente() {
       document.getElementById('ventaCliente').value = "";
       document.getElementById('ventaDni').value = "";
@@ -2068,7 +2020,6 @@
       document.getElementById('ventaDireccion').value = "";
       document.getElementById('selectClienteAntiguo').value = "";
     }
-
     function guardarClienteEnDirectorio(c) {
       if (!zonaActivaClave) return;
       const idx = directorioClientes.findIndex(x => x.dni === c.dni);
@@ -2131,8 +2082,7 @@
       const esPagoInmediato = (condicion === "Efectivo" || condicion === "Transferencia");
 
       const clienteDatos = {
-        nombre: cliente,
-        dni,
+        nombre: cliente, dni,
         ruc: ruc || "No solicita factura",
         telefono_contacto: telefonoContacto,
         telefono_llegada: telefonoLlegada,
@@ -2145,7 +2095,7 @@
         fecha_venta: ahora.toISOString(),
         fecha_entrega_solicitada: fechaEntrega,
         cliente: clienteDatos,
-        tarifa_aplicada: infoPedido.esMayor ? "Al por mayor" : "Al por menor",
+        tarifa_aplicada: tarifaAplicadaTexto(infoPedido.modo),
         vendedor: z.asesor,
         zona: z.nombreZona,
         zonaClave: zonaActivaClave,
@@ -2200,14 +2150,8 @@
       if (filtro === 'confirmados') document.getElementById('btnFiltroConfirmados').classList.add('active');
       renderizarVentasInicio();
     }
-
-    function contarPendientes() {
-      return todasLasVentas.filter(v => !esPagado(v)).length;
-    }
-
-    function contarConfirmados() {
-      return todasLasVentas.filter(v => esPendienteContabilidad(v)).length;
-    }
+    function contarPendientes() { return todasLasVentas.filter(v => !esPagado(v)).length; }
+    function contarConfirmados() { return todasLasVentas.filter(v => esPendienteContabilidad(v)).length; }
 
     // ==================================================
     // 12. RENDERIZAR VENTAS
@@ -2224,19 +2168,10 @@
       const confirmados = contarConfirmados();
       badgeCant.innerText = `${ventasHoy.length} pedidos`;
 
-      if (pendientes > 0) {
-        pillPendientes.style.display = 'inline-block';
-        pillPendientes.innerText = pendientes;
-      } else {
-        pillPendientes.style.display = 'none';
-      }
-
-      if (confirmados > 0) {
-        pillConfirmados.style.display = 'inline-block';
-        pillConfirmados.innerText = confirmados;
-      } else {
-        pillConfirmados.style.display = 'none';
-      }
+      if (pendientes > 0) { pillPendientes.style.display = 'inline-block'; pillPendientes.innerText = pendientes; }
+      else { pillPendientes.style.display = 'none'; }
+      if (confirmados > 0) { pillConfirmados.style.display = 'inline-block'; pillConfirmados.innerText = confirmados; }
+      else { pillConfirmados.style.display = 'none'; }
 
       panelAcciones.style.display = (filtroVentasActivo === 'confirmados') ? 'block' : 'none';
 
@@ -2290,9 +2225,7 @@
 
         let metaTexto = `${v.total_paquetes} paq`;
         let fechaMostrar = '';
-        if (mostrarFecha && !esDeHoy) {
-          fechaMostrar = fechaTexto + ' • ';
-        }
+        if (mostrarFecha && !esDeHoy) fechaMostrar = fechaTexto + ' • ';
 
         html += `
           <div class="card-venta-simple" onclick="verDetalleVenta('${v.codigo}')">
@@ -2353,7 +2286,6 @@
 
       const mPagado = getMontoPagado(v);
       const mPendiente = getMontoPendiente(v);
-
       document.getElementById('detMontoPagado').innerText = `S/ ${mPagado.toFixed(2)}`;
       document.getElementById('detMontoPendiente').innerText = `S/ ${mPendiente.toFixed(2)}`;
 
@@ -2369,15 +2301,84 @@
       `).join('');
 
       document.getElementById('detMontoTotal').innerText = `S/ ${v.monto_total.toFixed(2)}`;
+
+      actualizarNavRegistro(codigoVenta);
+
       document.getElementById('modalDetalleVenta').classList.add('open');
+    }
+
+    function actualizarNavRegistro(codigoVenta) {
+      const nav = document.getElementById('navRegistroVenta');
+      if (registroOrigenCodigos.length > 0) {
+        const idx = registroOrigenCodigos.indexOf(codigoVenta);
+        if (idx !== -1) {
+          registroOrigenIndice = idx;
+          nav.style.display = 'flex';
+          const total = registroOrigenCodigos.length;
+          document.getElementById('navRegInfo').innerText = (idx + 1) + ' / ' + total;
+          document.getElementById('btnRegAnterior').disabled = (idx <= 0);
+          document.getElementById('btnRegSiguiente').disabled = (idx >= total - 1);
+        } else { nav.style.display = 'none'; }
+      } else { nav.style.display = 'none'; }
     }
 
     function cerrarModalDetalleVenta() {
       document.getElementById('modalDetalleVenta').classList.remove('open');
+      limpiarNavRegistro();
+    }
+
+    function limpiarNavRegistro() {
+      registroOrigenFechaKey = null;
+      registroOrigenCodigos = [];
+      registroOrigenIndice = -1;
+      const nav = document.getElementById('navRegistroVenta');
+      if (nav) nav.style.display = 'none';
+    }
+
+    function volverAlRegistro() {
+      if (!registroOrigenFechaKey) return;
+      const fechaKey = registroOrigenFechaKey;
+      document.getElementById('modalDetalleVenta').classList.remove('open');
+      registroOrigenCodigos = [];
+      registroOrigenIndice = -1;
+      registroOrigenFechaKey = null;
+      setTimeout(() => abrirRegistroDetalle(fechaKey), 180);
+    }
+    function irVentaAnterior() {
+      if (registroOrigenIndice <= 0) return;
+      registroOrigenIndice--;
+      const codigo = registroOrigenCodigos[registroOrigenIndice];
+      document.getElementById('modalDetalleVenta').classList.remove('open');
+      setTimeout(() => verDetalleVenta(codigo), 180);
+    }
+    function irVentaSiguiente() {
+      if (registroOrigenIndice >= registroOrigenCodigos.length - 1) return;
+      registroOrigenIndice++;
+      const codigo = registroOrigenCodigos[registroOrigenIndice];
+      document.getElementById('modalDetalleVenta').classList.remove('open');
+      setTimeout(() => verDetalleVenta(codigo), 180);
     }
 
     // ==================================================
-    // 14. EDITAR VENTA (con edición de productos)
+    // 13b. WHATSAPP CLIENTE
+    // ==================================================
+    function abrirWhatsAppCliente() {
+      if (!ventaDetalleActual) return;
+      const v = ventaDetalleActual;
+      const telRaw = v.cliente.telefono_contacto || v.cliente.telefono || '';
+      const tel = formatearTelefonoPeru(telRaw);
+      const texto = `Hola ${v.cliente.nombre}, le escribo de FABREC sobre su pedido *${v.codigo}* (S/ ${v.monto_total.toFixed(2)}).`;
+      let url;
+      if (tel && tel.length >= 11) {
+        url = "https://api.whatsapp.com/send/?phone=" + tel + "&text=" + encodeURIComponent(texto);
+      } else {
+        url = "https://api.whatsapp.com/send/?text=" + encodeURIComponent(texto);
+      }
+      window.open(url, '_blank');
+    }
+
+    // ==================================================
+    // 14. EDITAR VENTA
     // ==================================================
     function abrirModalEditarVenta() {
       if (!ventaDetalleActual) return;
@@ -2387,7 +2388,18 @@
       editandoEstadoPago = esPagado(v) ? 'PAGADO' : 'PENDIENTE';
       editandoTipoEnvio = v.tipo_envio || 'carro';
 
-      // Clonar items para edición
+      // Determinar modo de tarifa desde el primer item
+      const primerItem = (v.items && v.items[0]);
+      if (primerItem) {
+        const t = primerItem.tipo_tarifa || '';
+        if (t.toLowerCase().includes('final')) modoTarifaEdicion = 'final';
+        else if (t.toLowerCase().includes('mayor')) modoTarifaEdicion = 'mayor';
+        else if (t.toLowerCase().includes('menor')) modoTarifaEdicion = 'menor';
+        else modoTarifaEdicion = null;
+      } else {
+        modoTarifaEdicion = null;
+      }
+
       itemsEdicionVenta = (v.items || []).map(it => ({ ...it }));
 
       document.getElementById('editVentaCodigo').innerText = v.codigo;
@@ -2398,7 +2410,8 @@
       actualizarBotonesEdicionVenta();
       document.getElementById('editAgregarItemPanel').style.display = 'none';
 
-      cerrarModalDetalleVenta();
+      document.getElementById('modalDetalleVenta').classList.remove('open');
+      limpiarNavRegistro();
       document.getElementById('modalEditarVenta').classList.add('open');
     }
 
@@ -2408,15 +2421,8 @@
       itemsEdicionVenta = [];
     }
 
-    function seleccionarEstadoEdicion(estado) {
-      editandoEstadoPago = estado;
-      actualizarBotonesEdicionVenta();
-    }
-
-    function seleccionarTipoEnvioEdicion(tipo) {
-      editandoTipoEnvio = tipo;
-      actualizarBotonesEdicionVenta();
-    }
+    function seleccionarEstadoEdicion(estado) { editandoEstadoPago = estado; actualizarBotonesEdicionVenta(); }
+    function seleccionarTipoEnvioEdicion(tipo) { editandoTipoEnvio = tipo; actualizarBotonesEdicionVenta(); }
 
     function actualizarBotonesEdicionVenta() {
       const b1 = document.getElementById('editEstadoPagado');
@@ -2438,16 +2444,16 @@
     function recalcularItemsEdicion() {
       let totalPaq = 0;
       itemsEdicionVenta.forEach(it => { totalPaq += it.paquetes_totales || 0; });
-      const esMayor = totalPaq >= 100;
+      const modo = determinarModoEfectivo(totalPaq, modoTarifaEdicion);
       itemsEdicionVenta.forEach(it => {
         const itemCat = obtenerItemCatalogo(it.producto);
         if (itemCat) {
-          it.tipo_tarifa = esMayor ? "Mayor" : "Menor";
-          it.precio_unitario = esMayor ? itemCat.mayor : itemCat.menor;
+          it.tipo_tarifa = etiquetaModo(modo);
+          it.precio_unitario = modo === 'final' ? itemCat.final : (modo === 'mayor' ? itemCat.mayor : itemCat.menor);
           it.subtotal = (it.paquetes_totales || 0) * it.precio_unitario;
         }
       });
-      return { totalPaquetes: totalPaq, esMayor };
+      return { totalPaquetes: totalPaq, modo };
     }
 
     function actualizarTotalEdicion() {
@@ -2456,10 +2462,15 @@
     }
 
     function renderizarItemsEdicion() {
-      recalcularItemsEdicion();
+      const info = recalcularItemsEdicion();
+      const badge = document.getElementById('badgeTarifaEdicion');
+      if (badge) {
+        badge.className = 'tag-tarifa-simple ' + (info.modo === 'final' ? 'tarifa-final' : (info.modo === 'mayor' ? 'tarifa-mayor' : 'tarifa-menor'));
+        badge.innerText = etiquetaModo(info.modo);
+      }
+
       const cont = document.getElementById('editItemsLista');
       if (!cont) return;
-
       if (itemsEdicionVenta.length === 0) {
         cont.innerHTML = '<div style="text-align:center; padding:14px; font-size:11px; color:var(--text-soft); font-weight:600;">Sin productos. Agrega al menos uno.</div>';
         actualizarTotalEdicion();
@@ -2497,23 +2508,19 @@
       it.paquetes_stock = cant - paraProduccion;
       renderizarItemsEdicion();
     }
-
     function eliminarItemEdicion(idx) {
       if (itemsEdicionVenta.length <= 1) { mostrarToast("Debe haber al menos un producto"); return; }
       itemsEdicionVenta.splice(idx, 1);
       renderizarItemsEdicion();
     }
-
     function abrirAgregarItemEdicion() {
       document.getElementById('editAgregarItemPanel').style.display = 'block';
       document.getElementById('editItemCantidad').value = '';
       document.getElementById('editItemCantidad').focus();
     }
-
     function cancelarAgregarItemEdicion() {
       document.getElementById('editAgregarItemPanel').style.display = 'none';
     }
-
     function confirmarAgregarItemEdicion() {
       const prod = document.getElementById('editItemProducto').value;
       const cant = parseInt(document.getElementById('editItemCantidad').value) || 0;
@@ -2533,15 +2540,10 @@
       } else {
         const paraProduccion = cant > stockActual ? (cant - stockActual) : 0;
         itemsEdicionVenta.push({
-          producto: prod,
-          paquetes_totales: cant,
-          paquetes_stock: cant - paraProduccion,
-          paquetes_produccion: paraProduccion,
-          unidad_origen: 'paquetes',
-          valor_origen: cant,
-          tipo_tarifa: 'Menor',
-          precio_unitario: 0,
-          subtotal: 0
+          producto: prod, paquetes_totales: cant,
+          paquetes_stock: cant - paraProduccion, paquetes_produccion: paraProduccion,
+          unidad_origen: 'paquetes', valor_origen: cant,
+          tipo_tarifa: 'Menor', precio_unitario: 0, subtotal: 0
         });
       }
 
@@ -2554,7 +2556,7 @@
       if (!ventaEditandoCodigo) return;
       if (itemsEdicionVenta.length === 0) { mostrarToast("Debe haber al menos un producto"); return; }
 
-      recalcularItemsEdicion();
+      const info = recalcularItemsEdicion();
       const totalPaquetes = itemsEdicionVenta.reduce((a, it) => a + (it.paquetes_totales || 0), 0);
       const totalSoles = itemsEdicionVenta.reduce((a, it) => a + (it.subtotal || 0), 0);
 
@@ -2573,23 +2575,19 @@
         const estabaPagado = esPagado(v);
         const seraPagado = (editandoEstadoPago === 'PAGADO');
 
-        // Actualizar items y totales
         v.items = itemsEdicionVenta.map(it => ({ ...it }));
         v.total_paquetes = totalPaquetes;
         v.monto_total = +totalSoles.toFixed(2);
-        v.tarifa_aplicada = totalPaquetes >= 100 ? "Al por mayor" : "Al por menor";
+        v.tarifa_aplicada = tarifaAplicadaTexto(info.modo);
 
-        // Ajustar estado de pago y montos
         if (seraPagado && !estabaPagado) {
           v.monto_pagado = +totalSoles.toFixed(2);
           v.monto_pendiente = 0;
           v.estado_pago = 'PAGADO';
           if (!v.cobros) v.cobros = [];
           v.cobros.push({
-            fecha: ahora.toISOString(),
-            monto: +totalSoles.toFixed(2),
-            metodo: 'Ajuste manual',
-            vendedor: v.vendedor,
+            fecha: ahora.toISOString(), monto: +totalSoles.toFixed(2),
+            metodo: 'Ajuste manual', vendedor: v.vendedor,
             nota: 'Marcado como pagado desde edición'
           });
           v.contabilidad_enviada = false;
@@ -2603,13 +2601,11 @@
           v.monto_pendiente = 0;
           v.estado_pago = 'PAGADO';
         } else {
-          // Pendiente sigue pendiente
           v.monto_pagado = 0;
           v.monto_pendiente = +totalSoles.toFixed(2);
           v.estado_pago = 'PENDIENTE';
         }
 
-        // Recalcular tickets de producción
         const tickets = [];
         let prodSeq = 0;
         const seqVenta = extraerSecuenciaVenta(v.codigo);
@@ -2619,8 +2615,7 @@
             tickets.push({
               codigo: `produccion_${abrev}_${fechaCorta}_${seqVenta}_${String(prodSeq).padStart(2,'0')}`,
               fecha_solicitud: ahora.toISOString(),
-              producto: it.producto,
-              paquetes_a_fabricar: it.paquetes_produccion,
+              producto: it.producto, paquetes_a_fabricar: it.paquetes_produccion,
               venta_codigo: v.codigo
             });
           }
@@ -2660,20 +2655,18 @@
       document.getElementById('cobroMonto').value = mPendiente.toFixed(2);
       document.getElementById('cobroMetodo').value = "Efectivo";
 
-      cerrarModalDetalleVenta();
+      document.getElementById('modalDetalleVenta').classList.remove('open');
+      limpiarNavRegistro();
       document.getElementById('modalConfirmarCobro').classList.add('open');
     }
-
     function cerrarModalConfirmarCobro() {
       document.getElementById('modalConfirmarCobro').classList.remove('open');
       codigoVentaCobrando = null;
     }
-
     function confirmarCobroYNotificar() {
       if (!codigoVentaCobrando) return;
       const montoRecibido = parseFloat(document.getElementById('cobroMonto').value) || 0;
       const metodo = document.getElementById('cobroMetodo').value;
-
       if (montoRecibido <= 0) { mostrarToast("Ingresa un monto válido"); return; }
 
       const refs = [];
@@ -2685,19 +2678,13 @@
 
       const v = refs[0];
       const mPendienteAntes = getMontoPendiente(v);
-
       if (montoRecibido > mPendienteAntes + 0.01) {
         mostrarToast("El monto excede lo pendiente (S/ " + mPendienteAntes.toFixed(2) + ")");
         return;
       }
 
       const ahora = new Date();
-      const cobro = {
-        fecha: ahora.toISOString(),
-        monto: +montoRecibido.toFixed(2),
-        metodo: metodo,
-        vendedor: v.vendedor
-      };
+      const cobro = { fecha: ahora.toISOString(), monto: +montoRecibido.toFixed(2), metodo, vendedor: v.vendedor };
 
       const actualizacion = (venta) => {
         venta.monto_pagado = +((venta.monto_pagado || 0) + montoRecibido).toFixed(2);
@@ -2734,10 +2721,7 @@
         fecha_envio: ahora.toISOString(),
         vendedor: z.asesor,
         zona: z.nombreZona,
-        pagos: pendientes.map(v => ({
-          codigo: v.codigo,
-          estado: "pagado"
-        }))
+        pagos: pendientes.map(v => ({ codigo: v.codigo, estado: "pagado" }))
       };
 
       const jsonStr = JSON.stringify(payload, null, 2);
@@ -2746,9 +2730,7 @@
 
       const codigosEnviados = new Set(pendientes.map(v => v.codigo));
       [todasLasVentas, ventasHoy].forEach(arr => {
-        arr.forEach(v => {
-          if (codigosEnviados.has(v.codigo)) v.contabilidad_enviada = true;
-        });
+        arr.forEach(v => { if (codigosEnviados.has(v.codigo)) v.contabilidad_enviada = true; });
       });
 
       localStorage.setItem(`fabrec_ventas_hoy_${zonaActivaClave}`, JSON.stringify(ventasHoy));
@@ -2769,9 +2751,7 @@
     }
 
     async function generarReciboCanvas(venta) {
-      if (document.fonts && document.fonts.ready) {
-        try { await document.fonts.ready; } catch (e) {}
-      }
+      if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch (e) {} }
 
       const dpr = 2;
       const W = 440;
@@ -2779,7 +2759,6 @@
       const d = venta;
       const cli = d.cliente || {};
       const items = d.items || [];
-
       const EST_H = 900 + items.length * 30;
 
       const temp = document.createElement('canvas');
@@ -2790,13 +2769,11 @@
 
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, W, EST_H);
-
       ctx.fillStyle = '#2563eb';
       ctx.fillRect(0, 0, W, 6);
 
       const FONT_REG = 'Montserrat, Arial, sans-serif';
       const FONT_MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
-
       let y = 42;
 
       ctx.textAlign = 'left';
@@ -2817,7 +2794,6 @@
       ctx.font = `600 10px ${FONT_REG}`;
       ctx.fillStyle = '#94a3b8';
       ctx.fillText(fv, W - padding, y + 18);
-
       y += 38;
 
       ctx.strokeStyle = '#e2e8f0';
@@ -2870,11 +2846,8 @@
       const maxW = W - padding * 2;
       for (const w of words) {
         const test = line ? line + ' ' + w : w;
-        if (ctx.measureText(test).width > maxW) {
-          ctx.fillText(line, padding, y);
-          y += 15;
-          line = w;
-        } else line = test;
+        if (ctx.measureText(test).width > maxW) { ctx.fillText(line, padding, y); y += 15; line = w; }
+        else line = test;
       }
       if (line) { ctx.fillText(line, padding, y); y += 15; }
       y += 8;
@@ -2914,9 +2887,7 @@
         ctx.fillStyle = '#0f172a';
         ctx.font = `700 11px ${FONT_REG}`;
         let prod = it.producto || '-';
-        while (ctx.measureText(prod).width > (W - padding * 2 - 130) && prod.length > 6) {
-          prod = prod.slice(0, -2);
-        }
+        while (ctx.measureText(prod).width > (W - padding * 2 - 130) && prod.length > 6) prod = prod.slice(0, -2);
         if (prod !== it.producto) prod = prod.slice(0, -1) + '…';
         ctx.fillText(prod, padding, y);
 
@@ -2943,7 +2914,6 @@
       ctx.fillStyle = '#64748b';
       ctx.font = `900 10px ${FONT_REG}`;
       ctx.fillText('TOTAL', padding, y);
-
       ctx.textAlign = 'right';
       ctx.fillStyle = '#2563eb';
       ctx.font = `900 24px ${FONT_REG}`;
@@ -3016,9 +2986,7 @@
       return finalCanvas;
     }
 
-    function nombreArchivoRecibo(v) {
-      return `recibo_${(v.codigo || 'venta').replace(/[^a-z0-9_-]/gi, '_')}.png`;
-    }
+    function nombreArchivoRecibo(v) { return `recibo_${(v.codigo || 'venta').replace(/[^a-z0-9_-]/gi, '_')}.png`; }
 
     async function descargarReciboImagen() {
       if (!ventaDetalleActual) return;
@@ -3037,10 +3005,7 @@
           setTimeout(() => URL.revokeObjectURL(url), 2000);
           mostrarToast("Recibo descargado");
         }, 'image/png');
-      } catch (e) {
-        console.error(e);
-        mostrarToast("Error generando imagen");
-      }
+      } catch (e) { console.error(e); mostrarToast("Error generando imagen"); }
     }
 
     async function enviarReciboCliente() {
@@ -3056,7 +3021,6 @@
                     `Te envío la imagen del recibo adjunta.`;
 
       let compartido = false;
-
       try {
         if (navigator.canShare && navigator.share) {
           const canvas = await generarReciboCanvas(v);
@@ -3064,22 +3028,13 @@
           if (blob) {
             const file = new File([blob], nombreArchivoRecibo(v), { type: 'image/png' });
             if (navigator.canShare({ files: [file] })) {
-              await navigator.share({
-                files: [file],
-                title: 'Recibo FABREC',
-                text: `Recibo de venta ${v.codigo} - ${v.cliente.nombre}`
-              });
+              await navigator.share({ files: [file], title: 'Recibo FABREC', text: `Recibo de venta ${v.codigo} - ${v.cliente.nombre}` });
               compartido = true;
               mostrarToast("Recibo compartido");
             }
           }
         }
-      } catch (e) {
-        if (e && e.name === 'AbortError') {
-          return;
-        }
-      }
-
+      } catch (e) { if (e && e.name === 'AbortError') return; }
       if (compartido) return;
 
       try {
@@ -3095,22 +3050,17 @@
           document.body.removeChild(a);
           setTimeout(() => URL.revokeObjectURL(url), 2000);
         }, 'image/png');
-      } catch (e) {
-        console.error(e);
-      }
+      } catch (e) { console.error(e); }
 
       let waUrl;
-      if (tel && tel.length >= 11) {
-        waUrl = "https://api.whatsapp.com/send/?phone=" + tel + "&text=" + encodeURIComponent(texto);
-      } else {
-        waUrl = "https://api.whatsapp.com/send/?text=" + encodeURIComponent(texto);
-      }
+      if (tel && tel.length >= 11) waUrl = "https://api.whatsapp.com/send/?phone=" + tel + "&text=" + encodeURIComponent(texto);
+      else waUrl = "https://api.whatsapp.com/send/?text=" + encodeURIComponent(texto);
       window.open(waUrl, '_blank');
       mostrarToast("Imagen descargada. Adjúntala en WhatsApp.");
     }
 
     // ==================================================
-    // 18. CIERRE / REGISTROS DE VENTAS
+    // 18. CIERRE / REGISTROS
     // ==================================================
     function agruparVentasPorFecha(ventas) {
       const grupos = {};
@@ -3143,8 +3093,7 @@
       return {
         codigo_registro: generarCodigoRegistroParaFecha(fechaObj),
         fecha_registro: fechaObj.toISOString(),
-        vendedor: z.asesor,
-        zona: z.nombreZona,
+        vendedor: z.asesor, zona: z.nombreZona,
         resumen: {
           monto_total: +totalSoles.toFixed(2),
           monto_cobrado: +totalCobrado.toFixed(2),
@@ -3180,7 +3129,7 @@
       }
 
       let html = "";
-      fechasPrevias.slice(0, 15).forEach(fecha => {
+      fechasPrevias.slice(0, 30).forEach(fecha => {
         const grupo = grupos[fecha];
         const ventasDia = grupo.ventas;
         let totalSoles = 0, totalCobrado = 0, totalPorCobrar = 0, pendientesCount = 0;
@@ -3197,7 +3146,7 @@
         const codigo = generarCodigoRegistroParaFecha(grupo.fechaObj);
 
         html += `
-          <div class="registro-row">
+          <div class="registro-row" onclick="abrirRegistroDetalle('${fecha}')">
             <div class="registro-row-top">
               <span class="registro-codigo">${codigo}</span>
               <span class="registro-monto">S/ ${totalSoles.toFixed(2)}</span>
@@ -3212,20 +3161,106 @@
       cont.innerHTML = html;
     }
 
+    function abrirRegistroDetalle(fechaKey) {
+      const grupos = agruparVentasPorFecha(todasLasVentas);
+      const grupo = grupos[fechaKey];
+      if (!grupo) return;
+
+      const ventasDia = grupo.ventas;
+      let totalSoles = 0, totalCobrado = 0, totalPorCobrar = 0;
+      ventasDia.forEach(v => {
+        totalSoles += v.monto_total;
+        totalCobrado += getMontoPagado(v);
+        totalPorCobrar += getMontoPendiente(v);
+      });
+
+      const codigo = generarCodigoRegistroParaFecha(grupo.fechaObj);
+      document.getElementById('registroDetalleTitulo').innerText = codigo;
+
+      document.getElementById('registroDetalleResumen').innerHTML = `
+        <div class="registro-resumen-item">
+          <div class="registro-resumen-lbl">Vendido</div>
+          <div class="registro-resumen-val">S/ ${totalSoles.toFixed(2)}</div>
+        </div>
+        <div class="registro-resumen-item">
+          <div class="registro-resumen-lbl">Cobrado</div>
+          <div class="registro-resumen-val" style="color: var(--success);">S/ ${totalCobrado.toFixed(2)}</div>
+        </div>
+        <div class="registro-resumen-item">
+          <div class="registro-resumen-lbl">Por Cobrar</div>
+          <div class="registro-resumen-val" style="color: var(--amber);">S/ ${totalPorCobrar.toFixed(2)}</div>
+        </div>
+      `;
+
+      registroOrigenFechaKey = fechaKey;
+      registroOrigenCodigos = ventasDia.map(v => v.codigo);
+      registroOrigenIndice = -1;
+
+      const contVentas = document.getElementById('registroDetalleVentas');
+      const ventasOrd = [...ventasDia].sort((a, b) => new Date(b.fecha_venta) - new Date(a.fecha_venta));
+
+      contVentas.innerHTML = ventasOrd.map(v => {
+        const pagado = esPagado(v);
+        const hora = v.fecha_venta ? new Date(v.fecha_venta).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }) : '';
+        return `
+          <div class="venta-registro-row" onclick="verDetalleVentaDesdeRegistro('${v.codigo}')">
+            <div class="venta-registro-info">
+              <div class="venta-registro-nombre">${escaparHTML(v.cliente.nombre)}</div>
+              <div class="venta-registro-meta">
+                ${escaparHTML(v.codigo)} • ${hora} • ${v.total_paquetes} paq •
+                ${pagado ? 'Pagado' : 'Por cobrar'}
+              </div>
+            </div>
+            <div class="venta-registro-monto">S/ ${v.monto_total.toFixed(2)}</div>
+          </div>
+        `;
+      }).join('') || '<div class="empty-state">Sin ventas en este registro.</div>';
+
+      document.getElementById('modalRegistroDetalle').classList.add('open');
+    }
+
+    function cerrarModalRegistroDetalle() {
+      document.getElementById('modalRegistroDetalle').classList.remove('open');
+      limpiarNavRegistro();
+    }
+    function verDetalleVentaDesdeRegistro(codigo) {
+      document.getElementById('modalRegistroDetalle').classList.remove('open');
+      setTimeout(() => verDetalleVenta(codigo), 180);
+    }
+
     // ==================================================
     // 19. DASHBOARD
     // ==================================================
     function cambiarFiltroDashboard(tipo) {
       filtroDashboardActivo = tipo;
-      ['btnDashHoy', 'btnDashSemana', 'btnDashMes', 'btnDashTodo'].forEach(id => {
+      localStorage.setItem(KEY_FILTRO_DASH, tipo);
+      actualizarBotonesFiltroDash();
+      renderizarDashboard();
+    }
+
+    function actualizarBotonesFiltroDash() {
+      ['btnDashHoy', 'btnDashSemana', 'btnDashMes', 'btnDashAnio'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.remove('active');
       });
-      if (tipo === 'hoy') document.getElementById('btnDashHoy').classList.add('active');
-      if (tipo === 'semana') document.getElementById('btnDashSemana').classList.add('active');
-      if (tipo === 'mes') document.getElementById('btnDashMes').classList.add('active');
-      if (tipo === 'todo') document.getElementById('btnDashTodo').classList.add('active');
-      renderizarDashboard();
+      const map = { hoy: 'btnDashHoy', semana: 'btnDashSemana', mes: 'btnDashMes', anio: 'btnDashAnio' };
+      const btn = document.getElementById(map[filtroDashboardActivo]);
+      if (btn) btn.classList.add('active');
+    }
+
+    function cambiarTipoGrafico(tipo) {
+      tipoGraficoActual = tipo;
+      localStorage.setItem(KEY_TIPO_GRAFICO, tipo);
+      actualizarBotonesGrafico();
+      dibujarChartPaquetes('canvasChartPaquetes');
+    }
+
+    function actualizarBotonesGrafico() {
+      const b1 = document.getElementById('btnChartBarras');
+      const b2 = document.getElementById('btnChartLineas');
+      if (!b1 || !b2) return;
+      if (tipoGraficoActual === 'bar') { b1.classList.add('active'); b2.classList.remove('active'); }
+      else { b1.classList.remove('active'); b2.classList.add('active'); }
     }
 
     function renderizarDashboard() {
@@ -3240,26 +3275,46 @@
           return fVenta >= hace7dias;
         }
         if (filtroDashboardActivo === 'mes') return fVenta.getMonth() === ahora.getMonth() && fVenta.getFullYear() === ahora.getFullYear();
+        if (filtroDashboardActivo === 'anio') return fVenta.getFullYear() === ahora.getFullYear();
         return true;
       });
 
-      let totalSoles = 0, totalCobrado = 0, totalPorCobrar = 0;
+      let totalCobrado = 0, totalPorCobrar = 0, totalPaquetes = 0;
       ventasFiltradas.forEach(v => {
-        totalSoles += v.monto_total;
         totalCobrado += getMontoPagado(v);
         totalPorCobrar += getMontoPendiente(v);
+        totalPaquetes += v.total_paquetes || 0;
       });
 
-      document.getElementById('dashTotalSoles').innerText = formatearMonto(totalSoles);
-      document.getElementById('dashTotalPedidos').innerText = ventasFiltradas.length;
+      const comision = totalPaquetes * COMISION_POR_PAQUETE;
+      document.getElementById('dashPaquetes').innerText = totalPaquetes.toLocaleString();
+      document.getElementById('dashComision').innerText = 'S/ ' + comision.toFixed(2);
       document.getElementById('dashCobrado').innerText = formatearMonto(totalCobrado);
       document.getElementById('dashPorCobrar').innerText = formatearMonto(totalPorCobrar);
 
-      dibujarBarChart('canvasChartMonto', ventasFiltradas, 'monto_total', '#059669', 'S/');
-      dibujarBarChart('canvasChartPedidos', ventasFiltradas, 'conteo', '#2563eb', '');
+      const chartTitulo = document.getElementById('chartTituloPaquetes');
+      if (filtroDashboardActivo === 'hoy') chartTitulo.innerText = 'Paquetes de Hoy';
+      else if (filtroDashboardActivo === 'semana') chartTitulo.innerText = 'Paquetes Semanales';
+      else if (filtroDashboardActivo === 'mes') chartTitulo.innerText = 'Paquetes Mensuales';
+      else if (filtroDashboardActivo === 'anio') chartTitulo.innerText = 'Paquetes Anuales';
+
+      actualizarBotonesGrafico();
+      dibujarChartPaquetes('canvasChartPaquetes');
     }
 
-    function dibujarBarChart(canvasId, dataset, propiedad, colorHex, prefijo) {
+    // ==================================================
+    // CHART DRAWING
+    // ==================================================
+    function getStartOfWeek(date) {
+      const d = new Date(date);
+      d.setHours(0,0,0,0);
+      const day = d.getDay();
+      const diff = (day === 0 ? -6 : 1 - day);
+      d.setDate(d.getDate() + diff);
+      return d;
+    }
+
+    function dibujarChartPaquetes(canvasId) {
       const canvas = document.getElementById(canvasId);
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
@@ -3272,63 +3327,333 @@
       const h = rect.height;
       ctx.clearRect(0, 0, w, h);
 
-      if (dataset.length === 0) {
+      const ahora = new Date();
+      const colorPrimario = getComputedStyle(document.body).getPropertyValue('--primary').trim() || '#2563eb';
+
+      const padL = 36, padR = 16, padT = 30, padB = 28;
+      const chartW = w - padL - padR;
+      const chartH = h - padT - padB;
+
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padL, h - padB);
+      ctx.lineTo(w - padR, h - padB);
+      ctx.stroke();
+
+      // HOY: una sola barra/punto
+      if (filtroDashboardActivo === 'hoy') {
+        let hoyPaq = 0;
+        todasLasVentas.forEach(v => {
+          if (!v.fecha_venta) return;
+          const f = new Date(v.fecha_venta);
+          if (f.toLocaleDateString('es-PE') === ahora.toLocaleDateString('es-PE')) {
+            hoyPaq += v.total_paquetes || 0;
+          }
+        });
+        const maxVal = Math.max(hoyPaq, 1);
+
         ctx.fillStyle = '#94a3b8';
-        ctx.font = '600 11px Montserrat';
+        ctx.font = '600 9px Montserrat';
+        ctx.textAlign = 'right';
+        ctx.fillText(String(maxVal), padL - 4, padT + 4);
+        ctx.fillText('0', padL - 4, h - padB + 4);
+
+        const cx = padL + chartW / 2;
+        if (tipoGraficoActual === 'bar') {
+          const barW = 60;
+          const barH = (hoyPaq / maxVal) * chartH;
+          const x = cx - barW / 2;
+          const y = h - padB - barH;
+          ctx.fillStyle = colorPrimario;
+          ctx.beginPath();
+          const r = 6;
+          if (barH > r) {
+            ctx.moveTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.lineTo(x + barW - r, y);
+            ctx.quadraticCurveTo(x + barW, y, x + barW, y + r);
+            ctx.lineTo(x + barW, h - padB);
+            ctx.lineTo(x, h - padB);
+            ctx.closePath();
+            ctx.fill();
+          } else {
+            ctx.fillRect(x, h - padB - Math.max(barH, 4), barW, Math.max(barH, 4));
+          }
+          if (hoyPaq > 0) {
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '800 13px Montserrat';
+            ctx.textAlign = 'center';
+            ctx.fillText(String(hoyPaq), cx, y - 8);
+          }
+        } else {
+          const y = h - padB - (hoyPaq / maxVal) * chartH;
+          // Área
+          const grad = ctx.createLinearGradient(0, padT, 0, h - padB);
+          grad.addColorStop(0, hexToRgba(colorPrimario, 0.25));
+          grad.addColorStop(1, hexToRgba(colorPrimario, 0));
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.moveTo(cx - 80, h - padB);
+          ctx.lineTo(cx, y);
+          ctx.lineTo(cx + 80, h - padB);
+          ctx.closePath();
+          ctx.fill();
+
+          // Punto
+          ctx.fillStyle = '#fff';
+          ctx.beginPath();
+          ctx.arc(cx, y, 7, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = colorPrimario;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+
+          if (hoyPaq > 0) {
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '800 13px Montserrat';
+            ctx.textAlign = 'center';
+            ctx.fillText(String(hoyPaq), cx, y - 15);
+          }
+        }
+
+        ctx.fillStyle = '#64748b';
+        ctx.font = '600 10px Montserrat';
         ctx.textAlign = 'center';
-        ctx.fillText('Sin ventas registradas en esta zona', w / 2, h / 2);
+        ctx.fillText('Hoy', cx, h - 8);
         return;
       }
 
-      const mapaAgrupado = {};
-      dataset.forEach(d => {
-        if (!d.fecha_venta) return;
-        const clave = new Date(d.fecha_venta).toLocaleDateString('es-PE');
-        if (!mapaAgrupado[clave]) mapaAgrupado[clave] = { monto: 0, conteo: 0 };
-        mapaAgrupado[clave].monto += d.monto_total;
-        mapaAgrupado[clave].conteo += 1;
+      // SEMANA: esta semana vs semana pasada
+      if (filtroDashboardActivo === 'semana') {
+        const inicioActual = getStartOfWeek(ahora);
+        const inicioPasado = new Date(inicioActual);
+        inicioPasado.setDate(inicioActual.getDate() - 7);
+        const oneDay = 24 * 60 * 60 * 1000;
+
+        const etiquetas = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+        const datosActual = new Array(7).fill(0);
+        const datosPasado = new Array(7).fill(0);
+
+        todasLasVentas.forEach(v => {
+          if (!v.fecha_venta) return;
+          const f = new Date(v.fecha_venta);
+          f.setHours(0,0,0,0);
+          const diffActual = Math.round((f.getTime() - inicioActual.getTime()) / oneDay);
+          const diffPasado = Math.round((f.getTime() - inicioPasado.getTime()) / oneDay);
+          const paq = v.total_paquetes || 0;
+          if (diffActual >= 0 && diffActual < 7) datosActual[diffActual] += paq;
+          if (diffPasado >= 0 && diffPasado < 7) datosPasado[diffPasado] += paq;
+        });
+
+        dibujarComparativo(ctx, w, h, padL, padR, padT, padB, chartW, chartH, colorPrimario,
+          etiquetas, datosActual, datosPasado, 'Esta semana', 'Semana pasada');
+        return;
+      }
+
+      // MES: este mes vs mes pasado
+      if (filtroDashboardActivo === 'mes') {
+        const diasMesActual = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0).getDate();
+        const mesPasado = new Date(ahora.getFullYear(), ahora.getMonth() - 1, 1);
+        const diasMesPasado = new Date(mesPasado.getFullYear(), mesPasado.getMonth() + 1, 0).getDate();
+        const maxDias = Math.max(diasMesActual, diasMesPasado);
+
+        const etiquetas = [];
+        for (let i = 1; i <= maxDias; i++) etiquetas.push(String(i));
+
+        const datosActual = new Array(maxDias).fill(0);
+        const datosPasado = new Array(maxDias).fill(0);
+
+        todasLasVentas.forEach(v => {
+          if (!v.fecha_venta) return;
+          const f = new Date(v.fecha_venta);
+          const paq = v.total_paquetes || 0;
+          if (f.getFullYear() === ahora.getFullYear() && f.getMonth() === ahora.getMonth()) {
+            const dia = f.getDate() - 1;
+            if (dia >= 0 && dia < maxDias) datosActual[dia] += paq;
+          }
+          if (f.getFullYear() === mesPasado.getFullYear() && f.getMonth() === mesPasado.getMonth()) {
+            const dia = f.getDate() - 1;
+            if (dia >= 0 && dia < maxDias) datosPasado[dia] += paq;
+          }
+        });
+
+        const nomActual = ahora.toLocaleDateString('es-PE', { month: 'short' });
+        const nomPasado = mesPasado.toLocaleDateString('es-PE', { month: 'short' });
+
+        dibujarComparativo(ctx, w, h, padL, padR, padT, padB, chartW, chartH, colorPrimario,
+          etiquetas, datosActual, datosPasado, nomActual, nomPasado);
+        return;
+      }
+
+      // AÑO: este año vs año pasado
+      if (filtroDashboardActivo === 'anio') {
+        const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        const datosActual = new Array(12).fill(0);
+        const datosPasado = new Array(12).fill(0);
+        const yearActual = ahora.getFullYear();
+        const yearPasado = yearActual - 1;
+
+        todasLasVentas.forEach(v => {
+          if (!v.fecha_venta) return;
+          const f = new Date(v.fecha_venta);
+          const paq = v.total_paquetes || 0;
+          if (f.getFullYear() === yearActual) datosActual[f.getMonth()] += paq;
+          else if (f.getFullYear() === yearPasado) datosPasado[f.getMonth()] += paq;
+        });
+
+        dibujarComparativo(ctx, w, h, padL, padR, padT, padB, chartW, chartH, colorPrimario,
+          meses, datosActual, datosPasado, String(yearActual), String(yearPasado));
+        return;
+      }
+    }
+
+    function dibujarComparativo(ctx, w, h, padL, padR, padT, padB, chartW, chartH, colorPrimario, etiquetas, datosActual, datosPasado, nombreActual, nombrePasado) {
+      const allVals = [...datosActual, ...datosPasado];
+      const maxVal = Math.max(...allVals, 1);
+
+      // Y labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '600 9px Montserrat';
+      ctx.textAlign = 'right';
+      ctx.fillText(String(maxVal), padL - 4, padT + 4);
+      ctx.fillText('0', padL - 4, h - padB + 4);
+
+      // Leyenda
+      ctx.textAlign = 'left';
+      ctx.font = '700 10px Montserrat';
+      ctx.fillStyle = colorPrimario;
+      ctx.fillRect(padL, 8, 14, 3);
+      ctx.fillStyle = '#475569';
+      ctx.fillText(nombreActual, padL + 20, 13);
+
+      ctx.fillStyle = '#94a3b8';
+      const legendX = Math.max(padL + 100, padL + 20 + ctx.measureText(nombreActual).width + 18);
+      ctx.fillRect(legendX, 8, 14, 3);
+      ctx.fillStyle = '#475569';
+      ctx.fillText(nombrePasado, legendX + 20, 13);
+
+      const n = etiquetas.length;
+      const gap = chartW / n;
+
+      // X labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '600 9px Montserrat';
+      ctx.textAlign = 'center';
+      const skip = n > 15 ? Math.ceil(n / 12) : 1;
+      etiquetas.forEach((lbl, i) => {
+        if (i % skip !== 0 && i !== n - 1) return;
+        const x = padL + (i * gap) + (gap / 2);
+        ctx.fillText(lbl, x, h - 8);
       });
 
-      const etiquetas = Object.keys(mapaAgrupado);
-      const valores = etiquetas.map(k => propiedad === 'monto_total' ? mapaAgrupado[k].monto : mapaAgrupado[k].conteo);
-      const maxVal = Math.max(...valores, 1);
-      const paddingBottom = 26, paddingTop = 20;
-      const chartHeight = h - paddingBottom - paddingTop;
-      const barWidth = Math.min(36, (w / (valores.length || 1)) - 14);
-      const gap = w / valores.length;
+      if (tipoGraficoActual === 'bar') {
+        const pairWidth = Math.min(gap - 3, 22);
+        const barWidth = pairWidth / 2 - 1;
 
-      valores.forEach((val, i) => {
-        const barHeight = (val / maxVal) * chartHeight;
-        const x = (i * gap) + (gap / 2) - (barWidth / 2);
-        const y = h - paddingBottom - barHeight;
-        ctx.fillStyle = colorHex;
-        ctx.beginPath();
-        const r = 5;
-        ctx.moveTo(x, y + r);
-        ctx.quadraticCurveTo(x, y, x + r, y);
-        ctx.lineTo(x + barWidth - r, y);
-        ctx.quadraticCurveTo(x + barWidth, y, x + barWidth, y + r);
-        ctx.lineTo(x + barWidth, h - paddingBottom);
-        ctx.lineTo(x, h - paddingBottom);
-        ctx.closePath();
-        ctx.fill();
+        datosActual.forEach((val, i) => {
+          const cx = padL + (i * gap) + (gap / 2);
 
-        ctx.fillStyle = '#0f172a';
-        ctx.font = '800 10px Montserrat';
-        ctx.textAlign = 'center';
-        let txtVal;
-        if (propiedad === 'monto_total') {
-          txtVal = formatearMonto(val);
-        } else {
-          txtVal = `${val}`;
+          // Barra del mes/semana pasado (izquierda)
+          const barHP = (datosPasado[i] / maxVal) * chartH;
+          if (barHP > 0) {
+            const xP = cx - pairWidth / 2;
+            const yP = h - padB - barHP;
+            ctx.fillStyle = '#94a3b8';
+            ctx.beginPath();
+            const r = 3;
+            if (barHP > r) {
+              ctx.moveTo(xP, yP + r);
+              ctx.quadraticCurveTo(xP, yP, xP + r, yP);
+              ctx.lineTo(xP + barWidth - r, yP);
+              ctx.quadraticCurveTo(xP + barWidth, yP, xP + barWidth, yP + r);
+              ctx.lineTo(xP + barWidth, h - padB);
+              ctx.lineTo(xP, h - padB);
+              ctx.closePath();
+              ctx.fill();
+            } else {
+              ctx.fillRect(xP, h - padB - Math.max(barHP, 2), barWidth, Math.max(barHP, 2));
+            }
+          }
+
+          // Barra del actual (derecha)
+          const barHA = (val / maxVal) * chartH;
+          if (barHA > 0) {
+            const xA = cx + 1;
+            const yA = h - padB - barHA;
+            ctx.fillStyle = colorPrimario;
+            ctx.beginPath();
+            const r = 3;
+            if (barHA > r) {
+              ctx.moveTo(xA, yA + r);
+              ctx.quadraticCurveTo(xA, yA, xA + r, yA);
+              ctx.lineTo(xA + barWidth - r, yA);
+              ctx.quadraticCurveTo(xA + barWidth, yA, xA + barWidth, yA + r);
+              ctx.lineTo(xA + barWidth, h - padB);
+              ctx.lineTo(xA, h - padB);
+              ctx.closePath();
+              ctx.fill();
+            } else {
+              ctx.fillRect(xA, h - padB - Math.max(barHA, 2), barWidth, Math.max(barHA, 2));
+            }
+          }
+        });
+      } else {
+        function plotLine(data, color, lineWidth, fillAlpha) {
+          const grad = ctx.createLinearGradient(0, padT, 0, h - padB);
+          grad.addColorStop(0, hexToRgba(color, fillAlpha));
+          grad.addColorStop(1, hexToRgba(color, 0));
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.moveTo(padL + gap / 2, h - padB);
+          for (let i = 0; i < data.length; i++) {
+            const x = padL + (i * gap) + (gap / 2);
+            const y = h - padB - (data[i] / maxVal) * chartH;
+            ctx.lineTo(x, y);
+          }
+          ctx.lineTo(padL + (n - 1) * gap + gap / 2, h - padB);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.strokeStyle = color;
+          ctx.lineWidth = lineWidth;
+          ctx.lineJoin = 'round';
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          for (let i = 0; i < data.length; i++) {
+            const x = padL + (i * gap) + (gap / 2);
+            const y = h - padB - (data[i] / maxVal) * chartH;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+
+          for (let i = 0; i < data.length; i++) {
+            const x = padL + (i * gap) + (gap / 2);
+            const y = h - padB - (data[i] / maxVal) * chartH;
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(x, y, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
         }
-        ctx.fillText(txtVal, x + (barWidth / 2), y - 6);
 
-        ctx.fillStyle = '#64748b';
-        ctx.font = '600 9px Montserrat';
-        const txtLabel = etiquetas[i].length > 5 ? etiquetas[i].substring(0, 5) : etiquetas[i];
-        ctx.fillText(txtLabel, x + (barWidth / 2), h - 8);
-      });
+        plotLine(datosPasado, '#94a3b8', 2, 0.08);
+        plotLine(datosActual, colorPrimario, 2.5, 0.18);
+      }
+    }
+
+    function hexToRgba(hex, alpha) {
+      hex = (hex || '#2563eb').replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      return `rgba(${r},${g},${b},${alpha})`;
     }
 
     // ==================================================
@@ -3362,6 +3687,10 @@
                   <span class="precio-label">Mayor</span>
                   <span class="precio-value">S/ ${p.mayor.toFixed(2)}</span>
                 </div>
+                <div class="precio-item final">
+                  <span class="precio-label">Final</span>
+                  <span class="precio-value">S/ ${p.final.toFixed(2)}</span>
+                </div>
               </div>
             </div>
           `;
@@ -3377,10 +3706,31 @@
       setTimeout(() => { toast.classList.remove('show'); }, 2400);
     }
 
-    /* ==================================================
-       ============ CARGUILLO: LÓGICA ===================
-       ================================================== */
+    // ==================================================
+    // SECCIONES COLAPSABLES
+    // ==================================================
+    function restaurarEstadoSecciones() {
+      document.querySelectorAll('.seccion-colapsable[data-seccion]').forEach(el => {
+        if (!zonaActivaClave) { el.open = false; return; }
+        const key = `fabrec_sec_${zonaActivaClave}_${el.dataset.seccion}`;
+        const val = localStorage.getItem(key);
+        if (val === null) el.open = false;
+        else el.open = val === '1';
+      });
+    }
+    function initListenersSecciones() {
+      document.querySelectorAll('.seccion-colapsable[data-seccion]').forEach(el => {
+        el.addEventListener('toggle', () => {
+          if (!zonaActivaClave) return;
+          const key = `fabrec_sec_${zonaActivaClave}_${el.dataset.seccion}`;
+          localStorage.setItem(key, el.open ? '1' : '0');
+        });
+      });
+    }
 
+    // ==================================================
+    // CARGUILLO
+    // ==================================================
     function guardarCarros() {
       if (!zonaActivaClave) return;
       localStorage.setItem(`fabrec_carros_${zonaActivaClave}`, JSON.stringify(carros));
@@ -3388,7 +3738,6 @@
 
     function autoAsignarVentas() {
       ventasHoy.forEach(v => { v.asignaciones = []; });
-
       const ventasParaCarros = ventasHoy.filter(v => v.tipo_envio !== 'individual');
 
       if (carros.length === 0 || ventasParaCarros.length === 0) {
@@ -3398,7 +3747,6 @@
 
       const cargaActual = {};
       carros.forEach(c => { cargaActual[c.id] = 0; });
-
       const ventasOrd = [...ventasParaCarros].sort((a, b) => (b.total_paquetes || 0) - (a.total_paquetes || 0));
 
       ventasOrd.forEach(venta => {
@@ -3408,7 +3756,6 @@
         })).filter(it => it.paquetes > 0);
 
         if (items.length === 0) return;
-
         const asigMap = {};
 
         for (const item of items) {
@@ -3428,14 +3775,11 @@
         }
 
         venta.asignaciones = Object.entries(asigMap).map(([carroId, d]) => ({
-          carroId,
-          items: d.items,
-          paquetes: d.paquetes
+          carroId, items: d.items, paquetes: d.paquetes
         }));
       });
 
       sincronizarAsignacionesConTodas();
-
       if (zonaActivaClave) {
         localStorage.setItem(`fabrec_ventas_hoy_${zonaActivaClave}`, JSON.stringify(ventasHoy));
         localStorage.setItem(`fabrec_ventas_todas_${zonaActivaClave}`, JSON.stringify(todasLasVentas));
@@ -3452,7 +3796,6 @@
     function totalPaquetesAsignadosAVenta(v) {
       return (v.asignaciones || []).reduce((a, x) => a + (x.paquetes || 0), 0);
     }
-
     function totalPaquetesEnCarro(carroId) {
       let t = 0;
       ventasHoy.forEach(v => {
@@ -3461,7 +3804,6 @@
       });
       return t;
     }
-
     function productosEnCarro(carroId) {
       const productos = {};
       ventasHoy.forEach(v => {
@@ -3473,7 +3815,6 @@
       });
       return Object.entries(productos).sort((a, b) => b[1] - a[1]);
     }
-
     function clientesEnCarro(carroId) {
       const lista = [];
       ventasHoy.forEach(v => {
@@ -3488,7 +3829,6 @@
       });
       return lista;
     }
-
     function resumenProductosGlobal() {
       const productos = {};
       ventasHoy.forEach(v => {
@@ -3501,14 +3841,11 @@
       ventasHoy.filter(v => v.tipo_envio === 'individual').forEach(v => {
         (v.items || []).forEach(it => {
           const paq = parseInt(it.paquetes_totales) || 0;
-          if (paq > 0) {
-            productos[it.producto] = (productos[it.producto] || 0) + paq;
-          }
+          if (paq > 0) productos[it.producto] = (productos[it.producto] || 0) + paq;
         });
       });
       return Object.entries(productos).sort((a, b) => b[1] - a[1]);
     }
-
     function totalPaquetesSinAsignar() {
       let t = 0;
       ventasHoy.filter(v => v.tipo_envio !== 'individual').forEach(v => {
@@ -3554,9 +3891,7 @@
       }
 
       const fechaBadge = document.getElementById('carguilloFechaBadge');
-      if (fechaBadge) {
-        fechaBadge.innerText = formatearFechaBonita(new Date().toISOString().split('T')[0]);
-      }
+      if (fechaBadge) fechaBadge.innerText = formatearFechaBonita(new Date().toISOString().split('T')[0]);
 
       const cont = document.getElementById('carguilloContenido');
       if (!cont) return;
@@ -3568,14 +3903,12 @@
         cont.innerHTML = '<div class="empty-state">Configura al menos un carro o registra una venta con envío individual.</div>';
         return;
       }
-
       if (ventasHoy.length === 0) {
         cont.innerHTML = '<div class="empty-state">Aún no hay ventas registradas hoy.<br>Cuando registres ventas, se distribuirán automáticamente en tus carros.</div>';
         return;
       }
 
       let html = '';
-
       const sinAsignar = totalPaquetesSinAsignar();
       if (sinAsignar > 0) {
         html += `<div class="carguillo-alerta">
@@ -3609,6 +3942,11 @@
       }
 
       if (carros.length > 0 && ventasCarro.length > 0) {
+        html += `<div class="seccion-header" style="margin-top:4px;">
+          <span>Carguillos por Carro</span>
+          <span class="badge-count">${carros.length}</span>
+        </div>`;
+
         carros.forEach((carro, idx) => {
           const carga = totalPaquetesEnCarro(carro.id);
           const max = carro.maxPaquetes || 0;
@@ -3668,7 +4006,7 @@
 
       if (ventasIndividuales.length > 0) {
         html += `<div class="seccion-header" style="margin-top:20px;">
-          <span style="color:#7c3aed;">Envíos Individuales</span>
+          <span style="color:#7c3aed;">Carguillos Individuales</span>
           <span class="badge-count" style="background:#f5f3ff; color:#7c3aed; border-color:#ddd6fe;">${ventasIndividuales.length}</span>
         </div>`;
 
@@ -3744,29 +4082,20 @@
 
       document.getElementById('modalCarroConfig').classList.add('open');
     }
-
     function cerrarModalCarroConfig() {
       document.getElementById('modalCarroConfig').classList.remove('open');
       editandoCarroId = null;
     }
-
     function guardarCarroConfig() {
       const maxPaq = parseInt(document.getElementById('carroMaxPaq').value) || 0;
-
       if (maxPaq <= 0) { mostrarToast("El máximo de paquetes debe ser mayor a 0"); return; }
 
       if (editandoCarroId) {
         const idx = carros.findIndex(x => x.id === editandoCarroId);
-        if (idx !== -1) {
-          carros[idx].maxPaquetes = maxPaq;
-        }
+        if (idx !== -1) carros[idx].maxPaquetes = maxPaq;
         mostrarToast("Carro actualizado");
       } else {
-        carros.push({
-          id: generarId('carro'),
-          numero: String(carros.length + 1),
-          maxPaquetes: maxPaq
-        });
+        carros.push({ id: generarId('carro'), numero: String(carros.length + 1), maxPaquetes: maxPaq });
         mostrarToast("Carro " + carros.length + " agregado");
       }
 
@@ -3776,11 +4105,7 @@
       renderizarCarguillo();
       actualizarBadgeCarguillo();
     }
-
-    function editarCarroConfig(id) {
-      abrirModalCarroConfig(id);
-    }
-
+    function editarCarroConfig(id) { abrirModalCarroConfig(id); }
     function eliminarCarroConfig(id) {
       const c = carros.find(x => x.id === id);
       if (!c) return;
@@ -3801,20 +4126,14 @@
 
       const carrosPayload = carros.map(c => {
         const productos = productosEnCarro(c.id).map(([prod, qty]) => ({ producto: prod, paquetes: qty }));
-        const clientes = clientesEnCarro(c.id).map(cl => ({
-          nombre: cl.nombre,
-          direccion: cl.direccion,
-          paquetes: cl.paquetes
-        }));
+        const clientes = clientesEnCarro(c.id).map(cl => ({ nombre: cl.nombre, direccion: cl.direccion, paquetes: cl.paquetes }));
         const carga = totalPaquetesEnCarro(c.id);
         return {
-          id: c.id,
-          numero: c.numero || '',
+          id: c.id, numero: c.numero || '',
           max_paquetes: c.maxPaquetes,
           paquetes_asignados: carga,
           porcentaje_uso: c.maxPaquetes > 0 ? Math.round((carga / c.maxPaquetes) * 100) : 0,
-          productos: productos,
-          clientes: clientes
+          productos, clientes
         };
       });
 
@@ -3850,11 +4169,7 @@
         estado_pago: v.estado_pago,
         asignaciones: (v.asignaciones || []).map(a => {
           const car = carros.find(c => c.id === a.carroId);
-          return {
-            carro: car ? `Carro ${car.numero || ''}` : '?',
-            paquetes: a.paquetes,
-            items: a.items
-          };
+          return { carro: car ? `Carro ${car.numero || ''}` : '?', paquetes: a.paquetes, items: a.items };
         })
       }));
 
@@ -3874,14 +4189,10 @@
         paquetes_sin_asignar: sinAsignar,
         cantidad_pedidos: ventasHoy.length,
         cantidad_envios_individuales: individuales.length,
-        pedidos: pedidos
+        pedidos
       };
     }
 
-    // ==================================================
-    // ENVÍO UNIFICADO: Cierre + Carguillo
-    // Solo se envía si el carguillo está completo.
-    // ==================================================
     function enviarTodoAKing() {
       if (!zonaActivaClave) { mostrarToast("Selecciona tu zona"); abrirModalZona(); return; }
       if (ventasHoy.length === 0) { mostrarToast("No hay ventas registradas hoy"); return; }
@@ -3893,16 +4204,11 @@
       }
 
       autoAsignarVentas();
-
       const sinAsignar = totalPaquetesSinAsignar();
-      if (sinAsignar > 0) {
-        mostrarToast(`Carguillo incompleto: ${sinAsignar} paq sin asignar`);
-        return;
-      }
+      if (sinAsignar > 0) { mostrarToast(`Carguillo incompleto: ${sinAsignar} paq sin asignar`); return; }
 
       const z = ZONAS[zonaActivaClave];
       const ahora = new Date();
-
       const payloadCierre = construirPayloadRegistro(ahora, ventasHoy);
       const payloadCarguillo = construirPayloadCarguillo();
 
@@ -3930,9 +4236,7 @@
         badge.style.display = '';
         badge.innerText = total;
         badge.style.background = 'var(--primary)';
-      } else {
-        badge.style.display = 'none';
-      }
+      } else { badge.style.display = 'none'; }
     }
 
     // EXPOSICIÓN GLOBAL
@@ -3953,6 +4257,9 @@
     window.eliminarItemModal = eliminarItemModal;
     window.finalizarRegistroVenta = finalizarRegistroVenta;
     window.cambiarFiltroDashboard = cambiarFiltroDashboard;
+    window.cambiarTipoGrafico = cambiarTipoGrafico;
+    window.ciclarModoTarifa = ciclarModoTarifa;
+    window.ciclarModoTarifaEdicion = ciclarModoTarifaEdicion;
     window.seleccionarClienteAntiguo = seleccionarClienteAntiguo;
     window.verDetalleVenta = verDetalleVenta;
     window.cerrarModalDetalleVenta = cerrarModalDetalleVenta;
@@ -3974,8 +4281,14 @@
     window.abrirAgregarItemEdicion = abrirAgregarItemEdicion;
     window.cancelarAgregarItemEdicion = cancelarAgregarItemEdicion;
     window.confirmarAgregarItemEdicion = confirmarAgregarItemEdicion;
+    window.abrirWhatsAppCliente = abrirWhatsAppCliente;
+    window.abrirRegistroDetalle = abrirRegistroDetalle;
+    window.cerrarModalRegistroDetalle = cerrarModalRegistroDetalle;
+    window.verDetalleVentaDesdeRegistro = verDetalleVentaDesdeRegistro;
+    window.volverAlRegistro = volverAlRegistro;
+    window.irVentaAnterior = irVentaAnterior;
+    window.irVentaSiguiente = irVentaSiguiente;
 
-    // Carguillo expuestos
     window.abrirModalCarroConfig = abrirModalCarroConfig;
     window.cerrarModalCarroConfig = cerrarModalCarroConfig;
     window.guardarCarroConfig = guardarCarroConfig;
@@ -3986,6 +4299,10 @@
 
     window.addEventListener('DOMContentLoaded', async () => {
       await cargarDatosExternos();
+      initListenersSecciones();
+      actualizarBotonesGrafico();
+      actualizarBotonesFiltroDash();
+      restaurarTabActivo();
       if (zonaActivaClave && ZONAS[zonaActivaClave]) seleccionarZona(zonaActivaClave);
       else seleccionarZona("");
       actualizarBadgeCarguillo();
