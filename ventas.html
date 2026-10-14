@@ -1475,22 +1475,30 @@
       return (prefijo || 'id') + '_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
     }
 
+    // Normaliza un nombre de producto para comparar entre price.json y stock.json:
+    // - quita acentos, pasa a minúsculas, convierte guiones/underscores a espacios, colapsa espacios.
+    function normalizarNombre(s) {
+      return String(s || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[-_]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
     // ==================================================
-    // 1. CARGA EXTERNA
+    // 1. CARGA EXTERNA (price.json + stock.json fusionados con nombres normalizados)
     // ==================================================
     async function cargarDatosExternos() {
+      let listaPrecios = [];
+      let listaStock = [];
+
       try {
         const resPrice = await fetch('price.json', { cache: 'no-store' });
         if (resPrice.ok) {
           const dataPrice = await resPrice.json();
-          const listaPrecios = Array.isArray(dataPrice) ? dataPrice : (dataPrice.precios || []);
-          CATALOGO_FABREC = listaPrecios.map(p => ({
-            producto: p.producto,
-            menor: p.precio_menor !== undefined ? p.precio_menor : (p.menor || 0),
-            mayor: p.precio_mayor !== undefined ? p.precio_mayor : (p.mayor || 0),
-            final: p.precio_cliente_final !== undefined ? p.precio_cliente_final : (p.final || 0),
-            unidades: p.unidades_paquete || p.unidades || 100
-          }));
+          listaPrecios = Array.isArray(dataPrice) ? dataPrice : (dataPrice.precios || []);
         }
       } catch (err) { console.error("Error price.json:", err); }
 
@@ -1498,22 +1506,63 @@
         const resStock = await fetch('stock.json', { cache: 'no-store' });
         if (resStock && resStock.ok) {
           const dataStock = await resStock.json();
-          inventarioLocal = {};
           if (Array.isArray(dataStock)) {
-            dataStock.forEach(item => {
-              const nombre = item.producto;
-              const cant = item.paquetes !== undefined ? item.paquetes : (item.paquetes_disponibles || 0);
-              if (nombre) inventarioLocal[nombre] = cant;
-            });
-          } else if (dataStock && dataStock.stock && Array.isArray(dataStock.stock)) {
-            dataStock.stock.forEach(item => {
-              const nombre = item.producto;
-              const cant = item.paquetes !== undefined ? item.paquetes : (item.paquetes_disponibles || 0);
-              if (nombre) inventarioLocal[nombre] = cant;
-            });
+            listaStock = dataStock;
+          } else if (dataStock && Array.isArray(dataStock.stock)) {
+            listaStock = dataStock.stock;
           }
         }
       } catch (err) { console.error("Error stock.json:", err); }
+
+      // Índice de stock por nombre normalizado (para tolerar guiones/acentos distintos)
+      const stockPorNombreNorm = {};
+      listaStock.forEach(item => {
+        const nombre = item && item.producto;
+        if (!nombre) return;
+        const cant = item.paquetes !== undefined ? item.paquetes : (item.paquetes_disponibles || 0);
+        stockPorNombreNorm[normalizarNombre(nombre)] = cant;
+      });
+
+      inventarioLocal = {};
+      CATALOGO_FABREC = [];
+      const nombresNormUsados = new Set();
+
+      // 1) Productos con precio (price.json)
+      listaPrecios.forEach(p => {
+        const nombre = p && p.producto;
+        if (!nombre) return;
+        const keyNorm = normalizarNombre(nombre);
+        nombresNormUsados.add(keyNorm);
+        const stockCant = stockPorNombreNorm[keyNorm];
+        inventarioLocal[nombre] = stockCant !== undefined ? stockCant : 0;
+        CATALOGO_FABREC.push({
+          producto: nombre,
+          menor: p.precio_menor !== undefined ? p.precio_menor : (p.menor || 0),
+          mayor: p.precio_mayor !== undefined ? p.precio_mayor : (p.mayor || 0),
+          final: p.precio_cliente_final !== undefined ? p.precio_cliente_final : (p.final || 0),
+          unidades: p.unidades_paquete || p.unidades || 100,
+          sinPrecio: false
+        });
+      });
+
+      // 2) Productos que solo están en stock.json (modelos nuevos agregados recientemente)
+      listaStock.forEach(item => {
+        const nombre = item && item.producto;
+        if (!nombre) return;
+        const keyNorm = normalizarNombre(nombre);
+        if (nombresNormUsados.has(keyNorm)) return;
+        nombresNormUsados.add(keyNorm);
+        const cant = item.paquetes !== undefined ? item.paquetes : (item.paquetes_disponibles || 0);
+        inventarioLocal[nombre] = cant;
+        CATALOGO_FABREC.push({
+          producto: nombre,
+          menor: 0,
+          mayor: 0,
+          final: 0,
+          unidades: 100,
+          sinPrecio: true
+        });
+      });
 
       poblarSelectBotellasModal();
       renderizarListaPrecios();
@@ -1891,7 +1940,8 @@
         const colorOption = tieneStock ? '#059669' : '#d97706';
         const punto = tieneStock ? '●' : '○';
         const estadoTxt = tieneStock ? `${stock} paq` : 'Pedir';
-        return `<option value="${p.producto}" style="color: ${colorOption}; font-weight: 700;">${punto} ${p.producto} — ${estadoTxt}</option>`;
+        const avisoSinPrecio = p.sinPrecio ? ' — ⚠ sin precio' : '';
+        return `<option value="${p.producto}" style="color: ${colorOption}; font-weight: 700;">${punto} ${p.producto} — ${estadoTxt}${avisoSinPrecio}</option>`;
       }).join('');
     }
 
@@ -1908,6 +1958,11 @@
       const inputValStr = document.getElementById('ventaCantidad').value.trim();
       const inputVal = parseFloat(inputValStr);
       if (!inputValStr || isNaN(inputVal) || inputVal <= 0) { mostrarToast("Ingresa una cantidad mayor a 0"); return; }
+
+      const itemCat = obtenerItemCatalogo(prodNom);
+      if (itemCat && itemCat.sinPrecio) {
+        mostrarToast("⚠ Este modelo no tiene precio en price.json");
+      }
 
       const paq = calcularPaquetesDeEntrada(prodNom, inputVal);
       const stockActual = inventarioLocal[prodNom] || 0;
@@ -2438,7 +2493,10 @@
     function poblarSelectProductosEdicion() {
       const sel = document.getElementById('editItemProducto');
       if (!sel) return;
-      sel.innerHTML = CATALOGO_FABREC.map(p => `<option value="${p.producto}">${p.producto}</option>`).join('');
+      sel.innerHTML = CATALOGO_FABREC.map(p => {
+        const aviso = p.sinPrecio ? ' (sin precio)' : '';
+        return `<option value="${p.producto}">${p.producto}${aviso}</option>`;
+      }).join('');
     }
 
     function recalcularItemsEdicion() {
@@ -3671,30 +3729,41 @@
 
       let html = "";
       CATALOGO_FABREC.forEach(p => {
-        if (p.producto.toLowerCase().includes(q)) {
-          html += `
-            <div class="precio-card">
-              <div class="precio-card-header">
-                <div class="precio-card-nombre">${p.producto}</div>
-                <div class="precio-card-units">${p.unidades} u/paq</div>
+        if (!p.producto.toLowerCase().includes(q)) return;
+        const esSinPrecio = !!p.sinPrecio;
+        const fmt = v => esSinPrecio ? 'S/ --' : ('S/ ' + (v || 0).toFixed(2));
+        const avisoStock = (() => {
+          const s = inventarioLocal[p.producto] || 0;
+          if (s <= 0) return '<span style="color: var(--amber); font-weight: 800;"> • Pedir</span>';
+          return `<span style="color: var(--success); font-weight: 800;"> • ${s} paq</span>`;
+        })();
+
+        html += `
+          <div class="precio-card">
+            <div class="precio-card-header">
+              <div class="precio-card-nombre">
+                ${p.producto}
+                ${esSinPrecio ? '<span style="color:var(--amber); font-size:10px; font-weight:800;"> (sin precio)</span>' : ''}
+                ${avisoStock}
               </div>
-              <div class="precio-grid">
-                <div class="precio-item menor">
-                  <span class="precio-label">Menor</span>
-                  <span class="precio-value">S/ ${p.menor.toFixed(2)}</span>
-                </div>
-                <div class="precio-item mayor">
-                  <span class="precio-label">Mayor</span>
-                  <span class="precio-value">S/ ${p.mayor.toFixed(2)}</span>
-                </div>
-                <div class="precio-item final">
-                  <span class="precio-label">Final</span>
-                  <span class="precio-value">S/ ${p.final.toFixed(2)}</span>
-                </div>
+              <div class="precio-card-units">${p.unidades} u/paq</div>
+            </div>
+            <div class="precio-grid">
+              <div class="precio-item menor">
+                <span class="precio-label">Menor</span>
+                <span class="precio-value">${fmt(p.menor)}</span>
+              </div>
+              <div class="precio-item mayor">
+                <span class="precio-label">Mayor</span>
+                <span class="precio-value">${fmt(p.mayor)}</span>
+              </div>
+              <div class="precio-item final">
+                <span class="precio-label">Final</span>
+                <span class="precio-value">${fmt(p.final)}</span>
               </div>
             </div>
-          `;
-        }
+          </div>
+        `;
       });
       cont.innerHTML = html || '<div class="empty-state">No hay productos que coincidan con la búsqueda.</div>';
     }
