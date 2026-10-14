@@ -1,34 +1,14 @@
 [
   {
     "producto": "900 ml",
-    "paquetes": 3538
+    "paquetes": 2076
   },
   {
     "producto": "450 ml",
-    "paquetes": 2592
+    "paquetes": 1288
   },
   {
     "producto": "500 ml - Néctar",
-    "paquetes": 2083
-  },
-  {
-    "producto": "340 ml",
-    "paquetes": 1967
-  },
-  {
-    "producto": "500 ml - Gorda",
-    "paquetes": 1068
-  },
-  {
-    "producto": "280 ml",
-    "paquetes": 867
-  },
-  {
-    "producto": "3000 ml",
-    "paquetes": 134
-  },
-  {
-    "producto": "400 ml - Gorda",
-    "paquetes": 18
+    "paquetes": 1082
   }
 ]
