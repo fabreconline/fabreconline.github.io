@@ -77,6 +77,7 @@
       padding: 1px 7px; border-radius: 20px; letter-spacing: 0.3px;
       display: inline-block; margin-top: 2px; text-transform: uppercase;
     }
+    .brand-sub #headerDeviceId { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.5px; }
     .btn-icon {
       width: 34px; height: 34px; border-radius: 50%;
       background: var(--bg); border: 1px solid var(--border-strong);
@@ -304,21 +305,101 @@
     .zona-pick .zona-pick-nombre { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .zona-color-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.06); }
 
-    /* ============ CARD VENTA ============ */
+    /* ============ CARD VENTA (NUEVO DISEÑO) ============ */
     .card-venta {
-      background: var(--surface); border: 1px solid var(--border-strong);
-      border-radius: 14px; padding: 13px 16px; margin-bottom: 9px; cursor: pointer;
-      display: flex; flex-direction: column; gap: 7px; transition: all 0.15s ease;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02); user-select: none;
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      margin-bottom: 9px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.15s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      user-select: none;
+      position: relative;
     }
-    .card-venta:hover { border-color: var(--primary-border); background: #fafafa; }
-    .card-venta:active { transform: scale(0.985); }
-    .card-venta-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-    .venta-nombre { font-size: 13.5px; font-weight: 800; color: var(--text); letter-spacing: -0.2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .venta-monto-group { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-    .venta-monto { font-size: 14.5px; font-weight: 900; color: var(--primary-ink); white-space: nowrap; letter-spacing: -0.3px; }
+    .card-venta:hover {
+      border-color: var(--primary-border);
+      background: #fafafa;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07);
+    }
+    .card-venta:active { transform: scale(0.995); }
+    .card-venta-stripe {
+      width: 5px;
+      flex-shrink: 0;
+      background: #475569;
+    }
+    .card-venta-inner {
+      flex: 1;
+      min-width: 0;
+      padding: 13px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .card-venta-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .card-venta-header-left {
+      min-width: 0;
+      flex: 1;
+    }
+    .venta-nombre {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.25px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 1.25;
+    }
+    .venta-codigo-mini {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--text-soft);
+      letter-spacing: 0.3px;
+      margin-top: 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: block;
+    }
+    .venta-monto-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+    .venta-monto {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--primary-ink);
+      white-space: nowrap;
+      letter-spacing: -0.4px;
+      line-height: 1.1;
+    }
+    .venta-hora {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-soft);
+      white-space: nowrap;
+      letter-spacing: 0.1px;
+    }
+    .card-venta-footer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
     .icon-chevron { width: 14px; height: 14px; stroke: var(--text-soft); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-    .card-venta-bottom { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 
     .tag-zona {
       font-size: 9.5px; font-weight: 800; padding: 2.5px 8px; border-radius: 6px;
@@ -337,7 +418,19 @@
       font-size: 9.5px; font-weight: 800; padding: 2.5px 7px; border-radius: 6px;
       display: inline-flex; align-items: center; gap: 4px;
     }
-    .venta-meta { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+    .tag-device {
+      font-size: 9px; font-weight: 800; padding: 2.5px 7px; border-radius: 6px;
+      background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: 0.5px;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .tag-vendedor {
+      font-size: 9.5px; font-weight: 800; padding: 2.5px 7px; border-radius: 6px;
+      display: inline-flex; align-items: center; gap: 4px;
+      letter-spacing: 0.2px;
+    }
+    .venta-meta { font-size: 11px; font-weight: 700; color: var(--text-muted); }
     .venta-meta-dot { color: var(--text-soft); font-size: 9px; }
 
     /* ============ EMPTY ============ */
@@ -519,9 +612,10 @@
     /* ============ TOGGLE ============ */
     .toggle-row {
       display: flex; align-items: center; justify-content: space-between;
-      gap: 12px; background: var(--bg); border: 1px solid var(--border-strong);
+      gap: 10px; background: var(--bg); border: 1px solid var(--border-strong);
       border-radius: var(--radius-sm); padding: 12px 14px;
       cursor: pointer; user-select: none; transition: all 0.15s ease;
+      min-width: 0;
     }
     .toggle-row:hover { border-color: var(--primary-border); }
     .toggle-row.active { background: #f5f3ff; border-color: #ddd6fe; }
@@ -727,6 +821,19 @@
         border-top: 1px solid var(--border);
         display: flex; flex-direction: column; gap: 10px;
       }
+      .sidebar-device {
+        display: flex; justify-content: space-between; align-items: center;
+        background: var(--bg); border: 1px solid var(--border-strong);
+        border-radius: 10px; padding: 8px 12px;
+      }
+      .sidebar-device-label {
+        font-size: 9.5px; font-weight: 800; color: var(--text-muted);
+        text-transform: uppercase; letter-spacing: 0.4px;
+      }
+      .sidebar-device-id {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-weight: 800; font-size: 11px; color: var(--primary-ink); letter-spacing: 0.6px;
+      }
       .sidebar-memoria {
         background: var(--bg);
         border: 1px solid var(--border-strong);
@@ -789,7 +896,7 @@
       #listaVentasDia {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        gap: 12px;
       }
       #listaVentasDia .card-venta { margin-bottom: 0; }
       #listaVentasDia .empty-state { grid-column: 1 / -1; }
@@ -881,6 +988,10 @@
     </nav>
 
     <div class="sidebar-footer">
+      <div class="sidebar-device">
+        <span class="sidebar-device-label">Dispositivo</span>
+        <span class="sidebar-device-id" id="sidebarDeviceId">—</span>
+      </div>
       <div class="sidebar-memoria">
         <div class="sidebar-memoria-header">
           <span>Memoria</span>
@@ -905,7 +1016,7 @@
         <div class="brand-logo">F</div>
         <div>
           <div class="brand-name">FABREC</div>
-          <span class="brand-sub">Oficina</span>
+          <span class="brand-sub">Oficina · <span id="headerDeviceId">----</span></span>
         </div>
       </div>
       <button class="btn-icon" onclick="borrarTodosLosDatos()" title="Borrar datos">
@@ -935,6 +1046,14 @@
         <button class="segmented-btn" id="btnFiltroConfirmados" onclick="cambiarFiltroVentas('confirmados')">
           Confirmados <span class="pill-count" id="pillConfirmadosCount" style="display:none;">0</span>
         </button>
+      </div>
+
+      <div class="toggle-row" id="toggleSoloMias" onclick="toggleSoloMisVentas()" style="margin-bottom: 12px;">
+        <div class="toggle-info">
+          <div class="toggle-title">Solo mis ventas</div>
+          <div class="toggle-sub">Ventas registradas desde este dispositivo · <span id="toggleDeviceId" style="font-family:ui-monospace,monospace; font-weight:800;">----</span></div>
+        </div>
+        <div class="toggle-switch"></div>
       </div>
 
       <div id="panelAccionesConfirmados" style="display: none; margin-bottom: 12px;">
@@ -1081,6 +1200,14 @@
         <div class="detalle-bloque-item">
           <span style="color:var(--text-muted);">Tarifa:</span>
           <span id="detTarifa">-</span>
+        </div>
+        <div class="detalle-bloque-item" id="detVendedorRow">
+          <span style="color:var(--text-muted);">Vendedor Asignado:</span>
+          <span id="detVendedorAsignado">-</span>
+        </div>
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Dispositivo:</span>
+          <span id="detDeviceId" style="font-family: ui-monospace, monospace; font-weight: 700; font-size: 11px;">-</span>
         </div>
       </div>
 
@@ -1315,11 +1442,6 @@
       <div id="wizardPaso2" style="display: none; flex-direction: column; gap: 12px;">
         <div class="step-label">Paso 2: Datos del Comprador</div>
 
-        <div>
-          <label class="form-label">Zona del Comprador *</label>
-          <div class="zona-picker" id="zonaPickerVenta"></div>
-        </div>
-
         <div style="background: var(--surface); border: 1px solid var(--border-strong); padding: 10px 12px; border-radius: var(--radius-sm);">
           <label class="form-label" style="color: var(--primary-ink);">Elegir Comprador Existente</label>
           <select id="selectClienteAntiguo" onchange="seleccionarClienteAntiguo(this.value)" class="input-field" style="font-weight: 700;">
@@ -1354,6 +1476,42 @@
           </div>
         </div>
 
+        <!-- Zona + Dirección lado a lado -->
+        <div class="form-grid-2">
+          <div>
+            <label class="form-label" id="lblZona">Zona del Comprador *</label>
+            <select id="ventaZonaComprador" class="input-field" style="font-weight: 700;" onchange="cambiarZonaComprador(this.value)">
+              <option value="">-- Elegir --</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Dirección de Entrega *</label>
+            <input type="text" id="ventaDireccion" placeholder="Av. Los Laureles 321" class="input-field">
+          </div>
+        </div>
+
+        <div id="infoVendedorExterno" style="display:none; background: var(--primary-subtle); border: 1px solid var(--primary-border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 11px; font-weight: 700; color: var(--text-muted); line-height: 1.45;">
+          Selecciona la zona del vendedor.
+        </div>
+
+        <!-- Toggles juntos -->
+        <div class="form-grid-2">
+          <div class="toggle-row" id="toggleEnvioIndividual" onclick="toggleEnvioIndividual()" style="padding: 10px 12px;">
+            <div class="toggle-info">
+              <div class="toggle-title" style="font-size: 11.5px;">Envío individual</div>
+              <div class="toggle-sub" style="font-size: 10px;">Entrega por separado.</div>
+            </div>
+            <div class="toggle-switch"></div>
+          </div>
+          <div class="toggle-row" id="toggleClienteExterno" onclick="toggleClienteExterno()" style="padding: 10px 12px;">
+            <div class="toggle-info">
+              <div class="toggle-title" style="font-size: 11.5px;">Otro vendedor</div>
+              <div class="toggle-sub" style="font-size: 10px;">Cliente ajeno.</div>
+            </div>
+            <div class="toggle-switch"></div>
+          </div>
+        </div>
+
         <div class="form-grid-2">
           <div>
             <label class="form-label">Fecha de Entrega *</label>
@@ -1373,19 +1531,6 @@
               </optgroup>
             </select>
           </div>
-        </div>
-
-        <div>
-          <label class="form-label">Dirección de Entrega *</label>
-          <input type="text" id="ventaDireccion" placeholder="Av. Los Laureles 321" class="input-field">
-        </div>
-
-        <div class="toggle-row" id="toggleEnvioIndividual" onclick="toggleEnvioIndividual()">
-          <div class="toggle-info">
-            <div class="toggle-title">Envío individual</div>
-            <div class="toggle-sub">Se entrega por separado.</div>
-          </div>
-          <div class="toggle-switch"></div>
         </div>
 
         <div class="form-grid-2">
@@ -1410,7 +1555,8 @@
           <div>
             <div style="font-size: 13px; font-weight: 800; color: #9f1239; margin-bottom: 6px;">Esta acción es irreversible</div>
             <div style="font-size: 12px; color: #881337; line-height: 1.55; font-weight: 600;">
-              Se eliminarán <strong>todas las ventas</strong>, <strong>clientes</strong>, <strong>carguillos exportados</strong> y configuración guardada en este dispositivo.
+              Se eliminarán <strong>todas las ventas</strong>, <strong>clientes</strong>, <strong>carguillos exportados</strong> y configuración guardada en este dispositivo. <br>
+              <strong>El ID de este dispositivo se mantendrá.</strong>
             </div>
           </div>
         </div>
@@ -1511,6 +1657,7 @@
     const KEY_TAB = KEY_PREFIX + 'tab_activo';
     const KEY_FILTRO_DASH = KEY_PREFIX + 'filtro_dashboard';
     const KEY_TIPO_GRAFICO = KEY_PREFIX + 'tipo_grafico';
+    const KEY_DEVICE_ID = KEY_PREFIX + 'device_id';
 
     let CATALOGO_FABREC = [];
     let inventarioLocal = {};
@@ -1543,6 +1690,11 @@
     let registroOrigenFechaKey = null;
     let registroOrigenCodigos = [];
     let registroOrigenIndice = -1;
+
+    /* ===== NUEVOS ESTADOS ===== */
+    let DEVICE_ID = '';
+    let clienteExternoActivo = false;   // "cliente de otro vendedor"
+    let soloMisVentas = false;          // filtro "solo mis ventas"
 
     // ==================================================
     // HELPERS
@@ -1613,6 +1765,37 @@
         const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
         return `${dias[d.getDay()]} ${d.getDate()} ${meses[d.getMonth()]} • ${d.toLocaleTimeString('es-PE', {hour: '2-digit', minute: '2-digit'})}`;
       } catch (e) { return iso; }
+    }
+
+    // ==================================================
+    // DEVICE ID
+    // ==================================================
+    function generarDeviceIdRandom() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let s = '';
+      if (window.crypto && window.crypto.getRandomValues) {
+        const arr = new Uint8Array(6);
+        window.crypto.getRandomValues(arr);
+        for (let i = 0; i < 6; i++) s += chars[arr[i] % chars.length];
+      } else {
+        for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return s;
+    }
+    function inicializarDeviceId() {
+      let id = '';
+      try { id = localStorage.getItem(KEY_DEVICE_ID) || ''; } catch (e) {}
+      if (!id) {
+        id = generarDeviceIdRandom();
+        try { localStorage.setItem(KEY_DEVICE_ID, id); } catch (e) {}
+      }
+      DEVICE_ID = id;
+      const hdr = document.getElementById('headerDeviceId');
+      if (hdr) hdr.innerText = DEVICE_ID;
+      const sb = document.getElementById('sidebarDeviceId');
+      if (sb) sb.innerText = DEVICE_ID;
+      const tg = document.getElementById('toggleDeviceId');
+      if (tg) tg.innerText = DEVICE_ID;
     }
 
     // ==================================================
@@ -1707,6 +1890,9 @@
       todasLasVentas = todasLasVentas.map(v => {
         if (!v.tipo_envio) v.tipo_envio = 'carro';
         if (v.carguillo_exportado === undefined) v.carguillo_exportado = false;
+        if (v.device_id === undefined) v.device_id = '';
+        if (v.es_cliente_externo === undefined) v.es_cliente_externo = false;
+        if (v.zona_vendedor_clave === undefined) v.zona_vendedor_clave = null;
         if (v.cliente) {
           if (!v.cliente.telefono_contacto && v.cliente.telefono) v.cliente.telefono_contacto = v.cliente.telefono;
           if (!v.cliente.telefono_llegada) v.cliente.telefono_llegada = '';
@@ -1791,16 +1977,16 @@
         return new Date(v.fecha_venta).toLocaleDateString('es-PE') === hoyStr;
       });
       const num = String(ventasDeZonaHoy.length + 1).padStart(2, '0');
-      return `venta_${abrev}_${fecha}_${num}`;
+      return `venta_${abrev}_${fecha}_${DEVICE_ID}_${num}`;
     }
     function generarCodigoRegistroParaFecha(fechaObj) {
       const fecha = fechaCompacta(fechaObj);
-      return `registro_venta_oficina_${fecha}_01`;
+      return `registro_venta_oficina_${fecha}_${DEVICE_ID}_01`;
     }
     function generarCodigoCarguillo(zonaClave) {
       const abrev = ZONA_ABREV[zonaClave] || "gen";
       const fecha = fechaCompacta(new Date());
-      return `carguillo_${abrev}_${fecha}_01`;
+      return `carguillo_${abrev}_${fecha}_${DEVICE_ID}_01`;
     }
     function extraerSecuenciaVenta(codigoVenta) {
       const partes = codigoVenta.split('_');
@@ -1911,7 +2097,7 @@
     }
 
     // ==================================================
-    // ZONA PICKER
+    // ZONA PICKER (para edición)
     // ==================================================
     function renderizarZonaPicker(contId, zonaSel, onSelect) {
       const cont = document.getElementById(contId);
@@ -1931,9 +2117,58 @@
       });
     }
 
-    function seleccionarZonaVenta(clave) {
-      zonaVentaTemporal = clave;
-      renderizarZonaPicker('zonaPickerVenta', zonaVentaTemporal, seleccionarZonaVenta);
+    // ==================================================
+    // ZONA COMPRADOR (SELECT)
+    // ==================================================
+    function poblarSelectZonasComprador() {
+      const sel = document.getElementById('ventaZonaComprador');
+      if (!sel) return;
+      let html = '<option value="">-- Elegir --</option>';
+      Object.entries(ZONAS).forEach(([clave, z]) => {
+        html += `<option value="${clave}">${escaparHTML(z.nombreZona)} — ${escaparHTML(z.asesor)}</option>`;
+      });
+      sel.innerHTML = html;
+    }
+
+    function cambiarZonaComprador(valor) {
+      zonaVentaTemporal = valor || null;
+      if (clienteExternoActivo) actualizarInfoVendedorExterno();
+    }
+
+    // ==================================================
+    // TOGGLE CLIENTE EXTERNO
+    // ==================================================
+    function toggleClienteExterno() {
+      clienteExternoActivo = !clienteExternoActivo;
+      actualizarToggleClienteExterno();
+    }
+
+    function actualizarToggleClienteExterno() {
+      const el = document.getElementById('toggleClienteExterno');
+      const lbl = document.getElementById('lblZona');
+      const info = document.getElementById('infoVendedorExterno');
+      if (!el) return;
+      if (clienteExternoActivo) {
+        el.classList.add('active');
+        if (lbl) lbl.innerText = 'Zona del Vendedor *';
+        if (info) info.style.display = 'block';
+        actualizarInfoVendedorExterno();
+      } else {
+        el.classList.remove('active');
+        if (lbl) lbl.innerText = 'Zona del Comprador *';
+        if (info) info.style.display = 'none';
+      }
+    }
+
+    function actualizarInfoVendedorExterno() {
+      const info = document.getElementById('infoVendedorExterno');
+      if (!info || !clienteExternoActivo) return;
+      if (zonaVentaTemporal && ZONAS[zonaVentaTemporal]) {
+        const z = ZONAS[zonaVentaTemporal];
+        info.innerHTML = `El recibo saldrá con el color y a nombre de: <strong style="color:${z.colorInk};">${escaparHTML(z.asesor)}</strong> — ${escaparHTML(z.nombreZona)}`;
+      } else {
+        info.innerText = 'Selecciona la zona del vendedor.';
+      }
     }
 
     // ==================================================
@@ -1945,7 +2180,9 @@
       envioIndividualActivo = false;
       modoTarifaManual = null;
       zonaVentaTemporal = null;
+      clienteExternoActivo = false;
       resetearFormularioItem();
+      poblarSelectZonasComprador();
       limpiarCamposCliente();
       const hoyISO = new Date().toISOString().split('T')[0];
       document.getElementById('ventaFechaEntrega').value = hoyISO;
@@ -1956,7 +2193,7 @@
       renderizarItemsModal();
       actualizarInfoProductoModal();
       poblarSelectorClientesAntiguos();
-      renderizarZonaPicker('zonaPickerVenta', zonaVentaTemporal, seleccionarZonaVenta);
+      actualizarToggleClienteExterno();
       document.getElementById('modalNuevaVenta').classList.add('open');
     }
 
@@ -2122,7 +2359,11 @@
         document.getElementById('ventaTelefono').value = c.telefono_contacto || c.telefono || '';
         document.getElementById('ventaTelefonoLlegada').value = c.telefono_llegada || '';
         document.getElementById('ventaDireccion').value = c.direccion;
-        if (c.zonaClave && ZONAS[c.zonaClave]) seleccionarZonaVenta(c.zonaClave);
+        if (c.zonaClave && ZONAS[c.zonaClave]) {
+          const selZona = document.getElementById('ventaZonaComprador');
+          if (selZona) selZona.value = c.zonaClave;
+          cambiarZonaComprador(c.zonaClave);
+        }
         mostrarToast("Datos de " + c.nombre + " cargados");
       }
     }
@@ -2134,6 +2375,10 @@
       document.getElementById('ventaTelefonoLlegada').value = "";
       document.getElementById('ventaDireccion').value = "";
       document.getElementById('selectClienteAntiguo').value = "";
+      const selZona = document.getElementById('ventaZonaComprador');
+      if (selZona) selZona.value = "";
+      zonaVentaTemporal = null;
+      if (clienteExternoActivo) actualizarInfoVendedorExterno();
     }
     function guardarClienteEnDirectorio(c) {
       const idx = directorioClientes.findIndex(x => x.dni === c.dni);
@@ -2154,7 +2399,10 @@
       const direccion = document.getElementById('ventaDireccion').value.trim();
       const condicion = document.getElementById('ventaCondicion').value;
 
-      if (!zonaVentaTemporal || !ZONAS[zonaVentaTemporal]) { mostrarToast("Selecciona la zona del comprador"); return; }
+      if (!zonaVentaTemporal || !ZONAS[zonaVentaTemporal]) {
+        mostrarToast(clienteExternoActivo ? "Selecciona la zona del vendedor" : "Selecciona la zona del comprador");
+        return;
+      }
       if (!cliente) { mostrarToast("Escribe el nombre o razón social"); return; }
       if (!dni) { mostrarToast("Ingresa el DNI del cliente"); return; }
       if (!telefonoContacto) { mostrarToast("Ingresa el WhatsApp del comprador"); return; }
@@ -2206,13 +2454,20 @@
         zonaClave: zonaVentaTemporal
       };
 
+      const zonaVendInfo = clienteExternoActivo ? ZONAS[zonaVentaTemporal] : null;
+
       const nuevaVenta = {
         codigo: codigoVenta,
+        device_id: DEVICE_ID,
         fecha_venta: ahora.toISOString(),
         fecha_entrega_solicitada: fechaEntrega,
         cliente: clienteDatos,
         tarifa_aplicada: tarifaAplicadaTexto(infoPedido.modo),
         vendedor: "Oficina",
+        es_cliente_externo: !!clienteExternoActivo,
+        // Si es de otro vendedor, la zona del vendedor es la misma que la del comprador
+        zona_vendedor_clave: clienteExternoActivo ? zonaVentaTemporal : null,
+        vendedor_asignado: zonaVendInfo ? zonaVendInfo.asesor : "Oficina",
         zona: z.nombreZona,
         zonaClave: zonaVentaTemporal,
         condicion_pago: condicion,
@@ -2270,8 +2525,15 @@
     function contarPendientes() { return todasLasVentas.filter(v => !esPagado(v)).length; }
     function contarConfirmados() { return todasLasVentas.filter(v => esPendienteContabilidad(v)).length; }
 
+    function toggleSoloMisVentas() {
+      soloMisVentas = !soloMisVentas;
+      const el = document.getElementById('toggleSoloMias');
+      if (el) el.classList.toggle('active', soloMisVentas);
+      renderizarVentasInicio();
+    }
+
     // ==================================================
-    // RENDERIZAR VENTAS
+    // RENDERIZAR VENTAS (CARD MEJORADO)
     // ==================================================
     function renderizarVentasInicio() {
       const cont = document.getElementById('listaVentasDia');
@@ -2283,7 +2545,6 @@
 
       const pendientes = contarPendientes();
       const confirmados = contarConfirmados();
-      badgeCant.innerText = `${ventasHoy.length} pedidos`;
 
       if (pendientes > 0) { pillPendientes.style.display = 'inline-block'; pillPendientes.innerText = pendientes; }
       else { pillPendientes.style.display = 'none'; }
@@ -2313,6 +2574,10 @@
         mostrarFecha = true;
       }
 
+      if (soloMisVentas) {
+        lista = lista.filter(v => v.device_id === DEVICE_ID);
+      }
+
       if (q) {
         lista = lista.filter(v =>
           (v.codigo || '').toLowerCase().includes(q) ||
@@ -2321,8 +2586,11 @@
         );
       }
 
+      badgeCant.innerText = `${lista.length} pedido${lista.length === 1 ? '' : 's'}`;
+
       if (lista.length === 0) {
         let msg = "No hay ventas que coincidan con el filtro o búsqueda.";
+        if (soloMisVentas) msg = "Aún no registras ventas desde este dispositivo en este filtro.";
         if (filtroVentasActivo === 'confirmados') msg = "No hay pagos pendientes de enviar a contabilidad.";
         if (filtroVentasActivo === 'pendientes') msg = "No hay ventas por cobrar.";
         if (filtroVentasActivo === 'todas' && ventasHoy.length === 0) msg = "No hay ventas registradas hoy. Toca el botón para crear una venta.";
@@ -2340,33 +2608,40 @@
         const fechaTexto = fechaVenta ? fechaVenta.toLocaleDateString('es-PE') : '';
         const esDeHoy = fechaVenta && fechaVenta.toLocaleDateString('es-PE') === hoyStr;
 
-        let metaTexto = `${v.total_paquetes} paq`;
         let fechaMostrar = '';
-        if (mostrarFecha && !esDeHoy) fechaMostrar = fechaTexto + ' • ';
+        if (mostrarFecha && !esDeHoy) fechaMostrar = fechaTexto.slice(0, 5) + ' · ';
 
         const zonaInfo = ZONAS[v.zonaClave];
         const zonaColor = zonaInfo ? zonaInfo.color : '#475569';
         const zonaNombreCorto = zonaInfo ? zonaInfo.nombreZona.split('/')[0].trim() : (v.zona || 'Sin zona');
 
+        const zonaVendInfo = (v.es_cliente_externo && v.zona_vendedor_clave) ? ZONAS[v.zona_vendedor_clave] : null;
+
         html += `
           <div class="card-venta" onclick="verDetalleVenta('${v.codigo}')">
-            <div class="card-venta-top">
-              <span class="venta-nombre">${escaparHTML(v.cliente.nombre)}</span>
-              <div class="venta-monto-group">
-                <span class="venta-monto">S/ ${v.monto_total.toFixed(2)}</span>
-                <svg class="icon-chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            <div class="card-venta-stripe" style="background:${zonaColor};"></div>
+            <div class="card-venta-inner">
+              <div class="card-venta-header">
+                <div class="card-venta-header-left">
+                  <div class="venta-nombre">${escaparHTML(v.cliente.nombre)}</div>
+                  <span class="venta-codigo-mini">${escaparHTML(v.codigo)}</span>
+                </div>
+                <div class="venta-monto-group">
+                  <span class="venta-monto">S/ ${v.monto_total.toFixed(2)}</span>
+                  <span class="venta-hora">${fechaMostrar}${horaTexto}</span>
+                </div>
               </div>
-            </div>
-            <div class="card-venta-bottom">
-              <span class="tag-zona" style="background:${zonaColor};">${escaparHTML(zonaNombreCorto)}</span>
-              ${pagado
-                ? `<span class="tag-estado pagado"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Pagado</span>`
-                : `<span class="tag-estado pendiente"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Por cobrar</span>`}
-              ${v.tipo_envio === 'individual' ? '<span class="tag-individual">Individual</span>' : ''}
-              ${!v.carguillo_exportado ? '<span class="tag-individual" style="background:#fffbeb; color:#92400e; border-color:#fde68a;">Pend. carguillo</span>' : ''}
-              <span class="venta-meta">${metaTexto}</span>
-              <span class="venta-meta-dot">•</span>
-              <span class="venta-meta">${fechaMostrar}${horaTexto}</span>
+              <div class="card-venta-footer">
+                <span class="tag-zona" style="background:${zonaColor};">${escaparHTML(zonaNombreCorto)}</span>
+                ${pagado
+                  ? `<span class="tag-estado pagado"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Pagado</span>`
+                  : `<span class="tag-estado pendiente"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Por cobrar</span>`}
+                ${v.tipo_envio === 'individual' ? '<span class="tag-individual">Individual</span>' : ''}
+                ${zonaVendInfo ? `<span class="tag-vendedor" style="background:${zonaVendInfo.color}1f; color:${zonaVendInfo.colorInk}; border:1px solid ${zonaVendInfo.color}55;">Vend: ${escaparHTML(zonaVendInfo.asesor)}</span>` : ''}
+                ${!v.carguillo_exportado ? '<span class="tag-individual" style="background:#fffbeb; color:#92400e; border-color:#fde68a;">Pend. carguillo</span>' : ''}
+                <span class="venta-meta">${v.total_paquetes} paq</span>
+                <span class="tag-device">${escaparHTML(v.device_id || '—')}</span>
+              </div>
             </div>
           </div>
         `;
@@ -2408,6 +2683,19 @@
         ? '<span class="tag-individual">Individual</span>'
         : '<span class="venta-meta">Normal</span>';
       document.getElementById('detTarifa').innerText = v.tarifa_aplicada;
+
+      const zonaVend = (v.es_cliente_externo && v.zona_vendedor_clave) ? ZONAS[v.zona_vendedor_clave] : null;
+      const detVendRow = document.getElementById('detVendedorRow');
+      const detVendEl = document.getElementById('detVendedorAsignado');
+      if (zonaVend) {
+        detVendRow.style.display = 'flex';
+        detVendEl.innerHTML = `<span style="display:inline-flex; align-items:center; gap:6px; font-weight:800; color:${zonaVend.colorInk};"><span style="width:9px;height:9px;border-radius:50%;background:${zonaVend.color};display:inline-block;"></span>${escaparHTML(zonaVend.asesor)}</span>`;
+      } else {
+        detVendRow.style.display = 'flex';
+        detVendEl.innerHTML = '<strong>Oficina</strong>';
+      }
+
+      document.getElementById('detDeviceId').innerText = v.device_id || '—';
 
       const estadoDiv = document.getElementById('detEstadoPago');
       if (esPagado(v)) {
@@ -2489,7 +2777,7 @@
     }
 
     // ==================================================
-    // WHATSAPP: ESCRIBIR (sin texto)
+    // WHATSAPP
     // ==================================================
     function escribirWhatsAppCliente() {
       if (!ventaDetalleActual) return;
@@ -2502,10 +2790,6 @@
       window.open(url, '_blank');
     }
 
-    // ==================================================
-    // WHATSAPP: ENVIAR CUENTA BANCARIA AL COMPRADOR
-    // Solo los datos de pago, sin saludo ni código de venta
-    // ==================================================
     function enviarCuentaZonaAlComprador() {
       if (!ventaDetalleActual) return;
       const v = ventaDetalleActual;
@@ -2746,6 +3030,8 @@
       const zonaInfo = ZONAS[editandoZonaClave];
       v.zonaClave = editandoZonaClave;
       v.zona = zonaInfo.nombreZona;
+      // Si era de otro vendedor, mantener la zona del vendedor = zona comprador
+      if (v.es_cliente_externo) v.zona_vendedor_clave = editandoZonaClave;
 
       if (seraPagado && !estabaPagado) {
         v.monto_pagado = +totalSoles.toFixed(2);
@@ -2875,6 +3161,7 @@
         tipo: "actualizacion_pagos",
         fecha_envio: ahora.toISOString(),
         vendedor: "Oficina",
+        device_id: DEVICE_ID,
         zona: "Varias",
         pagos: pendientes.map(v => ({ codigo: v.codigo, zona: v.zona, estado: "pagado" }))
       };
@@ -2892,7 +3179,7 @@
     }
 
     // ==================================================
-    // RECIBO (negro, Oficina)
+    // RECIBO
     // ==================================================
     async function generarReciboCanvas(venta) {
       if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch (e) {} }
@@ -2903,12 +3190,14 @@
       const d = venta;
       const cli = d.cliente || {};
 
-      const COLOR_MARCA     = '#0f172a';
-      const COLOR_MARCA_TXT = '#ffffff';
-      const COLOR_MARCA_INK = '#0f172a';
+      const zonaVend = (d.es_cliente_externo && d.zona_vendedor_clave && ZONAS[d.zona_vendedor_clave]) ? ZONAS[d.zona_vendedor_clave] : null;
+      const COLOR_MARCA     = zonaVend ? zonaVend.color : '#0f172a';
+      const COLOR_MARCA_TXT = zonaVend ? (zonaVend.colorTexto || '#ffffff') : '#ffffff';
+      const COLOR_MARCA_INK = zonaVend ? (zonaVend.colorInk || '#0f172a') : '#0f172a';
 
       const zonaInfo = ZONAS[d.zonaClave];
       const NOMBRE_ZONA = (zonaInfo && zonaInfo.nombreZona) || d.zona || '';
+      const ATENDIDO_POR = zonaVend ? zonaVend.asesor : 'Oficina';
 
       const items = d.items || [];
       const EST_H = 900 + items.length * 30;
@@ -3103,9 +3392,9 @@
       ctx.stroke();
       y += 24;
 
-      drawField('ZONA DEL COMPRADOR', NOMBRE_ZONA, y);
+      drawField('ZONA', NOMBRE_ZONA, y);
       y += 32;
-      drawField('ATENDIDO POR', 'Oficina', y, COLOR_MARCA_INK);
+      drawField('ATENDIDO POR', ATENDIDO_POR, y, COLOR_MARCA_INK);
       y += 32;
 
       if (d.tipo_envio === 'individual') {
@@ -3117,7 +3406,7 @@
       }
 
       y += 12;
-      const selloTxt = 'Oficina';
+      const selloTxt = ATENDIDO_POR;
       ctx.font = `800 11px ${FONT_REG}`;
       let selloAncho = ctx.measureText(selloTxt).width + 40;
       selloAncho = Math.min(selloAncho, W - padding * 2);
@@ -3194,7 +3483,6 @@
       } catch (e) { console.error(e); mostrarToast("Error generando imagen"); }
     }
 
-    // Enviar recibo al WhatsApp del comprador SIN texto
     async function enviarReciboCliente() {
       if (!ventaDetalleActual) return;
       const v = ventaDetalleActual;
@@ -3202,7 +3490,6 @@
       const tel = formatearTelefonoPeru(telRaw);
       if (!tel) { mostrarToast("El comprador no tiene WhatsApp registrado"); return; }
 
-      // 1) Generar y descargar la imagen del recibo
       try {
         mostrarToast("Generando recibo...");
         const canvas = await generarReciboCanvas(v);
@@ -3219,7 +3506,6 @@
         }, 'image/png');
       } catch (e) { console.error(e); }
 
-      // 2) Abrir WhatsApp del comprador SIN texto
       let url;
       if (tel.length >= 11) url = "https://api.whatsapp.com/send/?phone=" + tel;
       else url = "https://api.whatsapp.com/send/";
@@ -3719,7 +4005,6 @@
 
       let html = '';
 
-      // ==== Pendientes ====
       if (pendientes.length === 0) {
         html += '<div class="empty-state">No hay ventas pendientes de exportar.<br>Todas las ventas ya fueron enviadas.</div>';
       } else {
@@ -3767,6 +4052,7 @@
                   .sort((a, b) => new Date(b.fecha_venta) - new Date(a.fecha_venta))
                   .map(v => {
                     const fecha = v.fecha_venta ? new Date(v.fecha_venta).toLocaleDateString('es-PE') : '';
+                    const zv = (v.es_cliente_externo && v.zona_vendedor_clave) ? ZONAS[v.zona_vendedor_clave] : null;
                     return `
                       <div class="venta-carguillo-item" onclick="verDetalleVenta('${v.codigo}')">
                         <div class="venta-carguillo-top">
@@ -3779,6 +4065,7 @@
                           <span>${v.total_paquetes} paq</span>
                           <span>•</span>
                           <span>${fecha}</span>
+                          ${zv ? `<span class="tag-vendedor" style="font-size:8.5px; padding:1.5px 5px; background:${zv.color}1f; color:${zv.colorInk}; border:1px solid ${zv.color}55;">Vend: ${escaparHTML(zv.asesor)}</span>` : ''}
                           ${v.tipo_envio === 'individual' ? '<span class="tag-individual" style="font-size:8.5px; padding:1.5px 5px;">Individual</span>' : ''}
                         </div>
                       </div>
@@ -3787,7 +4074,7 @@
                 }
                 <button class="btn-primary w-full" style="margin-top: 10px;" onclick="enviarVentasYCarguilloZona('${zk}')">
                   <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                  Enviar ventas + carguillo
+                  Enviar carguillo + ventas
                 </button>
               </div>
             </div>
@@ -3800,13 +4087,12 @@
           html += `<div style="margin-top: 18px;">
             <button class="btn-primary w-full" onclick="enviarVentasYCarguilloTodo()">
               <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-              Enviar ventas + carguillo (${totalPaqGlobal} paq • ${totalZonas} zonas)
+              Enviar carguillo + ventas (${totalPaqGlobal} paq • ${totalZonas} zonas)
             </button>
           </div>`;
         }
       }
 
-      // ==== Historial de carguillos enviados ====
       if (carguillosExportados.length > 0) {
         html += `<div class="section-header" style="margin-top: 28px; margin-bottom: 12px;">
           <span>Carguillos enviados</span>
@@ -3877,7 +4163,6 @@
         const totalPaq = Object.values(productos).reduce((a, b) => a + b, 0);
         const totalMonto = ventasZona.reduce((a, v) => a + v.monto_total, 0);
 
-        // Estructura del carguillo por zona
         zonasData.push({
           zonaClave: zk,
           zona: zi ? zi.nombreZona : 'Sin zona',
@@ -3888,10 +4173,11 @@
           productos: Object.entries(productos).map(([prod, qty]) => ({ producto: prod, paquetes: qty }))
         });
 
-        // Ventas detalladas
         ventasZona.forEach(v => {
+          const zv = (v.es_cliente_externo && v.zona_vendedor_clave) ? ZONAS[v.zona_vendedor_clave] : null;
           ventasPayload.push({
             codigo: v.codigo,
+            device_id: v.device_id || '',
             zona: v.zona || '',
             zonaClave: v.zonaClave || '',
             fecha_venta: v.fecha_venta,
@@ -3910,6 +4196,10 @@
             estado_pago: v.estado_pago,
             tarifa_aplicada: v.tarifa_aplicada,
             tipo_envio: v.tipo_envio || 'carro',
+            es_cliente_externo: !!v.es_cliente_externo,
+            zona_vendedor_clave: v.zona_vendedor_clave || null,
+            zona_vendedor: zv ? zv.nombreZona : null,
+            vendedor_asignado: zv ? zv.asesor : 'Oficina',
             items: v.items || []
           });
         });
@@ -3917,11 +4207,11 @@
 
       if (zonasData.length === 0) { mostrarToast("No hay ventas para enviar"); return; }
 
-      // Payload unificado: ventas + carguillo
       const payload = {
         tipo: "ventas_carguillo_oficina",
         fecha_envio: ahora.toISOString(),
         vendedor: "Oficina",
+        device_id: DEVICE_ID,
         cantidad_zonas: zonasData.length,
         resumen_ventas: {
           total_ventas: ventasPayload.length,
@@ -3938,7 +4228,6 @@
       const url = "https://api.whatsapp.com/send/?phone=" + NUMERO_CIERRE_KING + "&text=" + encodeURIComponent(jsonStr);
       window.open(url, '_blank');
 
-      // Marcar ventas como exportadas
       zonasAExportar.forEach(zk => {
         todasLasVentas.forEach(v => {
           if (esPendienteCarguillo(v) && (v.zonaClave || '__sin_zona__') === zk) {
@@ -3948,7 +4237,6 @@
         });
       });
 
-      // Guardar registro en el historial
       const totalVentas = ventasPayload.length;
       const totalPaq = ventasPayload.reduce((a, v) => a + (v.total_paquetes || 0), 0);
       const totalMonto = +ventasPayload.reduce((a, v) => a + v.monto_total, 0).toFixed(2);
@@ -3956,6 +4244,7 @@
       const registro = {
         id: generarId('carguillo'),
         fecha: ahora.toISOString(),
+        device_id: DEVICE_ID,
         cantidad_zonas: zonasData.length,
         total_ventas: totalVentas,
         total_paquetes: totalPaq,
@@ -3987,7 +4276,7 @@
       const jsonStr = JSON.stringify(reg.payload, null, 2);
       const url = "https://api.whatsapp.com/send/?phone=" + NUMERO_CIERRE_KING + "&text=" + encodeURIComponent(jsonStr);
       window.open(url, '_blank');
-      mostrarToast("Reenviando carguillo...");
+      mostrarToast("Reenviando carguillo + ventas...");
     }
 
     async function eliminarCarguilloHistorial(id) {
@@ -4028,7 +4317,7 @@
     }
 
     // ==================================================
-    // BORRAR (con modal en UI)
+    // BORRAR
     // ==================================================
     function borrarTodosLosDatos() {
       document.getElementById('modalConfirmarBorrar').classList.add('open');
@@ -4038,13 +4327,11 @@
     }
 
     async function ejecutarBorrarTodo() {
-      try {
-        await store.clear();
-      } catch (e) { console.error(e); }
+      try { await store.clear(); } catch (e) { console.error(e); }
 
       try {
         Object.keys(localStorage)
-          .filter(k => k.indexOf(KEY_PREFIX) === 0)
+          .filter(k => k.indexOf(KEY_PREFIX) === 0 && k !== KEY_DEVICE_ID)
           .forEach(k => localStorage.removeItem(k));
       } catch (e) {}
 
@@ -4064,6 +4351,8 @@
       unidadSeleccionada = 'paquetes';
       envioIndividualActivo = false;
       zonaVentaTemporal = null;
+      clienteExternoActivo = false;
+      soloMisVentas = false;
 
       document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
 
@@ -4073,6 +4362,8 @@
       });
       const btnTodas = document.getElementById('btnFiltroTodas');
       if (btnTodas) btnTodas.classList.add('active');
+      const toggleMias = document.getElementById('toggleSoloMias');
+      if (toggleMias) toggleMias.classList.remove('active');
 
       actualizarBotonesFiltroDash();
       await cargarDatos();
@@ -4101,6 +4392,7 @@
     window.verDetalleVenta = verDetalleVenta;
     window.cerrarModalDetalleVenta = cerrarModalDetalleVenta;
     window.cambiarFiltroVentas = cambiarFiltroVentas;
+    window.toggleSoloMisVentas = toggleSoloMisVentas;
     window.abrirModalConfirmarCobroDesdeDetalle = abrirModalConfirmarCobroDesdeDetalle;
     window.cerrarModalConfirmarCobro = cerrarModalConfirmarCobro;
     window.confirmarCobroYNotificar = confirmarCobroYNotificar;
@@ -4108,6 +4400,8 @@
     window.enviarReciboCliente = enviarReciboCliente;
     window.descargarReciboImagen = descargarReciboImagen;
     window.toggleEnvioIndividual = toggleEnvioIndividual;
+    window.toggleClienteExterno = toggleClienteExterno;
+    window.cambiarZonaComprador = cambiarZonaComprador;
     window.abrirModalEditarVenta = abrirModalEditarVenta;
     window.cerrarModalEditarVenta = cerrarModalEditarVenta;
     window.seleccionarEstadoEdicion = seleccionarEstadoEdicion;
@@ -4138,6 +4432,8 @@
     // INICIALIZACIÓN
     // ==================================================
     window.addEventListener('DOMContentLoaded', async () => {
+      inicializarDeviceId();
+      poblarSelectZonasComprador();
       await cargarDatosExternos();
       actualizarBotonesGrafico();
       actualizarBotonesFiltroDash();

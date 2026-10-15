@@ -1,0 +1,2505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FABREC | Despacho</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #f7f7f7;
+      --surface: #ffffff;
+      --surface-subtle: #f0f0f0;
+      --border: #e0e0e0;
+      --border-subtle: #ececec;
+      --text: #0a0a0a;
+      --text-muted: #555555;
+      --text-subtle: #888888;
+      --accent: #1a1a1a;
+      --accent-subtle: #ededed;
+      --success: #059669;
+      --success-bg: #ecfdf5;
+      --success-border: #a7f3d0;
+      --amber: #d97706;
+      --amber-bg: #fffbeb;
+      --amber-border: #fde68a;
+      --rose: #e11d48;
+      --rose-bg: #fff1f2;
+      --rose-border: #fecdd3;
+      --radius: 14px; --radius-sm: 8px;
+    }
+    body.dark {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --surface-subtle: #1f1f1f;
+      --border: #2a2a2a;
+      --border-subtle: #1f1f1f;
+      --text: #f5f5f5;
+      --text-muted: #a0a0a0;
+      --text-subtle: #707070;
+      --accent: #e5e5e5;
+      --accent-subtle: rgba(255,255,255,0.08);
+      --success: #4ade80;
+      --success-bg: rgba(74, 222, 128, 0.1);
+      --success-border: rgba(74, 222, 128, 0.3);
+      --amber: #fbbf24;
+      --amber-bg: rgba(251, 191, 36, 0.1);
+      --amber-border: rgba(251, 191, 36, 0.3);
+      --rose: #f87171;
+      --rose-bg: rgba(248, 113, 113, 0.1);
+      --rose-border: rgba(248, 113, 113, 0.3);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(120, 120, 120, 0.35); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(120, 120, 120, 0.55); }
+    body.dark ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.22); }
+    body {
+      font-family: 'Montserrat', sans-serif; background-color: var(--bg); color: var(--text);
+      min-height: 100vh; display: flex; flex-direction: row;
+      -webkit-font-smoothing: antialiased; transition: background-color 0.2s, color 0.2s; overflow-x: hidden;
+    }
+
+    .sidebar {
+      width: 275px; background: #0a0a0a; border-right: 1px solid #1f1f1f;
+      height: 100vh; position: sticky; top: 0; display: flex; flex-direction: column;
+      justify-content: space-between; padding: 20px 14px; flex-shrink: 0; z-index: 40;
+      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding 0.25s ease;
+      color: #a3a3a3;
+    }
+    .sidebar.collapsed { width: 74px; padding: 20px 10px; }
+    .sidebar-top { display: flex; flex-direction: column; gap: 16px; min-height: 0; }
+    .sidebar-header-box {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 6px 12px; border-bottom: 1px solid #1f1f1f;
+    }
+    .brand-group-text { overflow: hidden; white-space: nowrap; transition: opacity 0.2s; }
+    .sidebar.collapsed .brand-group-text { display: none; }
+    .brand-title { font-size: 18px; font-weight: 900; letter-spacing: 1.5px; color: #f5f5f5; }
+    .role-badge {
+      font-size: 10px; font-weight: 700; color: #f5f5f5; background: #1f1f1f;
+      padding: 3px 9px; border-radius: var(--radius-sm); display: inline-block; margin-top: 3px;
+      border: 1px solid #2a2a2a; letter-spacing: 0.5px;
+    }
+    .btn-toggle-sidebar {
+      background: #1a1a1a; border: 1px solid #333333; color: #ffffff;
+      border-radius: 8px; width: 30px; height: 30px; display: flex; align-items: center;
+      justify-content: center; cursor: pointer; transition: all 0.15s ease; flex-shrink: 0;
+    }
+    .btn-toggle-sidebar:hover { color: #0a0a0a; background: #ffffff; border-color: #ffffff; }
+    .btn-toggle-sidebar svg { stroke: #ffffff; }
+    .btn-toggle-sidebar:hover svg { stroke: #0a0a0a; }
+    .nav-container {
+      display: flex; flex-direction: column; gap: 14px; overflow-y: auto;
+      max-height: calc(100vh - 340px); padding-right: 2px;
+    }
+    .nav-section-title {
+      font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+      color: #525252; padding: 0 8px 4px; white-space: nowrap;
+    }
+    .sidebar.collapsed .nav-section-title { display: none; }
+    .nav-group { display: flex; flex-direction: column; gap: 3px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 11px; background: transparent;
+      border: 1px solid transparent; color: #a3a3a3; font-family: inherit;
+      font-size: 11.5px; font-weight: 700; padding: 9px 12px; border-radius: 10px;
+      cursor: pointer; transition: all 0.15s ease; text-align: left; width: 100%; position: relative;
+    }
+    .sidebar.collapsed .nav-item { justify-content: center; padding: 10px; }
+    .nav-item:hover { color: #f5f5f5; background: #1a1a1a; }
+    .nav-item.active { background: #1f1f1f; color: #ffffff; border-color: #2a2a2a; }
+    .nav-item svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+    .nav-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+    .sidebar.collapsed .nav-text { display: none; }
+    .nav-badge {
+      background: #dc2626; color: #ffffff; font-size: 10px; font-weight: 800;
+      padding: 1px 7px; border-radius: 999px; line-height: 1.5; display: none;
+    }
+    .sidebar.collapsed .nav-badge {
+      position: absolute; top: 4px; right: 6px; padding: 1px 5px; font-size: 9px;
+      box-shadow: 0 0 0 2px #0a0a0a;
+    }
+    .sidebar-footer {
+      border-top: 1px solid #1f1f1f; padding-top: 12px;
+      display: flex; flex-direction: column; gap: 7px; flex-shrink: 0;
+    }
+    .storage-monitor-box {
+      background: #141414; border: 1px solid #2a2a2a;
+      border-radius: var(--radius-sm); padding: 8px 10px; font-size: 10px; color: #a3a3a3;
+    }
+    .sidebar.collapsed .storage-monitor-box { display: none; }
+    .storage-bar-track {
+      width: 100%; height: 4px; background: #2a2a2a; border-radius: 2px;
+      margin-top: 5px; overflow: hidden;
+    }
+    .storage-bar-fill {
+      height: 100%; background: #d4d4d4; border-radius: 2px; width: 0%; transition: width 0.3s;
+    }
+    .sidebar .btn-sidebar-action {
+      background: #1a1a1a; border: 1px solid #333333; color: #f5f5f5;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: inherit; font-size: 11px; font-weight: 700;
+      padding: 9px 12px; border-radius: 10px; cursor: pointer; transition: all 0.15s ease;
+      width: 100%; white-space: nowrap;
+    }
+    .sidebar .btn-sidebar-action:hover { background: #262626; border-color: #4a4a4a; }
+    .sidebar .btn-sidebar-action svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+    .sidebar .btn-sidebar-danger {
+      background: transparent; border: 1px solid #2a2a2a; color: #d4d4d4;
+    }
+    .sidebar .btn-sidebar-danger:hover { background: #1a1a1a; border-color: #404040; color: #f5f5f5; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      font-family: inherit; font-size: 11px; font-weight: 700; padding: 8px 14px;
+      border-radius: 10px; border: 1px solid transparent; cursor: pointer;
+      transition: all 0.15s ease; user-select: none; text-decoration: none; white-space: nowrap;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .btn-dark { background: var(--text); color: var(--surface); }
+    body.dark .btn-dark { background: #f5f5f5; color: #0a0a0a; }
+    .btn-outline { background: var(--surface); border-color: var(--border); color: var(--text); }
+    .btn-outline:hover { background: var(--surface-subtle); }
+    .btn-sm { padding: 6px 10px; font-size: 10.5px; border-radius: 8px; }
+    .btn-sm svg { width: 12px; height: 12px; }
+
+    .content-area {
+      flex: 1; padding: 24px 36px 90px; overflow-y: auto;
+      max-width: 1540px; transition: padding 0.2s ease;
+    }
+    .view-pane { display: none !important; }
+    .view-pane.active { display: block !important; }
+
+    .panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden; margin-bottom: 20px;
+    }
+    .panel-header {
+      padding: 15px 20px; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .panel-header-title-group { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .panel-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .panel-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .panel-body { padding: 20px; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 22px; }
+    .kpi-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .kpi-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .kpi-value { font-size: 24px; font-weight: 800; margin-top: 4px; line-height: 1.15; }
+    .kpi-sub { font-size: 11px; color: var(--text-subtle); margin-top: 4px; }
+    .kpi-icon {
+      width: 40px; height: 40px; border-radius: 12px; background: var(--surface-subtle);
+      display: flex; align-items: center; justify-content: center; color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .kpi-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    .filtros-bar {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 12px 16px; display: flex;
+      align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;
+    }
+    .filter-input, .filter-select {
+      background: var(--surface-subtle); border: 1px solid var(--border);
+      border-radius: 8px; padding: 6px 10px; font-family: inherit;
+      font-size: 11px; font-weight: 600; color: var(--text); outline: none;
+    }
+    .filter-select { cursor: pointer; }
+    .segmented-control {
+      display: inline-flex; background: var(--surface-subtle); border: 1px solid var(--border);
+      border-radius: 10px; padding: 2px; gap: 2px;
+    }
+    .segmented-btn {
+      background: transparent; border: none; padding: 7px 12px;
+      font-family: inherit; font-size: 11px; font-weight: 700;
+      color: var(--text-muted); border-radius: 8px; cursor: pointer;
+      transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .segmented-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .segmented-btn .pill-count {
+      font-size: 9.5px; font-weight: 900; background: var(--text-muted); color: var(--surface);
+      padding: 1px 6px; border-radius: 10px; line-height: 1.4;
+    }
+    .segmented-btn.active .pill-count { background: var(--text); }
+
+    .despacho-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 14px; overflow: hidden;
+      transition: border-color 0.15s ease;
+    }
+    .despacho-card:hover { border-color: var(--text-muted); }
+    .despacho-card.completado { opacity: 0.75; }
+    .despacho-card-header {
+      padding: 14px 18px; display: flex; align-items: center; gap: 14px;
+      cursor: pointer; user-select: none;
+    }
+    .despacho-card-header:hover { background: var(--surface-subtle); }
+    .zona-dot {
+      width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+    }
+    .despacho-card-info { flex: 1; min-width: 0; }
+    .despacho-card-nombre {
+      font-size: 14px; font-weight: 900; letter-spacing: -0.2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .despacho-card-meta {
+      font-size: 10.5px; color: var(--text-muted); margin-top: 3px;
+      font-weight: 600; display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+    }
+    .despacho-card-meta .codigo {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10px; font-weight: 700;
+    }
+    .despacho-card-stats {
+      display: flex; gap: 16px; align-items: center; flex-shrink: 0;
+    }
+    .stat-mini { text-align: right; }
+    .stat-mini-value { font-size: 15px; font-weight: 900; line-height: 1.1; }
+    .stat-mini-label {
+      font-size: 9px; font-weight: 800; text-transform: uppercase;
+      color: var(--text-subtle); letter-spacing: 0.4px; margin-top: 2px;
+    }
+    .card-actions-group {
+      display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+    }
+    .chevron-toggle {
+      width: 16px; height: 16px; stroke: var(--text-muted); fill: none;
+      stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0; transition: transform 0.2s ease;
+    }
+    .despacho-card.expanded .chevron-toggle { transform: rotate(180deg); }
+
+    .progress-bar-track {
+      height: 5px; background: var(--surface-subtle); border-radius: 999px;
+      overflow: hidden; margin: 0 18px 12px;
+    }
+    .progress-bar-fill {
+      height: 100%; background: var(--text); border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+    .progress-bar-fill.completo { background: var(--success); }
+    .progress-bar-fill.parcial { background: var(--amber); }
+
+    .estado-pill {
+      font-size: 9.5px; font-weight: 800; padding: 3px 8px; border-radius: 6px;
+      text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .estado-pill.pendiente { background: var(--surface-subtle); color: var(--text-muted); border: 1px solid var(--border); }
+    .estado-pill.en_ruta { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+    .estado-pill.completado { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
+
+    .despacho-card-body {
+      display: none; border-top: 1px solid var(--border); padding: 18px;
+      background: var(--surface);
+    }
+    .despacho-card.expanded .despacho-card-body { display: block; }
+
+    .bloque-interno { margin-bottom: 20px; }
+    .bloque-interno:last-child { margin-bottom: 0; }
+    .bloque-titulo {
+      font-size: 10.5px; font-weight: 900; text-transform: uppercase;
+      letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .bloque-titulo .badge-count {
+      font-size: 10px; font-weight: 800; background: var(--surface-subtle);
+      color: var(--text-muted); padding: 2px 8px; border-radius: 999px;
+      border: 1px solid var(--border); letter-spacing: 0;
+    }
+
+    .mini-table {
+      width: 100%; border-collapse: collapse; font-size: 12px;
+      background: var(--surface-subtle); border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .mini-table th {
+      padding: 8px 12px; font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.4px;
+      color: var(--text-muted); text-align: left;
+      background: transparent; border-bottom: 1px solid var(--border);
+    }
+    .mini-table td {
+      padding: 10px 12px; border-bottom: 1px solid var(--border);
+    }
+    .mini-table tr:last-child td { border-bottom: none; }
+    .mini-table td.num { text-align: right; font-weight: 800; }
+    .mini-table tr.total-row td {
+      background: var(--surface); font-weight: 900; font-size: 12.5px;
+      border-top: 2px solid var(--border);
+    }
+
+    .entrega-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 14px; border: 1px solid var(--border);
+      border-radius: var(--radius-sm); margin-bottom: 8px;
+      background: var(--surface); transition: all 0.15s ease;
+    }
+    .entrega-item.entregado {
+      background: var(--success-bg);
+      border-color: var(--success-border);
+    }
+    .entrega-check-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      flex-shrink: 0; padding-top: 2px;
+    }
+    .entrega-check-wrap label {
+      font-size: 8.5px; font-weight: 800; text-transform: uppercase;
+      color: var(--text-subtle); letter-spacing: 0.3px;
+    }
+    .checkbox-big {
+      width: 26px; height: 26px; border-radius: 8px; border: 2px solid var(--border);
+      background: var(--surface); cursor: pointer; position: relative;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s ease; flex-shrink: 0;
+    }
+    .checkbox-big:hover { border-color: var(--text); }
+    .checkbox-big.checked { background: var(--success); border-color: var(--success); }
+    .checkbox-big.checked::after {
+      content: ''; width: 12px; height: 7px;
+      border-left: 3px solid #fff; border-bottom: 3px solid #fff;
+      transform: rotate(-45deg) translate(1px, -1px);
+    }
+
+    .entrega-info { flex: 1; min-width: 0; }
+    .entrega-cliente {
+      font-size: 13px; font-weight: 800; letter-spacing: -0.2px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .entrega-cliente small {
+      font-size: 10px; color: var(--text-muted); font-weight: 600;
+      margin-left: 6px; font-family: monospace;
+    }
+    .entrega-dir {
+      font-size: 11.5px; color: var(--text-muted); font-weight: 600;
+      line-height: 1.4; margin-top: 3px;
+    }
+    .entrega-telefonos { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; align-items: center; }
+    .tel-pill {
+      font-size: 10.5px; font-weight: 700; color: var(--text);
+      background: var(--surface-subtle); border: 1px solid var(--border);
+      padding: 3px 8px; border-radius: 6px; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 5px;
+      transition: all 0.15s ease;
+    }
+    .tel-pill:hover { background: var(--border); }
+    .tel-pill svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+    .tel-pill.llegada { background: #f3e8ff; color: #7c3aed; border-color: #ddd6fe; }
+    body.dark .tel-pill.llegada { background: rgba(124, 58, 237, 0.15); border-color: rgba(124, 58, 237, 0.3); color: #c4b5fd; }
+    .paq-highlight-pill {
+      font-size: 11px; font-weight: 900; background: var(--text); color: var(--surface);
+      padding: 3px 9px; border-radius: 6px; letter-spacing: 0.3px;
+    }
+    .modelo-desglose-pill {
+      font-size: 10.5px; font-weight: 800; background: var(--surface-subtle);
+      border: 1px solid var(--border); color: var(--text);
+      padding: 3px 8px; border-radius: 6px; max-width: 440px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    .empty-state {
+      background: var(--surface); border: 1px dashed var(--border);
+      border-radius: var(--radius); padding: 46px 20px; text-align: center;
+      color: var(--text-subtle);
+    }
+    .empty-state .icon {
+      width: 56px; height: 56px; margin: 0 auto 14px;
+      border-radius: 16px; background: var(--surface-subtle);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+    }
+    .empty-state .icon svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+    .empty-state .titulo { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+    .empty-state .desc { font-size: 12px; line-height: 1.5; max-width: 400px; margin: 0 auto; }
+
+    .hist-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px 18px;
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 10px; cursor: pointer; transition: all 0.15s ease;
+    }
+    .hist-item:hover { border-color: var(--text-muted); background: var(--surface-subtle); }
+    .hist-icon {
+      width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--success-bg); color: var(--success);
+      border: 1px solid var(--success-border);
+    }
+    .hist-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.4; }
+    .hist-info { flex: 1; min-width: 0; }
+    .hist-title {
+      font-size: 13px; font-weight: 800; letter-spacing: -0.2px;
+      display: flex; gap: 8px; align-items: center;
+    }
+    .hist-meta {
+      font-size: 10.5px; color: var(--text-muted); margin-top: 3px;
+      font-weight: 600;
+    }
+    .hist-totales { display: flex; gap: 14px; align-items: center; flex-shrink: 0; }
+    .hist-stat { text-align: right; }
+    .hist-stat-val { font-size: 14px; font-weight: 900; line-height: 1.1; }
+    .hist-stat-lbl {
+      font-size: 9px; font-weight: 800; text-transform: uppercase;
+      color: var(--text-subtle); margin-top: 2px;
+    }
+
+    .metrics-section {
+      margin: 26px 0 14px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .metrics-section-title {
+      font-size: 11px; font-weight: 900; text-transform: uppercase;
+      letter-spacing: 1.2px; color: var(--text-muted);
+    }
+    .metrics-section-line { flex: 1; height: 1px; background: var(--border); }
+    .metrics-grid-2 {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(40px);
+      opacity: 0;
+      visibility: hidden;
+      background: #0a0a0a;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      z-index: 9999;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.25s;
+      max-width: 90vw;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    body.dark .toast { background: #f5f5f5; color: #0a0a0a; }
+    .toast.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 1100px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .metrics-grid-2 { grid-template-columns: 1fr; }
+      .content-area { padding: 20px 20px 90px; }
+    }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-header-box">
+        <div class="brand-group-text">
+          <h1 class="brand-title">FABREC</h1>
+          <div class="role-badge">Jefe de Despacho</div>
+        </div>
+        <button onclick="toggleSidebar()" class="btn-toggle-sidebar" id="btnToggleSidebar" title="Contraer/Expandir menú">
+          <svg id="iconToggleSidebar" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+      </div>
+
+      <nav class="nav-container">
+        <div class="nav-group">
+          <span class="nav-section-title">Operaciones</span>
+          <button class="nav-item active" id="btnTabDespachos" onclick="mostrarPestana('despachos')">
+            <svg viewBox="0 0 24 24"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <span class="nav-text">Despachos del Día</span>
+            <span class="nav-badge" id="badgeDespachosMenu">0</span>
+          </button>
+          <button class="nav-item" id="btnTabHistorial" onclick="mostrarPestana('historial')">
+            <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+            <span class="nav-text">Historial</span>
+          </button>
+          <button class="nav-item" id="btnTabMetricas" onclick="mostrarPestana('metricas')">
+            <svg viewBox="0 0 24 24"><path d="M3 3v18h18M7 14l4-4 4 4 5-6"/></svg>
+            <span class="nav-text">Métricas</span>
+          </button>
+        </div>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="storage-monitor-box">
+        <div style="display: flex; justify-content: space-between; font-weight: 700;">
+          <span>Memoria IndexedDB</span>
+          <span id="txtStoragePercent">0%</span>
+        </div>
+        <div class="storage-bar-track">
+          <div id="barStorageUsage" class="storage-bar-fill"></div>
+        </div>
+        <div id="txtStorageDetails" style="font-size: 9px; color: #707070; margin-top: 4px;">Sincronizado con Ventas</div>
+      </div>
+
+      <button onclick="recargarDesdeVentas()" class="btn-sidebar-action">
+        <svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10"/><path d="M20.49 15a9 9 0 01-14.85 3.36L1 14"/></svg>
+        <span class="nav-text">Sincronizar</span>
+      </button>
+
+      <button onclick="eliminarEstadosDespacho()" class="btn-sidebar-action btn-sidebar-danger">
+        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        <span class="nav-text">Limpiar estados</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="content-area">
+
+    <section id="paneDespachos" class="view-pane active">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div>
+            <div class="kpi-label">Zonas por Despachar</div>
+            <div class="kpi-value" id="kpiZonasPendientes">0</div>
+            <div class="kpi-sub" id="kpiZonasPendientesSub">Sin zonas pendientes</div>
+          </div>
+          <div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+        </div>
+        <div class="kpi-card">
+          <div>
+            <div class="kpi-label">Paquetes Totales</div>
+            <div class="kpi-value" id="kpiPaquetesTotales">0</div>
+            <div class="kpi-sub" id="kpiPaquetesTotalesSub">En todas las zonas</div>
+          </div>
+          <div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+        </div>
+        <div class="kpi-card">
+          <div>
+            <div class="kpi-label">Entregas Realizadas</div>
+            <div class="kpi-value" id="kpiEntregasRealizadas">0 / 0</div>
+            <div class="kpi-sub" id="kpiEntregasRealizadasSub">Progreso del día</div>
+          </div>
+          <div class="kpi-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        <div class="kpi-card">
+          <div>
+            <div class="kpi-label">Ventas Totales</div>
+            <div class="kpi-value" id="kpiVentasTotales">0</div>
+            <div class="kpi-sub" id="kpiVentasTotalesSub">En las zonas del día</div>
+          </div>
+          <div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+        </div>
+      </div>
+
+      <div class="filtros-bar">
+        <div class="segmented-control">
+          <button class="segmented-btn active" id="btnFiltroTodos" onclick="cambiarFiltroEstado('todos')">
+            Todos <span class="pill-count" id="cntTodos">0</span>
+          </button>
+          <button class="segmented-btn" id="btnFiltroPendientes" onclick="cambiarFiltroEstado('pendiente')">
+            Pendientes <span class="pill-count" id="cntPendientes">0</span>
+          </button>
+          <button class="segmented-btn" id="btnFiltroEnRuta" onclick="cambiarFiltroEstado('en_ruta')">
+            En ruta <span class="pill-count" id="cntEnRuta">0</span>
+          </button>
+          <button class="segmented-btn" id="btnFiltroCompletados" onclick="cambiarFiltroEstado('completado')">
+            Completados <span class="pill-count" id="cntCompletados">0</span>
+          </button>
+        </div>
+        <input type="date" id="filtroFechaDespacho" class="filter-input" onchange="renderizarDespachos()" style="margin-left: auto;">
+        <input type="text" id="buscadorDespachos" class="filter-input" oninput="renderizarDespachos()" placeholder="Buscar zona, código o cliente..." style="width: 230px;">
+      </div>
+
+      <div id="listaDespachos"></div>
+    </section>
+
+    <section id="paneHistorial" class="view-pane">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-header-title-group">
+            <h2 class="panel-title">Historial de Despachos Completados</h2>
+          </div>
+          <div class="panel-actions">
+            <input type="date" id="filtroFechaHistorial" class="filter-input" onchange="renderizarHistorial()">
+            <input type="text" id="buscadorHistorial" class="filter-input" oninput="renderizarHistorial()" placeholder="Buscar..." style="width: 200px;">
+            <button onclick="limpiarFiltrosHistorial()" class="btn btn-outline">Limpiar</button>
+            <button onclick="exportarHistorialExcel()" class="btn btn-dark" title="Exportar historial filtrado a Excel">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              Descargar Excel
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="listaHistorial"></div>
+    </section>
+
+    <section id="paneMetricas" class="view-pane">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div>
+            <div class="kpi-label">Despachos del Mes</div>
+            <div class="kpi-value" id="metDespachosMes">0</div>
+            <div class="kpi-sub">Zonas completadas</div>
+          </div>
+          <div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/></svg></div>
+        </div>
+        <div class="kpi-card">
+          <div>
+            <div class="kpi-label">Paquetes Entregados</div>
+            <div class="kpi-value" id="metPaquetesEntregados">0</div>
+            <div class="kpi-sub">En el mes actual</div>
+          </div>
+          <div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+        </div>
+        <div class="kpi-card">
+          <div>
+            <div class="kpi-label">Tasa de Éxito</div>
+            <div class="kpi-value" id="metTasaExito">0%</div>
+            <div class="kpi-sub">Entregas completadas / total</div>
+          </div>
+          <div class="kpi-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        <div class="kpi-card">
+          <div>
+            <div class="kpi-label">Monto Despachado</div>
+            <div class="kpi-value" id="metMontoDespachado">S/ 0</div>
+            <div class="kpi-sub">Total facturado en el mes</div>
+          </div>
+          <div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M12 1v22m17-5H5"/></svg></div>
+        </div>
+      </div>
+
+      <div class="metrics-section">
+        <span class="metrics-section-title">01 · Despachos por Zona</span>
+        <span class="metrics-section-line"></span>
+      </div>
+
+      <div class="metrics-grid-2">
+        <div class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title">Paquetes Despachados por Zona</h2>
+            <button onclick="descargarGraficoImagen('chartZonaPaquetes', 'paquetes_por_zona')" class="btn btn-outline btn-sm" title="Descargar como PNG">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Descargar PNG
+            </button>
+          </div>
+          <div class="panel-body">
+            <div style="position: relative; height: 300px;"><canvas id="chartZonaPaquetes"></canvas></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title">Entregas por Estado</h2>
+            <button onclick="descargarGraficoImagen('chartEstados', 'entregas_por_estado')" class="btn btn-outline btn-sm" title="Descargar como PNG">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Descargar PNG
+            </button>
+          </div>
+          <div class="panel-body">
+            <div style="position: relative; height: 300px;"><canvas id="chartEstados"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metrics-section">
+        <span class="metrics-section-title">02 · Evolución</span>
+        <span class="metrics-section-line"></span>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Paquetes Despachados por Día</h2>
+          <button onclick="descargarGraficoImagen('chartEvolucion', 'evolucion_diaria')" class="btn btn-outline btn-sm" title="Descargar como PNG">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Descargar PNG
+            </button>
+        </div>
+        <div class="panel-body">
+          <div style="position: relative; height: 300px;"><canvas id="chartEvolucion"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="toast" class="toast">Notificación</div>
+
+  <script>
+    // ================================================================
+    // CONFIGURACIÓN
+    // ================================================================
+    const SHARED_DB_NAME = 'FABREC_SHARED_DB';
+    const SHARED_STORE_NAME = 'fabrec_shared_store';
+
+    const KEY_CARGUILLOS = "fabrec_despacho_carguillos_v1";
+    const KEY_ESTADOS    = "fabrec_despacho_estados_v1";
+    const KEY_SIDEBAR    = "fabrec_despacho_sidebar_v1";
+    const KEY_ACTIVE_TAB = "fabrec_despacho_active_tab_v1";
+
+    const COLORES_ZONA = {
+      la_parada: '#eab308',
+      cono_norte: '#2563eb',
+      santa_anita: '#7c3aed',
+      cono_sur: '#16a34a',
+      oficina: '#0a0a0a'
+    };
+    const NOMBRE_ZONA_POR_KEY = {
+      la_parada: 'La Parada',
+      cono_norte: 'Cono Norte',
+      santa_anita: 'Santa Anita / Huaycán',
+      cono_sur: 'Cono Sur'
+    };
+
+    let zonasDespacho = [];
+    let estadosDespacho = {};
+    let filtroEstado = 'todos';
+
+    let chartZonaPaquetesInst = null;
+    let chartEstadosInst = null;
+    let chartEvolucionInst = null;
+
+    // ================================================================
+    // UTILIDADES
+    // ================================================================
+    function escaparHTML(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+    function formatearMonto(n) {
+      n = Number(n) || 0;
+      const abs = Math.abs(n);
+      if (abs >= 1e6) return 'S/ ' + (n/1e6).toFixed(2).replace(/\.00$/, '') + 'M';
+      if (abs >= 1e3) return 'S/ ' + (n/1e3).toFixed(1).replace(/\.0$/, '') + 'k';
+      return 'S/ ' + n.toFixed(2);
+    }
+    function formatearFechaLarga(iso) {
+      if (!iso) return '—';
+      try {
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return '—';
+        return d.toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' }) +
+          ' • ' + d.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
+      } catch (e) { return '—'; }
+    }
+    function fechaCorta(iso) {
+      if (!iso) return '—';
+      try {
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return '—';
+        return d.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: '2-digit' });
+      } catch (e) { return '—'; }
+    }
+    function fechaCompacta(d) {
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yy = String(d.getFullYear()).slice(-2);
+      return dd + mm + yy;
+    }
+    function esHoy(iso) {
+      if (!iso) return false;
+      try {
+        const d = new Date(iso);
+        const h = new Date();
+        return d.getFullYear() === h.getFullYear() && d.getMonth() === h.getMonth() && d.getDate() === h.getDate();
+      } catch (e) { return false; }
+    }
+    function colorDeZona(zonaClave) {
+      return COLORES_ZONA[zonaClave] || '#6b7280';
+    }
+    function mostrarToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.classList.add('show');
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => t.classList.remove('show'), 2400);
+    }
+    function normalizarTelefono(tel) {
+      if (!tel) return '';
+      return String(tel).replace(/\D/g, '');
+    }
+    function inicializarEstructuraEstado(codigoCarguillo) {
+      if (!estadosDespacho[codigoCarguillo]) {
+        estadosDespacho[codigoCarguillo] = {
+          estado: 'pendiente',
+          entregas: {},
+          fecha_despacho: null,
+          fecha_completado: null
+        };
+      }
+      return estadosDespacho[codigoCarguillo];
+    }
+
+    // ================================================================
+    // OBTENCIÓN ROBUSTA DE PAQUETES Y MODELOS POR ENTREGA
+    // ================================================================
+    function obtenerPaquetesEntrega(e, zonaPadre) {
+      if (!e) return 0;
+      
+      let totalE = Number(e.total_paquetes || e.paquetes || e.cantidad_paquetes || e.cant_paquetes || e.bultos || e.total_bultos || 0);
+
+      let sumaProds = 0;
+      const listaProds = Array.isArray(e.productos) ? e.productos : (Array.isArray(e.items) ? e.items : []);
+      if (listaProds.length > 0) {
+        listaProds.forEach(p => {
+          if (typeof p === 'object' && p !== null) {
+            const cant = Number(p.paquetes || p.cantidad_paquetes || p.cant_paquetes || p.paq || p.bultos || p.cajas || p.fardos || p.total_paquetes || 0);
+            if (cant > 0) {
+              sumaProds += cant;
+            } else if (Number(p.cantidad || p.cant) > 0) {
+              sumaProds += Number(p.cantidad || p.cant);
+            }
+          }
+        });
+      }
+
+      if (sumaProds > 0 && (!totalE || (totalE <= 1 && sumaProds > 1))) {
+        totalE = sumaProds;
+      }
+
+      // Si la entrega es la única de la zona y totalE es 0 o 1, sincroniza con el total de la zona
+      if (zonaPadre && Array.isArray(zonaPadre.entregas) && zonaPadre.entregas.length === 1) {
+        const totalZona = Number(zonaPadre.total_paquetes) || 0;
+        if (totalZona > 0 && (!totalE || totalE <= 1)) {
+          totalE = totalZona;
+        }
+      }
+
+      return totalE || 0;
+    }
+
+    function obtenerDesgloseModelosEntrega(e, zonaPadre) {
+      if (!e) return '';
+      const totalEntrega = obtenerPaquetesEntrega(e, zonaPadre);
+
+      const listaProds = Array.isArray(e.productos) ? e.productos : (Array.isArray(e.items) ? e.items : []);
+
+      if (listaProds.length > 0) {
+        // Caso: 1 solo producto en la entrega
+        if (listaProds.length === 1) {
+          const p = listaProds[0];
+          const nom = typeof p === 'string' ? p : (p.producto || p.modelo || p.nombre || p.descripcion || 'Modelo');
+          let cant = 0;
+          if (typeof p === 'object' && p !== null) {
+            cant = Number(p.paquetes || p.cantidad_paquetes || p.cant_paquetes || p.paq || p.bultos || p.cajas || p.total_paquetes || p.cantidad || p.cant || 0);
+          }
+          if (cant <= 1 && totalEntrega > 1) {
+            cant = totalEntrega;
+          } else if (cant === 0) {
+            cant = totalEntrega > 0 ? totalEntrega : 1;
+          }
+          return `${cant} paq ${nom}`;
+        }
+
+        // Caso: múltiples productos en la entrega
+        let sumaCants = 0;
+        const itemsParseados = listaProds.map(p => {
+          if (typeof p === 'string') return { nom: p, cant: 0 };
+          const nom = p.producto || p.modelo || p.nombre || p.descripcion || 'Modelo';
+          const cant = Number(p.paquetes || p.cantidad_paquetes || p.cant_paquetes || p.paq || p.bultos || p.cajas || p.total_paquetes || p.cantidad || p.cant || 0);
+          sumaCants += cant;
+          return { nom, cant };
+        });
+
+        // Si las cantidades venían con 1 o 0 pero el total de la entrega es mayor, cruza con la zona
+        if (sumaCants < totalEntrega && zonaPadre && Array.isArray(zonaPadre.productos) && zonaPadre.productos.length > 0) {
+          itemsParseados.forEach(item => {
+            const matchZona = zonaPadre.productos.find(zp => {
+              const nomZona = (zp.producto || zp.modelo || '').toLowerCase();
+              return nomZona && (nomZona.includes(item.nom.toLowerCase()) || item.nom.toLowerCase().includes(nomZona));
+            });
+            if (matchZona && Number(matchZona.paquetes) > 0) {
+              if (zonaPadre.entregas.length === 1) {
+                item.cant = Number(matchZona.paquetes);
+              }
+            }
+          });
+        }
+
+        return itemsParseados.map(item => {
+          const cantFinal = item.cant > 0 ? item.cant : (totalEntrega > 0 && itemsParseados.length === 1 ? totalEntrega : 1);
+          return `${cantFinal} paq ${item.nom}`;
+        }).join(' · ');
+      }
+
+      if (typeof e.modelos === 'string' && e.modelos.trim()) return e.modelos.trim();
+      if (typeof e.detalle === 'string' && e.detalle.trim()) return e.detalle.trim();
+      if (typeof e.detalle_productos === 'string' && e.detalle_productos.trim()) return e.detalle_productos.trim();
+
+      // Si la entrega no tiene array propio de productos, toma los de la zona
+      if (zonaPadre && Array.isArray(zonaPadre.productos) && zonaPadre.productos.length > 0) {
+        if (zonaPadre.productos.length === 1) {
+          const pUnico = zonaPadre.productos[0];
+          const cant = totalEntrega > 0 ? totalEntrega : (Number(pUnico.paquetes) || 1);
+          return `${cant} paq ${pUnico.producto || 'Modelo'}`;
+        }
+        if (zonaPadre.entregas.length === 1) {
+          return zonaPadre.productos.map(p => `${p.paquetes || 1} paq ${p.producto || 'Modelo'}`).join(' · ');
+        }
+      }
+
+      return totalEntrega > 0 ? `${totalEntrega} paq` : '';
+    }
+
+    function truncarTexto(ctx, text, maxW) {
+      text = String(text || '');
+      if (ctx.measureText(text).width <= maxW) return text;
+      while (text.length > 0 && ctx.measureText(text + '…').width > maxW) {
+        text = text.slice(0, -1);
+      }
+      return text + '…';
+    }
+
+    // ================================================================
+    // DEDUPLICACIÓN
+    // ================================================================
+    function deduplicarCarguillos(rawList) {
+      if (!Array.isArray(rawList) || rawList.length === 0) {
+        return { clean: [], eliminados: 0, detalle: { duplicadosLote: 0, duplicadosZona: 0 } };
+      }
+
+      const lotesMap = {};
+      let duplicadosLote = 0;
+      rawList.forEach(lote => {
+        if (!lote || !lote.codigo_lote) return;
+        const key = lote.codigo_lote;
+        const actual = lotesMap[key];
+        if (!actual) {
+          lotesMap[key] = lote;
+        } else {
+          duplicadosLote++;
+          const fActual = new Date(actual.fecha_envio || 0).getTime();
+          const fNuevo = new Date(lote.fecha_envio || 0).getTime();
+          if (fNuevo > fActual) lotesMap[key] = lote;
+        }
+      });
+
+      const lotesUnicos = Object.values(lotesMap);
+
+      const zonasMap = {};
+      let duplicadosZona = 0;
+      lotesUnicos.forEach(lote => {
+        if (!Array.isArray(lote.zonas)) return;
+        lote.zonas.forEach(z => {
+          const key = z.codigo_carguillo || `${lote.codigo_lote}_${z.zonaClave}`;
+          const actual = zonasMap[key];
+          if (!actual) {
+            zonasMap[key] = { lote, zona: z };
+          } else {
+            duplicadosZona++;
+            const fActual = new Date(actual.lote.fecha_envio || 0).getTime();
+            const fNueva = new Date(lote.fecha_envio || 0).getTime();
+            if (fNueva > fActual) zonasMap[key] = { lote, zona: z };
+          }
+        });
+      });
+
+      const lotesRebuild = {};
+      Object.values(zonasMap).forEach(({ lote, zona }) => {
+        const key = lote.codigo_lote;
+        if (!lotesRebuild[key]) {
+          lotesRebuild[key] = { ...lote, zonas: [] };
+        }
+        lotesRebuild[key].zonas.push(zona);
+      });
+
+      const clean = Object.values(lotesRebuild)
+        .filter(l => l.zonas.length > 0)
+        .sort((a, b) => new Date(b.fecha_envio || 0) - new Date(a.fecha_envio || 0));
+
+      return { clean, eliminados: duplicadosLote + duplicadosZona, detalle: { duplicadosLote, duplicadosZona } };
+    }
+
+    // ================================================================
+    // LOCALFORAGE
+    // ================================================================
+    async function initLocalForage() {
+      localforage.config({
+        name: SHARED_DB_NAME,
+        storeName: SHARED_STORE_NAME,
+        description: 'Almacén compartido Ventas + Despacho'
+      });
+    }
+
+    async function cargarDatosDesdeDB() {
+      let eliminados = 0;
+      try {
+        const raw = await localforage.getItem(KEY_CARGUILLOS);
+        const listaOriginal = Array.isArray(raw) ? raw : [];
+
+        const { clean, eliminados: elim } = deduplicarCarguillos(listaOriginal);
+        eliminados = elim;
+
+        if (eliminados > 0) {
+          try { await localforage.setItem(KEY_CARGUILLOS, clean); } catch (e) {}
+        }
+
+        zonasDespacho = aplanarCarguillos(clean);
+      } catch (e) {
+        console.error('Error leyendo carguillos:', e);
+        zonasDespacho = [];
+      }
+
+      try {
+        const rawEstados = await localforage.getItem(KEY_ESTADOS);
+        estadosDespacho = rawEstados && typeof rawEstados === 'object' ? rawEstados : {};
+      } catch (e) {
+        estadosDespacho = {};
+      }
+
+      zonasDespacho.forEach(z => {
+        inicializarEstructuraEstado(z.codigo_carguillo);
+      });
+
+      const codigosValidos = new Set(zonasDespacho.map(z => z.codigo_carguillo));
+      let huerfanos = 0;
+      Object.keys(estadosDespacho).forEach(k => {
+        if (!codigosValidos.has(k)) {
+          delete estadosDespacho[k];
+          huerfanos++;
+        }
+      });
+      if (huerfanos > 0) {
+        try { await localforage.setItem(KEY_ESTADOS, estadosDespacho); } catch (e) {}
+      }
+
+      return eliminados;
+    }
+
+    function aplanarCarguillos(lista) {
+      const out = [];
+      lista.forEach(lote => {
+        if (!lote || !Array.isArray(lote.zonas)) return;
+        lote.zonas.forEach(z => {
+          out.push({
+            id_lote: lote.id,
+            codigo_lote: lote.codigo_lote,
+            fecha_envio: lote.fecha_envio,
+            device_id: lote.device_id || '',
+            cantidad_zonas: lote.cantidad_zonas || 0,
+            zonaClave: z.zonaClave || '',
+            zona: z.zona || 'Sin zona',
+            codigo_carguillo: z.codigo_carguillo || `${lote.codigo_lote || 'lote'}_${z.zonaClave || 'z'}`,
+            total_ventas: parseInt(z.total_ventas) || 0,
+            total_paquetes: parseInt(z.total_paquetes) || 0,
+            total_monto: parseFloat(z.total_monto) || 0,
+            productos: Array.isArray(z.productos) ? z.productos : [],
+            entregas: Array.isArray(z.entregas) ? z.entregas : []
+          });
+        });
+      });
+      out.sort((a, b) => new Date(b.fecha_envio || 0) - new Date(a.fecha_envio || 0));
+      return out;
+    }
+
+    async function guardarEstados() {
+      try {
+        await localforage.setItem(KEY_ESTADOS, estadosDespacho);
+      } catch (e) {
+        console.error('Error guardando estados:', e);
+      }
+    }
+
+    // ================================================================
+    // SIDEBAR / TEMA
+    // ================================================================
+    async function toggleSidebar() {
+      const sb = document.getElementById('sidebar');
+      sb.classList.toggle('collapsed');
+      const colapsado = sb.classList.contains('collapsed');
+      try { await localforage.setItem(KEY_SIDEBAR, colapsado); } catch (e) {}
+      actualizarIconoToggle(colapsado);
+    }
+    function actualizarIconoToggle(colapsado) {
+      const icon = document.getElementById('iconToggleSidebar');
+      if (colapsado) icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>';
+      else icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>';
+    }
+
+    function aplicarTemaAutomatico() {
+      const hora = new Date().getHours();
+      const esNoche = (hora >= 17 || hora < 6);
+      if (esNoche) document.body.classList.add('dark');
+      else document.body.classList.remove('dark');
+      document.title = "FABREC | Despacho";
+    }
+
+    async function actualizarMonitorMemoria() {
+      try {
+        if (navigator.storage && navigator.storage.estimate) {
+          const estimate = await navigator.storage.estimate();
+          const usageMB = (estimate.usage / (1024 * 1024)).toFixed(2);
+          const quotaMB = (estimate.quota / (1024 * 1024)).toFixed(0);
+          const porcentaje = Math.min(100, Math.max(1, Math.round((estimate.usage / estimate.quota) * 100)));
+          document.getElementById('txtStoragePercent').innerText = `${porcentaje}%`;
+          document.getElementById('barStorageUsage').style.width = `${porcentaje}%`;
+          document.getElementById('txtStorageDetails').innerText = `${usageMB} MB / ${quotaMB} MB`;
+        }
+      } catch (e) {}
+    }
+
+    // ================================================================
+    // NAVEGACIÓN
+    // ================================================================
+    function mostrarPestana(nombre) {
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
+      const map = {
+        despachos: { btn: 'btnTabDespachos', pane: 'paneDespachos', cb: renderizarDespachos },
+        historial: { btn: 'btnTabHistorial', pane: 'paneHistorial', cb: renderizarHistorial },
+        metricas:  { btn: 'btnTabMetricas',  pane: 'paneMetricas',  cb: renderizarMetricas }
+      };
+      if (map[nombre]) {
+        document.getElementById(map[nombre].btn).classList.add('active');
+        document.getElementById(map[nombre].pane).classList.add('active');
+        try { localStorage.setItem(KEY_ACTIVE_TAB, nombre); } catch (e) {}
+        if (map[nombre].cb) setTimeout(() => map[nombre].cb(), 0);
+      }
+    }
+
+    function restaurarTabActivo() {
+      let tab = 'despachos';
+      try { tab = localStorage.getItem(KEY_ACTIVE_TAB) || 'despachos'; } catch (e) {}
+      if (!['despachos','historial','metricas'].includes(tab)) tab = 'despachos';
+      mostrarPestana(tab);
+    }
+
+    // ================================================================
+    // CARGA
+    // ================================================================
+    async function recargarDesdeVentas() {
+      const eliminados = await cargarDatosDesdeDB();
+      aplicarFiltroFechaInicial();
+      renderizarTodo();
+      await actualizarMonitorMemoria();
+      if (eliminados > 0) {
+        mostrarToast(`Sincronizado · ${eliminados} duplicado${eliminados === 1 ? '' : 's'} eliminado${eliminados === 1 ? '' : 's'}`);
+      } else {
+        mostrarToast("Sincronizado con Ventas");
+      }
+    }
+
+    function aplicarFiltroFechaInicial() {
+      const input = document.getElementById('filtroFechaDespacho');
+      if (!input) return;
+      const hoy = new Date();
+      const yyyy = hoy.getFullYear();
+      const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+      const dd = String(hoy.getDate()).padStart(2, '0');
+      input.value = `${yyyy}-${mm}-${dd}`;
+    }
+
+    function renderizarTodo() {
+      renderizarDespachos();
+      renderizarHistorial();
+      if (document.getElementById('paneMetricas').classList.contains('active')) {
+        renderizarMetricas();
+      }
+      actualizarBadgeMenu();
+    }
+
+    // ================================================================
+    // FILTROS
+    // ================================================================
+    function cambiarFiltroEstado(f) {
+      filtroEstado = f;
+      ['btnFiltroTodos','btnFiltroPendientes','btnFiltroEnRuta','btnFiltroCompletados'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+      });
+      const map = { todos: 'btnFiltroTodos', pendiente: 'btnFiltroPendientes', en_ruta: 'btnFiltroEnRuta', completado: 'btnFiltroCompletados' };
+      const btn = document.getElementById(map[f]);
+      if (btn) btn.classList.add('active');
+      renderizarDespachos();
+    }
+
+    function filtrarPorFecha(item) {
+      const input = document.getElementById('filtroFechaDespacho');
+      const fechaFiltro = input && input.value ? input.value : '';
+      if (!fechaFiltro) return true;
+      const f = new Date(item.fecha_envio || 0);
+      if (isNaN(f.getTime())) return false;
+      const yyyy = f.getFullYear();
+      const mm = String(f.getMonth() + 1).padStart(2, '0');
+      const dd = String(f.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}` === fechaFiltro;
+    }
+
+    // ================================================================
+    // HELPERS DE ESTADO
+    // ================================================================
+    function getEstadoDespacho(zona) {
+      return estadosDespacho[zona.codigo_carguillo] || { estado: 'pendiente', entregas: {} };
+    }
+
+    function contarEntregasDeZona(zona) {
+      const st = getEstadoDespacho(zona);
+      let entregadas = 0;
+      zona.entregas.forEach(e => {
+        const es = st.entregas[e.codigo] || {};
+        if (es.entregado) entregadas++;
+      });
+      return { entregadas, totalEntregas: zona.entregas.length };
+    }
+
+    // ================================================================
+    // RENDER DESPACHOS
+    // ================================================================
+    function renderizarDespachos() {
+      const cont = document.getElementById('listaDespachos');
+      if (!cont) return;
+
+      let lista = zonasDespacho.filter(filtrarPorFecha);
+      const stTotal = { todos: lista.length, pendiente: 0, en_ruta: 0, completado: 0 };
+      lista.forEach(z => {
+        const st = getEstadoDespacho(z).estado;
+        stTotal[st] = (stTotal[st] || 0) + 1;
+      });
+
+      document.getElementById('cntTodos').innerText = stTotal.todos;
+      document.getElementById('cntPendientes').innerText = stTotal.pendiente;
+      document.getElementById('cntEnRuta').innerText = stTotal.en_ruta;
+      document.getElementById('cntCompletados').innerText = stTotal.completado;
+
+      if (filtroEstado !== 'todos') {
+        lista = lista.filter(z => getEstadoDespacho(z).estado === filtroEstado);
+      }
+
+      const q = (document.getElementById('buscadorDespachos').value || '').toLowerCase().trim();
+      if (q) {
+        lista = lista.filter(z => {
+          if ((z.zona || '').toLowerCase().includes(q)) return true;
+          if ((z.codigo_carguillo || '').toLowerCase().includes(q)) return true;
+          if ((z.codigo_lote || '').toLowerCase().includes(q)) return true;
+          return z.entregas.some(e =>
+            (e.cliente || '').toLowerCase().includes(q) ||
+            (e.direccion || '').toLowerCase().includes(q) ||
+            (e.codigo || '').toLowerCase().includes(q)
+          );
+        });
+      }
+
+      actualizarKPIsDespachos(zonasDespacho.filter(filtrarPorFecha));
+
+      if (lista.length === 0) {
+        cont.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">
+              <svg viewBox="0 0 24 24"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <div class="titulo">Sin despachos en este filtro</div>
+            <div class="desc">
+              No hay zonas que coincidan con los filtros aplicados.<br>
+              Cuando la app de <strong>ventas-oficina</strong> envíe un carguillo, aparecerá aquí automáticamente.
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      cont.innerHTML = lista.map(z => renderCardDespacho(z)).join('');
+    }
+
+    function renderCardDespacho(z) {
+      const st = getEstadoDespacho(z);
+      const counts = contarEntregasDeZona(z);
+      const color = colorDeZona(z.zonaClave);
+      const porcentaje = counts.totalEntregas > 0 ? Math.round((counts.entregadas / counts.totalEntregas) * 100) : 0;
+      const claseProgreso = porcentaje >= 100 ? 'completo' : (porcentaje > 0 ? 'parcial' : '');
+      const esCompletado = st.estado === 'completado';
+
+      const productosRows = (z.productos || []).map(p => `
+        <tr>
+          <td>${escaparHTML(p.producto || p.modelo || 'Producto')}</td>
+          <td class="num">${p.paquetes || p.cantidad || 0} paq</td>
+        </tr>
+      `).join('');
+
+      const entregasHTML = z.entregas.map(e => {
+        const es = st.entregas[e.codigo] || {};
+        const entregado = !!es.entregado;
+        const claseItem = entregado ? 'entregado' : '';
+        const telContacto = normalizarTelefono(e.telefono_contacto);
+        const telLlegada = normalizarTelefono(e.telefono_llegada);
+        const paqEntrega = obtenerPaquetesEntrega(e, z);
+        const desgloseModelos = obtenerDesgloseModelosEntrega(e, z);
+
+        return `
+          <div class="entrega-item ${claseItem}" data-codigo="${escaparHTML(e.codigo)}">
+            <div class="entrega-check-wrap">
+              <label>Enviado</label>
+              <div class="checkbox-big ${entregado ? 'checked' : ''}"
+                   onclick="toggleEntregado('${escaparHTML(z.codigo_carguillo)}', '${escaparHTML(e.codigo)}')"></div>
+            </div>
+            <div class="entrega-info">
+              <div class="entrega-cliente">
+                ${escaparHTML(e.cliente || 'Sin nombre')}
+                ${e.codigo ? `<small>${escaparHTML(e.codigo)}</small>` : ''}
+              </div>
+              <div class="entrega-dir">📍 ${escaparHTML(e.direccion || 'Sin dirección')}</div>
+              <div class="entrega-telefonos">
+                <span class="paq-highlight-pill">📦 ${paqEntrega} paq</span>
+                ${desgloseModelos ? `<span class="modelo-desglose-pill" title="${escaparHTML(desgloseModelos)}">🏷️ ${escaparHTML(desgloseModelos)}</span>` : ''}
+                ${telContacto ? `<a class="tel-pill" href="tel:${telContacto}" onclick="event.stopPropagation();">
+                  <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  ${escaparHTML(e.telefono_contacto)}
+                </a>` : ''}
+                ${telLlegada ? `<a class="tel-pill llegada" href="tel:${telLlegada}" onclick="event.stopPropagation();">
+                  <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Llegada: ${escaparHTML(e.telefono_llegada)}
+                </a>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="despacho-card ${esCompletado ? 'completado' : ''}" data-key="${escaparHTML(z.codigo_carguillo)}">
+          <div class="despacho-card-header" onclick="toggleExpandirCard(this)">
+            <span class="zona-dot" style="background:${color};"></span>
+            <div class="despacho-card-info">
+              <div class="despacho-card-nombre">${escaparHTML(z.zona)}</div>
+              <div class="despacho-card-meta">
+                <span class="codigo">${escaparHTML(z.codigo_carguillo)}</span>
+                <span>•</span>
+                <span>${z.total_ventas} venta${z.total_ventas === 1 ? '' : 's'}</span>
+                <span>•</span>
+                <span>${fechaCorta(z.fecha_envio)}</span>
+                <span class="estado-pill ${st.estado}">
+                  ${st.estado === 'pendiente' ? 'Pendiente' : st.estado === 'en_ruta' ? 'En ruta' : 'Completado'}
+                </span>
+              </div>
+            </div>
+            <div class="despacho-card-stats">
+              <div class="stat-mini">
+                <div class="stat-mini-value">${z.total_paquetes}</div>
+                <div class="stat-mini-label">paquetes</div>
+              </div>
+              <div class="stat-mini">
+                <div class="stat-mini-value">${counts.entregadas}/${counts.totalEntregas}</div>
+                <div class="stat-mini-label">enviados</div>
+              </div>
+            </div>
+            <div class="card-actions-group">
+              <button class="btn btn-dark btn-sm" onclick="event.stopPropagation(); imprimirCarguillo('${escaparHTML(z.codigo_carguillo)}')" title="Imprimir directo en media hoja superior (A4)">
+                <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Imprimir
+              </button>
+              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); descargarCarguilloPDF('${escaparHTML(z.codigo_carguillo)}')" title="Descargar PDF en hoja A4 entera">
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                PDF
+              </button>
+            </div>
+            <svg class="chevron-toggle" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill ${claseProgreso}" style="width:${porcentaje}%"></div>
+          </div>
+          <div class="despacho-card-body">
+            <div class="bloque-interno">
+              <div class="bloque-titulo">
+                📦 Productos a cargar
+                <span class="badge-count">${z.productos.length} modelo${z.productos.length === 1 ? '' : 's'}</span>
+              </div>
+              ${z.productos.length > 0 ? `
+                <table class="mini-table">
+                  <thead>
+                    <tr><th>Producto</th><th style="text-align:right;">Cantidad</th></tr>
+                  </thead>
+                  <tbody>
+                    ${productosRows}
+                    <tr class="total-row">
+                      <td>TOTAL</td>
+                      <td class="num">${z.total_paquetes} paq</td>
+                    </tr>
+                  </tbody>
+                </table>
+              ` : '<div style="font-size:11.5px; color:var(--text-subtle); padding:10px;">Sin productos registrados.</div>'}
+            </div>
+
+            <div class="bloque-interno">
+              <div class="bloque-titulo">
+                📍 Entregas
+                <span class="badge-count">${counts.entregadas} / ${counts.totalEntregas} enviados</span>
+              </div>
+              ${entregasHTML || '<div style="font-size:11.5px; color:var(--text-subtle); padding:10px;">Sin entregas registradas.</div>'}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function actualizarKPIsDespachos(zonas) {
+      let paquetesTotales = 0;
+      let entregasTotales = 0;
+      let entregasRealizadas = 0;
+      let ventasTotales = 0;
+
+      zonas.forEach(z => {
+        paquetesTotales += z.total_paquetes || 0;
+        ventasTotales += z.total_ventas || 0;
+        const counts = contarEntregasDeZona(z);
+        entregasTotales += counts.totalEntregas;
+        entregasRealizadas += counts.entregadas;
+      });
+
+      const pendientes = zonas.filter(z => getEstadoDespacho(z).estado !== 'completado').length;
+
+      document.getElementById('kpiZonasPendientes').innerText = pendientes;
+      document.getElementById('kpiZonasPendientesSub').innerText = pendientes === 0
+        ? 'Todas despachadas'
+        : `${zonas.length} zona${zonas.length === 1 ? '' : 's'} totales`;
+
+      document.getElementById('kpiPaquetesTotales').innerText = paquetesTotales;
+      document.getElementById('kpiPaquetesTotalesSub').innerText = `${zonas.length} zona${zonas.length === 1 ? '' : 's'}`;
+
+      document.getElementById('kpiEntregasRealizadas').innerText = `${entregasRealizadas} / ${entregasTotales}`;
+      document.getElementById('kpiEntregasRealizadasSub').innerText = entregasTotales > 0
+        ? `${Math.round((entregasRealizadas / entregasTotales) * 100)}% completado`
+        : 'Sin entregas registradas';
+
+      document.getElementById('kpiVentasTotales').innerText = ventasTotales;
+      document.getElementById('kpiVentasTotalesSub').innerText = ventasTotales === 1
+        ? '1 venta registrada'
+        : `${ventasTotales} ventas registradas`;
+    }
+
+    function actualizarBadgeMenu() {
+      const pendientes = zonasDespacho.filter(z => {
+        const st = getEstadoDespacho(z);
+        return st.estado !== 'completado' && esHoy(z.fecha_envio);
+      }).length;
+      const badge = document.getElementById('badgeDespachosMenu');
+      if (pendientes > 0) {
+        badge.innerText = pendientes;
+        badge.style.display = 'inline-block';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    function toggleExpandirCard(header) {
+      const card = header.parentElement;
+      card.classList.toggle('expanded');
+    }
+
+    // ================================================================
+    // ACCIONES (REVERSIÓN A PENDIENTE AL DESMARCAR)
+    // ================================================================
+    function toggleEntregado(codigoCarguillo, codigoVenta) {
+      const st = inicializarEstructuraEstado(codigoCarguillo);
+      if (!st.entregas[codigoVenta]) st.entregas[codigoVenta] = {};
+      st.entregas[codigoVenta].entregado = !st.entregas[codigoVenta].entregado;
+      st.entregas[codigoVenta].timestamp = new Date().toISOString();
+      autoActualizarEstadoZona(codigoCarguillo);
+      guardarEstados();
+      renderizarDespachos();
+      actualizarBadgeMenu();
+    }
+
+    function autoActualizarEstadoZona(codigoCarguillo) {
+      const zona = zonasDespacho.find(z => z.codigo_carguillo === codigoCarguillo);
+      if (!zona) return;
+      const st = inicializarEstructuraEstado(codigoCarguillo);
+      const counts = contarEntregasDeZona(zona);
+
+      if (counts.entregadas >= counts.totalEntregas && counts.totalEntregas > 0) {
+        st.estado = 'completado';
+        if (!st.fecha_completado) st.fecha_completado = new Date().toISOString();
+      } else if (counts.entregadas > 0) {
+        st.estado = 'en_ruta';
+        st.fecha_completado = null;
+        if (!st.fecha_despacho) st.fecha_despacho = new Date().toISOString();
+      } else {
+        // Al quitar todos los checks de enviado, vuelve a pendiente y limpia fechas
+        st.estado = 'pendiente';
+        st.fecha_despacho = null;
+        st.fecha_completado = null;
+      }
+    }
+
+    // ================================================================
+    // GENERACIÓN DE CARGUILLO (CANVAS EN A4 VERTICAL CON MÁRGENES SEGUROS)
+    // ================================================================
+    async function generarCanvasA4Vertical(zona) {
+      if (document.fonts && document.fonts.ready) {
+        try { await document.fonts.ready; } catch (e) {}
+      }
+
+      const DPI = 200;
+      const mm = (v) => Math.round(v * DPI / 25.4);
+
+      const A4_W = mm(210);
+      const A4_H = mm(297);
+      const mitadH = mm(148.5);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = A4_W;
+      canvas.height = A4_H;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, A4_W, A4_H);
+
+      const st = getEstadoDespacho(zona);
+      const counts = contarEntregasDeZona(zona);
+      const color = colorDeZona(zona.zonaClave);
+
+      const MARGEN_X = mm(8);
+      const MARGEN_Y = mm(8);
+      const W_UTIL = A4_W - (MARGEN_X * 2);
+      const H_UTIL = mitadH - MARGEN_Y - mm(4);
+
+      dibujarBloqueCarguillo(ctx, MARGEN_X, MARGEN_Y, W_UTIL, H_UTIL, zona, st, counts, color, mm);
+
+      ctx.strokeStyle = '#c4c4c4';
+      ctx.setLineDash([mm(3), mm(2)]);
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(MARGEN_X, mitadH);
+      ctx.lineTo(A4_W - MARGEN_X, mitadH);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#9e9e9e';
+      ctx.font = `600 ${mm(2)}px Montserrat, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('cortar por la línea (espacio libre para segundo carguillo)', A4_W / 2, mitadH + mm(4.8));
+
+      return { canvas, mitadH, A4_W, A4_H, mm };
+    }
+
+    function dibujarBloqueCarguillo(ctx, x0, y0, wTotal, hTotal, zona, st, counts, color, mm) {
+      const W_CARGUILLO = Math.round(wTotal * 0.46);
+      const W_CHOFER = wTotal - W_CARGUILLO;
+
+      dibujarColumnaCarguillo(ctx, x0, y0, W_CARGUILLO, hTotal, zona, color, mm);
+
+      ctx.strokeStyle = '#e0e0e0';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x0 + W_CARGUILLO, y0 + mm(2));
+      ctx.lineTo(x0 + W_CARGUILLO, y0 + hTotal - mm(2));
+      ctx.stroke();
+
+      dibujarColumnaChofer(ctx, x0 + W_CARGUILLO, y0, W_CHOFER, hTotal, zona, st, color, mm);
+    }
+
+    function dibujarColumnaCarguillo(ctx, x0, y0, w, h, zona, color, mm) {
+      const M = mm(4.5);
+      const x = x0 + M;
+      const ancho = w - M * 2;
+      const xRight = x0 + w - M;
+      let y = y0 + M;
+
+      ctx.fillStyle = color;
+      ctx.fillRect(x0, y0, w, mm(1.5));
+
+      ctx.fillStyle = '#0a0a0a';
+      ctx.textAlign = 'left';
+      ctx.font = `900 ${mm(4.8)}px Montserrat, sans-serif`;
+      ctx.fillText('FABREC', x, y + mm(4.2));
+
+      ctx.fillStyle = '#666';
+      ctx.font = `600 ${mm(1.9)}px Montserrat, sans-serif`;
+      ctx.fillText('Comprobante de carga', x, y + mm(7.5));
+
+      ctx.textAlign = 'right';
+      ctx.fillStyle = color;
+      ctx.font = `900 ${mm(2.3)}px monospace`;
+      ctx.fillText(String(zona.codigo_carguillo || ''), xRight, y + mm(3.4));
+
+      ctx.fillStyle = '#666';
+      ctx.font = `600 ${mm(1.9)}px Montserrat, sans-serif`;
+      const fEnvio = new Date(zona.fecha_envio || Date.now());
+      ctx.fillText(fEnvio.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' }), xRight, y + mm(7.5));
+
+      y += mm(11);
+
+      ctx.strokeStyle = '#e0e0e0';
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(xRight, y);
+      ctx.stroke();
+      y += mm(4.5);
+
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y - mm(2), mm(1), mm(8.5));
+      ctx.fillStyle = '#0a0a0a';
+      ctx.textAlign = 'left';
+      ctx.font = `900 ${mm(6.2)}px Montserrat, sans-serif`;
+      ctx.fillText(truncarTexto(ctx, String(zona.zona || ''), ancho - mm(4)), x + mm(3), y + mm(4.8));
+
+      ctx.fillStyle = '#666';
+      ctx.font = `600 ${mm(2.2)}px Montserrat, sans-serif`;
+      ctx.fillText(`${zona.total_paquetes} paquetes · ${zona.total_ventas} venta${zona.total_ventas === 1 ? '' : 's'}`, x + mm(3), y + mm(8.8));
+
+      y += mm(14);
+
+      const cuadroH = mm(26);
+      ctx.strokeStyle = '#0a0a0a';
+      ctx.lineWidth = mm(0.35);
+      ctx.strokeRect(x, y, ancho, cuadroH);
+
+      const colW = ancho / 2;
+      const rowH = cuadroH / 2;
+
+      ctx.beginPath();
+      ctx.moveTo(x + colW, y); ctx.lineTo(x + colW, y + cuadroH);
+      ctx.moveTo(x, y + rowH); ctx.lineTo(x + ancho, y + rowH);
+      ctx.stroke();
+
+      const campos = [
+        { cx: x + mm(2.5), cy: y + mm(3.8), label: 'ENCARGADO DE CARGA', anchoCampo: colW - mm(5) },
+        { cx: x + colW + mm(2.5), cy: y + mm(3.8), label: 'N° DE CARRO', anchoCampo: colW - mm(5) },
+        { cx: x + mm(2.5), cy: y + rowH + mm(3.8), label: 'CHOFER', anchoCampo: colW - mm(5) },
+        { cx: x + colW + mm(2.5), cy: y + rowH + mm(3.8), label: 'AYUDANTE', anchoCampo: colW - mm(5) }
+      ];
+
+      campos.forEach(c => {
+        ctx.fillStyle = '#888';
+        ctx.font = `800 ${mm(1.6)}px Montserrat, sans-serif`;
+        ctx.textAlign = 'left';
+        ctx.fillText(c.label, c.cx, c.cy);
+
+        ctx.strokeStyle = '#cccccc';
+        ctx.lineWidth = mm(0.15);
+        ctx.beginPath();
+        ctx.moveTo(c.cx, c.cy + mm(4.8));
+        ctx.lineTo(c.cx + c.anchoCampo, c.cy + mm(4.8));
+        ctx.stroke();
+      });
+
+      y += cuadroH + mm(4.5);
+
+      ctx.fillStyle = '#0a0a0a';
+      ctx.font = `900 ${mm(2.6)}px Montserrat, sans-serif`;
+      ctx.textAlign = 'left';
+      ctx.fillText('PRODUCTOS A CARGAR', x, y);
+      y += mm(2.2);
+
+      const tablaTop = y;
+      const rowH2 = mm(5.4);
+      const prods = zona.productos || [];
+      const totalRows = prods.length + 2;
+      const tablaH = totalRows * rowH2;
+
+      ctx.fillStyle = '#0a0a0a';
+      ctx.fillRect(x, tablaTop, ancho, rowH2);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `800 ${mm(1.8)}px Montserrat, sans-serif`;
+      ctx.textAlign = 'left';
+      ctx.fillText('PRODUCTO', x + mm(2.5), tablaTop + mm(3.7));
+      ctx.textAlign = 'right';
+      ctx.fillText('PAQ', x + ancho - mm(2.5), tablaTop + mm(3.7));
+
+      let yFila = tablaTop + rowH2;
+      ctx.strokeStyle = '#e0e0e0';
+      ctx.lineWidth = mm(0.15);
+
+      prods.forEach((p, i) => {
+        if (i % 2 === 1) {
+          ctx.fillStyle = '#fafafa';
+          ctx.fillRect(x, yFila, ancho, rowH2);
+        }
+        ctx.fillStyle = '#0a0a0a';
+        ctx.textAlign = 'left';
+        ctx.font = `700 ${mm(2.3)}px Montserrat, sans-serif`;
+        ctx.fillText(truncarTexto(ctx, String(p.producto || p.modelo || 'Producto'), ancho - mm(16)), x + mm(2.5), yFila + mm(3.7));
+        ctx.textAlign = 'right';
+        ctx.font = `800 ${mm(2.3)}px Montserrat, sans-serif`;
+        ctx.fillText(String(p.paquetes || p.cantidad || 0), x + ancho - mm(2.5), yFila + mm(3.7));
+        ctx.beginPath();
+        ctx.moveTo(x, yFila + rowH2);
+        ctx.lineTo(x + ancho, yFila + rowH2);
+        ctx.stroke();
+        yFila += rowH2;
+      });
+
+      ctx.fillStyle = '#0a0a0a';
+      ctx.fillRect(x, yFila, ancho, rowH2);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `900 ${mm(2.4)}px Montserrat, sans-serif`;
+      ctx.textAlign = 'left';
+      ctx.fillText('TOTAL', x + mm(2.5), yFila + mm(3.7));
+      ctx.textAlign = 'right';
+      ctx.font = `900 ${mm(2.6)}px Montserrat, sans-serif`;
+      ctx.fillText(`${zona.total_paquetes} paq`, x + ancho - mm(2.5), yFila + mm(3.7));
+
+      ctx.strokeStyle = '#0a0a0a';
+      ctx.lineWidth = mm(0.35);
+      ctx.strokeRect(x, tablaTop, ancho, tablaH);
+
+      const pieY = y0 + h - mm(8);
+      ctx.strokeStyle = '#0a0a0a';
+      ctx.lineWidth = mm(0.25);
+      ctx.beginPath();
+      ctx.moveTo(x + mm(6), pieY);
+      ctx.lineTo(x + mm(48), pieY);
+      ctx.stroke();
+
+      ctx.fillStyle = '#666';
+      ctx.font = `700 ${mm(1.6)}px Montserrat, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('Firma / sello', x + mm(27), pieY + mm(2.8));
+
+      ctx.textAlign = 'right';
+      ctx.fillText('Fecha: ___/___/_____', xRight, pieY + mm(2.8));
+    }
+
+    function dibujarColumnaChofer(ctx, x0, y0, w, h, zona, st, color, mm) {
+      const M = mm(4.5);
+      const x = x0 + M;
+      const ancho = w - M * 2;
+      const xRight = x0 + w - M;
+      let y = y0 + M;
+
+      ctx.fillStyle = color;
+      ctx.fillRect(x0, y0, w, mm(1.5));
+
+      ctx.fillStyle = '#0a0a0a';
+      ctx.textAlign = 'left';
+      ctx.font = `900 ${mm(4.8)}px Montserrat, sans-serif`;
+      ctx.fillText('FABREC', x, y + mm(4.2));
+
+      ctx.fillStyle = '#666';
+      ctx.font = `600 ${mm(1.9)}px Montserrat, sans-serif`;
+      ctx.fillText('Hoja de ruta · Chofer', x, y + mm(7.5));
+
+      ctx.textAlign = 'right';
+      ctx.fillStyle = color;
+      ctx.font = `900 ${mm(2.3)}px monospace`;
+      ctx.fillText(String(zona.codigo_carguillo || ''), xRight, y + mm(3.4));
+
+      ctx.fillStyle = '#666';
+      ctx.font = `600 ${mm(1.9)}px Montserrat, sans-serif`;
+      const fEnvio = new Date(zona.fecha_envio || Date.now());
+      ctx.fillText(fEnvio.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' }), xRight, y + mm(7.5));
+
+      y += mm(11);
+
+      ctx.strokeStyle = '#e0e0e0';
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(xRight, y);
+      ctx.stroke();
+      y += mm(4.5);
+
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y - mm(2), mm(1), mm(8.5));
+      ctx.fillStyle = '#0a0a0a';
+      ctx.textAlign = 'left';
+      ctx.font = `900 ${mm(6.2)}px Montserrat, sans-serif`;
+      ctx.fillText(truncarTexto(ctx, String(zona.zona || ''), ancho - mm(4)), x + mm(3), y + mm(4.8));
+
+      ctx.fillStyle = '#666';
+      ctx.font = `600 ${mm(2.2)}px Montserrat, sans-serif`;
+      ctx.fillText(`${zona.entregas.length} entrega${zona.entregas.length === 1 ? '' : 's'} · ${zona.total_paquetes} paquetes totales`, x + mm(3), y + mm(8.8));
+
+      y += mm(13);
+
+      const entregasDisponibles = (y0 + h - mm(6)) - y;
+      const numEntregas = Math.max(1, zona.entregas.length);
+      const altoTotal = entregasDisponibles / numEntregas;
+      const altoEntrega = Math.max(mm(12.5), Math.min(mm(20), altoTotal));
+
+      const factor = Math.min(1, altoEntrega / mm(18));
+      const fsTitulo = mm(2.4) * Math.max(0.75, factor);
+      const fsTexto = mm(1.85) * Math.max(0.75, factor);
+      const fsModelos = mm(1.8) * Math.max(0.75, factor);
+
+      zona.entregas.forEach((e, idx) => {
+        const es = st.entregas[e.codigo] || {};
+        const entregado = !!es.entregado;
+        const paqEntrega = obtenerPaquetesEntrega(e, zona);
+        const desglose = obtenerDesgloseModelosEntrega(e, zona);
+
+        const boxH = altoEntrega - mm(1.1);
+        ctx.fillStyle = entregado ? '#f0fdf4' : '#ffffff';
+        ctx.fillRect(x, y, ancho, boxH);
+        ctx.strokeStyle = entregado ? '#a7f3d0' : '#d5d5d5';
+        ctx.lineWidth = mm(0.25);
+        ctx.strokeRect(x, y, ancho, boxH);
+
+        const checkSize = Math.max(mm(2.8), Math.min(mm(3.3), boxH * 0.22));
+        const checkX = x + ancho - checkSize - mm(1.5);
+        const checkY = y + mm(1.8);
+        ctx.strokeStyle = '#0a0a0a';
+        ctx.lineWidth = mm(0.25);
+        ctx.strokeRect(checkX, checkY, checkSize, checkSize);
+        if (entregado) {
+          ctx.fillStyle = '#16a34a';
+          ctx.fillRect(checkX, checkY, checkSize, checkSize);
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = mm(0.38);
+          ctx.beginPath();
+          ctx.moveTo(checkX + checkSize * 0.22, checkY + checkSize * 0.52);
+          ctx.lineTo(checkX + checkSize * 0.42, checkY + checkSize * 0.72);
+          ctx.lineTo(checkX + checkSize * 0.78, checkY + checkSize * 0.28);
+          ctx.stroke();
+        }
+        ctx.fillStyle = '#666';
+        ctx.font = `700 ${mm(1.3)}px Montserrat, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText('ENV', checkX + checkSize / 2, checkY + checkSize + mm(1.6));
+
+        // Placa destacada de paquetes totales reales
+        const badgeW = mm(17);
+        const badgeH = Math.max(mm(3.8), Math.min(mm(4.5), boxH * 0.28));
+        const badgeX = checkX - badgeW - mm(1.8);
+        const badgeY = checkY;
+        ctx.fillStyle = '#0a0a0a';
+        ctx.fillRect(badgeX, badgeY, badgeW, badgeH);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = `900 ${mm(2.1)}px Montserrat, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText(`${paqEntrega} PAQ`, badgeX + badgeW / 2, badgeY + badgeH * 0.72);
+
+        // Línea 1: # y Cliente
+        const lineY1 = y + mm(3.6);
+        ctx.fillStyle = '#0a0a0a';
+        ctx.textAlign = 'left';
+        ctx.font = `900 ${fsTitulo}px Montserrat, sans-serif`;
+        ctx.fillText(`#${idx + 1}`, x + mm(2.2), lineY1);
+
+        ctx.font = `800 ${fsTitulo}px Montserrat, sans-serif`;
+        const anchoMaxCliente = (badgeX - (x + mm(8)));
+        ctx.fillText(truncarTexto(ctx, String(e.cliente || 'Sin nombre'), anchoMaxCliente), x + mm(8), lineY1);
+
+        // Línea 2: Dirección
+        const lineY2 = lineY1 + fsTitulo + mm(1.1);
+        ctx.fillStyle = '#555';
+        ctx.font = `600 ${fsTexto}px Montserrat, sans-serif`;
+        ctx.fillText('📍 ' + truncarTexto(ctx, String(e.direccion || 'Sin dirección'), ancho - mm(5)), x + mm(2.2), lineY2);
+
+        // Línea 3: Desglose claro de paquetes por modelo + teléfono
+        const lineY3 = lineY2 + fsTexto + mm(1.2);
+        const tels = [];
+        if (e.telefono_contacto) tels.push(`☎ ${e.telefono_contacto}`);
+        if (e.telefono_llegada) tels.push(`☎L ${e.telefono_llegada}`);
+        const telStr = tels.join('  ') || '';
+
+        ctx.fillStyle = '#111';
+        ctx.font = `700 ${fsModelos}px Montserrat, sans-serif`;
+        ctx.textAlign = 'right';
+        if (telStr) {
+          ctx.fillText(telStr, x + ancho - mm(2.2), lineY3);
+        }
+
+        const anchoTel = telStr ? ctx.measureText(telStr).width + mm(3) : 0;
+        const anchoMaxModelos = ancho - anchoTel - mm(5);
+
+        ctx.textAlign = 'left';
+        if (desglose) {
+          ctx.fillStyle = '#0a0a0a';
+          ctx.font = `800 ${fsModelos}px Montserrat, sans-serif`;
+          ctx.fillText('📦 ' + truncarTexto(ctx, desglose, anchoMaxModelos), x + mm(2.2), lineY3);
+        } else if (!telStr) {
+          ctx.fillStyle = '#888';
+          ctx.font = `600 ${fsModelos}px Montserrat, sans-serif`;
+          ctx.fillText('Sin modelos especificados', x + mm(2.2), lineY3);
+        }
+
+        y += altoEntrega;
+      });
+
+      const pieY = y0 + h - mm(3.8);
+      ctx.fillStyle = '#777';
+      ctx.font = `700 ${mm(1.6)}px Montserrat, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('Verificar modelos y paquetes al entregar y marcar ENV', x0 + w / 2, pieY);
+    }
+
+    // ================================================================
+    // ACCIÓN: IMPRIMIR CARGUILLO (MEDIA HOJA SUPERIOR EN A4 VERTICAL)
+    // ================================================================
+    async function imprimirCarguillo(codigoCarguillo) {
+      const zona = zonasDespacho.find(z => z.codigo_carguillo === codigoCarguillo);
+      if (!zona) { mostrarToast("Zona no encontrada"); return; }
+      mostrarToast("Abriendo cuadro de impresión...");
+
+      const { canvas } = await generarCanvasA4Vertical(zona);
+      const dataUrl = canvas.toDataURL('image/png');
+
+      let iframe = document.getElementById('printFrame');
+      if (iframe) iframe.remove();
+      iframe = document.createElement('iframe');
+      iframe.id = 'printFrame';
+      iframe.style.position = 'fixed';
+      iframe.style.right = '0';
+      iframe.style.bottom = '0';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.style.border = '0';
+      document.body.appendChild(iframe);
+
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Carguillo - ${escaparHTML(zona.zona)}</title>
+          <style>
+            @page {
+              size: A4 portrait;
+              margin: 0;
+            }
+            * {
+              box-sizing: border-box;
+              margin: 0;
+              padding: 0;
+            }
+            html, body {
+              width: 210mm;
+              height: 297mm;
+              margin: 0;
+              padding: 0;
+              background: #ffffff;
+              display: block;
+              overflow: hidden;
+            }
+            .a4-page {
+              width: 210mm;
+              height: 297mm;
+              position: relative;
+              top: 0;
+              left: 0;
+              margin: 0;
+              padding: 0;
+            }
+            .a4-page img {
+              width: 210mm;
+              height: 297mm;
+              display: block;
+              position: absolute;
+              top: 0;
+              left: 0;
+              object-fit: fill;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="a4-page">
+            <img src="${dataUrl}" alt="Carguillo" />
+          </div>
+        </body>
+        </html>
+      `);
+      doc.close();
+
+      iframe.contentWindow.focus();
+      setTimeout(() => {
+        iframe.contentWindow.print();
+      }, 350);
+    }
+
+    // ================================================================
+    // ACCIÓN: DESCARGAR CARGUILLO EN PDF (HOJA A4 ENTERA VERTICAL)
+    // ================================================================
+    async function descargarCarguilloPDF(codigoCarguillo) {
+      const zona = zonasDespacho.find(z => z.codigo_carguillo === codigoCarguillo);
+      if (!zona) { mostrarToast("Zona no encontrada"); return; }
+      mostrarToast("Generando PDF en A4 vertical...");
+
+      const { canvas } = await generarCanvasA4Vertical(zona);
+      const imgData = canvas.toDataURL('image/png');
+
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+      });
+
+      pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+
+      const nombre = `carguillo_${zona.zonaClave || 'zona'}_${fechaCompacta(new Date())}.pdf`;
+      pdf.save(nombre);
+
+      mostrarToast("PDF descargado en A4 vertical");
+    }
+
+    // ================================================================
+    // HISTORIAL Y EXPORTACIÓN A EXCEL
+    // ================================================================
+    function renderizarHistorial() {
+      const cont = document.getElementById('listaHistorial');
+      if (!cont) return;
+
+      const inputFecha = document.getElementById('filtroFechaHistorial');
+      const fechaFiltro = inputFecha ? inputFecha.value : '';
+      const q = (document.getElementById('buscadorHistorial').value || '').toLowerCase().trim();
+
+      let completadas = zonasDespacho.filter(z => getEstadoDespacho(z).estado === 'completado');
+
+      if (fechaFiltro) {
+        completadas = completadas.filter(z => {
+          const st = getEstadoDespacho(z);
+          const fechaRef = st.fecha_completado || z.fecha_envio;
+          const f = new Date(fechaRef || 0);
+          if (isNaN(f.getTime())) return false;
+          const yyyy = f.getFullYear();
+          const mm = String(f.getMonth() + 1).padStart(2, '0');
+          const dd = String(f.getDate()).padStart(2, '0');
+          return `${yyyy}-${mm}-${dd}` === fechaFiltro;
+        });
+      }
+
+      if (q) {
+        completadas = completadas.filter(z =>
+          (z.zona || '').toLowerCase().includes(q) ||
+          (z.codigo_carguillo || '').toLowerCase().includes(q)
+        );
+      }
+
+      if (completadas.length === 0) {
+        cont.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">
+              <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+            </div>
+            <div class="titulo">Sin despachos completados</div>
+            <div class="desc">Los carguillos cuyas entregas se marquen como enviadas aparecerán aquí.</div>
+          </div>
+        `;
+        return;
+      }
+
+      cont.innerHTML = completadas.map(z => {
+        const st = getEstadoDespacho(z);
+        const counts = contarEntregasDeZona(z);
+        const color = colorDeZona(z.zonaClave);
+        const fechaFin = st.fecha_completado || z.fecha_envio;
+
+        return `
+          <div class="hist-item" onclick="verDetalleHistorial('${escaparHTML(z.codigo_carguillo)}')">
+            <div class="hist-icon">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="hist-info">
+              <div class="hist-title">
+                <span class="zona-dot" style="background:${color};"></span>
+                ${escaparHTML(z.zona)}
+              </div>
+              <div class="hist-meta">
+                ${escaparHTML(z.codigo_carguillo)} · ${counts.entregadas}/${counts.totalEntregas} enviados
+                · ${formatearFechaLarga(fechaFin)}
+              </div>
+            </div>
+            <div class="hist-totales">
+              <div class="hist-stat">
+                <div class="hist-stat-val">${z.total_paquetes}</div>
+                <div class="hist-stat-lbl">paquetes</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function exportarHistorialExcel() {
+      const inputFecha = document.getElementById('filtroFechaHistorial');
+      const fechaFiltro = inputFecha ? inputFecha.value : '';
+      const q = (document.getElementById('buscadorHistorial').value || '').toLowerCase().trim();
+
+      let completadas = zonasDespacho.filter(z => getEstadoDespacho(z).estado === 'completado');
+
+      if (fechaFiltro) {
+        completadas = completadas.filter(z => {
+          const st = getEstadoDespacho(z);
+          const fechaRef = st.fecha_completado || z.fecha_envio;
+          const f = new Date(fechaRef || 0);
+          if (isNaN(f.getTime())) return false;
+          const yyyy = f.getFullYear();
+          const mm = String(f.getMonth() + 1).padStart(2, '0');
+          const dd = String(f.getDate()).padStart(2, '0');
+          return `${yyyy}-${mm}-${dd}` === fechaFiltro;
+        });
+      }
+
+      if (q) {
+        completadas = completadas.filter(z =>
+          (z.zona || '').toLowerCase().includes(q) ||
+          (z.codigo_carguillo || '').toLowerCase().includes(q)
+        );
+      }
+
+      if (completadas.length === 0) {
+        mostrarToast("No hay registros en el historial para exportar");
+        return;
+      }
+
+      let csv = '\uFEFF';
+      csv += 'Código Carguillo;Zona;Fecha Envío;Fecha Completado;Total Ventas;Total Paquetes;Total Monto (S/);Detalle de Entregas y Modelos\n';
+
+      completadas.forEach(z => {
+        const st = getEstadoDespacho(z);
+        const fechaCompletado = st.fecha_completado ? new Date(st.fecha_completado).toLocaleString('es-PE') : '—';
+        const fechaEnvio = z.fecha_envio ? new Date(z.fecha_envio).toLocaleString('es-PE') : '—';
+
+        const entregasResumen = z.entregas.map(e => {
+          const paq = obtenerPaquetesEntrega(e, z);
+          const desglose = obtenerDesgloseModelosEntrega(e, z);
+          return `${e.cliente || 'Sin nombre'} (${paq} paq${desglose ? ' - ' + desglose : ''})`;
+        }).join(' | ');
+
+        const sanitize = (txt) => '"' + String(txt || '').replace(/"/g, '""') + '"';
+
+        const fila = [
+          sanitize(z.codigo_carguillo),
+          sanitize(z.zona),
+          sanitize(fechaEnvio),
+          sanitize(fechaCompletado),
+          z.total_ventas,
+          z.total_paquetes,
+          (z.total_monto || 0).toFixed(2),
+          sanitize(entregasResumen)
+        ];
+
+        csv += fila.join(';') + '\n';
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `historial_despachos_${fechaCompacta(new Date())}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      mostrarToast("Historial exportado a Excel");
+    }
+
+    function verDetalleHistorial(codigoCarguillo) {
+      mostrarPestana('despachos');
+      setTimeout(() => {
+        const card = document.querySelector(`.despacho-card[data-key="${codigoCarguillo}"]`);
+        if (card) {
+          card.classList.add('expanded');
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.style.boxShadow = '0 0 0 3px var(--text)';
+          setTimeout(() => { card.style.boxShadow = ''; }, 2000);
+        }
+      }, 200);
+    }
+
+    function limpiarFiltrosHistorial() {
+      document.getElementById('filtroFechaHistorial').value = '';
+      document.getElementById('buscadorHistorial').value = '';
+      renderizarHistorial();
+    }
+
+    // ================================================================
+    // MÉTRICAS Y DESCARGA DE GRÁFICAS EN IMAGEN (PNG)
+    // ================================================================
+    function descargarGraficoImagen(canvasId, nombreBase) {
+      const chartCanvas = document.getElementById(canvasId);
+      if (!chartCanvas) {
+        mostrarToast("Gráfica no encontrada");
+        return;
+      }
+
+      const esOscuro = document.body.classList.contains('dark');
+      const bgColor = esOscuro ? '#141414' : '#ffffff';
+
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = chartCanvas.width;
+      tempCanvas.height = chartCanvas.height;
+      const tCtx = tempCanvas.getContext('2d');
+
+      tCtx.fillStyle = bgColor;
+      tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      tCtx.drawImage(chartCanvas, 0, 0);
+
+      const link = document.createElement('a');
+      link.download = `${nombreBase}_${fechaCompacta(new Date())}.png`;
+      link.href = tempCanvas.toDataURL('image/png');
+      link.click();
+
+      mostrarToast("Gráfica descargada en imagen");
+    }
+
+    function renderizarMetricas() {
+      const hoy = new Date();
+      const mesActual = hoy.getMonth();
+      const anioActual = hoy.getFullYear();
+
+      const delMes = zonasDespacho.filter(z => {
+        const st = getEstadoDespacho(z);
+        const ref = st.fecha_completado || z.fecha_envio;
+        const d = new Date(ref || 0);
+        return !isNaN(d.getTime()) && d.getMonth() === mesActual && d.getFullYear() === anioActual;
+      });
+
+      let paquetesTotal = 0;
+      let montoTotal = 0;
+      let entregasRealizadas = 0;
+      let entregasTotales = 0;
+      const porZona = {};
+
+      zonasDespacho.forEach(z => {
+        const d = new Date(z.fecha_envio || 0);
+        if (isNaN(d.getTime()) || d.getMonth() !== mesActual || d.getFullYear() !== anioActual) return;
+
+        const counts = contarEntregasDeZona(z);
+        const st = getEstadoDespacho(z);
+
+        if (st.estado === 'completado') {
+          paquetesTotal += z.total_paquetes || 0;
+          montoTotal += z.total_monto || 0;
+        }
+
+        entregasRealizadas += counts.entregadas;
+        entregasTotales += counts.totalEntregas;
+
+        if (!porZona[z.zona]) porZona[z.zona] = { paquetes: 0, entregas: 0, entregadas: 0, completadas: 0, total: 0 };
+        porZona[z.zona].paquetes += z.total_paquetes || 0;
+        porZona[z.zona].entregas += counts.totalEntregas;
+        porZona[z.zona].entregadas += counts.entregadas;
+        porZona[z.zona].total += 1;
+        if (st.estado === 'completado') porZona[z.zona].completadas += 1;
+      });
+
+      document.getElementById('metDespachosMes').innerText = delMes.filter(z => getEstadoDespacho(z).estado === 'completado').length;
+      document.getElementById('metPaquetesEntregados').innerText = paquetesTotal.toLocaleString();
+      document.getElementById('metMontoDespachado').innerText = formatearMonto(montoTotal);
+      document.getElementById('metTasaExito').innerText = entregasTotales > 0
+        ? Math.round((entregasRealizadas / entregasTotales) * 100) + '%'
+        : '0%';
+
+      const zonasLabels = Object.keys(porZona);
+      const dataZonaPaq = zonasLabels.map(z => porZona[z].paquetes);
+
+      const canvas1 = document.getElementById('chartZonaPaquetes');
+      const existing1 = Chart.getChart(canvas1);
+      if (existing1) existing1.destroy();
+
+      const esOscuro = document.body.classList.contains('dark');
+      const textColor = esOscuro ? '#a0a0a0' : '#555555';
+      const gridColor = esOscuro ? '#2a2a2a' : '#ececec';
+
+      chartZonaPaquetesInst = new Chart(canvas1.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: zonasLabels.length ? zonasLabels : ['Sin datos'],
+          datasets: [{
+            label: 'Paquetes',
+            data: dataZonaPaq.length ? dataZonaPaq : [0],
+            backgroundColor: zonasLabels.map(z => {
+              const key = Object.keys(COLORES_ZONA).find(k => NOMBRE_ZONA_POR_KEY[k] === z);
+              return key ? COLORES_ZONA[key] : '#6b7280';
+            }),
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} paq` } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: textColor, font: { family: 'Montserrat', size: 10, weight: '600' } } },
+            y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'Montserrat', size: 10 } } }
+          }
+        }
+      });
+
+      let pendiente = 0, enRuta = 0, completado = 0;
+      zonasDespacho.forEach(z => {
+        const d = new Date(z.fecha_envio || 0);
+        if (isNaN(d.getTime()) || d.getMonth() !== mesActual || d.getFullYear() !== anioActual) return;
+        const st = getEstadoDespacho(z);
+        if (st.estado === 'pendiente') pendiente++;
+        else if (st.estado === 'en_ruta') enRuta++;
+        else if (st.estado === 'completado') completado++;
+      });
+
+      const canvas2 = document.getElementById('chartEstados');
+      const existing2 = Chart.getChart(canvas2);
+      if (existing2) existing2.destroy();
+
+      chartEstadosInst = new Chart(canvas2.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Pendiente', 'En ruta', 'Completado'],
+          datasets: [{
+            data: [pendiente, enRuta, completado],
+            backgroundColor: ['#a3a3a3', '#fbbf24', '#16a34a'],
+            borderColor: esOscuro ? '#141414' : '#ffffff',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '58%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: textColor, boxWidth: 12, padding: 8, font: { family: 'Montserrat', size: 10, weight: '600' } }
+            },
+            tooltip: {
+              callbacks: {
+                label: ctx => {
+                  const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                  const pct = total > 0 ? ((ctx.parsed / total) * 100).toFixed(1) : '0';
+                  return ` ${ctx.label}: ${ctx.parsed} (${pct}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+
+      const diasData = {};
+      const hoyDia = new Date();
+      for (let i = 13; i >= 0; i--) {
+        const d = new Date(hoyDia);
+        d.setDate(d.getDate() - i);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        diasData[key] = 0;
+      }
+
+      zonasDespacho.forEach(z => {
+        const st = getEstadoDespacho(z);
+        const ref = st.fecha_completado || z.fecha_envio;
+        const d = new Date(ref || 0);
+        if (isNaN(d.getTime())) return;
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        if (key in diasData && st.estado === 'completado') {
+          diasData[key] += z.total_paquetes || 0;
+        }
+      });
+
+      const labelsEvo = Object.keys(diasData).map(k => {
+        const [y, m, d] = k.split('-');
+        return `${d}/${m}`;
+      });
+      const dataEvo = Object.values(diasData);
+
+      const canvas3 = document.getElementById('chartEvolucion');
+      const existing3 = Chart.getChart(canvas3);
+      if (existing3) existing3.destroy();
+
+      chartEvolucionInst = new Chart(canvas3.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: labelsEvo,
+          datasets: [{
+            label: 'Paquetes',
+            data: dataEvo,
+            backgroundColor: esOscuro ? '#e5e5e533' : '#1a1a1a33',
+            borderColor: esOscuro ? '#e5e5e5' : '#1a1a1a',
+            borderWidth: 2.5,
+            tension: 0.3,
+            fill: true,
+            pointBackgroundColor: esOscuro ? '#e5e5e5' : '#1a1a1a',
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} paq despachados` } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: textColor, font: { family: 'Montserrat', size: 10, weight: '600' } } },
+            y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'Montserrat', size: 10 } } }
+          }
+        }
+      });
+    }
+
+    // ================================================================
+    // LIMPIAR ESTADOS
+    // ================================================================
+    function eliminarEstadosDespacho() {
+      if (!confirm("¿Eliminar todos los estados de despacho?\n\nLos carguillos se mantienen, pero se reinician los checkboxes y las marcas de completado.")) return;
+      estadosDespacho = {};
+      guardarEstados().then(async () => {
+        await cargarDatosDesdeDB();
+        renderizarTodo();
+        mostrarToast("Estados de despacho eliminados");
+      });
+    }
+
+    // ================================================================
+    // AUTO-REFRESH
+    // ================================================================
+    let ultimoHash = '';
+
+    async function autoRefresh() {
+      try {
+        const raw = await localforage.getItem(KEY_CARGUILLOS);
+        const hash = JSON.stringify(raw || []);
+        if (hash !== ultimoHash) {
+          ultimoHash = hash;
+          const eliminados = await cargarDatosDesdeDB();
+          const raw2 = await localforage.getItem(KEY_CARGUILLOS);
+          ultimoHash = JSON.stringify(raw2 || []);
+          renderizarTodo();
+          if (eliminados > 0) {
+            mostrarToast(`Auto-sync · ${eliminados} duplicado${eliminados === 1 ? '' : 's'} eliminado${eliminados === 1 ? '' : 's'}`);
+          }
+          if (document.getElementById('paneMetricas').classList.contains('active')) {
+            renderizarMetricas();
+          }
+        }
+      } catch (e) {}
+    }
+
+    // ================================================================
+    // INIT
+    // ================================================================
+    window.addEventListener('DOMContentLoaded', async () => {
+      await initLocalForage();
+
+      try {
+        const colapsado = await localforage.getItem(KEY_SIDEBAR);
+        if (colapsado) {
+          document.getElementById('sidebar').classList.add('collapsed');
+          actualizarIconoToggle(true);
+        }
+      } catch (e) {}
+
+      aplicarTemaAutomatico();
+      aplicarFiltroFechaInicial();
+
+      await cargarDatosDesdeDB();
+      try {
+        const raw = await localforage.getItem(KEY_CARGUILLOS);
+        ultimoHash = JSON.stringify(raw || []);
+      } catch (e) {}
+
+      restaurarTabActivo();
+      renderizarTodo();
+      await actualizarMonitorMemoria();
+
+      setInterval(autoRefresh, 5000);
+
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) autoRefresh();
+      });
+
+      setInterval(aplicarTemaAutomatico, 60000);
+      setInterval(actualizarMonitorMemoria, 20000);
+    });
+  </script>
+</body>
+</html>
