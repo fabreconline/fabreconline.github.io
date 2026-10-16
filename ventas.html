@@ -658,7 +658,6 @@
       font-weight: 800; line-height: 1.3; cursor: pointer;
       display: inline-flex; align-items: center; justify-content: center;
       gap: 8px; transition: transform 0.1s ease, background 0.15s ease;
-      margin-top: 4px;
     }
     .btn-whatsapp:active { transform: scale(0.98); background: #bbf7d0; }
     .btn-whatsapp svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
@@ -762,6 +761,24 @@
       width: 15px; height: 15px; stroke: currentColor; fill: none;
       stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
     }
+
+    .btn-enviar-carro {
+      width: 100%; background: var(--primary); color: var(--on-primary);
+      border: none; padding: 10px 12px; font-family: inherit;
+      font-size: 11.5px; font-weight: 800; border-radius: var(--radius-sm);
+      cursor: pointer; display: inline-flex; align-items: center;
+      justify-content: center; gap: 6px; margin-top: 10px;
+      transition: transform 0.1s ease;
+    }
+    .btn-enviar-carro:active { transform: scale(0.98); }
+    .btn-enviar-carro svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.6; }
+
+    .adelanto-input-box {
+      background: #fffbeb; border: 1px solid #fde68a;
+      border-radius: var(--radius-sm); padding: 12px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .adelanto-input-box .form-label { color: #92400e; }
   </style>
 </head>
 <body>
@@ -831,14 +848,12 @@
       <div id="listaVentasDia"></div>
     </section>
 
-    <!-- TAB: PRECIOS -->
     <section id="panePrecios" class="view-pane">
       <div class="seccion-header"><span>Lista de Precios</span></div>
       <input type="text" id="buscadorPrecios" oninput="renderizarListaPrecios()" placeholder="Buscar botella..." class="input-field" style="margin-bottom: 14px;">
       <div id="contenedorListaPrecios"></div>
     </section>
 
-    <!-- TAB: CARGUILLO -->
     <section id="paneCarguillo" class="view-pane">
       <button class="btn-carguillo-add" onclick="abrirModalCarroConfig()">
         <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -919,6 +934,13 @@
       </div>
 
       <div class="chart-container-box">
+        <div class="chart-header-with-toggle">
+          <div class="chart-header-title" id="chartTituloComision">Comisión del Período</div>
+        </div>
+        <canvas id="canvasChartComision" height="200" style="width: 100%; height: 200px;"></canvas>
+      </div>
+
+      <div class="chart-container-box">
         <div class="chart-header-title">Registros de Ventas</div>
         <div id="contenedorRegistrosCierre"></div>
       </div>
@@ -995,11 +1017,6 @@
         </div>
       </div>
 
-      <button id="btnWhatsAppDetalle" onclick="abrirWhatsAppCliente()" class="btn-whatsapp">
-        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-        Escribir por WhatsApp
-      </button>
-
       <div class="detalle-bloque" id="bloqueEstadoPago" style="background: var(--primary-subtle); border-color: var(--primary-border);">
         <div class="detalle-bloque-item">
           <span style="color:var(--text-muted);">Estado de Pago:</span>
@@ -1019,11 +1036,6 @@
         Confirmar Cobro Recibido
       </button>
 
-      <button onclick="abrirModalEditarVenta()" class="btn-action-cuenta" style="height: 44px; font-size: 12px; border-radius: var(--radius); margin-top: 4px; background: #fef3c7; color: #92400e; border-color: #fde68a;">
-        <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        Editar venta
-      </button>
-
       <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-top:2px;">
         Botellas en este pedido
       </div>
@@ -1039,11 +1051,24 @@
           <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
           Enviar
         </button>
+        <button onclick="enviarCuentaZonaAlComprador()" class="btn-action-cuenta" style="height:46px; font-size:11.5px; border-radius:var(--radius); background: var(--primary-subtle); color: var(--primary-ink); border-color: var(--primary-border);">
+          <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          Enviar cuenta
+        </button>
         <button onclick="descargarReciboImagen()" class="btn-recibo-img" style="height:46px; border-radius:var(--radius);">
           <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Descargar
         </button>
+        <button onclick="abrirWhatsAppCliente()" class="btn-whatsapp" style="height:46px; border-radius:var(--radius); margin-top:0;">
+          <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          Escribir
+        </button>
       </div>
+
+      <button onclick="abrirModalEditarVenta()" class="btn-action-cuenta" style="height: 44px; font-size: 12px; border-radius: var(--radius); margin-top: 8px; background: #fef3c7; color: #92400e; border-color: #fde68a;">
+        <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Editar venta
+      </button>
 
       <button onclick="cerrarModalDetalleVenta()" class="btn-action-cuenta" style="height:44px; font-size:12px; border-radius:var(--radius); margin-top:4px;">
         Cerrar Detalle
@@ -1236,13 +1261,17 @@
 
         <div class="form-grid-2">
           <div>
-            <label class="form-label">DNI (ID Cliente) *</label>
+            <label class="form-label">DNI</label>
             <input type="text" id="ventaDni" placeholder="8 dígitos" maxlength="8" class="input-field">
           </div>
           <div>
-            <label class="form-label">RUC (Opcional Factura)</label>
+            <label class="form-label">RUC</label>
             <input type="text" id="ventaRuc" placeholder="11 dígitos" maxlength="11" class="input-field">
           </div>
+        </div>
+
+        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:var(--radius-sm); padding:8px 10px; font-size:10.5px; color:#92400e; font-weight:700; line-height:1.4;">
+          Ingresa <strong>DNI o RUC</strong> (uno de los dos). Este será el ID del cliente.
         </div>
 
         <div class="form-grid-2">
@@ -1263,17 +1292,25 @@
           </div>
           <div>
             <label class="form-label">Condición Pago *</label>
-            <select id="ventaCondicion" class="input-field" style="font-weight: 700;">
+            <select id="ventaCondicion" class="input-field" style="font-weight: 700;" onchange="toggleAdelantoInput()">
               <optgroup label="YA PAGADO">
                 <option value="Efectivo">Efectivo</option>
                 <option value="Transferencia">Transferencia</option>
               </optgroup>
               <optgroup label="POR COBRAR">
                 <option value="Pago Contraentrega">Pago Contraentrega</option>
-                <option value="Adelanto 50%">Adelanto 50%</option>
+                <option value="Adelanto 50%">Adelanto (personalizado)</option>
                 <option value="Crédito">Crédito</option>
               </optgroup>
             </select>
+          </div>
+        </div>
+
+        <div id="adelantoInputBox" class="adelanto-input-box" style="display: none;">
+          <label class="form-label">Monto adelantado por el cliente (S/) *</label>
+          <input type="number" id="ventaAdelantoMonto" step="0.01" min="0" placeholder="0.00" class="input-field" style="font-weight:800;">
+          <div style="font-size:10px; color:#92400e; font-weight:600; line-height:1.4;">
+            Escribe la cantidad exacta que el cliente entregó adelantado. El saldo restante quedará como "por cobrar".
           </div>
         </div>
 
@@ -1411,6 +1448,7 @@
     const NUMERO_CIERRE_KING = "51922796815";
     const NUMERO_CONTABILIDAD = "51922244819";
     const COMISION_POR_PAQUETE = 0.12;
+    const CARRO_DEFAULT_MAX = 450;
 
     const ZONAS = {
       la_parada: {
@@ -1550,6 +1588,13 @@
         .trim();
     }
 
+    function formatearTelefonoPeru(tel) {
+      const digits = (tel || '').replace(/\D/g, '');
+      if (digits.length === 9 && digits.startsWith('9')) return '51' + digits;
+      if (digits.length === 11 && digits.startsWith('51')) return digits;
+      return digits;
+    }
+
     // ==================================================
     // 1. CARGA EXTERNA
     // ==================================================
@@ -1641,9 +1686,15 @@
 
         carros = carros.map((c, i) => {
           if (!c.numero) c.numero = String(i + 1);
-          if (!c.maxPaquetes && c.maxPaquetes !== 0) c.maxPaquetes = 100;
+          if (!c.maxPaquetes && c.maxPaquetes !== 0) c.maxPaquetes = CARRO_DEFAULT_MAX;
           return c;
         });
+
+        // Si no hay carros, crear uno por defecto
+        if (carros.length === 0) {
+          carros = [{ id: generarId('carro'), numero: '1', maxPaquetes: CARRO_DEFAULT_MAX }];
+          localStorage.setItem(`fabrec_carros_${zonaActivaClave}`, JSON.stringify(carros));
+        }
 
         todasLasVentas = todasLasVentas.map(v => {
           if (!v.tipo_envio) v.tipo_envio = 'carro';
@@ -1950,6 +2001,8 @@
       const hoyISO = new Date().toISOString().split('T')[0];
       document.getElementById('ventaFechaEntrega').value = hoyISO;
       document.getElementById('ventaCondicion').value = "Efectivo";
+      document.getElementById('adelantoInputBox').style.display = 'none';
+      document.getElementById('ventaAdelantoMonto').value = '';
       cambiarUnidadMedida('paquetes');
       actualizarToggleIndividual();
       irAPaso1();
@@ -1960,6 +2013,23 @@
     }
 
     function cerrarModalVenta() { document.getElementById('modalNuevaVenta').classList.remove('open'); }
+
+    function toggleAdelantoInput() {
+      const cond = document.getElementById('ventaCondicion').value;
+      const box = document.getElementById('adelantoInputBox');
+      if (cond === 'Adelanto 50%') {
+        box.style.display = 'flex';
+        // Si no hay valor previo, calcular 50% del total actual
+        const input = document.getElementById('ventaAdelantoMonto');
+        if (!input.value) {
+          let total = 0;
+          itemsVentaTemporal.forEach(it => total += it.subtotal || 0);
+          if (total > 0) input.value = (total * 0.5).toFixed(2);
+        }
+      } else {
+        box.style.display = 'none';
+      }
+    }
 
     function irAPaso1() {
       document.getElementById('wizardPaso1').style.display = 'flex';
@@ -1975,6 +2045,7 @@
       document.getElementById('pillPaso1').classList.add('active');
       document.getElementById('pillPaso2').classList.add('active');
       document.getElementById('tituloModalVenta').innerText = "Datos del Cliente";
+      toggleAdelantoInput();
     }
     function toggleEnvioIndividual() {
       envioIndividualActivo = !envioIndividualActivo;
@@ -2006,6 +2077,7 @@
       const btn = document.getElementById('btnAccionAgregarItem');
       btn.innerText = "+ Añadir";
       btn.style.background = "var(--primary)";
+      btn.style.color = "var(--on-primary)";
     }
 
     function guardarItemVenta() {
@@ -2041,6 +2113,7 @@
       resetearFormularioItem();
       renderizarItemsModal();
       actualizarInfoProductoModal();
+      toggleAdelantoInput();
     }
 
     function cargarItemParaEditar(idx) {
@@ -2095,6 +2168,7 @@
       if (indiceEditandoItem === idx) resetearFormularioItem();
       itemsVentaTemporal.splice(idx, 1);
       renderizarItemsModal();
+      toggleAdelantoInput();
     }
 
     // ==================================================
@@ -2104,15 +2178,18 @@
       const sel = document.getElementById('selectClienteAntiguo');
       if (!sel) return;
       let opts = '<option value="">-- Nuevo Comprador --</option>';
-      directorioClientes.forEach(c => { opts += `<option value="${c.dni}">${c.nombre} (${c.dni})</option>`; });
+      directorioClientes.forEach(c => {
+        const idc = c.dni || c.ruc || '';
+        opts += `<option value="${idc}">${c.nombre} (${idc})</option>`;
+      });
       sel.innerHTML = opts;
     }
-    function seleccionarClienteAntiguo(dniBuscado) {
-      if (!dniBuscado) { limpiarCamposCliente(); return; }
-      const c = directorioClientes.find(x => x.dni === dniBuscado);
+    function seleccionarClienteAntiguo(idBuscado) {
+      if (!idBuscado) { limpiarCamposCliente(); return; }
+      const c = directorioClientes.find(x => (x.dni || x.ruc) === idBuscado);
       if (c) {
         document.getElementById('ventaCliente').value = c.nombre;
-        document.getElementById('ventaDni').value = c.dni;
+        document.getElementById('ventaDni').value = c.dni || '';
         document.getElementById('ventaRuc').value = c.ruc === "No solicita factura" ? "" : (c.ruc || '');
         document.getElementById('ventaTelefono').value = c.telefono_contacto || c.telefono || '';
         document.getElementById('ventaTelefonoLlegada').value = c.telefono_llegada || '';
@@ -2131,7 +2208,8 @@
     }
     function guardarClienteEnDirectorio(c) {
       if (!zonaActivaClave) return;
-      const idx = directorioClientes.findIndex(x => x.dni === c.dni);
+      const idc = c.dni || c.ruc;
+      const idx = directorioClientes.findIndex(x => (x.dni || x.ruc) === idc);
       if (idx !== -1) directorioClientes[idx] = c; else directorioClientes.push(c);
       localStorage.setItem(`fabrec_clientes_${zonaActivaClave}`, JSON.stringify(directorioClientes));
     }
@@ -2150,7 +2228,9 @@
       const condicion = document.getElementById('ventaCondicion').value;
 
       if (!cliente) { mostrarToast("Escribe el nombre o razón social"); return; }
-      if (!dni) { mostrarToast("Ingresa el DNI del cliente"); return; }
+      if (!dni && !ruc) { mostrarToast("Ingresa el DNI o el RUC del cliente"); return; }
+      if (dni && dni.length !== 8) { mostrarToast("El DNI debe tener 8 dígitos"); return; }
+      if (ruc && ruc.length !== 11) { mostrarToast("El RUC debe tener 11 dígitos"); return; }
       if (!telefonoContacto) { mostrarToast("Ingresa el WhatsApp del comprador"); return; }
       if (!fechaEntrega) { mostrarToast("Selecciona la fecha de entrega"); return; }
       if (!direccion) { mostrarToast("Ingresa la dirección para el envío"); return; }
@@ -2184,14 +2264,27 @@
         }
       });
 
-      const config = CONDICION_A_ESTADO[condicion] || { estado: "PENDIENTE", ratio: 0 };
-      const montoPagado = +(totalSoles * config.ratio).toFixed(2);
-      const montoPendiente = +(totalSoles - montoPagado).toFixed(2);
+      let montoPagado = 0;
+      let estadoPago = "PENDIENTE";
 
-      const esPagoInmediato = (condicion === "Efectivo" || condicion === "Transferencia");
+      if (condicion === "Adelanto 50%") {
+        const adelantoInput = parseFloat(document.getElementById('ventaAdelantoMonto').value) || 0;
+        if (adelantoInput <= 0) { mostrarToast("Ingresa el monto adelantado"); return; }
+        if (adelantoInput > totalSoles + 0.01) { mostrarToast("El adelanto no puede ser mayor al total"); return; }
+        montoPagado = +adelantoInput.toFixed(2);
+        estadoPago = montoPagado >= totalSoles - 0.01 ? "PAGADO" : "PARCIAL";
+      } else {
+        const config = CONDICION_A_ESTADO[condicion] || { estado: "PENDIENTE", ratio: 0 };
+        montoPagado = +(totalSoles * config.ratio).toFixed(2);
+        estadoPago = config.estado;
+      }
+
+      const montoPendiente = +(totalSoles - montoPagado).toFixed(2);
+      const esPagoInmediato = (condicion === "Efectivo" || condicion === "Transferencia" || estadoPago === "PAGADO");
 
       const clienteDatos = {
-        nombre: cliente, dni,
+        nombre: cliente,
+        dni: dni || "",
         ruc: ruc || "No solicita factura",
         telefono_contacto: telefonoContacto,
         telefono_llegada: telefonoLlegada,
@@ -2209,7 +2302,7 @@
         zona: z.nombreZona,
         zonaClave: zonaActivaClave,
         condicion_pago: condicion,
-        estado_pago: config.estado,
+        estado_pago: estadoPago,
         monto_pagado: montoPagado,
         monto_pendiente: montoPendiente,
         contabilidad_enviada: esPagoInmediato,
@@ -2217,9 +2310,9 @@
         cobros: montoPagado > 0 ? [{
           fecha: ahora.toISOString(),
           monto: montoPagado,
-          metodo: condicion === "Adelanto 50%" ? "Adelanto 50%" : condicion,
+          metodo: condicion === "Adelanto 50%" ? "Adelanto" : condicion,
           vendedor: z.asesor,
-          nota: condicion === "Adelanto 50%" ? "Adelanto inicial 50%" : "Pago al registrar venta"
+          nota: condicion === "Adelanto 50%" ? "Adelanto recibido al registrar" : "Pago al registrar venta"
         }] : [],
         items: itemsVentaTemporal.slice(),
         total_paquetes: totalPaquetes,
@@ -2309,7 +2402,8 @@
         lista = lista.filter(v =>
           (v.codigo || '').toLowerCase().includes(q) ||
           (v.cliente && v.cliente.nombre && v.cliente.nombre.toLowerCase().includes(q)) ||
-          (v.cliente && v.cliente.dni && v.cliente.dni.includes(q))
+          (v.cliente && v.cliente.dni && v.cliente.dni.includes(q)) ||
+          (v.cliente && v.cliente.ruc && v.cliente.ruc.includes(q))
         );
       }
 
@@ -2374,7 +2468,11 @@
       document.getElementById('detalleTituloVenta').innerText = `Pedido ${v.codigo}`;
       document.getElementById('detCodigoVenta').innerText = v.codigo;
       document.getElementById('detClienteNombre').innerText = v.cliente.nombre;
-      document.getElementById('detClienteDoc').innerText = `DNI: ${v.cliente.dni} ${v.cliente.ruc && v.cliente.ruc !== 'No solicita factura' ? ' • RUC: ' + v.cliente.ruc : ''}`;
+
+      const docText = (v.cliente.dni ? 'DNI: ' + v.cliente.dni : '') +
+                     (v.cliente.ruc && v.cliente.ruc !== 'No solicita factura' ? ' • RUC: ' + v.cliente.ruc : '');
+      document.getElementById('detClienteDoc').innerText = docText || '-';
+
       document.getElementById('detClienteTel').innerText = telContacto || '-';
       document.getElementById('detClienteTelLlegada').innerText = telLlegada || '-';
       document.getElementById('detClienteDir').innerText = v.cliente.direccion;
@@ -2469,21 +2567,46 @@
     }
 
     // ==================================================
-    // 13b. WHATSAPP CLIENTE
+    // 13b. WHATSAPP CLIENTE (Escribir)
     // ==================================================
     function abrirWhatsAppCliente() {
       if (!ventaDetalleActual) return;
       const v = ventaDetalleActual;
       const telRaw = v.cliente.telefono_contacto || v.cliente.telefono || '';
       const tel = formatearTelefonoPeru(telRaw);
-      const texto = `Hola ${v.cliente.nombre}, le escribo de FABREC sobre su pedido *${v.codigo}* (S/ ${v.monto_total.toFixed(2)}).`;
       let url;
       if (tel && tel.length >= 11) {
-        url = "https://api.whatsapp.com/send/?phone=" + tel + "&text=" + encodeURIComponent(texto);
+        url = "https://api.whatsapp.com/send/?phone=" + tel;
       } else {
-        url = "https://api.whatsapp.com/send/?text=" + encodeURIComponent(texto);
+        url = "https://api.whatsapp.com/send/";
       }
       window.open(url, '_blank');
+    }
+
+    // ==================================================
+    // 13c. ENVIAR CUENTA BANCARIA AL CLIENTE
+    // ==================================================
+    function enviarCuentaZonaAlComprador() {
+      if (!ventaDetalleActual) return;
+      const v = ventaDetalleActual;
+      const z = ZONAS[v.zonaClave];
+      if (!z) { mostrarToast("Zona no encontrada"); return; }
+      const telRaw = v.cliente.telefono_contacto || v.cliente.telefono || '';
+      const tel = formatearTelefonoPeru(telRaw);
+      if (!tel) { mostrarToast("El comprador no tiene WhatsApp registrado"); return; }
+
+      let datos = "*DATOS DE PAGO FABREC - " + z.nombreZona.toUpperCase() + "*\n" +
+                  "Titular: " + z.titular + "\n" +
+                  "BCP: " + z.bcp + "\n" +
+                  "CCI: " + z.cci + "\n" +
+                  "YAPE: " + z.yape;
+      if (z.bbva) datos += "\nBBVA: " + z.bbva;
+
+      let url;
+      if (tel.length >= 11) url = "https://api.whatsapp.com/send/?phone=" + tel + "&text=" + encodeURIComponent(datos);
+      else url = "https://api.whatsapp.com/send/?text=" + encodeURIComponent(datos);
+      window.open(url, '_blank');
+      mostrarToast("Enviando cuenta al comprador...");
     }
 
     // ==================================================
@@ -2712,9 +2835,11 @@
           v.monto_pendiente = 0;
           v.estado_pago = 'PAGADO';
         } else {
-          v.monto_pagado = 0;
-          v.monto_pendiente = +totalSoles.toFixed(2);
-          v.estado_pago = 'PENDIENTE';
+          const mPagadoActual = getMontoPagado(v);
+          const mPendienteNuevo = Math.max(0, totalSoles - mPagadoActual);
+          v.monto_pagado = mPagadoActual;
+          v.monto_pendiente = +mPendienteNuevo.toFixed(2);
+          v.estado_pago = mPendienteNuevo <= 0.01 ? 'PAGADO' : (mPagadoActual > 0 ? 'PARCIAL' : 'PENDIENTE');
         }
 
         const tickets = [];
@@ -2854,13 +2979,6 @@
     // ==================================================
     // 17. RECIBO: IMAGEN + ENVÍO
     // ==================================================
-    function formatearTelefonoPeru(tel) {
-      const digits = (tel || '').replace(/\D/g, '');
-      if (digits.length === 9 && digits.startsWith('9')) return '51' + digits;
-      if (digits.length === 11 && digits.startsWith('51')) return digits;
-      return digits;
-    }
-
     async function generarReciboCanvas(venta) {
       if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch (e) {} }
 
@@ -2943,7 +3061,8 @@
       ctx.fillText('DNI / RUC', padding, y);
       ctx.fillStyle = '#0f172a';
       ctx.font = `700 12px ${FONT_REG}`;
-      ctx.fillText(cli.dni || '-', padding, y + 15);
+      const docTxt = cli.dni || (cli.ruc && cli.ruc !== 'No solicita factura' ? cli.ruc : '-');
+      ctx.fillText(docTxt, padding, y + 15);
 
       ctx.fillStyle = '#94a3b8';
       ctx.font = `800 9px ${FONT_REG}`;
@@ -3083,7 +3202,6 @@
         y += 18;
       }
 
-      // Sello de color del vendedor (para clasificar recibos por color)
       y += 12;
       const selloTxt = (d.vendedor || '') + (NOMBRE_COLOR ? ' • ' + NOMBRE_COLOR : '');
       ctx.font = `800 11px ${FONT_REG}`;
@@ -3120,7 +3238,6 @@
       fctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
       fctx.drawImage(temp, 0, 0);
 
-      // Barra inferior del color del vendedor
       fctx.fillStyle = COLOR_MARCA;
       fctx.fillRect(0, finalCanvas.height - (6 * dpr), finalCanvas.width, 6 * dpr);
 
@@ -3163,19 +3280,14 @@
       } catch (e) { console.error(e); mostrarToast("Error generando imagen"); }
     }
 
+    // ENVIAR: abre WhatsApp del cliente SIN texto, descarga imagen para adjuntar
     async function enviarReciboCliente() {
       if (!ventaDetalleActual) return;
       const v = ventaDetalleActual;
       const telRaw = v.cliente.telefono_contacto || v.cliente.telefono || '';
       const tel = formatearTelefonoPeru(telRaw);
 
-      const texto = `Recibo de venta *${v.codigo}* - FABREC\n` +
-                    `Cliente: ${v.cliente.nombre}\n` +
-                    `Total: S/ ${v.monto_total.toFixed(2)}\n` +
-                    `Estado: ${esPagado(v) ? 'PAGADO' : 'POR COBRAR'}\n\n` +
-                    `Te envío la imagen del recibo adjunta.`;
-
-      let compartido = false;
+      // Intentar Web Share API con solo el archivo (sin texto)
       try {
         if (navigator.canShare && navigator.share) {
           const canvas = await generarReciboCanvas(v);
@@ -3183,15 +3295,15 @@
           if (blob) {
             const file = new File([blob], nombreArchivoRecibo(v), { type: 'image/png' });
             if (navigator.canShare({ files: [file] })) {
-              await navigator.share({ files: [file], title: 'Recibo FABREC', text: `Recibo de venta ${v.codigo} - ${v.cliente.nombre}` });
-              compartido = true;
+              await navigator.share({ files: [file] });
               mostrarToast("Recibo compartido");
+              return;
             }
           }
         }
       } catch (e) { if (e && e.name === 'AbortError') return; }
-      if (compartido) return;
 
+      // Fallback: descargar imagen y abrir WhatsApp sin texto
       try {
         const canvas = await generarReciboCanvas(v);
         canvas.toBlob(blob => {
@@ -3208,10 +3320,10 @@
       } catch (e) { console.error(e); }
 
       let waUrl;
-      if (tel && tel.length >= 11) waUrl = "https://api.whatsapp.com/send/?phone=" + tel + "&text=" + encodeURIComponent(texto);
-      else waUrl = "https://api.whatsapp.com/send/?text=" + encodeURIComponent(texto);
+      if (tel && tel.length >= 11) waUrl = "https://api.whatsapp.com/send/?phone=" + tel;
+      else waUrl = "https://api.whatsapp.com/send/";
       window.open(waUrl, '_blank');
-      mostrarToast("Imagen descargada. Adjúntala en WhatsApp.");
+      mostrarToast("Imagen descargada. Adjúntala en el chat del cliente.");
     }
 
     // ==================================================
@@ -3408,6 +3520,7 @@
       localStorage.setItem(KEY_TIPO_GRAFICO, tipo);
       actualizarBotonesGrafico();
       dibujarChartPaquetes('canvasChartPaquetes');
+      dibujarChartComision('canvasChartComision');
     }
 
     function actualizarBotonesGrafico() {
@@ -3453,8 +3566,12 @@
       else if (filtroDashboardActivo === 'mes') chartTitulo.innerText = 'Paquetes Mensuales';
       else if (filtroDashboardActivo === 'anio') chartTitulo.innerText = 'Paquetes Anuales';
 
+      const chartTituloCom = document.getElementById('chartTituloComision');
+      if (chartTituloCom) chartTituloCom.innerText = 'Comisión (S/) — ' + chartTitulo.innerText.replace('Paquetes', '').trim();
+
       actualizarBotonesGrafico();
       dibujarChartPaquetes('canvasChartPaquetes');
+      dibujarChartComision('canvasChartComision');
     }
 
     // ==================================================
@@ -3598,7 +3715,7 @@
         });
 
         dibujarComparativo(ctx, w, h, padL, padR, padT, padB, chartW, chartH, colorPrimario,
-          etiquetas, datosActual, datosPasado, 'Esta semana', 'Semana pasada');
+          etiquetas, datosActual, datosPasado, 'Esta semana', 'Semana pasada', false);
         return;
       }
 
@@ -3632,7 +3749,7 @@
         const nomPasado = mesPasado.toLocaleDateString('es-PE', { month: 'short' });
 
         dibujarComparativo(ctx, w, h, padL, padR, padT, padB, chartW, chartH, colorPrimario,
-          etiquetas, datosActual, datosPasado, nomActual, nomPasado);
+          etiquetas, datosActual, datosPasado, nomActual, nomPasado, false);
         return;
       }
 
@@ -3652,20 +3769,224 @@
         });
 
         dibujarComparativo(ctx, w, h, padL, padR, padT, padB, chartW, chartH, colorPrimario,
-          meses, datosActual, datosPasado, String(yearActual), String(yearPasado));
+          meses, datosActual, datosPasado, String(yearActual), String(yearPasado), false);
         return;
       }
     }
 
-    function dibujarComparativo(ctx, w, h, padL, padR, padT, padB, chartW, chartH, colorPrimario, etiquetas, datosActual, datosPasado, nombreActual, nombrePasado) {
+    // ============ CHART DE COMISIÓN ============
+    function dibujarChartComision(canvasId) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      const w = rect.width;
+      const h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const ahora = new Date();
+      const colorPrimario = '#059669'; // verde para comisión
+
+      const padL = 42, padR = 16, padT = 30, padB = 28;
+      const chartW = w - padL - padR;
+      const chartH = h - padT - padB;
+
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padL, h - padB);
+      ctx.lineTo(w - padR, h - padB);
+      ctx.stroke();
+
+      // Formatear etiqueta Y con S/
+      function fmtEje(v) {
+        if (v >= 1000) return 'S/' + (v/1000).toFixed(1).replace(/\.0$/, '') + 'k';
+        return 'S/' + v.toFixed(0);
+      }
+
+      if (filtroDashboardActivo === 'hoy') {
+        let hoyPaq = 0;
+        todasLasVentas.forEach(v => {
+          if (!v.fecha_venta) return;
+          const f = new Date(v.fecha_venta);
+          if (f.toLocaleDateString('es-PE') === ahora.toLocaleDateString('es-PE')) {
+            hoyPaq += v.total_paquetes || 0;
+          }
+        });
+        const comision = hoyPaq * COMISION_POR_PAQUETE;
+        const maxVal = Math.max(comision, 1);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '600 9px Montserrat';
+        ctx.textAlign = 'right';
+        ctx.fillText(fmtEje(maxVal), padL - 4, padT + 4);
+        ctx.fillText('S/0', padL - 4, h - padB + 4);
+
+        const cx = padL + chartW / 2;
+        if (tipoGraficoActual === 'bar') {
+          const barW = 60;
+          const barH = (comision / maxVal) * chartH;
+          const x = cx - barW / 2;
+          const y = h - padB - barH;
+          ctx.fillStyle = colorPrimario;
+          ctx.beginPath();
+          const r = 6;
+          if (barH > r) {
+            ctx.moveTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.lineTo(x + barW - r, y);
+            ctx.quadraticCurveTo(x + barW, y, x + barW, y + r);
+            ctx.lineTo(x + barW, h - padB);
+            ctx.lineTo(x, h - padB);
+            ctx.closePath();
+            ctx.fill();
+          } else {
+            ctx.fillRect(x, h - padB - Math.max(barH, 4), barW, Math.max(barH, 4));
+          }
+          if (comision > 0) {
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '800 12px Montserrat';
+            ctx.textAlign = 'center';
+            ctx.fillText('S/ ' + comision.toFixed(2), cx, y - 8);
+          }
+        } else {
+          const y = h - padB - (comision / maxVal) * chartH;
+          const grad = ctx.createLinearGradient(0, padT, 0, h - padB);
+          grad.addColorStop(0, hexToRgba(colorPrimario, 0.25));
+          grad.addColorStop(1, hexToRgba(colorPrimario, 0));
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.moveTo(cx - 80, h - padB);
+          ctx.lineTo(cx, y);
+          ctx.lineTo(cx + 80, h - padB);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.fillStyle = '#fff';
+          ctx.beginPath();
+          ctx.arc(cx, y, 7, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = colorPrimario;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+
+          if (comision > 0) {
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '800 12px Montserrat';
+            ctx.textAlign = 'center';
+            ctx.fillText('S/ ' + comision.toFixed(2), cx, y - 15);
+          }
+        }
+
+        ctx.fillStyle = '#64748b';
+        ctx.font = '600 10px Montserrat';
+        ctx.textAlign = 'center';
+        ctx.fillText('Hoy', cx, h - 8);
+        return;
+      }
+
+      if (filtroDashboardActivo === 'semana') {
+        const inicioActual = getStartOfWeek(ahora);
+        const inicioPasado = new Date(inicioActual);
+        inicioPasado.setDate(inicioActual.getDate() - 7);
+        const oneDay = 24 * 60 * 60 * 1000;
+
+        const etiquetas = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+        const datosActual = new Array(7).fill(0);
+        const datosPasado = new Array(7).fill(0);
+
+        todasLasVentas.forEach(v => {
+          if (!v.fecha_venta) return;
+          const f = new Date(v.fecha_venta);
+          f.setHours(0,0,0,0);
+          const diffActual = Math.round((f.getTime() - inicioActual.getTime()) / oneDay);
+          const diffPasado = Math.round((f.getTime() - inicioPasado.getTime()) / oneDay);
+          const com = (v.total_paquetes || 0) * COMISION_POR_PAQUETE;
+          if (diffActual >= 0 && diffActual < 7) datosActual[diffActual] += com;
+          if (diffPasado >= 0 && diffPasado < 7) datosPasado[diffPasado] += com;
+        });
+
+        dibujarComparativo(ctx, w, h, padL, padR, padT, padB, chartW, chartH, colorPrimario,
+          etiquetas, datosActual, datosPasado, 'Esta semana', 'Semana pasada', true);
+        return;
+      }
+
+      if (filtroDashboardActivo === 'mes') {
+        const diasMesActual = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0).getDate();
+        const mesPasado = new Date(ahora.getFullYear(), ahora.getMonth() - 1, 1);
+        const diasMesPasado = new Date(mesPasado.getFullYear(), mesPasado.getMonth() + 1, 0).getDate();
+        const maxDias = Math.max(diasMesActual, diasMesPasado);
+
+        const etiquetas = [];
+        for (let i = 1; i <= maxDias; i++) etiquetas.push(String(i));
+
+        const datosActual = new Array(maxDias).fill(0);
+        const datosPasado = new Array(maxDias).fill(0);
+
+        todasLasVentas.forEach(v => {
+          if (!v.fecha_venta) return;
+          const f = new Date(v.fecha_venta);
+          const com = (v.total_paquetes || 0) * COMISION_POR_PAQUETE;
+          if (f.getFullYear() === ahora.getFullYear() && f.getMonth() === ahora.getMonth()) {
+            const dia = f.getDate() - 1;
+            if (dia >= 0 && dia < maxDias) datosActual[dia] += com;
+          }
+          if (f.getFullYear() === mesPasado.getFullYear() && f.getMonth() === mesPasado.getMonth()) {
+            const dia = f.getDate() - 1;
+            if (dia >= 0 && dia < maxDias) datosPasado[dia] += com;
+          }
+        });
+
+        const nomActual = ahora.toLocaleDateString('es-PE', { month: 'short' });
+        const nomPasado = mesPasado.toLocaleDateString('es-PE', { month: 'short' });
+
+        dibujarComparativo(ctx, w, h, padL, padR, padT, padB, chartW, chartH, colorPrimario,
+          etiquetas, datosActual, datosPasado, nomActual, nomPasado, true);
+        return;
+      }
+
+      if (filtroDashboardActivo === 'anio') {
+        const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        const datosActual = new Array(12).fill(0);
+        const datosPasado = new Array(12).fill(0);
+        const yearActual = ahora.getFullYear();
+        const yearPasado = yearActual - 1;
+
+        todasLasVentas.forEach(v => {
+          if (!v.fecha_venta) return;
+          const f = new Date(v.fecha_venta);
+          const com = (v.total_paquetes || 0) * COMISION_POR_PAQUETE;
+          if (f.getFullYear() === yearActual) datosActual[f.getMonth()] += com;
+          else if (f.getFullYear() === yearPasado) datosPasado[f.getMonth()] += com;
+        });
+
+        dibujarComparativo(ctx, w, h, padL, padR, padT, padB, chartW, chartH, colorPrimario,
+          meses, datosActual, datosPasado, String(yearActual), String(yearPasado), true);
+        return;
+      }
+    }
+
+    function dibujarComparativo(ctx, w, h, padL, padR, padT, padB, chartW, chartH, colorPrimario, etiquetas, datosActual, datosPasado, nombreActual, nombrePasado, esComision) {
       const allVals = [...datosActual, ...datosPasado];
-      const maxVal = Math.max(...allVals, 1);
+      const maxVal = Math.max(...allVals, esComision ? 0.5 : 1);
+
+      function fmtEje(v) {
+        if (esComision) {
+          if (v >= 1000) return 'S/' + (v/1000).toFixed(1).replace(/\.0$/, '') + 'k';
+          return 'S/' + v.toFixed(0);
+        }
+        return String(Math.round(v));
+      }
 
       ctx.fillStyle = '#94a3b8';
       ctx.font = '600 9px Montserrat';
       ctx.textAlign = 'right';
-      ctx.fillText(String(maxVal), padL - 4, padT + 4);
-      ctx.fillText('0', padL - 4, h - padB + 4);
+      ctx.fillText(fmtEje(maxVal), padL - 4, padT + 4);
+      ctx.fillText(esComision ? 'S/0' : '0', padL - 4, h - padB + 4);
 
       ctx.textAlign = 'left';
       ctx.font = '700 10px Montserrat';
@@ -4068,7 +4389,7 @@
       if (sinAsignar > 0) {
         html += `<div class="carguillo-alerta">
           <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <span><strong>${sinAsignar} paq</strong> sin asignar</span>
+          <span><strong>${sinAsignar} paq</strong> sin asignar. Agrega un carro más o amplía la capacidad.</span>
         </div>`;
       }
 
@@ -4152,6 +4473,12 @@
                       </div>
                     `).join('')}
                   </div>
+                ` : ''}
+                ${carga > 0 ? `
+                  <button class="btn-enviar-carro" onclick="enviarCarguilloCarro('${carro.id}')">
+                    <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    Enviar carguillo del Carro ${escaparHTML(carro.numero || (idx + 1))} + ventas
+                  </button>
                 ` : ''}
               </div>
             </div>
@@ -4274,112 +4601,181 @@
       mostrarToast("Carro eliminado");
     }
 
-    function construirPayloadCarguillo() {
-      const z = ZONAS[zonaActivaClave] || {};
-      const ahora = new Date();
-      const hoyStr = ahora.toISOString().split('T')[0];
-
-      const carrosPayload = carros.map(c => {
-        const productos = productosEnCarro(c.id).map(([prod, qty]) => ({ producto: prod, paquetes: qty }));
-        const clientes = clientesEnCarro(c.id).map(cl => ({ nombre: cl.nombre, direccion: cl.direccion, paquetes: cl.paquetes }));
-        const carga = totalPaquetesEnCarro(c.id);
-        return {
-          id: c.id, numero: c.numero || '',
-          max_paquetes: c.maxPaquetes,
-          paquetes_asignados: carga,
-          porcentaje_uso: c.maxPaquetes > 0 ? Math.round((carga / c.maxPaquetes) * 100) : 0,
-          productos, clientes
-        };
-      });
-
-      const individuales = ventasHoy.filter(v => v.tipo_envio === 'individual').map(v => ({
-        codigo: v.codigo,
-        cliente: v.cliente ? v.cliente.nombre : '',
-        telefono_contacto: v.cliente ? (v.cliente.telefono_contacto || v.cliente.telefono || '') : '',
-        telefono_llegada: v.cliente ? (v.cliente.telefono_llegada || '') : '',
-        direccion: v.cliente ? v.cliente.direccion : '',
-        total_paquetes: v.total_paquetes,
-        monto_total: v.monto_total,
-        condicion_pago: v.condicion_pago,
-        estado_pago: v.estado_pago,
-        items: v.items || []
-      }));
-
-      const resumen = resumenProductosGlobal().map(([prod, qty]) => ({ producto: prod, paquetes: qty }));
-      const totalAsignado = resumen.reduce((a, x) => a + x.paquetes, 0);
-      const totalPedidos = ventasHoy.reduce((a, v) => a + (v.total_paquetes || 0), 0);
-      const sinAsignar = totalPedidos - totalAsignado;
-
-      const pedidos = ventasHoy.map(v => ({
-        codigo: v.codigo,
-        cliente: v.cliente ? v.cliente.nombre : '',
-        telefono_contacto: v.cliente ? (v.cliente.telefono_contacto || v.cliente.telefono || '') : '',
-        telefono_llegada: v.cliente ? (v.cliente.telefono_llegada || '') : '',
-        direccion: v.cliente ? v.cliente.direccion : '',
-        zona: v.zona || '',
-        tipo_envio: v.tipo_envio || 'carro',
-        total_paquetes: v.total_paquetes,
-        monto_total: v.monto_total,
-        condicion_pago: v.condicion_pago,
-        estado_pago: v.estado_pago,
-        asignaciones: (v.asignaciones || []).map(a => {
-          const car = carros.find(c => c.id === a.carroId);
-          return { carro: car ? `Carro ${car.numero || ''}` : '?', paquetes: a.paquetes, items: a.items };
-        })
-      }));
-
+    // ==================================================
+    // PAYLOAD PARA KING (ventas-oficina compatible)
+    // ==================================================
+    function construirVentaPayloadParaKing(v) {
+      const zv = (v.es_cliente_externo && v.zona_vendedor_clave) ? ZONAS[v.zona_vendedor_clave] : null;
+      const zonaVend = zonaActivaClave;
       return {
-        tipo: "carguillo",
-        codigo_carguillo: generarCodigoCarguillo(),
-        fecha: hoyStr,
-        fecha_envio: ahora.toISOString(),
-        vendedor: z.asesor || '',
-        zona: z.nombreZona || '',
-        zonaClave: zonaActivaClave,
-        carros: carrosPayload,
-        envios_individuales: individuales,
-        resumen_productos: resumen,
-        total_paquetes_asignados: totalAsignado,
-        total_paquetes_pedidos: totalPedidos,
-        paquetes_sin_asignar: sinAsignar,
-        cantidad_pedidos: ventasHoy.length,
-        cantidad_envios_individuales: individuales.length,
-        pedidos
+        codigo: v.codigo,
+        device_id: 'V_' + (ZONA_ABREV[zonaVend] || 'gen'),
+        zona: v.zona || '',
+        zonaClave: v.zonaClave || '',
+        fecha_venta: v.fecha_venta,
+        fecha_entrega: v.fecha_entrega_solicitada,
+        cliente: v.cliente ? v.cliente.nombre : '',
+        dni: v.cliente ? (v.cliente.dni || '') : '',
+        ruc: v.cliente ? (v.cliente.ruc || '') : '',
+        telefono_contacto: v.cliente ? (v.cliente.telefono_contacto || v.cliente.telefono || '') : '',
+        telefono_llegada: v.cliente ? (v.cliente.telefono_llegada || '') : '',
+        direccion: v.cliente ? v.cliente.direccion : '',
+        total_paquetes: v.total_paquetes,
+        monto_total: v.monto_total,
+        monto_pagado: getMontoPagado(v),
+        monto_pendiente: getMontoPendiente(v),
+        condicion_pago: v.condicion_pago,
+        estado_pago: v.estado_pago,
+        tarifa_aplicada: v.tarifa_aplicada,
+        tipo_envio: v.tipo_envio || 'carro',
+        es_cliente_externo: !!v.es_cliente_externo,
+        zona_vendedor_clave: v.zona_vendedor_clave || null,
+        zona_vendedor: zv ? zv.nombreZona : null,
+        vendedor_asignado: zv ? zv.asesor : (v.vendedor || 'Oficina'),
+        items: v.items || []
       };
     }
 
+    function construirZonaDataKing(ventasZona, codigoCarguillo, productosOverride, paqOverride) {
+      const z = ZONAS[zonaActivaClave];
+      let productos = {};
+      let totalPaq = 0;
+
+      if (productosOverride) {
+        productos = Object.fromEntries(productosOverride);
+        totalPaq = paqOverride || Object.values(productos).reduce((a, b) => a + b, 0);
+      } else {
+        ventasZona.forEach(v => {
+          (v.items || []).forEach(it => {
+            const p = parseInt(it.paquetes_totales) || 0;
+            if (p > 0) productos[it.producto] = (productos[it.producto] || 0) + p;
+          });
+        });
+        totalPaq = Object.values(productos).reduce((a, b) => a + b, 0);
+      }
+
+      return {
+        zonaClave: zonaActivaClave,
+        zona: z.nombreZona,
+        codigo_carguillo: codigoCarguillo,
+        total_ventas: ventasZona.length,
+        total_paquetes: totalPaq,
+        total_monto: +ventasZona.reduce((a, v) => a + v.monto_total, 0).toFixed(2),
+        productos: Object.entries(productos).map(([prod, qty]) => ({ producto: prod, paquetes: qty }))
+      };
+    }
+
+    // ==================================================
+    // ENVIAR CARGUILLO POR CARRO INDIVIDUAL
+    // ==================================================
+    function enviarCarguilloCarro(carroId) {
+      if (!zonaActivaClave) { mostrarToast("Selecciona tu zona"); return; }
+      const carro = carros.find(c => c.id === carroId);
+      if (!carro) { mostrarToast("Carro no encontrado"); return; }
+
+      // Ventas que tienen asignación en este carro
+      const ventasDelCarro = ventasHoy.filter(v =>
+        v.tipo_envio !== 'individual' &&
+        (v.asignaciones || []).some(a => a.carroId === carroId && a.paquetes > 0)
+      );
+
+      if (ventasDelCarro.length === 0) {
+        mostrarToast("Este carro no tiene ventas asignadas");
+        return;
+      }
+
+      const z = ZONAS[zonaActivaClave];
+      const ahora = new Date();
+      const productosCarro = productosEnCarro(carroId);
+      const totalPaqCarro = totalPaquetesEnCarro(carroId);
+      const totalMontoCarro = ventasDelCarro.reduce((a, v) => a + v.monto_total, 0);
+
+      const codigoCarguillo = generarCodigoCarguillo() + '_c' + (carro.numero || '');
+
+      const zonaData = construirZonaDataKing(
+        ventasDelCarro,
+        codigoCarguillo,
+        productosCarro,
+        totalPaqCarro
+      );
+
+      const ventasPayload = ventasDelCarro.map(v => construirVentaPayloadParaKing(v));
+
+      const payload = {
+        tipo: "ventas_carguillo_oficina",
+        fecha_envio: ahora.toISOString(),
+        vendedor: z.asesor,
+        device_id: 'V_' + (ZONA_ABREV[zonaActivaClave] || 'gen'),
+        cantidad_zonas: 1,
+        resumen_ventas: {
+          total_ventas: ventasPayload.length,
+          total_paquetes: totalPaqCarro,
+          total_monto: +totalMontoCarro.toFixed(2)
+        },
+        carguillo: {
+          zonas: [zonaData]
+        },
+        ventas: ventasPayload,
+        meta: {
+          carro: carro.numero || '',
+          carro_id: carroId,
+          max_paquetes: carro.maxPaquetes,
+          es_carguillo_individual: true
+        }
+      };
+
+      const jsonStr = JSON.stringify(payload, null, 2);
+      const url = "https://api.whatsapp.com/send/?phone=" + NUMERO_CIERRE_KING + "&text=" + encodeURIComponent(jsonStr);
+      window.open(url, '_blank');
+      mostrarToast(`Carguillo del Carro ${carro.numero} enviado (${ventasDelCarro.length} ventas · ${totalPaqCarro} paq)`);
+    }
+
+    // ==================================================
+    // ENVIAR CARGUILLO COMPLETO A KING
+    // ==================================================
     function enviarTodoAKing() {
       if (!zonaActivaClave) { mostrarToast("Selecciona tu zona"); abrirModalZona(); return; }
       if (ventasHoy.length === 0) { mostrarToast("No hay ventas registradas hoy"); return; }
 
-      const hayIndividuales = ventasHoy.filter(v => v.tipo_envio === 'individual').length > 0;
-      if (carros.length === 0 && !hayIndividuales) {
-        mostrarToast("Agrega al menos un carro o registra una venta individual");
+      autoAsignarVentas();
+      const sinAsignar = totalPaquetesSinAsignar();
+      if (sinAsignar > 0) {
+        mostrarToast(`Carguillo incompleto: ${sinAsignar} paq sin asignar. Agrega un carro.`);
         return;
       }
 
-      autoAsignarVentas();
-      const sinAsignar = totalPaquetesSinAsignar();
-      if (sinAsignar > 0) { mostrarToast(`Carguillo incompleto: ${sinAsignar} paq sin asignar`); return; }
-
       const z = ZONAS[zonaActivaClave];
       const ahora = new Date();
-      const payloadCierre = construirPayloadRegistro(ahora, ventasHoy);
-      const payloadCarguillo = construirPayloadCarguillo();
 
-      const payloadUnificado = {
-        tipo: "cierre_carguillo",
+      const productosTotales = resumenProductosGlobal();
+      const totalPaq = productosTotales.reduce((a, x) => a + x[1], 0);
+      const totalMonto = ventasHoy.reduce((a, v) => a + v.monto_total, 0);
+      const codigoCarguillo = generarCodigoCarguillo();
+
+      const zonaData = construirZonaDataKing(ventasHoy, codigoCarguillo, productosTotales, totalPaq);
+      const ventasPayload = ventasHoy.map(v => construirVentaPayloadParaKing(v));
+
+      const payload = {
+        tipo: "ventas_carguillo_oficina",
         fecha_envio: ahora.toISOString(),
         vendedor: z.asesor,
-        zona: z.nombreZona,
-        cierre_ventas: payloadCierre,
-        carguillo: payloadCarguillo
+        device_id: 'V_' + (ZONA_ABREV[zonaActivaClave] || 'gen'),
+        cantidad_zonas: 1,
+        resumen_ventas: {
+          total_ventas: ventasPayload.length,
+          total_paquetes: totalPaq,
+          total_monto: +totalMonto.toFixed(2)
+        },
+        carguillo: {
+          zonas: [zonaData]
+        },
+        ventas: ventasPayload
       };
 
-      const jsonStr = JSON.stringify(payloadUnificado, null, 2);
+      const jsonStr = JSON.stringify(payload, null, 2);
       const url = "https://api.whatsapp.com/send/?phone=" + NUMERO_CIERRE_KING + "&text=" + encodeURIComponent(jsonStr);
       window.open(url, '_blank');
-      mostrarToast("Cierre y Carguillo enviados");
+      mostrarToast(`Cierre + Carguillo enviados · ${ventasHoy.length} ventas · ${totalPaq} paq`);
     }
 
     function actualizarBadgeCarguillo() {
@@ -4491,6 +4887,7 @@
     window.cancelarAgregarItemEdicion = cancelarAgregarItemEdicion;
     window.confirmarAgregarItemEdicion = confirmarAgregarItemEdicion;
     window.abrirWhatsAppCliente = abrirWhatsAppCliente;
+    window.enviarCuentaZonaAlComprador = enviarCuentaZonaAlComprador;
     window.abrirRegistroDetalle = abrirRegistroDetalle;
     window.cerrarModalRegistroDetalle = cerrarModalRegistroDetalle;
     window.verDetalleVentaDesdeRegistro = verDetalleVentaDesdeRegistro;
@@ -4504,7 +4901,10 @@
     window.editarCarroConfig = editarCarroConfig;
     window.eliminarCarroConfig = eliminarCarroConfig;
     window.enviarTodoAKing = enviarTodoAKing;
+    window.enviarCarguilloCarro = enviarCarguilloCarro;
     window.toggleCarguilloCard = toggleCarguilloCard;
+
+    window.toggleAdelantoInput = toggleAdelantoInput;
 
     window.borrarTodosLosDatos = borrarTodosLosDatos;
 

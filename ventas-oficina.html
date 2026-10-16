@@ -1456,11 +1456,11 @@
 
         <div class="form-grid-2">
           <div>
-            <label class="form-label">DNI (ID Cliente) *</label>
+            <label class="form-label">DNI (ID Cliente)</label>
             <input type="text" id="ventaDni" placeholder="8 dígitos" maxlength="8" class="input-field">
           </div>
           <div>
-            <label class="form-label">RUC (Opcional Factura)</label>
+            <label class="form-label">RUC (Factura)</label>
             <input type="text" id="ventaRuc" placeholder="11 dígitos" maxlength="11" class="input-field">
           </div>
         </div>
@@ -2346,12 +2346,15 @@
       if (!sel) return;
       let opts = '<option value="">-- Nuevo Comprador --</option>';
       const ordenados = [...directorioClientes].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
-      ordenados.forEach(c => { opts += `<option value="${c.dni}">${escaparHTML(c.nombre)} (${c.dni})</option>`; });
+      ordenados.forEach(c => {
+        const idc = c.dni || c.ruc || '';
+        opts += `<option value="${idc}">${escaparHTML(c.nombre)} (${idc})</option>`;
+      });
       sel.innerHTML = opts;
     }
     function seleccionarClienteAntiguo(dniBuscado) {
       if (!dniBuscado) { limpiarCamposCliente(); return; }
-      const c = directorioClientes.find(x => x.dni === dniBuscado);
+      const c = directorioClientes.find(x => (x.dni || x.ruc) === dniBuscado);
       if (c) {
         document.getElementById('ventaCliente').value = c.nombre;
         document.getElementById('ventaDni').value = c.dni;
@@ -2381,7 +2384,8 @@
       if (clienteExternoActivo) actualizarInfoVendedorExterno();
     }
     function guardarClienteEnDirectorio(c) {
-      const idx = directorioClientes.findIndex(x => x.dni === c.dni);
+      const idc = c.dni || c.ruc;
+      const idx = directorioClientes.findIndex(x => (x.dni || x.ruc) === idc);
       if (idx !== -1) directorioClientes[idx] = c; else directorioClientes.push(c);
       guardarClientes();
     }
@@ -2404,7 +2408,7 @@
         return;
       }
       if (!cliente) { mostrarToast("Escribe el nombre o razón social"); return; }
-      if (!dni) { mostrarToast("Ingresa el DNI del cliente"); return; }
+      if (!dni && !ruc) { mostrarToast("Ingresa el DNI o el RUC del cliente"); return; }
       if (!telefonoContacto) { mostrarToast("Ingresa el WhatsApp del comprador"); return; }
       if (!fechaEntrega) { mostrarToast("Selecciona la fecha de entrega"); return; }
       if (!direccion) { mostrarToast("Ingresa la dirección para el envío"); return; }
