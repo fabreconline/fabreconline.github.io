@@ -551,6 +551,20 @@
       clearTimeout(t._timer); t._timer = setTimeout(() => t.classList.remove('show'), 3200);
     }
     function normalizarTelefono(tel) { if (!tel) return ''; return String(tel).replace(/\D/g, ''); }
+
+    // ==== RENOMBRADO DE PRODUCTOS (1000 ml → 1 Litro, etc.) ====
+    function renombrarProducto(nombre) {
+      if (nombre === null || nombre === undefined) return nombre;
+      let s = String(nombre).trim();
+      if (!s) return s;
+      // Verde tiene prioridad (debe ir primero)
+      s = s.replace(/3000\s*ml\s*\(?\s*verde\s*\)?/gi, '3 Litros verde');
+      s = s.replace(/3000\s*ml/gi, '3 Litros');
+      s = s.replace(/1500\s*ml/gi, '1 1/2 Litro');
+      s = s.replace(/1000\s*ml/gi, '1 Litro');
+      return s;
+    }
+
     function inicializarEstructuraEstado(codigoCarguillo) {
       if (!estadosDespacho[codigoCarguillo]) {
         estadosDespacho[codigoCarguillo] = { estado: 'pendiente', entregas: {}, fecha_despacho: null, fecha_completado: null, datos_carga: {} };
@@ -586,7 +600,8 @@
       if (listaProds.length > 0) {
         if (listaProds.length === 1) {
           const p = listaProds[0];
-          const nom = typeof p === 'string' ? p : (p.producto || p.modelo || p.nombre || p.descripcion || 'Modelo');
+          const nomOrig = typeof p === 'string' ? p : (p.producto || p.modelo || p.nombre || p.descripcion || 'Modelo');
+          const nom = renombrarProducto(nomOrig);
           let cant = 0;
           if (typeof p === 'object' && p !== null) {
             cant = Number(p.paquetes || p.cantidad_paquetes || p.cant_paquetes || p.paq || p.bultos || p.cajas || p.total_paquetes || p.cantidad || p.cant || 0);
@@ -597,17 +612,17 @@
         }
         let sumaCants = 0;
         const itemsParseados = listaProds.map(p => {
-          if (typeof p === 'string') return { nom: p, cant: 0 };
-          const nom = p.producto || p.modelo || p.nombre || p.descripcion || 'Modelo';
+          if (typeof p === 'string') return { nomOrig: p, cant: 0 };
+          const nomOrig = p.producto || p.modelo || p.nombre || p.descripcion || 'Modelo';
           const cant = Number(p.paquetes || p.cantidad_paquetes || p.cant_paquetes || p.paq || p.bultos || p.cajas || p.total_paquetes || p.cantidad || p.cant || 0);
           sumaCants += cant;
-          return { nom, cant };
+          return { nomOrig, cant };
         });
         if (sumaCants < totalEntrega && zonaPadre && Array.isArray(zonaPadre.productos) && zonaPadre.productos.length > 0) {
           itemsParseados.forEach(item => {
             const matchZona = zonaPadre.productos.find(zp => {
               const nomZona = (zp.producto || zp.modelo || '').toLowerCase();
-              return nomZona && (nomZona.includes(item.nom.toLowerCase()) || item.nom.toLowerCase().includes(nomZona));
+              return nomZona && (nomZona.includes(item.nomOrig.toLowerCase()) || item.nomOrig.toLowerCase().includes(nomZona));
             });
             if (matchZona && Number(matchZona.paquetes) > 0) {
               if (zonaPadre.entregas.length === 1) item.cant = Number(matchZona.paquetes);
@@ -616,20 +631,20 @@
         }
         return itemsParseados.map(item => {
           const cantFinal = item.cant > 0 ? item.cant : (totalEntrega > 0 && itemsParseados.length === 1 ? totalEntrega : 1);
-          return `${cantFinal} paq ${item.nom}`;
+          return `${cantFinal} paq ${renombrarProducto(item.nomOrig)}`;
         }).join(' · ');
       }
-      if (typeof e.modelos === 'string' && e.modelos.trim()) return e.modelos.trim();
-      if (typeof e.detalle === 'string' && e.detalle.trim()) return e.detalle.trim();
-      if (typeof e.detalle_productos === 'string' && e.detalle_productos.trim()) return e.detalle_productos.trim();
+      if (typeof e.modelos === 'string' && e.modelos.trim()) return renombrarProducto(e.modelos.trim());
+      if (typeof e.detalle === 'string' && e.detalle.trim()) return renombrarProducto(e.detalle.trim());
+      if (typeof e.detalle_productos === 'string' && e.detalle_productos.trim()) return renombrarProducto(e.detalle_productos.trim());
       if (zonaPadre && Array.isArray(zonaPadre.productos) && zonaPadre.productos.length > 0) {
         if (zonaPadre.productos.length === 1) {
           const pUnico = zonaPadre.productos[0];
           const cant = totalEntrega > 0 ? totalEntrega : (Number(pUnico.paquetes) || 1);
-          return `${cant} paq ${pUnico.producto || 'Modelo'}`;
+          return `${cant} paq ${renombrarProducto(pUnico.producto || 'Modelo')}`;
         }
         if (zonaPadre.entregas.length === 1) {
-          return zonaPadre.productos.map(p => `${p.paquetes || 1} paq ${p.producto || 'Modelo'}`).join(' · ');
+          return zonaPadre.productos.map(p => `${p.paquetes || 1} paq ${renombrarProducto(p.producto || 'Modelo')}`).join(' · ');
         }
       }
       return totalEntrega > 0 ? `${totalEntrega} paq` : '';
@@ -939,7 +954,7 @@
       const claseProgreso = porcentaje >= 100 ? 'completo' : (porcentaje > 0 ? 'parcial' : '');
       const esEnviado = st.estado === 'enviado';
 
-      const productosRows = (z.productos || []).map(p => `<tr><td>${escaparHTML(p.producto || p.modelo || 'Producto')}</td><td class="num">${p.paquetes || p.cantidad || 0} paq</td></tr>`).join('');
+      const productosRows = (z.productos || []).map(p => `<tr><td>${escaparHTML(renombrarProducto(p.producto || p.modelo || 'Producto'))}</td><td class="num">${p.paquetes || p.cantidad || 0} paq</td></tr>`).join('');
 
       const entregasHTML = z.entregas.map(e => {
         const es = st.entregas[e.codigo] || {};
@@ -1239,7 +1254,7 @@
         ctx.fillStyle = (i % 2 === 0) ? '#ffffff' : colorBg;
         ctx.fillRect(xRight, yFila, colProdW, rowP);
         ctx.fillStyle = '#0a0a0a'; ctx.font = `700 ${mm(3.3)}px Montserrat, sans-serif`;
-        ctx.textAlign = 'left'; ctx.fillText(truncarTexto(ctx, p.producto || 'Producto', colProdW - mm(24)), xRight + mm(2.5), yFila + rowP - mm(2.6));
+        ctx.textAlign = 'left'; ctx.fillText(truncarTexto(ctx, renombrarProducto(p.producto || 'Producto'), colProdW - mm(24)), xRight + mm(2.5), yFila + rowP - mm(2.6));
         ctx.textAlign = 'right'; ctx.font = `900 ${mm(3.5)}px Montserrat, sans-serif`;
         ctx.fillText(String(p.paquetes || 0), xRight + colProdW - mm(2.5), yFila + rowP - mm(2.6));
         ctx.strokeStyle = colorBorde; ctx.lineWidth = mm(0.15);
@@ -1338,7 +1353,7 @@
         ctx.strokeStyle = colorBorde; ctx.lineWidth = mm(0.4);
         ctx.strokeRect(xRight + (colOK - cbSize)/2, yFila + (rowP - cbSize)/2, cbSize, cbSize);
         ctx.fillStyle = '#0a0a0a'; ctx.font = `800 ${mm(3.2)}px Montserrat, sans-serif`;
-        ctx.textAlign = 'left'; ctx.fillText(truncarTexto(ctx, p.producto || 'Producto', colProd - mm(3)), xRight + colOK + mm(2.5), yFila + rowP - mm(2.5));
+        ctx.textAlign = 'left'; ctx.fillText(truncarTexto(ctx, renombrarProducto(p.producto || 'Producto'), colProd - mm(3)), xRight + colOK + mm(2.5), yFila + rowP - mm(2.5));
         ctx.textAlign = 'center'; ctx.font = `900 ${mm(3.4)}px Montserrat, sans-serif`;
         ctx.fillText(String(p.paquetes || 0), xRight + colOK + colProd + colPed/2, yFila + rowP - mm(2.5));
         const inX = xRight + colOK + colProd + colPed + mm(2.5);
@@ -1558,7 +1573,7 @@
     }
 
     // ================================================================
-    // TICKET 80mm · Recibo (sin franja, vendedor negro)
+    // TICKET 80mm · Recibo (con columnas: PRODUCTO | CANT | P.UNIT | SUBTOTAL)
     // ================================================================
     function generarCanvasTicket(entrega, zona, mm) {
       const W = mm(80);
@@ -1670,41 +1685,99 @@
       ctx.setLineDash([]);
       y += mm(3.5);
 
-      ctx.fillStyle = '#000000'; ctx.font = `900 ${mm(3.5)}px Montserrat, sans-serif`;
-      ctx.textAlign = 'left'; ctx.fillText('PRODUCTO', PAD_X, y + mm(3.5));
-      ctx.textAlign = 'center'; ctx.fillText('CANT', PAD_X + usableW * 0.62, y + mm(3.5));
-      ctx.textAlign = 'right'; ctx.fillText('SUBTOTAL', W - PAD_X, y + mm(3.5));
-      y += mm(4.2);
+      // ============================================================
+      // TABLA: columnas empaquetadas a la izquierda, ancho auto
+      // ============================================================
+      const items = entrega.items || [];
 
-      ctx.strokeStyle = '#000000'; ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
+      // Normalizar filas
+      const filas = items.length > 0
+        ? items.map(it => {
+            const cant = parseInt(it.paquetes_totales) || 0;
+            const sub  = parseFloat(it.subtotal) || 0;
+            const unit = parseFloat(it.precio_unitario) || (cant > 0 ? sub / cant : 0);
+            return { prod: renombrarProducto(it.producto || 'Producto'), cant, unit, sub };
+          })
+        : [(() => {
+            const cant = entrega.total_paquetes || 0;
+            const sub  = entrega.monto_total || 0;
+            const unit = cant > 0 ? sub / cant : 0;
+            return { prod: 'Paquetes', cant, unit, sub };
+          })()];
+
+      // Fuentes: header pequeña, datos medianos
+      const FONT_HEAD      = `900 ${mm(2.5)}px Montserrat, sans-serif`;
+      const FONT_DATA      = `700 ${mm(3.1)}px Montserrat, sans-serif`;
+      const FONT_DATA_BOLD = `900 ${mm(3.1)}px Montserrat, sans-serif`;
+
+      // Medir headers
+      ctx.font = FONT_HEAD;
+      const hProd  = ctx.measureText('PRODUCTO').width;
+      const hCant  = ctx.measureText('CANT').width;
+      const hPunit = ctx.measureText('P.U.').width;
+      const hSub   = ctx.measureText('SUBTOTAL').width;
+
+      // Medir datos
+      ctx.font = FONT_DATA;
+      let dProd = 0, dCant = 0, dPunit = 0, dSub = 0;
+      filas.forEach(f => {
+        dProd  = Math.max(dProd,  ctx.measureText(f.prod).width);
+        dCant  = Math.max(dCant,  ctx.measureText(String(f.cant)).width);
+        dPunit = Math.max(dPunit, ctx.measureText(f.unit.toFixed(2)).width);
+        dSub   = Math.max(dSub,   ctx.measureText(f.sub.toFixed(2)).width);
+      });
+
+      // Anchos de columna = max(header, dato) + padding pequeño
+      const padCol = mm(0.6);
+      const gapCol = mm(1.8);
+      const cCant  = Math.max(hCant,  dCant)  + padCol;
+      const cPunit = Math.max(hPunit, dPunit) + padCol;
+      const cSub   = Math.max(hSub,   dSub)   + padCol;
+
+      // Producto: ancho natural, recortado solo si excede lo disponible
+      let cProd = Math.max(hProd, dProd) + padCol;
+      const anchoFijo = cCant + cPunit + cSub + gapCol * 3;
+      const cProdMax  = usableW - anchoFijo;
+      if (cProd > cProdMax) cProd = Math.max(mm(10), cProdMax);
+
+      // Posiciones: todas pegadas a la izquierda con gap mínimo
+      const xProd  = PAD_X;
+      const xCant  = xProd  + cProd  + gapCol;
+      const xPunit = xCant  + cCant  + gapCol;
+      const xSub   = xPunit + cPunit + gapCol;
+      const rCant  = xCant  + cCant;
+      const rPunit = xPunit + cPunit;
+      const rSub   = xSub   + cSub;
+
+      // Cabecera
+      ctx.fillStyle = '#000000'; ctx.font = FONT_HEAD;
+      ctx.textAlign = 'left';  ctx.fillText('PRODUCTO', xProd,  y + mm(3.2));
+      ctx.textAlign = 'right'; ctx.fillText('CANT',     rCant,  y + mm(3.2));
+      ctx.fillText('P.U.',     rPunit, y + mm(3.2));
+      ctx.fillText('SUBTOTAL', rSub,   y + mm(3.2));
+      y += mm(3.8);
+
+      ctx.strokeStyle = '#000000'; ctx.lineWidth = mm(0.25);
+      ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
       y += mm(3.2);
 
-      const items = entrega.items || [];
-      if (items.length > 0) {
-        items.forEach(it => {
-          const prod = it.producto || 'Producto';
-          const cant = parseInt(it.paquetes_totales) || 0;
-          const subtotal = parseFloat(it.subtotal) || 0;
-          ctx.fillStyle = '#000000';
-          ctx.font = `700 ${mm(3.7)}px Montserrat, sans-serif`;
-          ctx.textAlign = 'left'; ctx.fillText(truncarTexto(ctx, prod, usableW * 0.58), PAD_X, y + mm(3.8));
-          ctx.textAlign = 'center'; ctx.fillText(String(cant), PAD_X + usableW * 0.62, y + mm(3.8));
-          ctx.textAlign = 'right'; ctx.font = `900 ${mm(3.7)}px Montserrat, sans-serif`;
-          ctx.fillText(subtotal.toFixed(2), W - PAD_X, y + mm(3.8));
-          y += mm(6.2);
-        });
-      } else {
-        const cant = entrega.total_paquetes || 0;
-        const subtotal = entrega.monto_total || 0;
-        ctx.fillStyle = '#000000'; ctx.font = `700 ${mm(3.7)}px Montserrat, sans-serif`;
-        ctx.textAlign = 'left'; ctx.fillText('Paquetes', PAD_X, y + mm(3.8));
-        ctx.textAlign = 'center'; ctx.fillText(String(cant), PAD_X + usableW * 0.62, y + mm(3.8));
-        ctx.textAlign = 'right'; ctx.fillText(subtotal.toFixed(2), W - PAD_X, y + mm(3.8));
-        y += mm(6.2);
-      }
+      // Filas
+      filas.forEach(f => {
+        ctx.fillStyle = '#000000';
+        ctx.font = FONT_DATA;
+        ctx.textAlign = 'left';
+        ctx.fillText(truncarTexto(ctx, f.prod, cProd - mm(0.8)), xProd, y + mm(3.6));
+        ctx.textAlign = 'right';
+        ctx.fillText(String(f.cant),           rCant,  y + mm(3.6));
+        ctx.fillText(f.unit.toFixed(2),        rPunit, y + mm(3.6));
+        ctx.font = FONT_DATA_BOLD;
+        ctx.fillText(f.sub.toFixed(2),         rSub,   y + mm(3.6));
+        y += mm(5.8);
+      });
 
       y += mm(0.4);
-      ctx.strokeStyle = '#000000'; ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
+      ctx.strokeStyle = '#000000';
+      ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
       y += mm(4);
 
       const total = parseFloat(entrega.monto_total) || 0;
