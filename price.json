@@ -43,16 +43,16 @@
   },
   {
     "producto": "450 ml",
-    "precio_menor": 19.5,
-    "precio_mayor": 19,
-    "precio_cliente_final": 21,
+    "precio_menor": 18.5,
+    "precio_mayor": 18,
+    "precio_cliente_final": 19.5,
     "unidades_paquete": 100
   },
   {
     "producto": "500 ml Néctar",
-    "precio_menor": 16.5,
-    "precio_mayor": 16,
-    "precio_cliente_final": 17.5,
+    "precio_menor": 19.5,
+    "precio_mayor": 19,
+    "precio_cliente_final": 20.5,
     "unidades_paquete": 100
   },
   {
