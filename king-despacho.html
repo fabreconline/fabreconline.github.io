@@ -119,6 +119,9 @@
     .btn-outline:hover { background: var(--surface-subtle); }
     .btn-sm { padding: 6px 10px; font-size: 10.5px; border-radius: 8px; }
     .btn-sm svg { width: 12px; height: 12px; }
+    .btn-icon-solo { padding: 8px; min-width: 34px; }
+    .inline-icon { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; width: 13px; height: 13px; margin-right: 4px; flex-shrink: 0; }
+    .inline-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
     .content-area { flex: 1; padding: 24px 36px 90px; overflow-y: auto; max-width: 1540px; transition: padding 0.2s ease; }
     .view-pane { display: none !important; }
     .view-pane.active { display: block !important; }
@@ -195,18 +198,19 @@
     .entrega-info { flex: 1; min-width: 0; }
     .entrega-cliente { font-size: 13px; font-weight: 800; letter-spacing: -0.2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .entrega-cliente small { font-size: 10px; color: var(--text-muted); font-weight: 700; margin-left: 6px; font-family: monospace; }
-    .entrega-dir { font-size: 11.5px; color: var(--text-muted); font-weight: 700; line-height: 1.4; margin-top: 3px; }
+    .entrega-dir { font-size: 11.5px; color: var(--text-muted); font-weight: 700; line-height: 1.4; margin-top: 3px; display: flex; align-items: flex-start; gap: 4px; }
     .entrega-telefonos { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; align-items: center; }
     .tel-pill { font-size: 10.5px; font-weight: 700; color: var(--text); background: var(--surface-subtle); border: 1px solid var(--border); padding: 3px 8px; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: all 0.15s ease; }
     .tel-pill:hover { background: var(--border); }
     .tel-pill svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.2; }
     .tel-pill.llegada { background: #f3e8ff; color: #5b21b6; border-color: #ddd6fe; }
     body.dark .tel-pill.llegada { background: rgba(124,58,237,0.15); border-color: rgba(124,58,237,0.3); color: #c4b5fd; }
-    .paq-highlight-pill { font-size: 11px; font-weight: 900; background: var(--text); color: var(--surface); padding: 3px 9px; border-radius: 6px; letter-spacing: 0.3px; }
-    .pago-pill { font-size: 10.5px; font-weight: 900; padding: 3px 9px; border-radius: 6px; letter-spacing: 0.3px; display: inline-block; }
+    .paq-highlight-pill { font-size: 11px; font-weight: 900; background: var(--text); color: var(--surface); padding: 3px 9px; border-radius: 6px; letter-spacing: 0.3px; display: inline-flex; align-items: center; }
+    .pago-pill { font-size: 10.5px; font-weight: 900; padding: 3px 9px; border-radius: 6px; letter-spacing: 0.3px; display: inline-flex; align-items: center; gap: 3px; }
     .pago-pill.pagado { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
     .pago-pill.pendiente { background: var(--rose-bg); color: var(--rose); border: 1px solid var(--rose-border); }
-    .modelo-desglose-pill { font-size: 10.5px; font-weight: 800; background: var(--surface-subtle); border: 1px solid var(--border); color: var(--text); padding: 3px 8px; border-radius: 6px; max-width: 440px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .modelo-desglose-pill { font-size: 10.5px; font-weight: 800; background: var(--surface-subtle); border: 1px solid var(--border); color: var(--text); padding: 3px 8px; border-radius: 6px; max-width: 440px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-flex; align-items: center; }
+    .entrega-btn-recibo { align-self: center; }
     .empty-state { background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius); padding: 46px 20px; text-align: center; color: var(--text-subtle); }
     .empty-state .icon { width: 56px; height: 56px; margin: 0 auto 14px; border-radius: 16px; background: var(--surface-subtle); display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
     .empty-state .icon svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 1.8; }
@@ -289,7 +293,7 @@
       .panel-body { padding: 14px; }
       .carga-fields-grid { grid-template-columns: 1fr; gap: 8px; }
       .carga-field input { font-size: 13px; padding: 10px 12px; }
-      .entrega-item { padding: 12px; gap: 10px; }
+      .entrega-item { padding: 12px; gap: 10px; flex-wrap: wrap; }
       .entrega-cliente { font-size: 12.5px; }
       .entrega-dir { font-size: 11px; }
       .tel-pill { font-size: 10px; }
@@ -374,7 +378,6 @@
   </aside>
 
   <main class="content-area">
-
     <section id="paneDespachos" class="view-pane active">
       <div class="kpi-grid">
         <div class="kpi-card"><div><div class="kpi-label">Zonas por Despachar</div><div class="kpi-value" id="kpiZonasPendientes">0</div><div class="kpi-sub" id="kpiZonasPendientesSub">Sin zonas pendientes</div></div><div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div></div>
@@ -424,7 +427,6 @@
       <div class="metrics-section"><span class="metrics-section-title">02 · Evolución</span><span class="metrics-section-line"></span></div>
       <div class="panel"><div class="panel-header"><h2 class="panel-title">Paquetes Despachados por Día</h2><button onclick="descargarGraficoImagen('chartEvolucion', 'evolucion_diaria')" class="btn btn-outline btn-sm"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>PNG</button></div><div class="panel-body"><div style="position: relative; height: 300px;"><canvas id="chartEvolucion"></canvas></div></div></div>
     </section>
-
   </main>
 
   <div id="toast" class="toast">Notificación</div>
@@ -458,11 +460,19 @@
     const KEY_ACTIVE_TAB = "fabrec_despacho_active_tab_v1";
     const KEY_CIERRES_VENTAS = "fabrec_ventas_cierres_v4";
 
-    const COLORES_ZONA = { la_parada: '#eab308', cono_norte: '#2563eb', santa_anita: '#7c3aed', cono_sur: '#16a34a', oficina: '#0a0a0a' };
-    const NOMBRE_ZONA_POR_KEY = { la_parada: 'La Parada', cono_norte: 'Cono Norte', santa_anita: 'Santa Anita / Huaycán', cono_sur: 'Cono Sur' };
+    const COLORES_ZONA = {
+      la_parada: '#eab308', cono_norte: '#2563eb', santa_anita: '#7c3aed',
+      cono_sur: '#16a34a', provincia: '#dc2626', oficina: '#0a0a0a'
+    };
+    const NOMBRE_ZONA_POR_KEY = {
+      la_parada: 'La Parada', cono_norte: 'Cono Norte',
+      santa_anita: 'Santa Anita / Huaycán', cono_sur: 'Cono Sur', provincia: 'Provincia'
+    };
 
-    // Mínimo de alto en mm para evitar que el navegador rote el ticket (landscape)
+    const COLORES_VENDEDOR = {};
     const TICKET_MIN_HEIGHT_MM = 210;
+    const TICKET_PAGE_HEIGHT_MM = 240;
+    const A4_MARGEN_MM = 6;
 
     let zonasDespacho = [];
     let estadosDespacho = {};
@@ -475,6 +485,17 @@
     function escaparHTML(s) {
       return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     }
+    function parseFechaLocal(iso) {
+      if (!iso) return null;
+      if (iso instanceof Date) return isNaN(iso.getTime()) ? null : iso;
+      const s = String(iso).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+        const [y, mo, d] = s.split('-').map(Number);
+        return new Date(y, mo - 1, d);
+      }
+      const d = new Date(s);
+      return isNaN(d.getTime()) ? null : d;
+    }
     function formatearMonto(n) {
       n = Number(n) || 0; const abs = Math.abs(n);
       if (abs >= 1e6) return 'S/ ' + (n/1e6).toFixed(2).replace(/\.00$/, '') + 'M';
@@ -482,19 +503,49 @@
       return 'S/ ' + n.toFixed(2);
     }
     function formatearFechaLarga(iso) {
-      if (!iso) return '—';
-      try { const d = new Date(iso); if (isNaN(d.getTime())) return '—'; return d.toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' }) + ' • ' + d.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }); } catch (e) { return '—'; }
+      const d = parseFechaLocal(iso); if (!d) return '—';
+      try { return d.toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' }) + ' • ' + d.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }); } catch (e) { return '—'; }
     }
     function fechaCorta(iso) {
-      if (!iso) return '—';
-      try { const d = new Date(iso); if (isNaN(d.getTime())) return '—'; return d.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: '2-digit' }); } catch (e) { return '—'; }
+      const d = parseFechaLocal(iso); if (!d) return '—';
+      try { return d.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: '2-digit' }); } catch (e) { return '—'; }
+    }
+    function fechaSoloDia(iso) {
+      const d = parseFechaLocal(iso); if (!d) return '—';
+      try { return d.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' }); } catch (e) { return '—'; }
     }
     function fechaCompacta(d) { return String(d.getDate()).padStart(2, '0') + String(d.getMonth() + 1).padStart(2, '0') + String(d.getFullYear()).slice(-2); }
     function esHoy(iso) {
-      if (!iso) return false;
-      try { const d = new Date(iso); const h = new Date(); return d.getFullYear() === h.getFullYear() && d.getMonth() === h.getMonth() && d.getDate() === h.getDate(); } catch (e) { return false; }
+      const d = parseFechaLocal(iso); if (!d) return false;
+      const h = new Date();
+      return d.getFullYear() === h.getFullYear() && d.getMonth() === h.getMonth() && d.getDate() === h.getDate();
     }
     function colorDeZona(zonaClave) { return COLORES_ZONA[zonaClave] || '#6b7280'; }
+    function colorClaro(hex, mixPct) {
+      mixPct = (typeof mixPct === 'number') ? mixPct : 0.88;
+      let h = String(hex || '#000000').replace('#','');
+      if (h.length === 3) h = h.split('').map(c => c+c).join('');
+      const r = parseInt(h.substr(0,2),16) || 0;
+      const g = parseInt(h.substr(2,2),16) || 0;
+      const b = parseInt(h.substr(4,2),16) || 0;
+      const m = mixPct;
+      const nr = Math.round(r * (1-m) + 255 * m);
+      const ng = Math.round(g * (1-m) + 255 * m);
+      const nb = Math.round(b * (1-m) + 255 * m);
+      return `rgb(${nr},${ng},${nb})`;
+    }
+    function colorDeRecibo(vendedor) {
+      if (!vendedor) return '#000000';
+      const v = String(vendedor).trim();
+      if (!v) return '#000000';
+      const vl = v.toLowerCase();
+      if (vl === 'oficina' || vl === 'general' || vl === 'sin especificar' || vl === 'administracion' || vl === 'administración') return '#000000';
+      if (COLORES_VENDEDOR[vl]) return COLORES_VENDEDOR[vl];
+      const paleta = ['#1d4ed8', '#6d28d9', '#b91c1c', '#047857', '#c2410c', '#0e7490', '#be185d', '#4338ca'];
+      let hash = 0;
+      for (let i = 0; i < vl.length; i++) hash = (hash << 5) - hash + vl.charCodeAt(i);
+      return paleta[Math.abs(hash) % paleta.length];
+    }
     function mostrarToast(msg) {
       const t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show');
       clearTimeout(t._timer); t._timer = setTimeout(() => t.classList.remove('show'), 3200);
@@ -601,9 +652,14 @@
       if (actual) lineas.push(actual);
       return lineas.length > 0 ? lineas : [''];
     }
+    function fechaEntregaDeZona(zona) {
+      if (!zona) return null;
+      const e0 = Array.isArray(zona.entregas) && zona.entregas.length > 0 ? zona.entregas[0] : null;
+      return (e0 && (e0.fecha_entrega || e0.fecha_entrega_solicitada || e0.fecha_entrega_programada)) || zona.fecha_entrega || zona.fecha_envio;
+    }
 
     // ================================================================
-    // IMPRESIÓN VÍA IFRAME SRCDOC
+    // IMPRESIÓN
     // ================================================================
     function imprimirEnIframe(html) {
       let iframe = document.getElementById('printFrame');
@@ -705,9 +761,11 @@
             device_id: lote.device_id || '', cantidad_zonas: lote.cantidad_zonas || 0,
             zonaClave: z.zonaClave || '', zona: z.zona || 'Sin zona',
             codigo_carguillo: z.codigo_carguillo || `${lote.codigo_lote || 'lote'}_${z.zonaClave || 'z'}`,
+            numero_carro: z.numero_carro || '',
             total_ventas: parseInt(z.total_ventas) || 0,
             total_paquetes: parseInt(z.total_paquetes) || 0,
             total_monto: parseFloat(z.total_monto) || 0,
+            fecha_entrega: z.fecha_entrega || '',
             productos: Array.isArray(z.productos) ? z.productos : [],
             entregas: Array.isArray(z.entregas) ? z.entregas : []
           });
@@ -831,6 +889,19 @@
     }
 
     // ================================================================
+    // ÍCONOS SVG
+    // ================================================================
+    const SVG_PHONE = '<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
+    const SVG_PIN = '<svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+    const SVG_BOX = '<svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>';
+    const SVG_TAG = '<svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>';
+    const SVG_CHECK = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+    const SVG_MONEY = '<svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>';
+    const SVG_TRUCK = '<svg viewBox="0 0 24 24"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>';
+    const SVG_PRINTER = '<svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>';
+    function iconInline(svg) { return `<span class="inline-icon">${svg}</span>`; }
+
+    // ================================================================
     // RENDER DESPACHOS
     // ================================================================
     function renderizarDespachos() {
@@ -854,7 +925,7 @@
       }
       actualizarKPIsDespachos(zonasDespacho.filter(filtrarPorFecha));
       if (lista.length === 0) {
-        cont.innerHTML = `<div class="empty-state"><div class="icon"><svg viewBox="0 0 24 24"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div><div class="titulo">Sin despachos en este filtro</div><div class="desc">Usa el botón <strong>+</strong> para pegar tu JSON.</div></div>`;
+        cont.innerHTML = `<div class="empty-state"><div class="icon">${SVG_TRUCK}</div><div class="titulo">Sin despachos en este filtro</div><div class="desc">Usa el botón <strong>+</strong> para pegar tu JSON.</div></div>`;
         return;
       }
       cont.innerHTML = lista.map(z => renderCardDespacho(z)).join('');
@@ -880,7 +951,20 @@
         const pendienteMonto = Number(e.monto_pendiente) || 0;
         const totalMonto = Number(e.monto_total) || 0;
         const pagado = (e.estado_pago === 'PAGADO') || (pendienteMonto <= 0 && totalMonto > 0);
-        const pagoHTML = pagado ? `<span class="pago-pill pagado">✓ PAGADO</span>` : `<span class="pago-pill pendiente">💰 COBRAR S/ ${pendienteMonto.toFixed(2)}</span>`;
+        const esEnvioTercero = !!e.envio_tercero;
+
+        const pagoHTML = pagado
+          ? `<span class="pago-pill pagado">${iconInline(SVG_CHECK)}PAGADO</span>`
+          : `<span class="pago-pill pendiente">${iconInline(SVG_MONEY)}COBRAR S/ ${pendienteMonto.toFixed(2)}</span>`;
+
+        const desgloseHTML = desgloseModelos
+          ? `<span class="modelo-desglose-pill" title="${escaparHTML(desgloseModelos)}">${iconInline(SVG_TAG)}${escaparHTML(desgloseModelos)}</span>`
+          : '';
+
+        const terceroHTML = esEnvioTercero && e.direccion_llegada
+          ? `<span class="modelo-desglose-pill" title="${escaparHTML(e.direccion_llegada)}">${iconInline(SVG_PIN)}Llegada: ${escaparHTML(e.direccion_llegada)}</span>`
+          : '';
+
         return `
           <div class="entrega-item ${entregado ? 'entregado' : ''}" data-codigo="${escaparHTML(e.codigo)}">
             <div class="entrega-check-wrap">
@@ -889,13 +973,14 @@
             </div>
             <div class="entrega-info">
               <div class="entrega-cliente">${escaparHTML(e.cliente || 'Sin nombre')}${e.codigo ? `<small>${escaparHTML(e.codigo)}</small>` : ''}</div>
-              <div class="entrega-dir">📍 ${escaparHTML(e.direccion || 'Sin dirección')}</div>
+              <div class="entrega-dir">${iconInline(SVG_PIN)}<span>${escaparHTML(e.direccion || 'Sin dirección')}</span></div>
               <div class="entrega-telefonos">
-                <span class="paq-highlight-pill">📦 ${paqEntrega} paq</span>
-                ${desgloseModelos ? `<span class="modelo-desglose-pill" title="${escaparHTML(desgloseModelos)}">🏷️ ${escaparHTML(desgloseModelos)}</span>` : ''}
+                <span class="paq-highlight-pill">${iconInline(SVG_BOX)}${paqEntrega} paq</span>
+                ${desgloseHTML}
+                ${terceroHTML}
                 ${pagoHTML}
-                ${telContacto ? `<a class="tel-pill" href="tel:${telContacto}" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>${escaparHTML(e.telefono_contacto)}</a>` : ''}
-                ${telLlegada ? `<a class="tel-pill llegada" href="tel:${telLlegada}" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Llegada: ${escaparHTML(e.telefono_llegada)}</a>` : ''}
+                ${telContacto ? `<a class="tel-pill" href="tel:${telContacto}" onclick="event.stopPropagation();">${SVG_PHONE}${escaparHTML(e.telefono_contacto)}</a>` : ''}
+                ${telLlegada ? `<a class="tel-pill llegada" href="tel:${telLlegada}" onclick="event.stopPropagation();">${SVG_PHONE}Llegada: ${escaparHTML(e.telefono_llegada)}</a>` : ''}
               </div>
             </div>
           </div>
@@ -903,6 +988,7 @@
       }).join('');
 
       const dc = st.datos_carga || {};
+      const fechaEntrega = fechaEntregaDeZona(z);
 
       return `
         <div class="despacho-card ${esEnviado ? 'completado' : ''}" data-key="${escaparHTML(z.codigo_carguillo)}">
@@ -913,7 +999,7 @@
               <div class="despacho-card-meta">
                 <span class="codigo">${escaparHTML(z.codigo_carguillo)}</span><span>•</span>
                 <span>${z.total_ventas} venta${z.total_ventas === 1 ? '' : 's'}</span><span>•</span>
-                <span>${fechaCorta(z.fecha_envio)}</span>
+                <span>Entrega: ${fechaCorta(fechaEntrega)}</span>
                 <span class="estado-pill ${esEnviado ? 'enviado' : 'pendiente'}">${esEnviado ? 'Enviado' : 'Pendiente'}</span>
               </div>
             </div>
@@ -922,17 +1008,13 @@
               <div class="stat-mini"><div class="stat-mini-value">${counts.entregadas}/${counts.totalEntregas}</div><div class="stat-mini-label">enviados</div></div>
             </div>
             <div class="card-actions-group">
-              <button class="btn btn-dark btn-sm" onclick="event.stopPropagation(); imprimirCarguillo('${escaparHTML(z.codigo_carguillo)}')" title="Imprimir carguillo + hoja de ruta (A4)">
-                <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              <button class="btn btn-dark btn-sm" onclick="event.stopPropagation(); imprimirCarguillo('${escaparHTML(z.codigo_carguillo)}')" title="Imprimir A4 (hoja de ruta + carguillo + checkeo)">
+                ${SVG_PRINTER}
                 Carguillo
               </button>
-              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); imprimirSoloRecibos('${escaparHTML(z.codigo_carguillo)}')" title="Imprimir solo los recibos de venta (ticketera 80mm)">
+              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); imprimirSoloRecibos('${escaparHTML(z.codigo_carguillo)}')" title="Imprimir todos los recibos (ticketera 80mm, uno por hoja)">
                 <svg viewBox="0 0 24 24"><path d="M4 7V3h16v4M4 7h16v10H4z M8 11h8M8 14h5"/></svg>
                 Recibos
-              </button>
-              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); imprimirSoloHojaRuta('${escaparHTML(z.codigo_carguillo)}')" title="Imprimir hoja de ruta del chofer (ticketera 80mm)">
-                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                Hoja de ruta
               </button>
             </div>
             <svg class="chevron-toggle" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -940,7 +1022,7 @@
           <div class="progress-bar-track"><div class="progress-bar-fill ${claseProgreso}" style="width:${porcentaje}%"></div></div>
           <div class="despacho-card-body">
             <div class="bloque-interno">
-              <div class="bloque-titulo">🚚 Datos de carga y transporte</div>
+              <div class="bloque-titulo">${iconInline(SVG_TRUCK)}Datos de carga y transporte</div>
               <div class="carga-fields-grid">
                 <div class="carga-field"><label>Encargado de carga</label><input type="text" value="${escaparHTML(dc.encargado_carga || '')}" placeholder="Nombre..." onchange="guardarCampoCarga('${escaparHTML(z.codigo_carguillo)}', 'encargado_carga', this.value)"></div>
                 <div class="carga-field"><label>N° de carro</label><input type="text" value="${escaparHTML(dc.n_carro || '')}" placeholder="Placa / número..." onchange="guardarCampoCarga('${escaparHTML(z.codigo_carguillo)}', 'n_carro', this.value)"></div>
@@ -949,11 +1031,11 @@
               </div>
             </div>
             <div class="bloque-interno">
-              <div class="bloque-titulo">📦 Productos a cargar <span class="badge-count">${z.productos.length} modelo${z.productos.length === 1 ? '' : 's'}</span></div>
+              <div class="bloque-titulo">${iconInline(SVG_BOX)}Productos a cargar <span class="badge-count">${z.productos.length} modelo${z.productos.length === 1 ? '' : 's'}</span></div>
               ${z.productos.length > 0 ? `<table class="mini-table"><thead><tr><th>Producto</th><th style="text-align:right;">Cantidad</th></tr></thead><tbody>${productosRows}<tr class="total-row"><td>TOTAL</td><td class="num">${z.total_paquetes} paq</td></tr></tbody></table>` : '<div style="font-size:11.5px; color:var(--text-subtle); padding:10px;">Sin productos registrados.</div>'}
             </div>
             <div class="bloque-interno">
-              <div class="bloque-titulo">📍 Entregas <span class="badge-count">${counts.entregadas} / ${counts.totalEntregas} enviados</span></div>
+              <div class="bloque-titulo">${iconInline(SVG_PIN)}Entregas <span class="badge-count">${counts.entregadas} / ${counts.totalEntregas} enviados</span></div>
               ${entregasHTML || '<div style="font-size:11.5px; color:var(--text-subtle); padding:10px;">Sin entregas registradas.</div>'}
             </div>
           </div>
@@ -1023,154 +1105,315 @@
     }
 
     // ================================================================
-    // GENERACIÓN A4
+    // A4 en 3 franjas · ORDEN: Hoja de ruta · Carguillo · Checkeo
     // ================================================================
-    async function generarCanvasA4Vertical(zona) {
-      if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch (e) {} }
+    function generarCanvasA4Completo(zona, st, mm) {
       const DPI = 200;
-      const mm = (v) => Math.round(v * DPI / 25.4);
-      const A4_W = mm(210), A4_H = mm(297), mitadH = mm(148.5);
+      const A4_W = mm(210), A4_H = mm(297);
       const canvas = document.createElement('canvas');
       canvas.width = A4_W; canvas.height = A4_H;
       const ctx = canvas.getContext('2d');
       ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, A4_W, A4_H);
-      const st = getEstadoDespacho(zona);
-      const counts = contarEntregasDeZona(zona);
+
       const color = colorDeZona(zona.zonaClave);
-      const MARGEN_X = mm(6), MARGEN_Y = mm(6);
-      const W_UTIL = A4_W - (MARGEN_X * 2);
-      const H_UTIL = mitadH - MARGEN_Y - mm(4);
-      dibujarBloqueCarguillo(ctx, MARGEN_X, MARGEN_Y, W_UTIL, H_UTIL, zona, st, counts, color, mm);
-      ctx.strokeStyle = '#7a7a7a'; ctx.setLineDash([mm(3), mm(2)]); ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(MARGEN_X, mitadH); ctx.lineTo(A4_W - MARGEN_X, mitadH); ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.fillStyle = '#444444'; ctx.font = `700 ${mm(2.2)}px Montserrat, sans-serif`; ctx.textAlign = 'center';
-      ctx.fillText('— cortar por la línea —', A4_W / 2, mitadH + mm(5));
-      return { canvas, mitadH, A4_W, A4_H, mm };
-    }
-    function dibujarBloqueCarguillo(ctx, x0, y0, wTotal, hTotal, zona, st, counts, color, mm) {
-      const W_CARGUILLO = Math.round(wTotal * 0.5);
-      const W_CHOFER = wTotal - W_CARGUILLO;
-      dibujarColumnaCarguillo(ctx, x0, y0, W_CARGUILLO, hTotal, zona, color, mm);
-      ctx.strokeStyle = '#bbbbbb'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(x0 + W_CARGUILLO, y0 + mm(2)); ctx.lineTo(x0 + W_CARGUILLO, y0 + hTotal - mm(2)); ctx.stroke();
-      dibujarColumnaChofer(ctx, x0 + W_CARGUILLO, y0, W_CHOFER, hTotal, zona, st, color, mm);
-    }
-    function dibujarColumnaCarguillo(ctx, x0, y0, w, h, zona, color, mm) {
-      const M = mm(4.5), x = x0 + M, ancho = w - M * 2, xRight = x0 + w - M;
-      let y = y0 + M;
-      const st = getEstadoDespacho(zona);
       const dc = st.datos_carga || {};
-      ctx.fillStyle = color; ctx.fillRect(x0, y0, w, mm(1.5));
-      ctx.fillStyle = '#0a0a0a'; ctx.textAlign = 'left';
-      ctx.font = `900 ${mm(5.4)}px Montserrat, sans-serif`; ctx.fillText('FABREC', x, y + mm(4.6));
-      ctx.fillStyle = '#333333'; ctx.font = `700 ${mm(2.4)}px Montserrat, sans-serif`; ctx.fillText('Comprobante de carga', x, y + mm(8.4));
-      ctx.textAlign = 'right'; ctx.fillStyle = color; ctx.font = `900 ${mm(2.7)}px monospace`;
-      ctx.fillText(String(zona.codigo_carguillo || ''), xRight, y + mm(3.8));
-      ctx.fillStyle = '#333333'; ctx.font = `700 ${mm(2.3)}px Montserrat, sans-serif`;
-      const fEnvio = new Date(zona.fecha_envio || Date.now());
-      ctx.fillText(fEnvio.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' }), xRight, y + mm(8.4));
-      y += mm(12.5);
-      ctx.strokeStyle = '#bbbbbb'; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(xRight, y); ctx.stroke();
-      y += mm(5.5);
-      ctx.fillStyle = color; ctx.fillRect(x, y - mm(2.2), mm(1.2), mm(10));
-      ctx.fillStyle = '#0a0a0a'; ctx.textAlign = 'left';
-      ctx.font = `900 ${mm(7.5)}px Montserrat, sans-serif`;
-      ctx.fillText(truncarTexto(ctx, String(zona.zona || ''), ancho - mm(5)), x + mm(3.5), y + mm(5.8));
-      ctx.fillStyle = '#333333'; ctx.font = `800 ${mm(2.7)}px Montserrat, sans-serif`;
-      ctx.fillText(`${zona.total_paquetes} paquetes · ${zona.total_ventas} venta${zona.total_ventas === 1 ? '' : 's'}`, x + mm(3.5), y + mm(10.6));
-      y += mm(16);
-      const cuadroH = mm(30);
-      ctx.strokeStyle = '#0a0a0a'; ctx.lineWidth = mm(0.4); ctx.strokeRect(x, y, ancho, cuadroH);
-      const colW = ancho / 2, rowH = cuadroH / 2;
-      ctx.beginPath();
-      ctx.moveTo(x + colW, y); ctx.lineTo(x + colW, y + cuadroH);
-      ctx.moveTo(x, y + rowH); ctx.lineTo(x + ancho, y + rowH); ctx.stroke();
-      const campos = [
-        { cx: x + mm(2.5), cy: y + mm(4), label: 'ENCARGADO DE CARGA', key: 'encargado_carga', anchoCampo: colW - mm(5) },
-        { cx: x + colW + mm(2.5), cy: y + mm(4), label: 'N° DE CARRO', key: 'n_carro', anchoCampo: colW - mm(5) },
-        { cx: x + mm(2.5), cy: y + rowH + mm(4), label: 'CHOFER', key: 'chofer', anchoCampo: colW - mm(5) },
-        { cx: x + colW + mm(2.5), cy: y + rowH + mm(4), label: 'AYUDANTE', key: 'ayudante', anchoCampo: colW - mm(5) }
-      ];
-      campos.forEach(c => {
-        ctx.fillStyle = '#0a0a0a'; ctx.font = `900 ${mm(1.9)}px Montserrat, sans-serif`; ctx.textAlign = 'left';
-        ctx.fillText(c.label, c.cx, c.cy);
-        const valor = dc[c.key] || '';
-        if (valor) { ctx.fillStyle = '#0a0a0a'; ctx.font = `800 ${mm(2.4)}px Montserrat, sans-serif`; ctx.fillText(truncarTexto(ctx, valor, c.anchoCampo), c.cx, c.cy + mm(6)); }
-        ctx.strokeStyle = '#666666'; ctx.lineWidth = mm(0.18);
-        ctx.beginPath(); ctx.moveTo(c.cx, c.cy + mm(7.2)); ctx.lineTo(c.cx + c.anchoCampo, c.cy + mm(7.2)); ctx.stroke();
-      });
-      y += cuadroH + mm(5);
-      ctx.fillStyle = '#0a0a0a'; ctx.font = `900 ${mm(3.1)}px Montserrat, sans-serif`; ctx.textAlign = 'left';
-      ctx.fillText('PRODUCTOS A CARGAR', x, y);
-      y += mm(2.5);
-      const tablaTop = y, rowH2 = mm(6.2);
-      const prods = zona.productos || [];
-      const tablaH = (prods.length + 2) * rowH2;
-      ctx.fillStyle = '#0a0a0a'; ctx.fillRect(x, tablaTop, ancho, rowH2);
-      ctx.fillStyle = '#ffffff'; ctx.font = `900 ${mm(2.2)}px Montserrat, sans-serif`;
-      ctx.textAlign = 'left'; ctx.fillText('PRODUCTO', x + mm(2.5), tablaTop + mm(4.1));
-      ctx.textAlign = 'right'; ctx.fillText('PAQ', x + ancho - mm(2.5), tablaTop + mm(4.1));
-      let yFila = tablaTop + rowH2;
-      ctx.strokeStyle = '#cccccc'; ctx.lineWidth = mm(0.18);
-      prods.forEach((p, i) => {
-        if (i % 2 === 1) { ctx.fillStyle = '#f5f5f5'; ctx.fillRect(x, yFila, ancho, rowH2); }
-        ctx.fillStyle = '#0a0a0a'; ctx.textAlign = 'left'; ctx.font = `800 ${mm(2.7)}px Montserrat, sans-serif`;
-        ctx.fillText(truncarTexto(ctx, String(p.producto || p.modelo || 'Producto'), ancho - mm(18)), x + mm(2.5), yFila + mm(4.1));
-        ctx.textAlign = 'right'; ctx.font = `900 ${mm(2.7)}px Montserrat, sans-serif`;
-        ctx.fillText(String(p.paquetes || p.cantidad || 0), x + ancho - mm(2.5), yFila + mm(4.1));
-        ctx.beginPath(); ctx.moveTo(x, yFila + rowH2); ctx.lineTo(x + ancho, yFila + rowH2); ctx.stroke();
-        yFila += rowH2;
-      });
-      ctx.fillStyle = '#0a0a0a'; ctx.fillRect(x, yFila, ancho, rowH2);
-      ctx.fillStyle = '#ffffff'; ctx.font = `900 ${mm(2.8)}px Montserrat, sans-serif`;
-      ctx.textAlign = 'left'; ctx.fillText('TOTAL', x + mm(2.5), yFila + mm(4.1));
-      ctx.textAlign = 'right'; ctx.font = `900 ${mm(3)}px Montserrat, sans-serif`;
-      ctx.fillText(`${zona.total_paquetes} paq`, x + ancho - mm(2.5), yFila + mm(4.1));
-      ctx.strokeStyle = '#0a0a0a'; ctx.lineWidth = mm(0.4); ctx.strokeRect(x, tablaTop, ancho, tablaH);
-      const pieY = y0 + h - mm(9);
-      const firmaW = mm(52);
-      const firmaX = x + (ancho - firmaW) / 2;
-      ctx.strokeStyle = '#0a0a0a'; ctx.lineWidth = mm(0.3);
-      ctx.beginPath(); ctx.moveTo(firmaX, pieY); ctx.lineTo(firmaX + firmaW, pieY); ctx.stroke();
-      ctx.fillStyle = '#0a0a0a'; ctx.font = `800 ${mm(2.2)}px Montserrat, sans-serif`; ctx.textAlign = 'center';
-      ctx.fillText('Firma / sello', x + ancho / 2, pieY + mm(3.6));
+      const prods = Array.isArray(zona.productos) ? zona.productos : [];
+      const SEC_H = A4_H / 3;
+
+      // 1) Hoja de ruta
+      dibujarHojaRuta(ctx, 0, 0, A4_W, SEC_H, zona, st, color, mm);
+      dibujarLineaCorte(ctx, A4_W, SEC_H, mm);
+      // 2) Carguillo
+      dibujarCarguillo(ctx, 0, SEC_H, A4_W, SEC_H, zona, dc, prods, color, mm);
+      dibujarLineaCorte(ctx, A4_W, SEC_H * 2, mm);
+      // 3) Checkeo de carga
+      dibujarCheckeo(ctx, 0, SEC_H * 2, A4_W, SEC_H, zona, dc, prods, color, mm);
+      return canvas;
     }
-    function dibujarColumnaChofer(ctx, x0, y0, w, h, zona, st, color, mm) {
-      const M = mm(4.5), xL = x0 + M, xR = x0 + w - M, ancho = w - M * 2;
-      let y = y0 + M;
-      ctx.fillStyle = color; ctx.fillRect(x0, y0, w, mm(1.5));
-      ctx.fillStyle = color; ctx.font = `900 ${mm(2.7)}px monospace`; ctx.textAlign = 'left';
-      ctx.fillText(String(zona.codigo_carguillo || ''), xL, y + mm(3.8));
-      ctx.fillStyle = '#0a0a0a'; ctx.textAlign = 'right';
-      ctx.font = `900 ${mm(5.4)}px Montserrat, sans-serif`; ctx.fillText('FABREC', xR, y + mm(4.6));
-      const fEnvio = new Date(zona.fecha_envio || Date.now());
-      ctx.fillStyle = '#333333'; ctx.textAlign = 'left'; ctx.font = `700 ${mm(2.3)}px Montserrat, sans-serif`;
-      ctx.fillText(fEnvio.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' }), xL, y + mm(8.4));
-      ctx.textAlign = 'right'; ctx.font = `700 ${mm(2.4)}px Montserrat, sans-serif`;
-      ctx.fillText('Hoja de ruta · Chofer', xR, y + mm(8.4));
-      y += mm(12.5);
-      ctx.strokeStyle = '#bbbbbb'; ctx.beginPath(); ctx.moveTo(xL, y); ctx.lineTo(xR, y); ctx.stroke();
-      y += mm(5.5);
-      const colorBarW = mm(1.2), colorBarH = mm(10);
-      ctx.fillStyle = color; ctx.fillRect(xR - colorBarW, y - mm(2.2), colorBarW, colorBarH);
-      ctx.fillStyle = '#0a0a0a'; ctx.textAlign = 'right';
-      ctx.font = `900 ${mm(7.5)}px Montserrat, sans-serif`;
-      ctx.fillText(truncarTexto(ctx, String(zona.zona || ''), ancho - mm(6)), xR - colorBarW - mm(3), y + mm(5.8));
-      ctx.fillStyle = '#333333'; ctx.font = `800 ${mm(2.7)}px Montserrat, sans-serif`; ctx.textAlign = 'right';
-      ctx.fillText(`${zona.entregas.length} entrega${zona.entregas.length === 1 ? '' : 's'} · ${zona.total_paquetes} paquetes totales`, xR, y + mm(10.6));
-      y += mm(15);
-      const entregasDisponibles = (y0 + h - mm(7)) - y;
-      const numEntregas = Math.max(1, zona.entregas.length);
-      const altoDisponible = entregasDisponibles / numEntregas;
-      const altoEntrega = Math.max(mm(15), Math.min(mm(19), altoDisponible));
-      const boxH = altoEntrega - mm(0.6);
-      const factor = Math.min(1, altoEntrega / mm(19));
-      const fsTitulo = mm(3.1) * Math.max(0.7, factor);
-      const fsTexto = mm(2.4) * Math.max(0.7, factor);
-      const fsModelos = mm(2.35) * Math.max(0.7, factor);
-      const fsPago = mm(2.3) * Math.max(0.7, factor);
-      zona.entregas.forEach((e, idx) => {
+
+    function dibujarLineaCorte(ctx, w, y, mm) {
+      ctx.strokeStyle = '#888888'; ctx.setLineDash([mm(2.5), mm(1.5)]); ctx.lineWidth = mm(0.25);
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#888888'; ctx.font = `700 ${mm(2)}px Montserrat, sans-serif`; ctx.textAlign = 'center';
+      ctx.fillText('✂ cortar aquí', w / 2, y - mm(0.6));
+    }
+
+    // --- Bloque inputs (reutilizable) ---
+    function dibujarBloqueInputs(ctx, x, y, w, h, dc, color, mm) {
+      const campos = [
+        { label: 'ENCARGADO DE CARGA', val: dc.encargado_carga || '' },
+        { label: 'N° DE CARRO', val: dc.n_carro || '' },
+        { label: 'CHOFER', val: dc.chofer || '' },
+        { label: 'AYUDANTE', val: dc.ayudante || '' }
+      ];
+      const rowH = h / 4;
+      let yy = y;
+      campos.forEach((c, i) => {
+        if (i % 2 === 0) {
+          ctx.fillStyle = colorClaro(color, 0.94);
+          ctx.fillRect(x, yy, w, rowH);
+        }
+        ctx.fillStyle = color; ctx.font = `900 ${mm(2.3)}px Montserrat, sans-serif`; ctx.textAlign = 'left';
+        ctx.fillText(c.label, x + mm(2.5), yy + mm(3.2));
+        if (c.val) {
+          ctx.fillStyle = '#0a0a0a'; ctx.font = `800 ${mm(3.6)}px Montserrat, sans-serif`;
+          ctx.fillText(truncarTexto(ctx, c.val, w - mm(5)), x + mm(2.5), yy + rowH - mm(1.6));
+        }
+        ctx.strokeStyle = color; ctx.lineWidth = mm(0.3);
+        ctx.beginPath(); ctx.moveTo(x + mm(2.5), yy + rowH - mm(0.5)); ctx.lineTo(x + w - mm(2.5), yy + rowH - mm(0.5)); ctx.stroke();
+        yy += rowH;
+      });
+      ctx.strokeStyle = color; ctx.lineWidth = mm(0.35);
+      ctx.strokeRect(x, y, w, h);
+    }
+
+    // --- Sección: CARGUILLO ---
+    function dibujarCarguillo(ctx, x0, y0, w, h, zona, dc, prods, color, mm) {
+      prods = Array.isArray(prods) ? prods : [];
+      const M = mm(6);
+      const xL = x0 + M, xR = x0 + w - M;
+      const ancho = xR - xL;
+      const fechaEntrega = fechaEntregaDeZona(zona);
+      const colorBg = colorClaro(color, 0.9);
+      const colorBorde = color;
+
+      // Barra superior de color
+      ctx.fillStyle = color; ctx.fillRect(x0, y0, w, mm(4));
+
+      let y = y0 + mm(8);
+      // Header (sin código de carguillo)
+      ctx.fillStyle = color; ctx.textAlign = 'left';
+      ctx.font = `900 ${mm(13)}px Montserrat, sans-serif`;
+      ctx.fillText('Carguillo', xL, y + mm(9));
+
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#0a0a0a'; ctx.font = `800 ${mm(3.6)}px Montserrat, sans-serif`;
+      ctx.fillText('Fecha de entrega: ' + fechaSoloDia(fechaEntrega), xR, y + mm(9));
+
+      // Zona + paquetes (SIN "n ventas")
+      ctx.textAlign = 'left'; ctx.fillStyle = '#0a0a0a';
+      ctx.font = `900 ${mm(5.2)}px Montserrat, sans-serif`;
+      ctx.fillText(truncarTexto(ctx, String(zona.zona || ''), ancho - mm(60)), xL, y + mm(15));
+      ctx.fillStyle = '#333333'; ctx.font = `800 ${mm(3.2)}px Montserrat, sans-serif`;
+      ctx.fillText(`${zona.total_paquetes} paquetes`, xL, y + mm(19.5));
+
+      y += mm(22);
+      ctx.strokeStyle = colorBorde; ctx.lineWidth = mm(0.5);
+      ctx.beginPath(); ctx.moveTo(xL, y); ctx.lineTo(xR, y); ctx.stroke();
+      y += mm(4);
+
+      const colGap = mm(5);
+      const colLeftW = mm(60);
+      const colRightW = ancho - colLeftW - colGap;
+      const xLeft = xL;
+      const xRight = xL + colLeftW + colGap;
+      const yContenido = y;
+      const altoContenido = (y0 + h - mm(4)) - y;
+
+      // LEFT: inputs
+      ctx.fillStyle = color; ctx.font = `900 ${mm(2.8)}px Montserrat, sans-serif`; ctx.textAlign = 'left';
+      ctx.fillText('DATOS DE CARGA', xLeft, yContenido + mm(3));
+      const yInputs = yContenido + mm(5);
+      const altoInputs = altoContenido - mm(5);
+      dibujarBloqueInputs(ctx, xLeft, yInputs, colLeftW, altoInputs, dc, color, mm);
+
+      // RIGHT: tabla productos
+      ctx.fillStyle = color; ctx.font = `900 ${mm(2.8)}px Montserrat, sans-serif`; ctx.textAlign = 'left';
+      ctx.fillText('PRODUCTOS A CARGAR', xRight, yContenido + mm(3));
+      const yTabla = yContenido + mm(5);
+      const rowP = mm(7);
+      const colProdW = colRightW;
+
+      ctx.fillStyle = color; ctx.fillRect(xRight, yTabla, colProdW, rowP);
+      ctx.fillStyle = '#ffffff'; ctx.font = `900 ${mm(3)}px Montserrat, sans-serif`;
+      ctx.textAlign = 'left'; ctx.fillText('PRODUCTO', xRight + mm(2.5), yTabla + rowP - mm(2.4));
+      ctx.textAlign = 'right'; ctx.fillText('PAQUETES', xRight + colProdW - mm(2.5), yTabla + rowP - mm(2.4));
+
+      let yFila = yTabla + rowP;
+      const espTab = (yInputs + altoInputs) - yFila - rowP;
+      const maxFilas = Math.max(1, Math.floor(espTab / rowP));
+      const filasMostrar = prods.slice(0, maxFilas);
+
+      filasMostrar.forEach((p, i) => {
+        ctx.fillStyle = (i % 2 === 0) ? '#ffffff' : colorBg;
+        ctx.fillRect(xRight, yFila, colProdW, rowP);
+        ctx.fillStyle = '#0a0a0a'; ctx.font = `700 ${mm(3.3)}px Montserrat, sans-serif`;
+        ctx.textAlign = 'left'; ctx.fillText(truncarTexto(ctx, p.producto || 'Producto', colProdW - mm(24)), xRight + mm(2.5), yFila + rowP - mm(2.6));
+        ctx.textAlign = 'right'; ctx.font = `900 ${mm(3.5)}px Montserrat, sans-serif`;
+        ctx.fillText(String(p.paquetes || 0), xRight + colProdW - mm(2.5), yFila + rowP - mm(2.6));
+        ctx.strokeStyle = colorBorde; ctx.lineWidth = mm(0.15);
+        ctx.beginPath(); ctx.moveTo(xRight, yFila + rowP); ctx.lineTo(xRight + colProdW, yFila + rowP); ctx.stroke();
+        yFila += rowP;
+      });
+      if (prods.length > maxFilas) {
+        ctx.fillStyle = '#888888'; ctx.font = `700 ${mm(2.6)}px Montserrat, sans-serif`; ctx.textAlign = 'center';
+        ctx.fillText(`+ ${prods.length - maxFilas} más`, xRight + colProdW/2, yFila + rowP - mm(2.4));
+        yFila += rowP;
+      }
+
+      ctx.fillStyle = color; ctx.fillRect(xRight, yFila, colProdW, rowP);
+      ctx.fillStyle = '#ffffff'; ctx.font = `900 ${mm(3.3)}px Montserrat, sans-serif`;
+      ctx.textAlign = 'left'; ctx.fillText('TOTAL', xRight + mm(2.5), yFila + rowP - mm(2.3));
+      ctx.textAlign = 'right'; ctx.fillText(`${zona.total_paquetes} paq`, xRight + colProdW - mm(2.5), yFila + rowP - mm(2.3));
+      yFila += rowP;
+
+      ctx.strokeStyle = colorBorde; ctx.lineWidth = mm(0.5);
+      ctx.strokeRect(xRight, yTabla, colProdW, yFila - yTabla);
+    }
+
+    // --- Sección: CHECKEO ---
+    function dibujarCheckeo(ctx, x0, y0, w, h, zona, dc, prods, color, mm) {
+      prods = Array.isArray(prods) ? prods : [];
+      const M = mm(6);
+      const xL = x0 + M, xR = x0 + w - M;
+      const ancho = xR - xL;
+      const fechaEntrega = fechaEntregaDeZona(zona);
+      const colorBg = colorClaro(color, 0.9);
+      const colorBorde = color;
+
+      ctx.fillStyle = color; ctx.fillRect(x0, y0, w, mm(4));
+
+      let y = y0 + mm(8);
+      ctx.fillStyle = color; ctx.textAlign = 'left';
+      ctx.font = `900 ${mm(12)}px Montserrat, sans-serif`;
+      ctx.fillText('Checkeo de carga', xL, y + mm(9));
+
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#0a0a0a'; ctx.font = `800 ${mm(3.6)}px Montserrat, sans-serif`;
+      ctx.fillText('Fecha de entrega: ' + fechaSoloDia(fechaEntrega), xR, y + mm(9));
+
+      ctx.textAlign = 'left'; ctx.fillStyle = '#0a0a0a';
+      ctx.font = `900 ${mm(5.2)}px Montserrat, sans-serif`;
+      ctx.fillText(truncarTexto(ctx, String(zona.zona || ''), ancho - mm(60)), xL, y + mm(15));
+      ctx.fillStyle = '#333333'; ctx.font = `800 ${mm(3.2)}px Montserrat, sans-serif`;
+      ctx.fillText(`${zona.total_paquetes} paquetes`, xL, y + mm(19.5));
+
+      y += mm(22);
+      ctx.strokeStyle = colorBorde; ctx.lineWidth = mm(0.5);
+      ctx.beginPath(); ctx.moveTo(xL, y); ctx.lineTo(xR, y); ctx.stroke();
+      y += mm(4);
+
+      const colGap = mm(5);
+      const colLeftW = mm(60);
+      const colRightW = ancho - colLeftW - colGap;
+      const xLeft = xL;
+      const xRight = xL + colLeftW + colGap;
+      const yContenido = y;
+      const altoContenido = (y0 + h - mm(4)) - y;
+
+      // LEFT: inputs
+      ctx.fillStyle = color; ctx.font = `900 ${mm(2.8)}px Montserrat, sans-serif`; ctx.textAlign = 'left';
+      ctx.fillText('DATOS DEL QUE CARGA', xLeft, yContenido + mm(3));
+      const yInputs = yContenido + mm(5);
+      const altoInputs = altoContenido - mm(5);
+      dibujarBloqueInputs(ctx, xLeft, yInputs, colLeftW, altoInputs, dc, color, mm);
+
+      // RIGHT: tabla con OK, PRODUCTO, PEDIDO, CARGADO
+      ctx.fillStyle = color; ctx.font = `900 ${mm(2.8)}px Montserrat, sans-serif`; ctx.textAlign = 'left';
+      ctx.fillText('VERIFICACIÓN', xRight, yContenido + mm(3));
+      const yTabla = yContenido + mm(5);
+      const rowP = mm(7);
+      const colOK = mm(13);
+      const colPed = mm(18);
+      const colCargado = mm(38);
+      const colProd = colRightW - colOK - colPed - colCargado;
+
+      ctx.fillStyle = color; ctx.fillRect(xRight, yTabla, colRightW, rowP);
+      ctx.fillStyle = '#ffffff'; ctx.font = `900 ${mm(2.8)}px Montserrat, sans-serif`;
+      ctx.textAlign = 'center'; ctx.fillText('OK', xRight + colOK/2, yTabla + rowP - mm(2.4));
+      ctx.textAlign = 'left'; ctx.fillText('PRODUCTO', xRight + colOK + mm(2.5), yTabla + rowP - mm(2.4));
+      ctx.textAlign = 'center'; ctx.fillText('PEDIDO', xRight + colOK + colProd + colPed/2, yTabla + rowP - mm(2.4));
+      ctx.fillText('CARGADO (real)', xRight + colOK + colProd + colPed + colCargado/2, yTabla + rowP - mm(2.4));
+
+      let yFila = yTabla + rowP;
+      const espacioTab = (yInputs + altoInputs) - yFila - rowP;
+      const maxFilas = Math.max(1, Math.floor(espacioTab / rowP));
+      const filasMostrar = prods.slice(0, maxFilas);
+
+      filasMostrar.forEach((p, i) => {
+        ctx.fillStyle = (i % 2 === 0) ? '#ffffff' : colorBg;
+        ctx.fillRect(xRight, yFila, colRightW, rowP);
+        const cbSize = mm(5);
+        ctx.strokeStyle = colorBorde; ctx.lineWidth = mm(0.4);
+        ctx.strokeRect(xRight + (colOK - cbSize)/2, yFila + (rowP - cbSize)/2, cbSize, cbSize);
+        ctx.fillStyle = '#0a0a0a'; ctx.font = `800 ${mm(3.2)}px Montserrat, sans-serif`;
+        ctx.textAlign = 'left'; ctx.fillText(truncarTexto(ctx, p.producto || 'Producto', colProd - mm(3)), xRight + colOK + mm(2.5), yFila + rowP - mm(2.5));
+        ctx.textAlign = 'center'; ctx.font = `900 ${mm(3.4)}px Montserrat, sans-serif`;
+        ctx.fillText(String(p.paquetes || 0), xRight + colOK + colProd + colPed/2, yFila + rowP - mm(2.5));
+        const inX = xRight + colOK + colProd + colPed + mm(2.5);
+        const inW = colCargado - mm(5);
+        ctx.strokeStyle = colorBorde; ctx.lineWidth = mm(0.25);
+        ctx.beginPath(); ctx.moveTo(inX, yFila + rowP - mm(1.5)); ctx.lineTo(inX + inW, yFila + rowP - mm(1.5)); ctx.stroke();
+        ctx.strokeStyle = colorBorde; ctx.lineWidth = mm(0.15);
+        ctx.beginPath(); ctx.moveTo(xRight, yFila + rowP); ctx.lineTo(xRight + colRightW, yFila + rowP); ctx.stroke();
+        yFila += rowP;
+      });
+      if (prods.length > maxFilas) {
+        ctx.fillStyle = '#888888'; ctx.font = `700 ${mm(2.6)}px Montserrat, sans-serif`; ctx.textAlign = 'center';
+        ctx.fillText(`+ ${prods.length - maxFilas} más`, xRight + colRightW/2, yFila + rowP - mm(2.5));
+        yFila += rowP;
+      }
+
+      ctx.fillStyle = color; ctx.fillRect(xRight, yFila, colRightW, rowP);
+      ctx.fillStyle = '#ffffff'; ctx.font = `900 ${mm(3.3)}px Montserrat, sans-serif`;
+      ctx.textAlign = 'left'; ctx.fillText('TOTAL', xRight + colOK + mm(2.5), yFila + rowP - mm(2.3));
+      ctx.textAlign = 'center'; ctx.fillText(String(zona.total_paquetes), xRight + colOK + colProd + colPed/2, yFila + rowP - mm(2.3));
+      yFila += rowP;
+
+      ctx.strokeStyle = colorBorde; ctx.lineWidth = mm(0.5);
+      ctx.strokeRect(xRight, yTabla, colRightW, yFila - yTabla);
+    }
+
+    // --- Sección: HOJA DE RUTA ---
+    function dibujarHojaRuta(ctx, x0, y0, w, h, zona, st, color, mm) {
+      const M = mm(6);
+      const xL = x0 + M, xR = x0 + w - M;
+      const ancho = xR - xL;
+      const fechaEntrega = fechaEntregaDeZona(zona);
+      const colorBg = colorClaro(color, 0.9);
+
+      // Barra superior de color
+      ctx.fillStyle = color; ctx.fillRect(x0, y0, w, mm(4));
+
+      let y = y0 + mm(8);
+      ctx.fillStyle = color; ctx.textAlign = 'left';
+      ctx.font = `900 ${mm(12)}px Montserrat, sans-serif`;
+      ctx.fillText('Hoja de ruta', xL, y + mm(9));
+
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#0a0a0a'; ctx.font = `800 ${mm(3.6)}px Montserrat, sans-serif`;
+      ctx.fillText('Fecha de entrega: ' + fechaSoloDia(fechaEntrega), xR, y + mm(9));
+
+      ctx.textAlign = 'left'; ctx.fillStyle = '#0a0a0a';
+      ctx.font = `900 ${mm(5.2)}px Montserrat, sans-serif`;
+      ctx.fillText(truncarTexto(ctx, String(zona.zona || ''), ancho - mm(60)), xL, y + mm(15));
+      ctx.fillStyle = '#333333'; ctx.font = `800 ${mm(3.2)}px Montserrat, sans-serif`;
+      // Formato pedido: "N paquetes · N entregas"
+      ctx.fillText(`${zona.total_paquetes} paquetes · ${zona.entregas.length} entrega${zona.entregas.length === 1 ? '' : 's'}`, xL, y + mm(19.5));
+
+      y += mm(22);
+      ctx.strokeStyle = color; ctx.lineWidth = mm(0.5);
+      ctx.beginPath(); ctx.moveTo(xL, y); ctx.lineTo(xR, y); ctx.stroke();
+      y += mm(3);
+
+      // Pedidos en columnas
+      const entregas = zona.entregas || [];
+      const n = Math.max(1, entregas.length);
+      const cols = n <= 4 ? n : 3;
+      const rows = Math.ceil(n / cols);
+      const gap = mm(3);
+      const colW = (ancho - gap * (cols - 1)) / cols;
+      const availableH = (y0 + h - mm(3)) - y;
+      const rowGap = mm(2);
+      const rowH = (availableH - rowGap * (rows - 1)) / rows;
+
+      entregas.forEach((e, idx) => {
+        const col = idx % cols;
+        const row = Math.floor(idx / cols);
+        const cx = xL + col * (colW + gap);
+        const cy = y + row * (rowH + rowGap);
+
         const es = st.entregas[e.codigo] || {};
         const entregado = !!es.entregado;
         const paqEntrega = obtenerPaquetesEntrega(e, zona);
@@ -1178,84 +1421,150 @@
         const pendienteMonto = Number(e.monto_pendiente) || 0;
         const totalMonto = Number(e.monto_total) || 0;
         const pagado = (e.estado_pago === 'PAGADO') || (pendienteMonto <= 0 && totalMonto > 0);
-        ctx.fillStyle = entregado ? '#f0fdf4' : '#ffffff';
-        ctx.fillRect(xL - mm(1), y, ancho + mm(2), boxH);
-        ctx.strokeStyle = entregado ? '#16a34a' : '#888888';
-        ctx.lineWidth = mm(0.3); ctx.strokeRect(xL - mm(1), y, ancho + mm(2), boxH);
-        const checkSize = Math.max(mm(3.4), Math.min(mm(4.2), boxH * 0.22));
-        const checkX = xL, checkY = y + mm(2);
-        ctx.strokeStyle = '#0a0a0a'; ctx.lineWidth = mm(0.3); ctx.strokeRect(checkX, checkY, checkSize, checkSize);
-        if (entregado) {
-          ctx.fillStyle = '#16a34a'; ctx.fillRect(checkX, checkY, checkSize, checkSize);
-          ctx.strokeStyle = '#ffffff'; ctx.lineWidth = mm(0.45);
-          ctx.beginPath();
-          ctx.moveTo(checkX + checkSize * 0.22, checkY + checkSize * 0.52);
-          ctx.lineTo(checkX + checkSize * 0.42, checkY + checkSize * 0.72);
-          ctx.lineTo(checkX + checkSize * 0.78, checkY + checkSize * 0.28); ctx.stroke();
+        const esEnvioTercero = !!e.envio_tercero;
+
+        // Fondo alternado (sin barra izquierda de vendedor)
+        ctx.fillStyle = (idx % 2 === 0) ? '#ffffff' : colorBg;
+        ctx.fillRect(cx, cy, colW, rowH);
+        ctx.strokeStyle = color; ctx.lineWidth = mm(0.45);
+        ctx.strokeRect(cx, cy, colW, rowH);
+
+        const pad = mm(2.5);
+        const xCont = cx + pad;
+        const wCont = colW - pad * 2;
+
+        // Línea 1: # + Nombre
+        let yCont = cy + mm(4.5);
+        ctx.fillStyle = color; ctx.font = `900 ${mm(3.2)}px Montserrat, sans-serif`; ctx.textAlign = 'left';
+        ctx.fillText(`#${idx + 1}`, xCont, yCont);
+        const xNom = xCont + mm(7);
+        const wNom = wCont - mm(7) - mm(9);
+        ctx.fillStyle = '#0a0a0a'; ctx.font = `900 ${mm(3.4)}px Montserrat, sans-serif`;
+        const nomLines = envolverTexto(ctx, e.cliente || 'Sin nombre', wNom);
+        const maxNomLines = Math.min(nomLines.length, 2);
+        for (let i = 0; i < maxNomLines; i++) {
+          ctx.fillText(nomLines[i], xNom, yCont + i * mm(4.2));
         }
-        ctx.fillStyle = '#0a0a0a'; ctx.font = `800 ${mm(1.5)}px Montserrat, sans-serif`; ctx.textAlign = 'center';
-        ctx.fillText('ENV', checkX + checkSize / 2, checkY + checkSize + mm(1.7));
-        const badgeW = mm(20), badgeH = Math.max(mm(4.6), Math.min(mm(5.2), boxH * 0.26));
-        const badgeX = checkX + checkSize + mm(2), badgeY = checkY;
-        ctx.fillStyle = '#0a0a0a'; ctx.fillRect(badgeX, badgeY, badgeW, badgeH);
-        ctx.fillStyle = '#ffffff'; ctx.font = `900 ${mm(2.5)}px Montserrat, sans-serif`; ctx.textAlign = 'center';
-        ctx.fillText(`${paqEntrega} PAQ`, badgeX + badgeW / 2, badgeY + badgeH * 0.72);
-        const lineY1 = y + mm(4.4);
-        ctx.fillStyle = '#0a0a0a'; ctx.textAlign = 'right'; ctx.font = `900 ${fsTitulo}px Montserrat, sans-serif`;
-        const maxAnchoCliente = ancho - mm(26);
-        const clienteText = truncarTexto(ctx, String(e.cliente || 'Sin nombre'), maxAnchoCliente);
-        ctx.fillText(`#${idx + 1}  ${clienteText}`, xR - mm(1), lineY1);
-        const lineY2 = lineY1 + fsTitulo + mm(1.4);
-        ctx.fillStyle = '#222222'; ctx.font = `700 ${fsTexto}px Montserrat, sans-serif`; ctx.textAlign = 'right';
-        const dirText = truncarTexto(ctx, String(e.direccion || 'Sin dirección'), ancho - mm(4)) + '  📍';
-        ctx.fillText(dirText, xR - mm(1), lineY2);
-        const lineY3 = lineY2 + fsTexto + mm(1.5);
-        const tels = [];
-        if (e.telefono_contacto) tels.push(`☎ ${e.telefono_contacto}`);
-        if (e.telefono_llegada) tels.push(`L ${e.telefono_llegada}`);
-        const telStr = tels.join('  ');
-        ctx.font = `800 ${fsModelos}px Montserrat, sans-serif`; ctx.textAlign = 'left';
-        if (telStr) { ctx.fillStyle = '#0a0a0a'; ctx.fillText(telStr, xL + mm(1), lineY3); }
-        const anchoTel = telStr ? ctx.measureText(telStr).width + mm(3) : 0;
-        const anchoMaxModelos = ancho - anchoTel - mm(6);
-        ctx.textAlign = 'right';
-        if (desglose) { ctx.fillStyle = '#0a0a0a'; ctx.font = `900 ${fsModelos}px Montserrat, sans-serif`; ctx.fillText(truncarTexto(ctx, desglose, anchoMaxModelos) + '  📦', xR - mm(1), lineY3); }
-        else if (!telStr) { ctx.fillStyle = '#444444'; ctx.font = `700 ${fsModelos}px Montserrat, sans-serif`; ctx.fillText('Sin modelos especificados', xR - mm(1), lineY3); }
-        const lineY4 = lineY3 + fsModelos + mm(1.6);
-        ctx.textAlign = 'right';
-        if (pagado) { ctx.fillStyle = '#15803d'; ctx.font = `900 ${fsPago}px Montserrat, sans-serif`; ctx.fillText('✓ PAGADO', xR - mm(1), lineY4); }
-        else if (pendienteMonto > 0) { ctx.fillStyle = '#991b1b'; ctx.font = `900 ${fsPago}px Montserrat, sans-serif`; ctx.fillText(`💰 COBRAR S/ ${pendienteMonto.toFixed(2)}`, xR - mm(1), lineY4); }
-        else if (totalMonto > 0) { ctx.fillStyle = '#991b1b'; ctx.font = `900 ${fsPago}px Montserrat, sans-serif`; ctx.fillText(`💰 COBRAR S/ ${totalMonto.toFixed(2)}`, xR - mm(1), lineY4); }
-        y += altoEntrega;
+        // Checkbox ENV
+        const cbSize = mm(6);
+        const cbX = cx + colW - pad - cbSize;
+        const cbY = cy + mm(2);
+        ctx.strokeStyle = color; ctx.lineWidth = mm(0.4);
+        ctx.strokeRect(cbX, cbY, cbSize, cbSize);
+        if (entregado) {
+          ctx.fillStyle = '#16a34a'; ctx.fillRect(cbX, cbY, cbSize, cbSize);
+          ctx.strokeStyle = '#ffffff'; ctx.lineWidth = mm(0.55);
+          ctx.beginPath();
+          ctx.moveTo(cbX + cbSize*0.22, cbY + cbSize*0.52);
+          ctx.lineTo(cbX + cbSize*0.42, cbY + cbSize*0.72);
+          ctx.lineTo(cbX + cbSize*0.78, cbY + cbSize*0.28);
+          ctx.stroke();
+        }
+
+        yCont = cy + mm(4.5) + maxNomLines * mm(4.2);
+
+        // Info comprador (teléfono + dirección) — solo datos de comprador
+        const fsPeq = mm(2.5);
+        const infoComprador = [];
+        if (e.telefono_contacto) infoComprador.push(`Tel: ${e.telefono_contacto}`);
+        if (e.direccion) infoComprador.push(`Dir: ${e.direccion}`);
+        const infoCompradorStr = infoComprador.join('  ·  ');
+        if (infoCompradorStr) {
+          ctx.fillStyle = '#222222'; ctx.font = `700 ${fsPeq}px Montserrat, sans-serif`; ctx.textAlign = 'left';
+          const linesC = envolverTexto(ctx, infoCompradorStr, wCont);
+          const maxLC = Math.min(linesC.length, 2);
+          for (let i = 0; i < maxLC; i++) {
+            ctx.fillText(linesC[i], xCont, yCont + i * mm(3.2));
+          }
+          yCont += maxLC * mm(3.2);
+        }
+
+        // Información de tercero (si aplica) — bloque separado y claramente etiquetado
+        if (esEnvioTercero) {
+          yCont += mm(1.2);
+          ctx.fillStyle = color; ctx.font = `900 ${mm(2.3)}px Montserrat, sans-serif`; ctx.textAlign = 'left';
+          ctx.fillText('Información de tercero:', xCont, yCont + mm(2.4));
+          yCont += mm(5);
+          ctx.fillStyle = '#222222'; ctx.font = `700 ${fsPeq}px Montserrat, sans-serif`;
+          const datosTercero = [];
+          if (e.dni) datosTercero.push(`DNI: ${e.dni}`);
+          if (e.telefono_llegada) datosTercero.push(`Tel: ${e.telefono_llegada}`);
+          if (e.direccion_llegada) datosTercero.push(`Dir: ${e.direccion_llegada}`);
+          datosTercero.forEach(dato => {
+            const lineas = envolverTexto(ctx, dato, wCont);
+            lineas.forEach(l => {
+              ctx.fillText(l, xCont, yCont + mm(2.4));
+              yCont += mm(3.2);
+            });
+          });
+        }
+
+        // PAQ + pago
+        ctx.fillStyle = '#0a0a0a'; ctx.font = `900 ${mm(3.2)}px Montserrat, sans-serif`; ctx.textAlign = 'left';
+        ctx.fillText(`${paqEntrega} PAQ`, xCont, yCont + mm(3.2));
+        ctx.textAlign = 'right'; ctx.font = `900 ${mm(2.8)}px Montserrat, sans-serif`;
+        if (pagado) { ctx.fillStyle = '#15803d'; ctx.fillText('PAGADO', cx + colW - pad, yCont + mm(3.2)); }
+        else if (pendienteMonto > 0) { ctx.fillStyle = '#991b1b'; ctx.fillText(`COBRAR S/ ${pendienteMonto.toFixed(2)}`, cx + colW - pad, yCont + mm(3.2)); }
+        else if (totalMonto > 0) { ctx.fillStyle = '#991b1b'; ctx.fillText(`COBRAR S/ ${totalMonto.toFixed(2)}`, cx + colW - pad, yCont + mm(3.2)); }
+        yCont += mm(4.8);
+
+        // Modelos
+        if (desglose) {
+          ctx.fillStyle = '#555555'; ctx.font = `700 ${mm(2.2)}px Montserrat, sans-serif`; ctx.textAlign = 'left';
+          ctx.fillText(truncarTexto(ctx, desglose, wCont), xCont, yCont + mm(2.5));
+          yCont += mm(3.5);
+        }
+
+        // Observaciones
+        const yObs = cy + rowH - mm(15);
+        ctx.fillStyle = '#555555'; ctx.font = `800 ${mm(2.1)}px Montserrat, sans-serif`; ctx.textAlign = 'left';
+        ctx.fillText('OBS:', xCont, yObs);
+        ctx.strokeStyle = '#aaaaaa'; ctx.lineWidth = mm(0.18);
+        ctx.beginPath(); ctx.moveTo(xCont + mm(9), yObs + mm(0.3)); ctx.lineTo(cx + colW - pad, yObs + mm(0.3)); ctx.stroke();
+
+        // Firma del cliente
+        const firmaY = cy + rowH - mm(5);
+        ctx.strokeStyle = color; ctx.lineWidth = mm(0.3);
+        ctx.beginPath();
+        ctx.moveTo(xCont + mm(5), firmaY);
+        ctx.lineTo(cx + colW - pad - mm(5), firmaY);
+        ctx.stroke();
+        ctx.fillStyle = '#555555'; ctx.font = `800 ${mm(2)}px Montserrat, sans-serif`; ctx.textAlign = 'center';
+        ctx.fillText('Firma del cliente', cx + colW/2, firmaY + mm(2.8));
       });
-      const pieY = y0 + h - mm(4);
-      ctx.fillStyle = '#333333'; ctx.font = `800 ${mm(1.9)}px Montserrat, sans-serif`; ctx.textAlign = 'center';
-      ctx.fillText('Verificar modelos y paquetes al entregar y marcar ENV', x0 + w / 2, pieY);
     }
 
     // ================================================================
-    // BOTÓN 1: IMPRIMIR CARGUILLO (A4)
+    // BOTÓN: IMPRIMIR CARGUILLO A4 (con margen seguro)
     // ================================================================
     async function imprimirCarguillo(codigoCarguillo) {
       const zona = zonasDespacho.find(z => z.codigo_carguillo === codigoCarguillo);
       if (!zona) { mostrarToast("Zona no encontrada"); return; }
-      mostrarToast("Preparando impresión A4...");
-      const { canvas } = await generarCanvasA4Vertical(zona);
-      const dataUrl = canvas.toDataURL('image/png');
-      const html = `<!DOCTYPE html><html><head><title> </title><style>@page{size:A4 portrait;margin:0;}*{box-sizing:border-box;margin:0;padding:0;}html,body{width:210mm;height:297mm;margin:0;padding:0;background:#fff;overflow:hidden;}.p{width:210mm;height:297mm;position:relative;}img{width:210mm;height:297mm;display:block;position:absolute;top:0;left:0;}</style></head><body><div class="p"><img src="${dataUrl}"/></div></body></html>`;
-      imprimirEnIframe(html);
-      mostrarToast("Si ves fecha/URL en el papel, desactiva 'Encabezados y pies de página' en el diálogo");
+      mostrarToast("Preparando A4 (hoja de ruta + carguillo + checkeo)...");
+      try {
+        if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch (e) {} }
+        const DPI = 200;
+        const mm = (v) => Math.round(v * DPI / 25.4);
+        const canvas = generarCanvasA4Completo(zona, getEstadoDespacho(zona), mm);
+        const dataUrl = canvas.toDataURL('image/png');
+        // Margen seguro de 6mm
+        const html = `<!DOCTYPE html><html><head><title> </title><style>@page{size:A4 portrait;margin:0;}*{box-sizing:border-box;margin:0;padding:0;}html,body{width:210mm;height:297mm;margin:0;padding:0;background:#fff;overflow:hidden;}.p{width:210mm;height:297mm;padding:${A4_MARGEN_MM}mm;box-sizing:border-box;display:flex;align-items:center;justify-content:center;}.p img{max-width:100%;max-height:100%;display:block;}</style></head><body><div class="p"><img src="${dataUrl}"/></div></body></html>`;
+        imprimirEnIframe(html);
+        mostrarToast("Si ves fecha/URL en el papel, desactiva 'Encabezados y pies de página' en el diálogo");
+      } catch (err) {
+        console.error('Error generando carguillo A4:', err);
+        mostrarToast("Error al generar el A4: " + (err.message || err));
+      }
     }
 
     // ================================================================
-    // TICKET DE VENTA (80mm · B/N)
+    // TICKET 80mm · Recibo (sin franja, vendedor negro)
     // ================================================================
     function generarCanvasTicket(entrega, zona, mm) {
       const W = mm(80);
-      const PAD_X = mm(3);
+      const PAD_X = mm(3.5);
       const usableW = W - PAD_X * 2;
-
-      const H_MAX = mm(300);
+      const H_MAX = mm(500);
       const temp = document.createElement('canvas');
       temp.width = W; temp.height = H_MAX;
       const ctx = temp.getContext('2d');
@@ -1263,78 +1572,112 @@
 
       let y = 0;
 
-      ctx.fillStyle = '#000000';
-      ctx.font = `900 ${mm(6.5)}px Montserrat, sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.fillText('FABREC', W / 2, y + mm(5));
-      y += mm(6.5);
+      // Sin barra superior de color. Fuente siempre en negro.
 
-      ctx.font = `700 ${mm(2.2)}px Montserrat, sans-serif`;
-      ctx.fillText('Envases PET', W / 2, y + mm(2));
-      y += mm(3.2);
+      ctx.fillStyle = '#000000'; ctx.textAlign = 'center';
+      ctx.font = `900 ${mm(9.5)}px Montserrat, sans-serif`;
+      ctx.fillText('FABREC', W / 2, y + mm(7.5));
+      y += mm(9.5);
 
-      ctx.strokeStyle = '#000000';
-      ctx.setLineDash([mm(1.5), mm(1)]);
-      ctx.lineWidth = mm(0.2);
+      ctx.font = `700 ${mm(3.8)}px Montserrat, sans-serif`;
+      ctx.fillText('Envases PET', W / 2, y + mm(3.2));
+      y += mm(6);
+
+      ctx.strokeStyle = '#000000'; ctx.setLineDash([mm(1.5), mm(1)]); ctx.lineWidth = mm(0.25);
       ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
       ctx.setLineDash([]);
-      y += mm(2.5);
+      y += mm(4);
 
-      const fechaVenta = new Date(entrega.fecha_venta || zona.fecha_envio || Date.now());
-      ctx.fillStyle = '#000000';
-      ctx.font = `700 ${mm(2.3)}px Montserrat, sans-serif`;
-      ctx.textAlign = 'left';
-      ctx.fillText(fechaVenta.toLocaleDateString('es-PE'), PAD_X, y + mm(2.2));
-      ctx.textAlign = 'right';
-      ctx.font = `600 ${mm(2.1)}px Montserrat, sans-serif`;
-      ctx.fillText(fechaVenta.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }), W - PAD_X, y + mm(2.2));
-      y += mm(3.3);
+      const fechaEntrega = (entrega.fecha_entrega || entrega.fecha_entrega_solicitada || entrega.fecha_entrega_programada) || zona.fecha_entrega || zona.fecha_envio;
+      ctx.fillStyle = '#000000'; ctx.textAlign = 'left';
+      ctx.font = `800 ${mm(3.6)}px Montserrat, sans-serif`;
+      ctx.fillText('Fecha de entrega:', PAD_X, y + mm(3.6));
+      ctx.textAlign = 'right'; ctx.font = `900 ${mm(3.6)}px Montserrat, sans-serif`;
+      ctx.fillText(fechaSoloDia(fechaEntrega), W - PAD_X, y + mm(3.6));
+      y += mm(5.5);
 
-      ctx.font = `600 ${mm(1.9)}px monospace`;
-      ctx.textAlign = 'left';
-      ctx.fillText(`Ticket: ${entrega.codigo || ''}`, PAD_X, y + mm(1.9));
-      y += mm(3.2);
+      ctx.font = `700 ${mm(3.1)}px monospace`; ctx.textAlign = 'left';
+      ctx.fillText(`Ticket: ${entrega.codigo || ''}`, PAD_X, y + mm(3));
+      y += mm(4.8);
 
-      ctx.strokeStyle = '#000000';
-      ctx.lineWidth = mm(0.2);
-      ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
-      y += mm(2.5);
-
-      ctx.fillStyle = '#000000';
-      ctx.font = `900 ${mm(2.3)}px Montserrat, sans-serif`;
-      ctx.textAlign = 'left';
-      ctx.fillText('CLIENTE', PAD_X, y + mm(2.2));
-      y += mm(3.3);
-
-      ctx.font = `900 ${mm(3.2)}px Montserrat, sans-serif`;
-      const nomLines = envolverTexto(ctx, entrega.cliente || 'Sin nombre', usableW);
-      nomLines.forEach(l => { ctx.fillText(l, PAD_X, y + mm(2.8)); y += mm(4); });
-
-      ctx.font = `600 ${mm(2.3)}px Montserrat, sans-serif`;
-      if (entrega.dni) { ctx.fillText(`DNI: ${entrega.dni}`, PAD_X, y + mm(2.2)); y += mm(3.3); }
-      if (entrega.direccion) {
-        const dirLines = envolverTexto(ctx, entrega.direccion, usableW);
-        dirLines.forEach(l => { ctx.fillText(l, PAD_X, y + mm(2.2)); y += mm(3.3); });
+      // Vendedor siempre en negro
+      if (entrega.vendedor) {
+        ctx.font = `800 ${mm(3.1)}px Montserrat, sans-serif`;
+        ctx.fillStyle = '#000000';
+        ctx.fillText(`Vendedor: ${entrega.vendedor}`, PAD_X, y + mm(3));
+        y += mm(4.8);
       }
-      if (entrega.telefono_contacto) { ctx.fillText(`Tel: ${entrega.telefono_contacto}`, PAD_X, y + mm(2.2)); y += mm(3.3); }
+
+      ctx.strokeStyle = '#000000'; ctx.lineWidth = mm(0.25);
+      ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
+      y += mm(3.5);
+
+      ctx.fillStyle = '#000000'; ctx.font = `900 ${mm(3.5)}px Montserrat, sans-serif`; ctx.textAlign = 'left';
+      ctx.fillText('CLIENTE', PAD_X, y + mm(3.5));
+      y += mm(5);
+
+      ctx.font = `900 ${mm(5.2)}px Montserrat, sans-serif`;
+      const nomLines = envolverTexto(ctx, entrega.cliente || 'Sin nombre', usableW);
+      nomLines.forEach(l => { ctx.fillText(l, PAD_X, y + mm(4.3)); y += mm(6.4); });
+
+      const docs = [];
+      if (entrega.dni) docs.push(`DNI: ${entrega.dni}`);
+      if (entrega.ruc) docs.push(`RUC: ${entrega.ruc}`);
+      if (entrega.codigo_cliente) docs.push(`Código: ${entrega.codigo_cliente}`);
+      if (docs.length) {
+        y += mm(0.5);
+        ctx.font = `800 ${mm(3.5)}px Montserrat, sans-serif`;
+        docs.forEach(d => { ctx.fillText(d, PAD_X, y + mm(3.5)); y += mm(5); });
+      }
+
+      if (entrega.direccion) {
+        y += mm(1);
+        ctx.fillStyle = '#000000'; ctx.font = `900 ${mm(3.4)}px Montserrat, sans-serif`;
+        ctx.fillText('Dirección Comprador:', PAD_X, y + mm(3.4));
+        y += mm(5);
+        ctx.font = `700 ${mm(3.4)}px Montserrat, sans-serif`;
+        const dirLines = envolverTexto(ctx, entrega.direccion, usableW);
+        dirLines.forEach(l => { ctx.fillText(l, PAD_X, y + mm(3.4)); y += mm(4.8); });
+      }
+
+      const esEnvioTercero = !!entrega.envio_tercero;
+      const dirLlegada = entrega.direccion_llegada || entrega.direccion_agencia || '';
+      if (esEnvioTercero && dirLlegada && dirLlegada !== entrega.direccion) {
+        y += mm(1);
+        ctx.fillStyle = '#000000'; ctx.font = `900 ${mm(3.4)}px Montserrat, sans-serif`;
+        ctx.fillText('Dirección Llegada:', PAD_X, y + mm(3.4));
+        y += mm(5);
+        ctx.font = `700 ${mm(3.4)}px Montserrat, sans-serif`;
+        const dirLines = envolverTexto(ctx, dirLlegada, usableW);
+        dirLines.forEach(l => { ctx.fillText(l, PAD_X, y + mm(3.4)); y += mm(4.8); });
+      }
+
+      if (entrega.telefono_contacto) {
+        y += mm(0.5);
+        ctx.font = `700 ${mm(3.4)}px Montserrat, sans-serif`;
+        ctx.fillText(`Tel. Comprador: ${entrega.telefono_contacto}`, PAD_X, y + mm(3.4));
+        y += mm(5);
+      }
+      if (esEnvioTercero && entrega.telefono_llegada) {
+        ctx.font = `700 ${mm(3.4)}px Montserrat, sans-serif`;
+        ctx.fillText(`Tel. Llegada: ${entrega.telefono_llegada}`, PAD_X, y + mm(3.4));
+        y += mm(5);
+      }
 
       y += mm(0.5);
-      ctx.strokeStyle = '#000000';
-      ctx.setLineDash([mm(1.5), mm(1)]);
+      ctx.strokeStyle = '#000000'; ctx.setLineDash([mm(1.5), mm(1)]);
       ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
       ctx.setLineDash([]);
-      y += mm(2.5);
+      y += mm(3.5);
 
-      ctx.fillStyle = '#000000';
-      ctx.font = `900 ${mm(2.2)}px Montserrat, sans-serif`;
-      ctx.textAlign = 'left'; ctx.fillText('PRODUCTO', PAD_X, y + mm(2.2));
-      ctx.textAlign = 'center'; ctx.fillText('CANT', PAD_X + usableW * 0.6, y + mm(2.2));
-      ctx.textAlign = 'right'; ctx.fillText('SUBTOTAL', W - PAD_X, y + mm(2.2));
-      y += mm(2.8);
+      ctx.fillStyle = '#000000'; ctx.font = `900 ${mm(3.5)}px Montserrat, sans-serif`;
+      ctx.textAlign = 'left'; ctx.fillText('PRODUCTO', PAD_X, y + mm(3.5));
+      ctx.textAlign = 'center'; ctx.fillText('CANT', PAD_X + usableW * 0.62, y + mm(3.5));
+      ctx.textAlign = 'right'; ctx.fillText('SUBTOTAL', W - PAD_X, y + mm(3.5));
+      y += mm(4.2);
 
-      ctx.strokeStyle = '#000000';
-      ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
-      y += mm(2);
+      ctx.strokeStyle = '#000000'; ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
+      y += mm(3.2);
 
       const items = entrega.items || [];
       if (items.length > 0) {
@@ -1343,223 +1686,63 @@
           const cant = parseInt(it.paquetes_totales) || 0;
           const subtotal = parseFloat(it.subtotal) || 0;
           ctx.fillStyle = '#000000';
-          ctx.font = `700 ${mm(2.5)}px Montserrat, sans-serif`;
-          ctx.textAlign = 'left'; ctx.fillText(truncarTexto(ctx, prod, usableW * 0.55), PAD_X, y + mm(2.4));
-          ctx.textAlign = 'center'; ctx.fillText(String(cant), PAD_X + usableW * 0.6, y + mm(2.4));
-          ctx.textAlign = 'right'; ctx.font = `900 ${mm(2.5)}px Montserrat, sans-serif`;
-          ctx.fillText(subtotal.toFixed(2), W - PAD_X, y + mm(2.4));
-          y += mm(4);
+          ctx.font = `700 ${mm(3.7)}px Montserrat, sans-serif`;
+          ctx.textAlign = 'left'; ctx.fillText(truncarTexto(ctx, prod, usableW * 0.58), PAD_X, y + mm(3.8));
+          ctx.textAlign = 'center'; ctx.fillText(String(cant), PAD_X + usableW * 0.62, y + mm(3.8));
+          ctx.textAlign = 'right'; ctx.font = `900 ${mm(3.7)}px Montserrat, sans-serif`;
+          ctx.fillText(subtotal.toFixed(2), W - PAD_X, y + mm(3.8));
+          y += mm(6.2);
         });
       } else {
         const cant = entrega.total_paquetes || 0;
         const subtotal = entrega.monto_total || 0;
-        ctx.fillStyle = '#000000';
-        ctx.font = `700 ${mm(2.5)}px Montserrat, sans-serif`;
-        ctx.textAlign = 'left'; ctx.fillText('Paquetes', PAD_X, y + mm(2.4));
-        ctx.textAlign = 'center'; ctx.fillText(String(cant), PAD_X + usableW * 0.6, y + mm(2.4));
-        ctx.textAlign = 'right'; ctx.fillText(subtotal.toFixed(2), W - PAD_X, y + mm(2.4));
-        y += mm(4);
+        ctx.fillStyle = '#000000'; ctx.font = `700 ${mm(3.7)}px Montserrat, sans-serif`;
+        ctx.textAlign = 'left'; ctx.fillText('Paquetes', PAD_X, y + mm(3.8));
+        ctx.textAlign = 'center'; ctx.fillText(String(cant), PAD_X + usableW * 0.62, y + mm(3.8));
+        ctx.textAlign = 'right'; ctx.fillText(subtotal.toFixed(2), W - PAD_X, y + mm(3.8));
+        y += mm(6.2);
       }
 
-      y += mm(0.3);
-      ctx.strokeStyle = '#000000';
-      ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
-      y += mm(2.5);
+      y += mm(0.4);
+      ctx.strokeStyle = '#000000'; ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
+      y += mm(4);
 
       const total = parseFloat(entrega.monto_total) || 0;
       const pagado = parseFloat(entrega.monto_pagado) || 0;
       const pendiente = parseFloat(entrega.monto_pendiente) || 0;
 
-      ctx.fillStyle = '#000000';
-      ctx.font = `900 ${mm(3.5)}px Montserrat, sans-serif`;
-      ctx.textAlign = 'left'; ctx.fillText('TOTAL', PAD_X, y + mm(2.9));
-      ctx.textAlign = 'right'; ctx.fillText(`S/ ${total.toFixed(2)}`, W - PAD_X, y + mm(2.9));
-      y += mm(5);
+      ctx.fillStyle = '#000000'; ctx.font = `900 ${mm(5.8)}px Montserrat, sans-serif`;
+      ctx.textAlign = 'left'; ctx.fillText('TOTAL', PAD_X, y + mm(4.6));
+      ctx.textAlign = 'right'; ctx.fillText(`S/ ${total.toFixed(2)}`, W - PAD_X, y + mm(4.6));
+      y += mm(8);
 
       if (pagado > 0) {
-        ctx.font = `700 ${mm(2.4)}px Montserrat, sans-serif`;
-        ctx.textAlign = 'left'; ctx.fillText('Pagado', PAD_X, y + mm(2.2));
-        ctx.textAlign = 'right'; ctx.fillText(`S/ ${pagado.toFixed(2)}`, W - PAD_X, y + mm(2.2));
-        y += mm(3.6);
+        ctx.font = `800 ${mm(3.7)}px Montserrat, sans-serif`;
+        ctx.textAlign = 'left'; ctx.fillText('Pagado', PAD_X, y + mm(3.5));
+        ctx.textAlign = 'right'; ctx.fillText(`S/ ${pagado.toFixed(2)}`, W - PAD_X, y + mm(3.5));
+        y += mm(5.4);
       }
       if (pendiente > 0.01) {
-        ctx.font = `900 ${mm(3)}px Montserrat, sans-serif`;
-        ctx.textAlign = 'left'; ctx.fillText('PENDIENTE', PAD_X, y + mm(2.6));
-        ctx.textAlign = 'right'; ctx.fillText(`S/ ${pendiente.toFixed(2)}`, W - PAD_X, y + mm(2.6));
-        y += mm(4.3);
+        ctx.font = `900 ${mm(4.8)}px Montserrat, sans-serif`;
+        ctx.textAlign = 'left'; ctx.fillText('PENDIENTE', PAD_X, y + mm(4));
+        ctx.textAlign = 'right'; ctx.fillText(`S/ ${pendiente.toFixed(2)}`, W - PAD_X, y + mm(4));
+        y += mm(6.8);
       } else if (total > 0) {
-        ctx.font = `900 ${mm(2.8)}px Montserrat, sans-serif`;
-        ctx.textAlign = 'center'; ctx.fillText('PAGADO', W / 2, y + mm(2.5));
-        y += mm(4.3);
+        ctx.font = `900 ${mm(4.5)}px Montserrat, sans-serif`;
+        ctx.textAlign = 'center'; ctx.fillText('PAGADO', W / 2, y + mm(3.8));
+        y += mm(6.8);
       }
 
-      y += mm(0.5);
-      ctx.strokeStyle = '#000000';
-      ctx.setLineDash([mm(1.5), mm(1)]);
+      y += mm(0.6);
+      ctx.strokeStyle = '#000000'; ctx.setLineDash([mm(1.5), mm(1)]);
       ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
       ctx.setLineDash([]);
-      y += mm(3);
+      y += mm(4);
 
-      ctx.fillStyle = '#000000';
-      ctx.font = `900 ${mm(2.6)}px Montserrat, sans-serif`;
-      ctx.textAlign = 'center'; ctx.fillText('Gracias por su compra', W / 2, y + mm(2.5));
-      y += mm(3.5);
-
-      const finalCanvas = document.createElement('canvas');
-      finalCanvas.width = W;
-      finalCanvas.height = Math.ceil(y);
-      const fCtx = finalCanvas.getContext('2d');
-      fCtx.fillStyle = '#ffffff';
-      fCtx.fillRect(0, 0, W, finalCanvas.height);
-      fCtx.drawImage(temp, 0, 0, W, finalCanvas.height, 0, 0, W, finalCanvas.height);
-      return finalCanvas;
-    }
-
-    // ================================================================
-    // HOJA DE RUTA (ticketera 80mm · mismo contenido que A4, sin carga/firma)
-    // ================================================================
-    function generarCanvasHojaRutaTicket(zona, st, mm) {
-      const W = mm(80);
-      const PAD_X = mm(3);
-      const usableW = W - PAD_X * 2;
-
-      const H_MAX = mm(800);
-      const temp = document.createElement('canvas');
-      temp.width = W; temp.height = H_MAX;
-      const ctx = temp.getContext('2d');
-      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H_MAX);
-
-      let y = 0;
-
-      ctx.fillStyle = '#000000';
-      ctx.font = `900 ${mm(6.5)}px Montserrat, sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.fillText('FABREC', W / 2, y + mm(5));
-      y += mm(6.5);
-
-      ctx.font = `700 ${mm(2.3)}px Montserrat, sans-serif`;
-      ctx.fillText('HOJA DE RUTA · CHOFER', W / 2, y + mm(2.2));
-      y += mm(3.5);
-
-      ctx.strokeStyle = '#000000';
-      ctx.lineWidth = mm(0.3);
-      ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
-      y += mm(3);
-
-      ctx.fillStyle = '#000000';
-      ctx.font = `900 ${mm(4.6)}px Montserrat, sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.fillText(truncarTexto(ctx, zona.zona || '', usableW), W / 2, y + mm(4));
+      ctx.fillStyle = '#000000'; ctx.font = `900 ${mm(3.9)}px Montserrat, sans-serif`;
+      ctx.textAlign = 'center'; ctx.fillText('Gracias por su compra', W / 2, y + mm(3.5));
       y += mm(5.5);
 
-      const fEnvio = new Date(zona.fecha_envio || Date.now());
-      ctx.font = `700 ${mm(2.3)}px Montserrat, sans-serif`;
-      ctx.fillText(`${fEnvio.toLocaleDateString('es-PE')}  ${fEnvio.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })}`, W / 2, y + mm(2.2));
-      y += mm(3.3);
-
-      ctx.font = `600 ${mm(1.9)}px monospace`;
-      ctx.fillText(zona.codigo_carguillo, W / 2, y + mm(1.9));
-      y += mm(3);
-
-      ctx.strokeStyle = '#000000';
-      ctx.setLineDash([mm(1.5), mm(1)]);
-      ctx.beginPath(); ctx.moveTo(PAD_X, y); ctx.lineTo(W - PAD_X, y); ctx.stroke();
-      ctx.setLineDash([]);
-      y += mm(3);
-
-      ctx.fillStyle = '#000000';
-      ctx.font = `900 ${mm(2.5)}px Montserrat, sans-serif`;
-      ctx.textAlign = 'left';
-      ctx.fillText(`ENTREGAS (${zona.entregas.length})`, PAD_X, y + mm(2.4));
-      y += mm(3.8);
-
-      zona.entregas.forEach((e, idx) => {
-        const es = st.entregas[e.codigo] || {};
-        const entregado = !!es.entregado;
-        const paq = obtenerPaquetesEntrega(e, zona);
-        const desglose = obtenerDesgloseModelosEntrega(e, zona);
-        const pendienteMonto = Number(e.monto_pendiente) || 0;
-        const totalMonto = Number(e.monto_total) || 0;
-        const pagado = (e.estado_pago === 'PAGADO') || (pendienteMonto <= 0 && totalMonto > 0);
-
-        const boxTop = y;
-        let innerY = y + mm(4);
-
-        ctx.fillStyle = '#000000';
-        ctx.font = `900 ${mm(3.2)}px Montserrat, sans-serif`;
-        ctx.textAlign = 'left';
-        ctx.fillText(`#${idx + 1}`, PAD_X + mm(1), innerY);
-
-        const anchoNombre = usableW - mm(14);
-        const nomLines = envolverTexto(ctx, e.cliente || 'Sin nombre', anchoNombre);
-        nomLines.forEach(l => { ctx.fillText(l, PAD_X + mm(9), innerY); innerY += mm(4); });
-
-        ctx.font = `600 ${mm(2.2)}px Montserrat, sans-serif`;
-        const dirLines = envolverTexto(ctx, e.direccion || 'Sin dirección', usableW - mm(2));
-        dirLines.forEach(l => { ctx.fillText(l, PAD_X + mm(1), innerY); innerY += mm(3.3); });
-
-        if (desglose) {
-          ctx.font = `700 ${mm(2.2)}px Montserrat, sans-serif`;
-          const modLines = envolverTexto(ctx, desglose, usableW - mm(2));
-          modLines.forEach(l => { ctx.fillText(l, PAD_X + mm(1), innerY); innerY += mm(3.3); });
-        }
-
-        innerY += mm(0.5);
-        ctx.fillStyle = '#000000';
-        ctx.font = `900 ${mm(3.4)}px Montserrat, sans-serif`;
-        ctx.textAlign = 'left';
-        ctx.fillText(`${paq} PAQ`, PAD_X + mm(1), innerY + mm(2));
-
-        ctx.textAlign = 'right';
-        ctx.font = `900 ${mm(2.6)}px Montserrat, sans-serif`;
-        if (pagado) ctx.fillText('PAGADO', W - PAD_X - mm(1), innerY + mm(2));
-        else if (pendienteMonto > 0) ctx.fillText(`COBRAR S/ ${pendienteMonto.toFixed(2)}`, W - PAD_X - mm(1), innerY + mm(2));
-        else if (totalMonto > 0) ctx.fillText(`COBRAR S/ ${totalMonto.toFixed(2)}`, W - PAD_X - mm(1), innerY + mm(2));
-        innerY += mm(5);
-
-        const tels = [];
-        if (e.telefono_contacto) tels.push(`☎ ${e.telefono_contacto}`);
-        if (e.telefono_llegada) tels.push(`L ${e.telefono_llegada}`);
-        if (tels.length > 0) {
-          ctx.fillStyle = '#000000';
-          ctx.font = `700 ${mm(2.2)}px Montserrat, sans-serif`;
-          ctx.textAlign = 'left';
-          ctx.fillText(tels.join('  '), PAD_X + mm(1), innerY);
-          innerY += mm(3.5);
-        }
-
-        const cbSize = mm(5);
-        const cbX = W - PAD_X - cbSize - mm(1);
-        const cbY = boxTop + mm(1);
-        ctx.strokeStyle = '#000000';
-        ctx.lineWidth = mm(0.3);
-        ctx.strokeRect(cbX, cbY, cbSize, cbSize);
-        if (entregado) {
-          ctx.fillStyle = '#000000';
-          ctx.fillRect(cbX, cbY, cbSize, cbSize);
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = mm(0.5);
-          ctx.beginPath();
-          ctx.moveTo(cbX + cbSize * 0.22, cbY + cbSize * 0.52);
-          ctx.lineTo(cbX + cbSize * 0.42, cbY + cbSize * 0.72);
-          ctx.lineTo(cbX + cbSize * 0.78, cbY + cbSize * 0.28); ctx.stroke();
-        }
-
-        const boxH = (innerY - boxTop) + mm(1);
-        ctx.strokeStyle = '#000000';
-        ctx.lineWidth = mm(0.2);
-        ctx.strokeRect(PAD_X, boxTop, usableW, boxH);
-
-        y = boxTop + boxH + mm(2);
-      });
-
-      y += mm(2);
-      ctx.fillStyle = '#000000';
-      ctx.font = `800 ${mm(2.1)}px Montserrat, sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.fillText('Verificar productos y marcar ENV', W / 2, y + mm(2));
-      y += mm(3.5);
-
       const finalCanvas = document.createElement('canvas');
       finalCanvas.width = W;
       finalCanvas.height = Math.ceil(y);
@@ -1571,126 +1754,62 @@
     }
 
     // ================================================================
-    // UNIR CANVASES VERTICALMENTE
-    // ================================================================
-    function unirCanvasesVertical(canvases, gapPx) {
-      const W = canvases[0].width;
-      const totalH = canvases.reduce((a, c) => a + c.height, 0) + gapPx * (canvases.length - 1);
-      const out = document.createElement('canvas');
-      out.width = W; out.height = totalH;
-      const ctx = out.getContext('2d');
-      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, totalH);
-      let y = 0;
-      canvases.forEach((c, i) => {
-        ctx.drawImage(c, 0, y);
-        y += c.height;
-        if (i < canvases.length - 1) {
-          ctx.strokeStyle = '#000000';
-          ctx.setLineDash([4, 4]);
-          ctx.lineWidth = 1;
-          ctx.beginPath(); ctx.moveTo(0, y + gapPx / 2); ctx.lineTo(W, y + gapPx / 2); ctx.stroke();
-          ctx.setLineDash([]);
-          y += gapPx;
-        }
-      });
-      return out;
-    }
-
-    // ================================================================
-    // FORZAR ALTO MÍNIMO (evita que Chrome rote el ticket a landscape)
+    // IMPRIMIR TICKETERA (un solo recibo)
     // ================================================================
     function forzarAltoMinimo(canvas, minMM, mm) {
       const minPx = mm(minMM);
       if (canvas.height >= minPx) return canvas;
       const padded = document.createElement('canvas');
-      padded.width = canvas.width;
-      padded.height = minPx;
+      padded.width = canvas.width; padded.height = minPx;
       const ctx = padded.getContext('2d');
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, padded.width, padded.height);
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, padded.width, padded.height);
       ctx.drawImage(canvas, 0, 0);
       return padded;
     }
 
     // ================================================================
-    // IMPRIMIR TICKETERA 80mm (con alto mínimo garantizado)
-    // ================================================================
-    function imprimirTicketera(dataUrl, altoMM) {
-      // Forzar portrait: 80mm de ancho × al menos 210mm de alto
-      const altoFinal = Math.max(altoMM, TICKET_MIN_HEIGHT_MM);
-
-      const css = `
-        @page {
-          size: 80mm ${altoFinal.toFixed(2)}mm portrait;
-          margin: 0;
-        }
-        html, body {
-          margin: 0 !important;
-          padding: 0 !important;
-          width: 80mm;
-          height: ${altoFinal.toFixed(2)}mm;
-          background: #ffffff;
-          overflow: hidden;
-        }
-        body > img {
-          display: block;
-          width: 80mm;
-          height: ${altoMM.toFixed(2)}mm;
-          margin: 0 !important;
-          padding: 0 !important;
-          position: absolute;
-          top: 0;
-          left: 0;
-        }
-      `;
-      const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title> </title><style>${css}</style></head><body><img src="${dataUrl}"/></body></html>`;
-      imprimirEnIframe(html);
-    }
-
-    // ================================================================
-    // BOTÓN 2: IMPRIMIR SOLO RECIBOS (ticketera 80mm)
+    // IMPRIMIR TODOS LOS RECIBOS (cada uno en su propia hoja)
     // ================================================================
     async function imprimirSoloRecibos(codigoCarguillo) {
       const zona = zonasDespacho.find(z => z.codigo_carguillo === codigoCarguillo);
       if (!zona) { mostrarToast("Zona no encontrada"); return; }
       if (zona.entregas.length === 0) { mostrarToast("Sin entregas para imprimir"); return; }
-      mostrarToast("Preparando recibos...");
+      mostrarToast("Preparando recibos (uno por hoja)...");
+      try {
+        const DPI = 200;
+        const mm = (v) => Math.round(v * DPI / 25.4);
+        const ALTO_PAGINA_MM = TICKET_PAGE_HEIGHT_MM;
 
-      const DPI = 200;
-      const mm = (v) => Math.round(v * DPI / 25.4);
-      const tickets = zona.entregas.map(e => generarCanvasTicket(e, zona, mm));
-      let finalCanvas = unirCanvasesVertical(tickets, mm(3));
+        const paginasHTML = zona.entregas.map(e => {
+          let canvas = generarCanvasTicket(e, zona, mm);
+          canvas = forzarAltoMinimo(canvas, TICKET_MIN_HEIGHT_MM, mm);
+          const dataUrl = canvas.toDataURL('image/png');
+          const altoMM = (canvas.height / DPI) * 25.4;
+          return `<div class="pagina"><img src="${dataUrl}" style="height:${altoMM.toFixed(2)}mm;"/></div>`;
+        }).join('');
 
-      // Asegurar alto mínimo (evita rotación por aspect ratio)
-      finalCanvas = forzarAltoMinimo(finalCanvas, TICKET_MIN_HEIGHT_MM, mm);
-
-      const dataUrl = finalCanvas.toDataURL('image/png');
-      const altoRealMM = (finalCanvas.height / DPI) * 25.4;
-
-      imprimirTicketera(dataUrl, altoRealMM);
-      mostrarToast(`Recibos listos (${zona.entregas.length}).`);
-    }
-
-    // ================================================================
-    // BOTÓN 3: IMPRIMIR SOLO HOJA DE RUTA (ticketera 80mm)
-    // ================================================================
-    async function imprimirSoloHojaRuta(codigoCarguillo) {
-      const zona = zonasDespacho.find(z => z.codigo_carguillo === codigoCarguillo);
-      if (!zona) { mostrarToast("Zona no encontrada"); return; }
-      mostrarToast("Preparando hoja de ruta...");
-
-      const DPI = 200;
-      const mm = (v) => Math.round(v * DPI / 25.4);
-      const st = getEstadoDespacho(zona);
-
-      let hojaRuta = generarCanvasHojaRutaTicket(zona, st, mm);
-      hojaRuta = forzarAltoMinimo(hojaRuta, TICKET_MIN_HEIGHT_MM, mm);
-
-      const dataUrl = hojaRuta.toDataURL('image/png');
-      const altoRealMM = (hojaRuta.height / DPI) * 25.4;
-
-      imprimirTicketera(dataUrl, altoRealMM);
-      mostrarToast("Hoja de ruta lista.");
+        const css = `
+          @page { size: 80mm ${ALTO_PAGINA_MM.toFixed(2)}mm portrait; margin: 0; }
+          * { box-sizing: border-box; }
+          html, body { margin: 0 !important; padding: 0 !important; width: 80mm; background: #ffffff; }
+          .pagina {
+            width: 80mm;
+            height: ${ALTO_PAGINA_MM.toFixed(2)}mm;
+            page-break-after: always;
+            break-after: page;
+            overflow: hidden;
+            position: relative;
+          }
+          .pagina:last-child { page-break-after: auto; break-after: auto; }
+          .pagina img { display: block; width: 80mm; height: auto; margin: 0; padding: 0; }
+        `;
+        const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title> </title><style>${css}</style></head><body>${paginasHTML}</body></html>`;
+        imprimirEnIframe(html);
+        mostrarToast(`Recibos listos (${zona.entregas.length}, uno por hoja).`);
+      } catch (err) {
+        console.error('Error generando recibos:', err);
+        mostrarToast("Error al generar los recibos: " + (err.message || err));
+      }
     }
 
     // ================================================================
@@ -1969,15 +2088,33 @@
         },
         zonas: data.carguillo.zonas.map(z => {
           const ventasDeZona = data.ventas.filter(v => (v.zonaClave && z.zonaClave && v.zonaClave === z.zonaClave) || (!v.zonaClave && v.zona && v.zona === z.zona));
+          const fechaEntregaZona =
+            z.fecha_entrega ||
+            (data.meta && data.meta.fecha_entrega) ||
+            (ventasDeZona[0] && (ventasDeZona[0].fecha_entrega || ventasDeZona[0].fecha_entrega_solicitada || ventasDeZona[0].fecha_entrega_programada)) ||
+            '';
           return {
             zonaClave: z.zonaClave, zona: z.zona, codigo_carguillo: z.codigo_carguillo,
+            numero_carro: z.numero_carro || '',
             total_ventas: z.total_ventas, total_paquetes: z.total_paquetes, total_monto: z.total_monto,
+            fecha_entrega: fechaEntregaZona,
             productos: (z.productos || []).map(p => ({ producto: p.producto, paquetes: parseInt(p.paquetes) || 0 })),
             entregas: ventasDeZona.map(v => ({
               codigo: v.codigo,
               cliente: typeof v.cliente === 'string' ? v.cliente : (v.cliente && v.cliente.nombre) || '',
-              dni: v.dni || '', telefono_contacto: v.telefono_contacto || '', telefono_llegada: v.telefono_llegada || '',
-              direccion: v.direccion || '', fecha_venta: v.fecha_venta || '',
+              dni: v.dni || '',
+              ruc: v.ruc || '',
+              codigo_cliente: v.codigo_cliente || '',
+              telefono_contacto: v.telefono_contacto || '',
+              telefono_llegada: v.telefono_llegada || '',
+              direccion: v.direccion || '',
+              direccion_llegada: v.direccion_llegada || '',
+              direccion_agencia: v.direccion_agencia || '',
+              direccion_entrega: v.direccion_entrega || '',
+              envio_tercero: !!v.envio_tercero,
+              fecha_venta: v.fecha_venta || '',
+              fecha_entrega: v.fecha_entrega || v.fecha_entrega_solicitada || v.fecha_entrega_programada || fechaEntregaZona || '',
+              vendedor: v.vendedor_asignado || v.vendedor || data.vendedor || 'Oficina',
               total_paquetes: v.total_paquetes || 0, monto_total: v.monto_total || 0,
               monto_pagado: v.monto_pagado || 0, monto_pendiente: v.monto_pendiente || 0,
               condicion_pago: v.condicion_pago || '', estado_pago: v.estado_pago || '',

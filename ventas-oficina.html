@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>FABREC | Oficina</title>
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  
+
   <style>
     :root {
       --primary: #0f172a;
@@ -305,7 +305,7 @@
     .zona-pick .zona-pick-nombre { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .zona-color-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.06); }
 
-    /* ============ CARD VENTA (NUEVO DISEÑO) ============ */
+    /* ============ CARD VENTA ============ */
     .card-venta {
       display: flex;
       background: var(--surface);
@@ -542,54 +542,98 @@
     .precio-item.final .precio-value { color: #92400e; }
 
     /* ============ CARGUILLO ============ */
-    .zona-carguillo-card {
+    .grupo-zona-header {
+      display: flex; align-items: center; gap: 10px;
+      margin: 18px 0 12px; padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-left: 5px solid var(--primary);
+    }
+    .grupo-zona-header:first-child { margin-top: 0; }
+    .grupo-zona-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    .grupo-zona-nombre { font-size: 13.5px; font-weight: 900; letter-spacing: -0.2px; flex: 1; }
+    .grupo-zona-meta { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+
+    .carguillo-card {
       background: var(--surface); border: 1px solid var(--border-strong);
       border-radius: var(--radius); margin-bottom: 12px; overflow: hidden;
     }
-    .zona-carguillo-header {
-      padding: 14px 16px; display: flex; align-items: center; gap: 11px;
-      border-bottom: 1px solid var(--border);
+    .carguillo-card.enviado { border-color: #a7f3d0; background: #f9fefb; }
+    .carguillo-card-header { padding: 14px 15px; display: flex; align-items: center; gap: 11px; }
+    .carguillo-car-icon {
+      width: 42px; height: 42px; border-radius: 12px;
+      background: var(--primary); display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; color: var(--on-primary); font-weight: 900; font-size: 15px;
     }
-    .zona-carguillo-dot {
-      width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
-      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.06);
-    }
-    .zona-carguillo-info { flex: 1; min-width: 0; }
-    .zona-carguillo-nombre { font-size: 13.5px; font-weight: 900; letter-spacing: -0.2px; }
-    .zona-carguillo-meta { font-size: 10.5px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
-    .zona-carguillo-carga {
-      font-size: 13px; font-weight: 900; color: var(--primary-ink);
-      flex-shrink: 0; text-align: right; line-height: 1.2;
-    }
-    .zona-carguillo-carga small {
-      display: block; font-size: 9px; font-weight: 700;
-      color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.3px;
-    }
+    .carguillo-car-info { flex: 1; min-width: 0; }
+    .carguillo-car-nombre { font-size: 13.5px; font-weight: 900; letter-spacing: -0.2px; }
+    .carguillo-car-meta { font-size: 10.5px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
+    .carguillo-car-carga { font-size: 12px; font-weight: 900; color: var(--primary-ink); flex-shrink: 0; text-align: right; line-height: 1.2; }
+    .carguillo-car-carga small { display: block; font-size: 9px; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.3px; }
 
-    .zona-carguillo-body { padding: 12px 16px 16px; }
-    .venta-carguillo-item {
-      padding: 10px 12px; background: var(--bg);
-      border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
-      margin-bottom: 6px; cursor: pointer; transition: all 0.15s ease;
+    .carguillo-progress { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; margin: 0 15px 12px; }
+    .carguillo-progress-fill { height: 100%; border-radius: 999px; background: var(--primary); }
+
+    .check-enviado {
+      display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+      padding: 7px 12px; border-radius: 20px; font-size: 11px; font-weight: 800;
+      user-select: none; border: 1.5px solid var(--border-strong);
+      background: var(--surface); color: var(--text-muted);
     }
-    .venta-carguillo-item:hover { background: var(--primary-subtle); border-color: var(--primary-border); }
-    .venta-carguillo-top {
-      display: flex; justify-content: space-between; align-items: center; gap: 10px;
-      font-size: 12px;
+    .check-enviado .box {
+      width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--border-strong);
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--surface); flex-shrink: 0;
     }
-    .venta-carguillo-cliente { font-weight: 800; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .venta-carguillo-monto { font-weight: 900; color: var(--primary-ink); flex-shrink: 0; }
-    .venta-carguillo-meta {
-      font-size: 10.5px; color: var(--text-muted); font-weight: 600; margin-top: 3px;
-      display: flex; gap: 6px; flex-wrap: wrap;
+    .check-enviado .box svg { width: 11px; height: 11px; stroke: transparent; stroke-width: 3.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .check-enviado.checked { border-color: var(--success); background: var(--success-bg); color: var(--success); }
+    .check-enviado.checked .box { background: var(--success); border-color: var(--success); }
+    .check-enviado.checked .box svg { stroke: #ffffff; }
+
+    .carguillo-card-actions { padding: 0 15px 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .carguillo-card-actions .btn {
+      flex: 1; min-width: 0; height: 40px; font-size: 11px; font-weight: 800;
+      border-radius: var(--radius-sm); display: inline-flex; align-items: center;
+      justify-content: center; gap: 6px; cursor: pointer; font-family: inherit;
+      border: 1px solid transparent;
     }
+    .carguillo-card-actions .btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.4; flex-shrink: 0; }
+    .btn-ver-detalle { background: var(--surface); color: var(--text); border-color: var(--border-strong); }
+    .btn-enviar-carguillo { background: var(--primary); color: var(--on-primary); border: none; }
+    .btn-editar-cap { background: #fef3c7; color: #92400e; border-color: #fde68a; flex: 0 0 42px !important; }
+    .btn-limpiar-carguillo { background: #fff1f2; color: #be123c; border-color: #fecdd3; flex: 0 0 42px !important; }
+    .carguillo-card-actions .btn:disabled { background: var(--border-strong) !important; color: var(--text-soft) !important; border-color: var(--border-strong) !important; cursor: not-allowed; }
+    .carguillo-card-actions .btn:disabled svg { stroke: var(--text-soft) !important; }
+
+    .carguillo-modal-cliente {
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
+      padding: 12px; background: var(--bg); border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm); margin-bottom: 8px;
+    }
+    .carguillo-modal-cliente.n { background: #f0fdf4; border-color: #bbf7d0; }
+    .carguillo-modal-cliente-info { flex: 1; min-width: 0; }
+    .carguillo-modal-cliente-nombre { font-size: 13px; font-weight: 800; }
+    .carguillo-modal-cliente-dir { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px; display: flex; align-items: center; gap: 4px; line-height: 1.4; }
+    .carguillo-modal-cliente-dir svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.4; flex-shrink: 0; }
+    .carguillo-modal-cliente-tels { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+    .carguillo-modal-tel { font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 5px; background: var(--surface); border: 1px solid var(--border); text-decoration: none; color: var(--text); display: inline-flex; align-items: center; gap: 3px; }
+    .carguillo-modal-tel svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2.4; flex-shrink: 0; }
+    .carguillo-modal-cliente-paq { font-size: 12px; font-weight: 900; background: var(--text); color: var(--surface); padding: 3px 9px; border-radius: 6px; flex-shrink: 0; }
+    .carguillo-order-client { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; align-self: center; }
+    .btn-order-client { background: var(--surface); border: 1px solid var(--border-strong); color: var(--text-muted); width: 28px; height: 24px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-family: inherit; padding: 0; }
+    .btn-order-client:active { background: var(--primary-subtle); }
+    .btn-order-client:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn-order-client svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
 
     /* Historial de carguillos */
     .historial-carguillo-item {
       background: var(--surface); border: 1px solid var(--border-strong);
       border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 8px;
       display: flex; align-items: center; gap: 12px;
+      cursor: pointer; transition: all 0.15s ease;
     }
+    .historial-carguillo-item:hover { border-color: var(--primary-border); background: #fafafa; }
     .historial-carguillo-icono {
       width: 38px; height: 38px; border-radius: 11px;
       background: var(--success-bg); color: var(--success);
@@ -598,16 +642,9 @@
     }
     .historial-carguillo-icono svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
     .historial-carguillo-info { flex: 1; min-width: 0; }
-    .historial-carguillo-titulo {
-      font-size: 12.5px; font-weight: 800; color: var(--text);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .historial-carguillo-meta {
-      font-size: 10.5px; font-weight: 600; color: var(--text-muted); margin-top: 2px;
-    }
-    .historial-carguillo-monto {
-      font-size: 13px; font-weight: 900; color: var(--primary-ink); flex-shrink: 0; margin-left: 8px;
-    }
+    .historial-carguillo-titulo { font-size: 12.5px; font-weight: 800; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .historial-carguillo-meta { font-size: 10.5px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
+    .historial-carguillo-monto { font-size: 13px; font-weight: 900; color: var(--primary-ink); flex-shrink: 0; margin-left: 8px; }
 
     /* ============ TOGGLE ============ */
     .toggle-row {
@@ -635,6 +672,41 @@
     }
     .toggle-row.active .toggle-switch { background: #7c3aed; }
     .toggle-row.active .toggle-switch::after { transform: translateX(18px); }
+
+    /* ============ CLIENTE CÓDIGO / ADELANTO ============ */
+    .cliente-codigo-box {
+      background: #f0f9ff; border: 1px solid #bae6fd;
+      border-radius: var(--radius-sm); padding: 10px 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .cliente-codigo-box.activo { background: #ecfdf5; border-color: #a7f3d0; }
+    .cliente-codigo-valor {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-weight: 800; font-size: 12px; color: var(--primary-ink); letter-spacing: 0.5px;
+    }
+    .btn-gen-cod {
+      flex-shrink: 0; height: 34px; padding: 0 12px; font-size: 11px;
+      background: #0284c7; color: #fff; border: 1px solid #0284c7;
+      border-radius: var(--radius-sm); cursor: pointer; font-family: inherit;
+      font-weight: 800; display: inline-flex; align-items: center; gap: 5px;
+      width: auto;
+    }
+    .btn-gen-cod svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+    .adelanto-input-box {
+      background: #fffbeb; border: 1px solid #fde68a;
+      border-radius: var(--radius-sm); padding: 12px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .adelanto-input-box .form-label { color: #92400e; }
+    .adelanto-quick-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .btn-quick-pct {
+      background: #fef3c7; color: #92400e; border: 1px solid #fde68a;
+      padding: 10px 12px; font-size: 12px; font-weight: 900;
+      border-radius: var(--radius-sm); cursor: pointer; font-family: inherit;
+      display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+    }
+    .btn-quick-pct:active { background: #fde68a; }
 
     /* ============ EDIT ITEM ============ */
     .edit-item-row {
@@ -765,7 +837,6 @@
       }
       .fab svg { width: 26px; height: 26px; }
 
-      /* Sidebar */
       .sidebar {
         display: flex; flex-direction: column;
         position: fixed; left: 0; top: 0; bottom: 0;
@@ -815,7 +886,6 @@
       }
       .sidebar-item.active .sidebar-badge { background: rgba(255,255,255,0.25); }
 
-      /* Sidebar footer */
       .sidebar-footer {
         padding-top: 12px;
         border-top: 1px solid var(--border);
@@ -871,15 +941,9 @@
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         text-align: center;
       }
-      .sidebar-item-danger {
-        color: var(--rose) !important;
-      }
-      .sidebar-item-danger:hover {
-        background: #fff1f2 !important;
-        color: #be123c !important;
-      }
+      .sidebar-item-danger { color: var(--rose) !important; }
+      .sidebar-item-danger:hover { background: #fff1f2 !important; color: #be123c !important; }
 
-      /* Layout */
       .app-viewport { max-width: 1180px; margin: 0 auto; padding: 32px 40px 60px; }
 
       .pane-title-desktop {
@@ -888,11 +952,9 @@
         color: var(--text); margin-bottom: 22px;
       }
 
-      /* KPI grid 3 cols */
       .grid-kpis { grid-template-columns: repeat(3, 1fr); gap: 14px; }
       .kpi-value { font-size: 22px; }
 
-      /* Sale list grid */
       #listaVentasDia {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -901,7 +963,6 @@
       #listaVentasDia .card-venta { margin-bottom: 0; }
       #listaVentasDia .empty-state { grid-column: 1 / -1; }
 
-      /* Precios grid */
       #contenedorListaPrecios {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -910,28 +971,12 @@
       #contenedorListaPrecios .precio-card { margin-bottom: 0; }
       #contenedorListaPrecios .empty-state { grid-column: 1 / -1; }
 
-      /* Carguillo: zonas en grid 2 columnas */
       #carguilloContenido .zonas-carguillo-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 16px;
       }
-      #carguilloContenido .zonas-carguillo-grid .zona-carguillo-card { margin-bottom: 0; }
-      #carguilloContenido .zona-carguillo-header { padding: 18px 20px; }
-      #carguilloContenido .zona-carguillo-nombre { font-size: 15px; }
-      #carguilloContenido .zona-carguillo-body { padding: 16px 20px 20px; }
-      #carguilloContenido .venta-carguillo-item { padding: 12px 14px; }
-      #carguilloContenido .venta-carguillo-top { font-size: 13px; }
-      #carguilloContenido .venta-carguillo-meta { font-size: 11px; }
 
-      /* Historial de carguillos en grid 2 cols */
-      #historialCarguillos .historial-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-      }
-
-      /* Modal centered */
       .modal-overlay.open {
         align-items: center;
         justify-content: center;
@@ -1048,14 +1093,6 @@
         </button>
       </div>
 
-      <div class="toggle-row" id="toggleSoloMias" onclick="toggleSoloMisVentas()" style="margin-bottom: 12px;">
-        <div class="toggle-info">
-          <div class="toggle-title">Solo mis ventas</div>
-          <div class="toggle-sub">Ventas registradas desde este dispositivo · <span id="toggleDeviceId" style="font-family:ui-monospace,monospace; font-weight:800;">----</span></div>
-        </div>
-        <div class="toggle-switch"></div>
-      </div>
-
       <div id="panelAccionesConfirmados" style="display: none; margin-bottom: 12px;">
         <button onclick="enviarPagosContabilidad()" class="btn-success w-full">
           <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
@@ -1166,7 +1203,7 @@
           <strong id="detClienteNombre">-</strong>
         </div>
         <div class="detalle-bloque-item">
-          <span style="color:var(--text-muted);">DNI / RUC:</span>
+          <span style="color:var(--text-muted);">DNI / RUC / Código:</span>
           <span id="detClienteDoc">-</span>
         </div>
         <div class="detalle-bloque-item">
@@ -1178,8 +1215,12 @@
           <span id="detClienteTelLlegada">-</span>
         </div>
         <div class="detalle-bloque-item">
-          <span style="color:var(--text-muted);">Dirección:</span>
+          <span style="color:var(--text-muted);">Dirección Cliente:</span>
           <span id="detClienteDir" style="text-align: right; max-width: 60%;">-</span>
+        </div>
+        <div class="detalle-bloque-item">
+          <span style="color:var(--text-muted);">Dirección Agencia:</span>
+          <span id="detClienteDirAgencia" style="text-align: right; max-width: 60%;">-</span>
         </div>
         <div class="detalle-bloque-item">
           <span style="color:var(--text-muted);">Fecha Entrega:</span>
@@ -1257,15 +1298,55 @@
           <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
           Escribir
         </button>
-        <button onclick="abrirModalEditarVenta()" class="btn-soft-amber" style="grid-column: 1 / -1;">
+        <button onclick="abrirModalEditarVenta()" class="btn-soft-amber">
           <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           Editar venta
+        </button>
+        <button onclick="abrirModalAjustarPago()" class="btn-soft-violet">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Ajustar pago
         </button>
       </div>
 
       <button onclick="cerrarModalDetalleVenta()" class="btn-subtle w-full" style="height: 44px;">
         Cerrar Detalle
       </button>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: AJUSTAR PAGO ============ -->
+  <div id="modalAjustarPago" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">Ajustar Pago Registrado</h3>
+        <button onclick="cerrarModalAjustarPago()" class="btn-close">✕</button>
+      </div>
+
+      <div class="detalle-bloque">
+        <div class="detalle-bloque-item"><span style="color:var(--text-muted);">Cliente:</span> <strong id="ajusteCliente">-</strong></div>
+        <div class="detalle-bloque-item"><span style="color:var(--text-muted);">Pedido:</span> <span id="ajusteCodigo" style="font-family: ui-monospace, monospace; font-size:10.5px;">-</span></div>
+        <div class="detalle-bloque-item"><span style="color:var(--text-muted);">Total del pedido:</span> <strong id="ajusteTotal">S/ 0.00</strong></div>
+        <div class="detalle-bloque-item"><span style="color:var(--text-muted);">Pagado registrado:</span> <strong id="ajustePagoActual" style="color:var(--success);">S/ 0.00</strong></div>
+      </div>
+
+      <div>
+        <label class="form-label">Monto Real Pagado (S/) *</label>
+        <input type="number" id="ajusteMontoNuevo" step="0.01" min="0" class="input-field" style="font-weight: 800; font-size: 15px;">
+      </div>
+
+      <div>
+        <label class="form-label">Nota / Motivo</label>
+        <input type="text" id="ajusteNota" class="input-field" placeholder="Ej. Pago completo recibido por Yape" maxlength="120">
+      </div>
+
+      <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:var(--radius-sm); padding:10px 12px; font-size:11px; line-height:1.5; color:#92400e; font-weight:600;">
+        Esto <strong>corrige</strong> el monto que se registró al crear la venta. <strong>NO es un cobro nuevo.</strong> Si necesitas registrar dinero que recién te pagan, usa "Confirmar Cobro Recibido".
+      </div>
+
+      <div class="form-grid-2">
+        <button onclick="cerrarModalAjustarPago()" class="btn-subtle" style="height: 46px;">Cancelar</button>
+        <button onclick="guardarAjustePago()" class="btn-primary" style="height: 46px;">Guardar Ajuste</button>
+      </div>
     </div>
   </div>
 
@@ -1306,6 +1387,11 @@
       </div>
 
       <div>
+        <label class="form-label">Fecha de Entrega *</label>
+        <input type="date" id="editVentaFechaEntrega" class="input-field" style="font-weight: 700;">
+      </div>
+
+      <div>
         <label class="form-label">Estado de Pago</label>
         <div class="segmented-control" style="margin-bottom: 0;">
           <button type="button" class="segmented-btn" id="editEstadoPagado" onclick="seleccionarEstadoEdicion('PAGADO')">Pagado</button>
@@ -1340,6 +1426,10 @@
           <button onclick="cancelarAgregarItemEdicion()" class="btn-subtle" style="height:38px;">Cancelar</button>
           <button onclick="confirmarAgregarItemEdicion()" class="btn-primary" style="height:38px;">Añadir</button>
         </div>
+      </div>
+
+      <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--radius-sm); padding:10px 12px; font-size:11px; line-height:1.5; color:#1e40af; font-weight:600;">
+        💡 Al guardar cambios, esta venta se marcará como <strong>pendiente de carguillo</strong> para que puedas reenviarla con los datos actualizados (por ejemplo, si pasó de contraentrega a pagado).
       </div>
 
       <div class="form-grid-2">
@@ -1457,12 +1547,23 @@
         <div class="form-grid-2">
           <div>
             <label class="form-label">DNI (ID Cliente)</label>
-            <input type="text" id="ventaDni" placeholder="8 dígitos" maxlength="8" class="input-field">
+            <input type="text" id="ventaDni" placeholder="8 dígitos" maxlength="8" class="input-field" oninput="verificarIdCliente()">
           </div>
           <div>
             <label class="form-label">RUC (Factura)</label>
-            <input type="text" id="ventaRuc" placeholder="11 dígitos" maxlength="11" class="input-field">
+            <input type="text" id="ventaRuc" placeholder="11 dígitos" maxlength="11" class="input-field" oninput="verificarIdCliente()">
           </div>
+        </div>
+
+        <div id="clienteCodigoBox" class="cliente-codigo-box">
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:10px; font-weight:800; text-transform:uppercase; color:#0369a1; letter-spacing:0.4px;">Código de Cliente</div>
+            <div id="clienteCodigoValor" class="cliente-codigo-valor">—</div>
+          </div>
+          <button type="button" onclick="generarCodigoCliente()" class="btn-gen-cod">
+            <svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10"/><path d="M20.49 15a9 9 0 01-14.85 3.36L1 14"/></svg>
+            Generar
+          </button>
         </div>
 
         <div class="form-grid-2">
@@ -1476,7 +1577,16 @@
           </div>
         </div>
 
-        <!-- Zona + Dirección lado a lado -->
+        <div>
+          <label class="form-label">Dirección del Cliente *</label>
+          <input type="text" id="ventaDireccion" placeholder="Av. Los Laureles 321" class="input-field">
+        </div>
+
+        <div>
+          <label class="form-label">Dirección de la Agencia</label>
+          <input type="text" id="ventaDireccionAgencia" placeholder="Agencia / Terminal de llegada" class="input-field">
+        </div>
+
         <div class="form-grid-2">
           <div>
             <label class="form-label" id="lblZona">Zona del Comprador *</label>
@@ -1485,8 +1595,32 @@
             </select>
           </div>
           <div>
-            <label class="form-label">Dirección de Entrega *</label>
-            <input type="text" id="ventaDireccion" placeholder="Av. Los Laureles 321" class="input-field">
+            <label class="form-label">Fecha de Entrega *</label>
+            <input type="date" id="ventaFechaEntrega" class="input-field" style="font-weight: 700;">
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label">Condición Pago *</label>
+          <select id="ventaCondicion" class="input-field" style="font-weight: 700;" onchange="toggleAdelantoInput()">
+            <optgroup label="YA PAGADO">
+              <option value="Efectivo">Efectivo</option>
+              <option value="Transferencia">Transferencia</option>
+            </optgroup>
+            <optgroup label="POR COBRAR">
+              <option value="Pago Contraentrega">Pago Contraentrega</option>
+              <option value="Adelanto 50%">Adelanto</option>
+              <option value="Crédito">Crédito</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div id="adelantoInputBox" class="adelanto-input-box" style="display: none;">
+          <label class="form-label">Monto adelantado por el cliente (S/) *</label>
+          <input type="number" id="ventaAdelantoMonto" step="0.01" min="0" placeholder="0.00" class="input-field" style="font-weight:800;">
+          <div class="adelanto-quick-btns">
+            <button type="button" class="btn-quick-pct" onclick="aplicarAdelantoRapido(0.20)">20%</button>
+            <button type="button" class="btn-quick-pct" onclick="aplicarAdelantoRapido(0.50)">50%</button>
           </div>
         </div>
 
@@ -1494,7 +1628,6 @@
           Selecciona la zona del vendedor.
         </div>
 
-        <!-- Toggles juntos -->
         <div class="form-grid-2">
           <div class="toggle-row" id="toggleEnvioIndividual" onclick="toggleEnvioIndividual()" style="padding: 10px 12px;">
             <div class="toggle-info">
@@ -1513,30 +1646,38 @@
         </div>
 
         <div class="form-grid-2">
-          <div>
-            <label class="form-label">Fecha de Entrega *</label>
-            <input type="date" id="ventaFechaEntrega" class="input-field" style="font-weight: 700;">
-          </div>
-          <div>
-            <label class="form-label">Condición Pago *</label>
-            <select id="ventaCondicion" class="input-field" style="font-weight: 700;">
-              <optgroup label="YA PAGADO">
-                <option value="Efectivo">Efectivo</option>
-                <option value="Transferencia">Transferencia</option>
-              </optgroup>
-              <optgroup label="POR COBRAR">
-                <option value="Pago Contraentrega">Pago Contraentrega</option>
-                <option value="Adelanto 50%">Adelanto 50%</option>
-                <option value="Crédito">Crédito</option>
-              </optgroup>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-grid-2">
           <button onclick="irAPaso1()" class="btn-subtle" style="height: 48px;">Volver</button>
           <button onclick="finalizarRegistroVenta()" class="btn-primary" style="height: 48px;">Confirmar y Emitir</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: DETALLE CARGUILLO ============ -->
+  <div id="modalCarguilloDetalle" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" id="carguilloDetalleTitulo">Carguillo</h3>
+        <button onclick="cerrarModalCarguilloDetalle()" class="btn-close">✕</button>
+      </div>
+      <div id="carguilloDetalleContenido"></div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: EDITAR CAPACIDAD ============ -->
+  <div id="modalEditarCapacidad" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalCapacidadTitulo">Editar Capacidad</h3>
+        <button onclick="cerrarModalEditarCapacidad()" class="btn-close">✕</button>
+      </div>
+      <div>
+        <label class="form-label">Máximo de Paquetes *</label>
+        <input type="number" id="capacidadMaxPaq" min="1" step="1" class="input-field" placeholder="Ej. 450" inputmode="numeric" style="font-weight: 800; font-size: 15px;">
+      </div>
+      <div class="form-grid-2" style="margin-top: 4px;">
+        <button onclick="cerrarModalEditarCapacidad()" class="btn-subtle" style="height: 46px;">Cancelar</button>
+        <button onclick="guardarCapacidadCarro()" class="btn-primary" style="height: 46px;">Guardar</button>
       </div>
     </div>
   </div>
@@ -1606,6 +1747,7 @@
   <script>
     const NUMERO_CIERRE_KING = "51922796815";
     const NUMERO_CONTABILIDAD = "51922244819";
+    const CARRO_DEFAULT_MAX = 450;
 
     const store = localforage.createInstance({
       name: 'fabrec_oficina',
@@ -1640,16 +1782,23 @@
         titular: "PLASTIK PET E.I.R.L.",
         bcp: "191-9870837-0-21", cci: "002-191-00987083702-152", yape: "904 888 872",
         bbva: null
+      },
+      provincia: {
+        nombreZona: "Provincia", asesor: "Provincia",
+        color: "#dc2626", colorTexto: "#ffffff", colorInk: "#b91c1c",
+        titular: "CONSORCIO FABREC E.I.R.L.",
+        bcp: "191-9405094-0-48", cci: "002-191-00940509404-858", yape: "",
+        bbva: null
       }
     };
 
-    const ZONA_ABREV = { la_parada: "parada", cono_norte: "norte", santa_anita: "anita", cono_sur: "sur" };
+    const ZONA_ABREV = { la_parada: "parada", cono_norte: "norte", santa_anita: "anita", cono_sur: "sur", provincia: "prov" };
 
     const CONDICION_A_ESTADO = {
       "Efectivo":            { estado: "PAGADO",    ratio: 1 },
       "Transferencia":       { estado: "PAGADO",    ratio: 1 },
       "Pago Contraentrega":  { estado: "PENDIENTE", ratio: 0 },
-      "Adelanto 50%":        { estado: "PARCIAL",   ratio: 0.5 },
+      "Adelanto 50%":        { estado: "PARCIAL",   ratio: 0 },
       "Crédito":             { estado: "PENDIENTE", ratio: 0 }
     };
 
@@ -1666,6 +1815,7 @@
     let todasLasVentas = [];
     let directorioClientes = [];
     let carguillosExportados = [];
+    let carros = [];
 
     let itemsVentaTemporal = [];
     let indiceEditandoItem = -1;
@@ -1691,10 +1841,11 @@
     let registroOrigenCodigos = [];
     let registroOrigenIndice = -1;
 
-    /* ===== NUEVOS ESTADOS ===== */
     let DEVICE_ID = '';
-    let clienteExternoActivo = false;   // "cliente de otro vendedor"
-    let soloMisVentas = false;          // filtro "solo mis ventas"
+    let clienteExternoActivo = false;
+    let codigoClienteGenerado = '';
+    let carroEditandoId = null;
+    let ajustePagoVentaCodigo = null;
 
     // ==================================================
     // HELPERS
@@ -1717,7 +1868,6 @@
     }
     function esPagado(v) { return getMontoPendiente(v) <= 0.01; }
     function esPendienteContabilidad(v) { return esPagado(v) && !v.contabilidad_enviada; }
-    function esPendienteCarguillo(v) { return !v.carguillo_exportado; }
 
     function formatearMonto(v) {
       const n = Number(v) || 0;
@@ -1766,6 +1916,34 @@
         return `${dias[d.getDay()]} ${d.getDate()} ${meses[d.getMonth()]} • ${d.toLocaleTimeString('es-PE', {hour: '2-digit', minute: '2-digit'})}`;
       } catch (e) { return iso; }
     }
+    function etiquetaFechaRelativa(fechaISO) {
+      if (!fechaISO) return 'Sin fecha';
+      const hoy = new Date(); hoy.setHours(0,0,0,0);
+      const hoyStr = hoy.toISOString().split('T')[0];
+      const manana = new Date(hoy.getTime() + 86400000).toISOString().split('T')[0];
+      const ayer = new Date(hoy.getTime() - 86400000).toISOString().split('T')[0];
+      if (fechaISO === hoyStr) return 'Hoy';
+      if (fechaISO === manana) return 'Mañana';
+      if (fechaISO === ayer) return 'Ayer';
+      try {
+        const d = new Date(fechaISO + 'T00:00:00');
+        const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+        const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        return `${dias[d.getDay()]} ${d.getDate()} ${meses[d.getMonth()]}`;
+      } catch (e) { return fechaISO; }
+    }
+    function generarCodigoClienteUnico() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let codigo = '';
+      if (window.crypto && window.crypto.getRandomValues) {
+        const arr = new Uint8Array(6);
+        window.crypto.getRandomValues(arr);
+        for (let i = 0; i < 6; i++) codigo += chars[arr[i] % chars.length];
+      } else {
+        for (let i = 0; i < 6; i++) codigo += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return 'CLI-' + codigo;
+    }
 
     // ==================================================
     // DEVICE ID
@@ -1794,8 +1972,6 @@
       if (hdr) hdr.innerText = DEVICE_ID;
       const sb = document.getElementById('sidebarDeviceId');
       if (sb) sb.innerText = DEVICE_ID;
-      const tg = document.getElementById('toggleDeviceId');
-      if (tg) tg.innerText = DEVICE_ID;
     }
 
     // ==================================================
@@ -1880,11 +2056,13 @@
         todasLasVentas = (await store.getItem('ventas_todas')) || [];
         directorioClientes = (await store.getItem('clientes')) || [];
         carguillosExportados = (await store.getItem('carguillos_exportados')) || [];
+        carros = (await store.getItem('carros')) || [];
       } catch (e) {
         console.error('Error cargando datos de IndexedDB:', e);
         todasLasVentas = [];
         directorioClientes = [];
         carguillosExportados = [];
+        carros = [];
       }
 
       todasLasVentas = todasLasVentas.map(v => {
@@ -1893,11 +2071,23 @@
         if (v.device_id === undefined) v.device_id = '';
         if (v.es_cliente_externo === undefined) v.es_cliente_externo = false;
         if (v.zona_vendedor_clave === undefined) v.zona_vendedor_clave = null;
+        if (!Array.isArray(v.asignaciones)) v.asignaciones = [];
+        if (!v.fecha_entrega_solicitada) v.fecha_entrega_solicitada = '';
         if (v.cliente) {
           if (!v.cliente.telefono_contacto && v.cliente.telefono) v.cliente.telefono_contacto = v.cliente.telefono;
           if (!v.cliente.telefono_llegada) v.cliente.telefono_llegada = '';
+          if (!v.cliente.direccion_agencia) v.cliente.direccion_agencia = '';
+          if (!v.cliente.codigo_cliente) v.cliente.codigo_cliente = '';
         }
         return v;
+      });
+
+      carros = carros.map(c => {
+        if (!Array.isArray(c.orden_ventas)) c.orden_ventas = [];
+        if (typeof c.enviado !== 'boolean') c.enviado = false;
+        if (!c.maxPaquetes) c.maxPaquetes = CARRO_DEFAULT_MAX;
+        if (!c.zonaClave) c.zonaClave = '__sin_zona__';
+        return c;
       });
 
       const hoyStr = new Date().toLocaleDateString('es-PE');
@@ -1906,6 +2096,7 @@
         return new Date(v.fecha_venta).toLocaleDateString('es-PE') === hoyStr;
       });
 
+      autoAsignarVentas();
       renderizarVentasInicio();
       renderizarDashboard();
       poblarSelectorClientesAntiguos();
@@ -1919,13 +2110,14 @@
       store.setItem('ventas_todas', todasLasVentas).catch(console.error);
       actualizarMemoria();
     }
-
     async function guardarClientes() {
       try { await store.setItem('clientes', directorioClientes); } catch (e) { console.error(e); }
     }
-
     async function guardarCarguillosExportados() {
       try { await store.setItem('carguillos_exportados', carguillosExportados); } catch (e) { console.error(e); }
+    }
+    async function guardarCarros() {
+      try { await store.setItem('carros', carros); } catch (e) { console.error(e); }
     }
 
     // ==================================================
@@ -1944,7 +2136,7 @@
 
       if (paneId === 'panePrecios') renderizarListaPrecios();
       if (paneId === 'paneDashboard') { renderizarDashboard(); renderizarRegistrosCierre(); }
-      if (paneId === 'paneCarguillo') { renderizarCarguillo(); actualizarBadgeCarguillo(); }
+      if (paneId === 'paneCarguillo') { autoAsignarVentas(); renderizarCarguillo(); actualizarBadgeCarguillo(); }
       window.scrollTo(0, 0);
     }
 
@@ -1983,10 +2175,12 @@
       const fecha = fechaCompacta(fechaObj);
       return `registro_venta_oficina_${fecha}_${DEVICE_ID}_01`;
     }
-    function generarCodigoCarguillo(zonaClave) {
-      const abrev = ZONA_ABREV[zonaClave] || "gen";
-      const fecha = fechaCompacta(new Date());
-      return `carguillo_${abrev}_${fecha}_${DEVICE_ID}_01`;
+    function generarCodigoCarguillo(carro) {
+      const abrev = ZONA_ABREV[carro.zonaClave] || "gen";
+      const fBase = carro.fechaEntrega ? new Date(carro.fechaEntrega + 'T00:00:00') : new Date();
+      const fecha = fechaCompacta(fBase);
+      const n = String(carro.numero || '1').padStart(2, '0');
+      return `carguillo_${abrev}_${fecha}_${DEVICE_ID}_c${n}`;
     }
     function extraerSecuenciaVenta(codigoVenta) {
       const partes = codigoVenta.split('_');
@@ -2097,7 +2291,7 @@
     }
 
     // ==================================================
-    // ZONA PICKER (para edición)
+    // ZONA PICKER
     // ==================================================
     function renderizarZonaPicker(contId, zonaSel, onSelect) {
       const cont = document.getElementById(contId);
@@ -2118,14 +2312,14 @@
     }
 
     // ==================================================
-    // ZONA COMPRADOR (SELECT)
+    // ZONA COMPRADOR
     // ==================================================
     function poblarSelectZonasComprador() {
       const sel = document.getElementById('ventaZonaComprador');
       if (!sel) return;
       let html = '<option value="">-- Elegir --</option>';
       Object.entries(ZONAS).forEach(([clave, z]) => {
-        html += `<option value="${clave}">${escaparHTML(z.nombreZona)} — ${escaparHTML(z.asesor)}</option>`;
+        html += `<option value="${clave}">${escaparHTML(z.nombreZona)}</option>`;
       });
       sel.innerHTML = html;
     }
@@ -2181,19 +2375,22 @@
       modoTarifaManual = null;
       zonaVentaTemporal = null;
       clienteExternoActivo = false;
+      codigoClienteGenerado = '';
       resetearFormularioItem();
       poblarSelectZonasComprador();
       limpiarCamposCliente();
       const hoyISO = new Date().toISOString().split('T')[0];
       document.getElementById('ventaFechaEntrega').value = hoyISO;
       document.getElementById('ventaCondicion').value = "Efectivo";
+      document.getElementById('adelantoInputBox').style.display = 'none';
+      document.getElementById('ventaAdelantoMonto').value = '';
       cambiarUnidadMedida('paquetes');
       actualizarToggleIndividual();
+      actualizarToggleClienteExterno();
       irAPaso1();
       renderizarItemsModal();
       actualizarInfoProductoModal();
       poblarSelectorClientesAntiguos();
-      actualizarToggleClienteExterno();
       document.getElementById('modalNuevaVenta').classList.add('open');
     }
 
@@ -2213,6 +2410,7 @@
       document.getElementById('pillPaso1').classList.add('active');
       document.getElementById('pillPaso2').classList.add('active');
       document.getElementById('tituloModalVenta').innerText = "Datos del Cliente";
+      toggleAdelantoInput();
     }
     function toggleEnvioIndividual() {
       envioIndividualActivo = !envioIndividualActivo;
@@ -2222,6 +2420,49 @@
       const el = document.getElementById('toggleEnvioIndividual');
       if (envioIndividualActivo) el.classList.add('active');
       else el.classList.remove('active');
+    }
+
+    function toggleAdelantoInput() {
+      const c = document.getElementById('ventaCondicion').value;
+      const b = document.getElementById('adelantoInputBox');
+      if (c === 'Adelanto 50%') {
+        b.style.display = 'flex';
+        document.getElementById('ventaAdelantoMonto').value = '';
+      } else b.style.display = 'none';
+    }
+    function aplicarAdelantoRapido(pct) {
+      let total = 0;
+      itemsVentaTemporal.forEach(it => { total += it.subtotal || 0; });
+      const monto = +(total * pct).toFixed(2);
+      document.getElementById('ventaAdelantoMonto').value = monto.toFixed(2);
+      mostrarToast(`${Math.round(pct*100)}% aplicado: S/ ${monto.toFixed(2)}`);
+    }
+
+    function verificarIdCliente() {
+      const d = (document.getElementById('ventaDni').value || '').trim();
+      const r = (document.getElementById('ventaRuc').value || '').trim();
+      const box = document.getElementById('clienteCodigoBox');
+      const val = document.getElementById('clienteCodigoValor');
+      if (d || r) {
+        if (d && r) val.innerText = 'DNI: ' + d + ' · RUC: ' + r;
+        else if (d) val.innerText = 'DNI: ' + d;
+        else val.innerText = 'RUC: ' + r;
+        box.classList.add('activo');
+      } else if (codigoClienteGenerado) {
+        val.innerText = codigoClienteGenerado;
+        box.classList.add('activo');
+      } else {
+        val.innerText = '—';
+        box.classList.remove('activo');
+      }
+    }
+    function generarCodigoCliente() {
+      codigoClienteGenerado = generarCodigoClienteUnico();
+      document.getElementById('clienteCodigoValor').innerText = codigoClienteGenerado;
+      document.getElementById('clienteCodigoBox').classList.add('activo');
+      document.getElementById('ventaDni').value = '';
+      document.getElementById('ventaRuc').value = '';
+      mostrarToast("Código generado: " + codigoClienteGenerado);
     }
 
     function poblarSelectBotellasModal() {
@@ -2347,21 +2588,24 @@
       let opts = '<option value="">-- Nuevo Comprador --</option>';
       const ordenados = [...directorioClientes].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
       ordenados.forEach(c => {
-        const idc = c.dni || c.ruc || '';
+        const idc = c.dni || c.ruc || c.codigo_cliente || '';
         opts += `<option value="${idc}">${escaparHTML(c.nombre)} (${idc})</option>`;
       });
       sel.innerHTML = opts;
     }
     function seleccionarClienteAntiguo(dniBuscado) {
       if (!dniBuscado) { limpiarCamposCliente(); return; }
-      const c = directorioClientes.find(x => (x.dni || x.ruc) === dniBuscado);
+      const c = directorioClientes.find(x => (x.dni || x.ruc || x.codigo_cliente) === dniBuscado);
       if (c) {
         document.getElementById('ventaCliente').value = c.nombre;
-        document.getElementById('ventaDni').value = c.dni;
+        document.getElementById('ventaDni').value = c.dni || '';
         document.getElementById('ventaRuc').value = c.ruc === "No solicita factura" ? "" : (c.ruc || '');
         document.getElementById('ventaTelefono').value = c.telefono_contacto || c.telefono || '';
         document.getElementById('ventaTelefonoLlegada').value = c.telefono_llegada || '';
-        document.getElementById('ventaDireccion').value = c.direccion;
+        document.getElementById('ventaDireccion').value = c.direccion || '';
+        document.getElementById('ventaDireccionAgencia').value = c.direccion_agencia || '';
+        if (c.codigo_cliente) codigoClienteGenerado = c.codigo_cliente;
+        verificarIdCliente();
         if (c.zonaClave && ZONAS[c.zonaClave]) {
           const selZona = document.getElementById('ventaZonaComprador');
           if (selZona) selZona.value = c.zonaClave;
@@ -2377,15 +2621,21 @@
       document.getElementById('ventaTelefono').value = "";
       document.getElementById('ventaTelefonoLlegada').value = "";
       document.getElementById('ventaDireccion').value = "";
+      document.getElementById('ventaDireccionAgencia').value = "";
       document.getElementById('selectClienteAntiguo').value = "";
       const selZona = document.getElementById('ventaZonaComprador');
       if (selZona) selZona.value = "";
       zonaVentaTemporal = null;
+      codigoClienteGenerado = '';
+      const cb = document.getElementById('clienteCodigoValor');
+      if (cb) cb.innerText = '—';
+      const cbox = document.getElementById('clienteCodigoBox');
+      if (cbox) cbox.classList.remove('activo');
       if (clienteExternoActivo) actualizarInfoVendedorExterno();
     }
     function guardarClienteEnDirectorio(c) {
-      const idc = c.dni || c.ruc;
-      const idx = directorioClientes.findIndex(x => (x.dni || x.ruc) === idc);
+      const idc = c.dni || c.ruc || c.codigo_cliente;
+      const idx = directorioClientes.findIndex(x => (x.dni || x.ruc || x.codigo_cliente) === idc);
       if (idx !== -1) directorioClientes[idx] = c; else directorioClientes.push(c);
       guardarClientes();
     }
@@ -2401,6 +2651,7 @@
       const telefonoLlegada = document.getElementById('ventaTelefonoLlegada').value.trim();
       const fechaEntrega = document.getElementById('ventaFechaEntrega').value;
       const direccion = document.getElementById('ventaDireccion').value.trim();
+      const direccionAgencia = document.getElementById('ventaDireccionAgencia').value.trim();
       const condicion = document.getElementById('ventaCondicion').value;
 
       if (!zonaVentaTemporal || !ZONAS[zonaVentaTemporal]) {
@@ -2408,10 +2659,12 @@
         return;
       }
       if (!cliente) { mostrarToast("Escribe el nombre o razón social"); return; }
-      if (!dni && !ruc) { mostrarToast("Ingresa el DNI o el RUC del cliente"); return; }
+      if (!dni && !ruc && !codigoClienteGenerado) { mostrarToast("Ingresa el DNI, RUC o genera un código de cliente"); return; }
+      if (dni && dni.length !== 8) { mostrarToast("El DNI debe tener 8 dígitos"); return; }
+      if (ruc && ruc.length !== 11) { mostrarToast("El RUC debe tener 11 dígitos"); return; }
       if (!telefonoContacto) { mostrarToast("Ingresa el WhatsApp del comprador"); return; }
       if (!fechaEntrega) { mostrarToast("Selecciona la fecha de entrega"); return; }
-      if (!direccion) { mostrarToast("Ingresa la dirección para el envío"); return; }
+      if (!direccion) { mostrarToast("Ingresa la dirección del cliente"); return; }
       if (itemsVentaTemporal.length === 0) { mostrarToast("No hay botellas en el pedido"); return; }
 
       const infoPedido = recalcularTarifasDelPedido();
@@ -2442,19 +2695,32 @@
         }
       });
 
-      const config = CONDICION_A_ESTADO[condicion] || { estado: "PENDIENTE", ratio: 0 };
-      const montoPagado = +(totalSoles * config.ratio).toFixed(2);
+      let montoPagado = 0;
+      let estadoPago = "PENDIENTE";
+      if (condicion === "Adelanto 50%") {
+        const ad = parseFloat(document.getElementById('ventaAdelantoMonto').value) || 0;
+        if (ad <= 0) { mostrarToast("Ingresa el monto adelantado"); return; }
+        if (ad > totalSoles + 0.01) { mostrarToast("El adelanto no puede superar el total"); return; }
+        montoPagado = +ad.toFixed(2);
+        estadoPago = montoPagado >= totalSoles - 0.01 ? "PAGADO" : "PARCIAL";
+      } else {
+        const config = CONDICION_A_ESTADO[condicion] || { estado: "PENDIENTE", ratio: 0 };
+        montoPagado = +(totalSoles * config.ratio).toFixed(2);
+        estadoPago = config.estado;
+      }
       const montoPendiente = +(totalSoles - montoPagado).toFixed(2);
 
-      const esPagoInmediato = (condicion === "Efectivo" || condicion === "Transferencia");
+      const esPagoInmediato = (estadoPago === "PAGADO");
 
       const clienteDatos = {
-        nombre: cliente, dni,
-        ruc: ruc || "No solicita factura",
+        nombre: cliente, dni: dni || "",
+        ruc: ruc || "",
+        codigo_cliente: codigoClienteGenerado || "",
         telefono_contacto: telefonoContacto,
         telefono_llegada: telefonoLlegada,
         telefono: telefonoContacto,
         direccion,
+        direccion_agencia: direccionAgencia,
         zonaClave: zonaVentaTemporal
       };
 
@@ -2469,13 +2735,12 @@
         tarifa_aplicada: tarifaAplicadaTexto(infoPedido.modo),
         vendedor: "Oficina",
         es_cliente_externo: !!clienteExternoActivo,
-        // Si es de otro vendedor, la zona del vendedor es la misma que la del comprador
         zona_vendedor_clave: clienteExternoActivo ? zonaVentaTemporal : null,
         vendedor_asignado: zonaVendInfo ? zonaVendInfo.asesor : "Oficina",
         zona: z.nombreZona,
         zonaClave: zonaVentaTemporal,
         condicion_pago: condicion,
-        estado_pago: config.estado,
+        estado_pago: estadoPago,
         monto_pagado: montoPagado,
         monto_pendiente: montoPendiente,
         contabilidad_enviada: esPagoInmediato,
@@ -2484,9 +2749,9 @@
         cobros: montoPagado > 0 ? [{
           fecha: ahora.toISOString(),
           monto: montoPagado,
-          metodo: condicion === "Adelanto 50%" ? "Adelanto 50%" : condicion,
+          metodo: condicion === "Adelanto 50%" ? "Adelanto" : condicion,
           vendedor: "Oficina",
-          nota: condicion === "Adelanto 50%" ? "Adelanto inicial 50%" : "Pago al registrar venta"
+          nota: condicion === "Adelanto 50%" ? "Adelanto recibido al registrar venta" : "Pago al registrar venta"
         }] : [],
         items: itemsVentaTemporal.slice(),
         total_paquetes: totalPaquetes,
@@ -2505,6 +2770,7 @@
         return new Date(v.fecha_venta).toLocaleDateString('es-PE') === hoyStr;
       });
 
+      autoAsignarVentas();
       cerrarModalVenta();
       mostrarToast("Venta " + codigoVenta + " registrada");
       renderizarVentasInicio();
@@ -2529,15 +2795,8 @@
     function contarPendientes() { return todasLasVentas.filter(v => !esPagado(v)).length; }
     function contarConfirmados() { return todasLasVentas.filter(v => esPendienteContabilidad(v)).length; }
 
-    function toggleSoloMisVentas() {
-      soloMisVentas = !soloMisVentas;
-      const el = document.getElementById('toggleSoloMias');
-      if (el) el.classList.toggle('active', soloMisVentas);
-      renderizarVentasInicio();
-    }
-
     // ==================================================
-    // RENDERIZAR VENTAS (CARD MEJORADO)
+    // RENDERIZAR VENTAS
     // ==================================================
     function renderizarVentasInicio() {
       const cont = document.getElementById('listaVentasDia');
@@ -2578,15 +2837,13 @@
         mostrarFecha = true;
       }
 
-      if (soloMisVentas) {
-        lista = lista.filter(v => v.device_id === DEVICE_ID);
-      }
-
       if (q) {
         lista = lista.filter(v =>
           (v.codigo || '').toLowerCase().includes(q) ||
           (v.cliente && v.cliente.nombre && v.cliente.nombre.toLowerCase().includes(q)) ||
-          (v.cliente && v.cliente.dni && v.cliente.dni.includes(q))
+          (v.cliente && v.cliente.dni && v.cliente.dni.includes(q)) ||
+          (v.cliente && v.cliente.ruc && v.cliente.ruc.includes(q)) ||
+          (v.cliente && v.cliente.codigo_cliente && v.cliente.codigo_cliente.toLowerCase().includes(q))
         );
       }
 
@@ -2594,7 +2851,6 @@
 
       if (lista.length === 0) {
         let msg = "No hay ventas que coincidan con el filtro o búsqueda.";
-        if (soloMisVentas) msg = "Aún no registras ventas desde este dispositivo en este filtro.";
         if (filtroVentasActivo === 'confirmados') msg = "No hay pagos pendientes de enviar a contabilidad.";
         if (filtroVentasActivo === 'pendientes') msg = "No hay ventas por cobrar.";
         if (filtroVentasActivo === 'todas' && ventasHoy.length === 0) msg = "No hay ventas registradas hoy. Toca el botón para crear una venta.";
@@ -2676,11 +2932,16 @@
       }
 
       document.getElementById('detClienteNombre').innerText = v.cliente.nombre;
-      document.getElementById('detClienteDoc').innerText = `DNI: ${v.cliente.dni} ${v.cliente.ruc && v.cliente.ruc !== 'No solicita factura' ? ' • RUC: ' + v.cliente.ruc : ''}`;
+      let docTxt = '';
+      if (v.cliente.dni) docTxt += 'DNI: ' + v.cliente.dni;
+      if (v.cliente.ruc && v.cliente.ruc !== 'No solicita factura') docTxt += (docTxt ? ' • ' : '') + 'RUC: ' + v.cliente.ruc;
+      if (v.cliente.codigo_cliente) docTxt += (docTxt ? ' • ' : '') + 'Código: ' + v.cliente.codigo_cliente;
+      document.getElementById('detClienteDoc').innerText = docTxt || '-';
       document.getElementById('detClienteTel').innerText = telContacto || '-';
       document.getElementById('detClienteTelLlegada').innerText = telLlegada || '-';
-      document.getElementById('detClienteDir').innerText = v.cliente.direccion;
-      document.getElementById('detFechaEntrega').innerText = v.fecha_entrega_solicitada;
+      document.getElementById('detClienteDir').innerText = v.cliente.direccion || '-';
+      document.getElementById('detClienteDirAgencia').innerText = v.cliente.direccion_agencia || '-';
+      document.getElementById('detFechaEntrega').innerText = v.fecha_entrega_solicitada || '-';
       document.getElementById('detFechaVenta').innerText = v.fecha_venta ? new Date(v.fecha_venta).toLocaleString('es-PE') : '-';
       document.getElementById('detCondicionPago').innerText = v.condicion_pago;
       document.getElementById('detTipoEnvio').innerHTML = v.tipo_envio === 'individual'
@@ -2781,6 +3042,79 @@
     }
 
     // ==================================================
+    // AJUSTAR PAGO REGISTRADO
+    // ==================================================
+    function abrirModalAjustarPago() {
+      if (!ventaDetalleActual) return;
+      const v = ventaDetalleActual;
+      ajustePagoVentaCodigo = v.codigo;
+      document.getElementById('ajusteCliente').innerText = v.cliente.nombre;
+      document.getElementById('ajusteCodigo').innerText = v.codigo;
+      document.getElementById('ajusteTotal').innerText = 'S/ ' + v.monto_total.toFixed(2);
+      document.getElementById('ajustePagoActual').innerText = 'S/ ' + getMontoPagado(v).toFixed(2);
+      document.getElementById('ajusteMontoNuevo').value = getMontoPagado(v).toFixed(2);
+      document.getElementById('ajusteNota').value = '';
+      document.getElementById('modalAjustarPago').classList.add('open');
+    }
+    function cerrarModalAjustarPago() {
+      document.getElementById('modalAjustarPago').classList.remove('open');
+      ajustePagoVentaCodigo = null;
+    }
+    function guardarAjustePago() {
+      if (!ajustePagoVentaCodigo) return;
+      const v = todasLasVentas.find(x => x.codigo === ajustePagoVentaCodigo);
+      if (!v) { mostrarToast("Venta no encontrada"); return; }
+
+      const nuevoMonto = parseFloat(document.getElementById('ajusteMontoNuevo').value);
+      const nota = document.getElementById('ajusteNota').value.trim();
+
+      if (isNaN(nuevoMonto) || nuevoMonto < 0) { mostrarToast("Ingresa un monto válido"); return; }
+      if (nuevoMonto > v.monto_total + 0.01) { mostrarToast("El monto no puede exceder el total S/ " + v.monto_total.toFixed(2)); return; }
+
+      const montoAnterior = +getMontoPagado(v).toFixed(2);
+      const montoNuevo = +nuevoMonto.toFixed(2);
+      const ahora = new Date();
+
+      v.monto_pagado = montoNuevo;
+      v.monto_pendiente = +Math.max(0, v.monto_total - montoNuevo).toFixed(2);
+      v.estado_pago = v.monto_pendiente <= 0.01 ? 'PAGADO' : (montoNuevo > 0.01 ? 'PARCIAL' : 'PENDIENTE');
+
+      // Si ahora está pagado, permitir reenviar a contabilidad
+      if (v.estado_pago === 'PAGADO') {
+        v.contabilidad_enviada = false;
+      }
+
+      // NOTA: Ajustar pago NO marca la venta como pendiente de carguillo.
+      // Solo la edición explícita de la venta lo hace.
+
+      if (!Array.isArray(v.cobros)) v.cobros = [];
+      v.cobros.push({
+        fecha: ahora.toISOString(),
+        monto: montoNuevo,
+        metodo: 'Ajuste',
+        vendedor: 'Oficina',
+        tipo: 'ajuste',
+        monto_anterior: montoAnterior,
+        nota: nota || `Ajuste: S/ ${montoAnterior.toFixed(2)} → S/ ${montoNuevo.toFixed(2)}`
+      });
+
+      guardarVentas();
+      const hoyStr = new Date().toLocaleDateString('es-PE');
+      ventasHoy = todasLasVentas.filter(x => {
+        if (!x.fecha_venta) return false;
+        return new Date(x.fecha_venta).toLocaleDateString('es-PE') === hoyStr;
+      });
+
+      cerrarModalAjustarPago();
+      cerrarModalDetalleVenta();
+      renderizarVentasInicio();
+      renderizarDashboard();
+      renderizarCarguillo();
+      actualizarBadgeCarguillo();
+      mostrarToast("Pago ajustado: S/ " + montoAnterior.toFixed(2) + " → S/ " + montoNuevo.toFixed(2));
+    }
+
+    // ==================================================
     // WHATSAPP
     // ==================================================
     function escribirWhatsAppCliente() {
@@ -2807,8 +3141,8 @@
       let datos = "*DATOS DE PAGO FABREC - " + z.nombreZona.toUpperCase() + "*\n" +
                   "Titular: " + z.titular + "\n" +
                   "BCP: " + z.bcp + "\n" +
-                  "CCI: " + z.cci + "\n" +
-                  "YAPE: " + z.yape;
+                  "CCI: " + z.cci;
+      if (z.yape) datos += "\nYAPE: " + z.yape;
       if (z.bbva) datos += "\nBBVA: " + z.bbva;
 
       let url;
@@ -2845,6 +3179,10 @@
       document.getElementById('editVentaCodigo').innerText = v.codigo;
       document.getElementById('editVentaCliente').innerText = v.cliente.nombre;
       document.getElementById('editVentaZona').innerText = editandoZonaClave && ZONAS[editandoZonaClave] ? ZONAS[editandoZonaClave].nombreZona : '—';
+
+      // Cargar fecha de entrega actual
+      const fechaEntregaActual = v.fecha_entrega_solicitada || new Date().toISOString().split('T')[0];
+      document.getElementById('editVentaFechaEntrega').value = fechaEntregaActual;
 
       poblarSelectProductosEdicion();
       renderizarItemsEdicion();
@@ -3012,6 +3350,9 @@
       if (itemsEdicionVenta.length === 0) { mostrarToast("Debe haber al menos un producto"); return; }
       if (!editandoZonaClave || !ZONAS[editandoZonaClave]) { mostrarToast("Selecciona una zona"); return; }
 
+      const nuevaFechaEntrega = (document.getElementById('editVentaFechaEntrega').value || '').trim();
+      if (!nuevaFechaEntrega) { mostrarToast("Selecciona la fecha de entrega"); return; }
+
       const info = recalcularItemsEdicion();
       const totalPaquetes = itemsEdicionVenta.reduce((a, it) => a + (it.paquetes_totales || 0), 0);
       const totalSoles = itemsEdicionVenta.reduce((a, it) => a + (it.subtotal || 0), 0);
@@ -3034,7 +3375,6 @@
       const zonaInfo = ZONAS[editandoZonaClave];
       v.zonaClave = editandoZonaClave;
       v.zona = zonaInfo.nombreZona;
-      // Si era de otro vendedor, mantener la zona del vendedor = zona comprador
       if (v.es_cliente_externo) v.zona_vendedor_clave = editandoZonaClave;
 
       if (seraPagado && !estabaPagado) {
@@ -3058,9 +3398,11 @@
         v.monto_pendiente = 0;
         v.estado_pago = 'PAGADO';
       } else {
-        v.monto_pagado = 0;
-        v.monto_pendiente = +totalSoles.toFixed(2);
-        v.estado_pago = 'PENDIENTE';
+        const mp = getMontoPagado(v);
+        const pend = Math.max(0, totalSoles - mp);
+        v.monto_pagado = mp;
+        v.monto_pendiente = +pend.toFixed(2);
+        v.estado_pago = pend <= 0.01 ? 'PAGADO' : (mp > 0 ? 'PARCIAL' : 'PENDIENTE');
       }
 
       const tickets = [];
@@ -3080,6 +3422,17 @@
       v.tickets_produccion = tickets;
       v.tipo_envio = editandoTipoEnvio;
 
+      // Guardar fecha de entrega (puede haber cambiado)
+      v.fecha_entrega_solicitada = nuevaFechaEntrega;
+
+      // ✅ IMPORTANTE: Cualquier edición de la venta la marca como PENDIENTE DE CARGUILLO
+      // para poder reenviar el carguillo con los datos actualizados.
+      // (Ej: venta que estaba en contraentrega y ahora pasó a pagado).
+      // NOTA: Esto NO ocurre al confirmar un cobro ni al ajustar pago, sólo al editar.
+      v.carguillo_exportado = false;
+      delete v.carguillo_exportado_fecha;
+      v.asignaciones = [];
+
       guardarVentas();
 
       const hoyStr = new Date().toLocaleDateString('es-PE');
@@ -3088,12 +3441,14 @@
         return new Date(x.fecha_venta).toLocaleDateString('es-PE') === hoyStr;
       });
 
+      autoAsignarVentas();
+      guardarCarros();
       cerrarModalEditarVenta();
       renderizarVentasInicio();
       renderizarCarguillo();
       renderizarDashboard();
       actualizarBadgeCarguillo();
-      mostrarToast("Venta actualizada");
+      mostrarToast("Venta actualizada. Pendiente de reenviar carguillo.");
     }
 
     // ==================================================
@@ -3144,6 +3499,11 @@
       v.estado_pago = v.monto_pendiente <= 0.01 ? "PAGADO" : "PARCIAL";
       if (!v.cobros) v.cobros = [];
       v.cobros.push(cobro);
+
+      // NOTA IMPORTANTE: El cobro real NO marca la venta como pendiente de carguillo.
+      // El carguillo ya fue enviado con la información de "cobrar" y el motorizado
+      // es quien hizo el cobro. Solo la EDICIÓN manual de la venta resetea ese estado.
+      // (Si el admin quiere corregir el carguillo, debe editar la venta.)
 
       guardarVentas();
       cerrarModalConfirmarCobro();
@@ -3269,7 +3629,9 @@
       ctx.fillText('DNI / RUC', padding, y);
       ctx.fillStyle = '#0f172a';
       ctx.font = `700 12px ${FONT_REG}`;
-      ctx.fillText(cli.dni || '-', padding, y + 15);
+      let docTxt = cli.dni || (cli.ruc && cli.ruc !== 'No solicita factura' ? cli.ruc : '');
+      if (!docTxt && cli.codigo_cliente) docTxt = cli.codigo_cliente;
+      ctx.fillText(docTxt || '-', padding, y + 15);
 
       ctx.fillStyle = '#94a3b8';
       ctx.font = `800 9px ${FONT_REG}`;
@@ -3296,6 +3658,25 @@
       }
       if (line) { ctx.fillText(line, padding, y); y += 15; }
       y += 8;
+
+      if (cli.direccion_agencia) {
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = `800 9px ${FONT_REG}`;
+        ctx.fillText('DIRECCIÓN AGENCIA', padding, y);
+        y += 15;
+        ctx.fillStyle = '#0f172a';
+        ctx.font = `600 11px ${FONT_REG}`;
+        const dirA = cli.direccion_agencia;
+        const wordsA = dirA.split(' ');
+        let lineA = '';
+        for (const w of wordsA) {
+          const test = lineA ? lineA + ' ' + w : w;
+          if (ctx.measureText(test).width > maxW) { ctx.fillText(lineA, padding, y); y += 15; lineA = w; }
+          else lineA = test;
+        }
+        if (lineA) { ctx.fillText(lineA, padding, y); y += 15; }
+        y += 8;
+      }
 
       ctx.fillStyle = '#94a3b8';
       ctx.font = `800 9px ${FONT_REG}`;
@@ -3487,32 +3868,52 @@
       } catch (e) { console.error(e); mostrarToast("Error generando imagen"); }
     }
 
+    // ============= ENVIAR RECIBO (compartir imagen real) =============
     async function enviarReciboCliente() {
       if (!ventaDetalleActual) return;
       const v = ventaDetalleActual;
-      const telRaw = v.cliente.telefono_contacto || v.cliente.telefono || '';
-      const tel = formatearTelefonoPeru(telRaw);
-      if (!tel) { mostrarToast("El comprador no tiene WhatsApp registrado"); return; }
+      const tel = formatearTelefonoPeru(v.cliente.telefono_contacto || v.cliente.telefono || '');
 
+      // Intenta compartir la imagen mediante Web Share API (móvil)
+      try {
+        if (navigator.canShare && navigator.share) {
+          mostrarToast("Generando recibo...");
+          const cv = await generarReciboCanvas(v);
+          const bl = await new Promise(r => cv.toBlob(r, 'image/png'));
+          if (bl) {
+            const file = new File([bl], nombreArchivoRecibo(v), { type: 'image/png' });
+            if (navigator.canShare({ files: [file] })) {
+              await navigator.share({ files: [file], title: 'Recibo ' + v.codigo });
+              mostrarToast("Recibo compartido. Elige WhatsApp y el contacto.");
+              return;
+            }
+          }
+        }
+      } catch (e) {
+        if (e && e.name === 'AbortError') return; // el usuario canceló
+        console.warn('Error al compartir recibo:', e);
+      }
+
+      // Fallback: descarga + abrir chat
       try {
         mostrarToast("Generando recibo...");
-        const canvas = await generarReciboCanvas(v);
-        canvas.toBlob(blob => {
-          if (!blob) return;
-          const url = URL.createObjectURL(blob);
+        const cv = await generarReciboCanvas(v);
+        cv.toBlob(b => {
+          if (!b) return;
+          const u = URL.createObjectURL(b);
           const a = document.createElement('a');
-          a.href = url;
+          a.href = u;
           a.download = nombreArchivoRecibo(v);
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
-          setTimeout(() => URL.revokeObjectURL(url), 2000);
+          setTimeout(() => URL.revokeObjectURL(u), 2000);
         }, 'image/png');
       } catch (e) { console.error(e); }
 
-      let url;
-      if (tel.length >= 11) url = "https://api.whatsapp.com/send/?phone=" + tel;
-      else url = "https://api.whatsapp.com/send/";
+      const url = tel && tel.length >= 11
+        ? "https://api.whatsapp.com/send/?phone=" + tel
+        : "https://api.whatsapp.com/send/";
       window.open(url, '_blank');
       mostrarToast("Recibo descargado. Adjúntalo en el chat del comprador.");
     }
@@ -3984,16 +4385,18 @@
       const toast = document.getElementById('toast');
       toast.innerText = msg;
       toast.classList.add('show');
-      setTimeout(() => { toast.classList.remove('show'); }, 2400);
+      clearTimeout(toast._tm);
+      toast._tm = setTimeout(() => { toast.classList.remove('show'); }, 2400);
     }
 
     // ==================================================
-    // CARGUILLO
+    // CARGUILLO - SISTEMA DE CARROS (multi-zona)
     // ==================================================
     function actualizarBadgeCarguillo() {
       const badgeMobile = document.getElementById('badgeCarguillo');
       const badgeSidebar = document.getElementById('badgeCarguilloSidebar');
-      const pendientes = todasLasVentas.filter(v => esPendienteCarguillo(v)).length;
+      const pendientes = carros.filter(c => totalPaquetesEnCarro(c.id) > 0 && !c.enviado).length +
+                        todasLasVentas.filter(v => v.tipo_envio === 'individual' && !v.carguillo_exportado).length;
       [badgeMobile, badgeSidebar].forEach(b => {
         if (!b) return;
         if (pendientes > 0) { b.style.display = ''; b.innerText = pendientes; }
@@ -4001,113 +4404,355 @@
       });
     }
 
+    function carrosDeZonaFecha(zonaClave, fecha) {
+      return carros.filter(c => c.zonaClave === zonaClave && c.fechaEntrega === fecha);
+    }
+
+    function siguienteNumeroCarro(zonaClave, fecha) {
+      const del = carrosDeZonaFecha(zonaClave, fecha);
+      let max = 0;
+      del.forEach(c => { const n = parseInt(c.numero) || 0; if (n > max) max = n; });
+      return String(max + 1);
+    }
+
+    function totalPaquetesEnCarro(cid) {
+      let t = 0;
+      todasLasVentas.forEach(v => { const a = (v.asignaciones || []).find(x => x.carroId === cid); if (a) t += a.paquetes; });
+      return t;
+    }
+    function productosEnCarro(cid) {
+      const p = {};
+      todasLasVentas.forEach(v => {
+        const a = (v.asignaciones || []).find(x => x.carroId === cid); if (!a) return;
+        (a.items || []).forEach(it => { p[it.producto] = (p[it.producto] || 0) + it.paquetes; });
+      });
+      return Object.entries(p).sort((a, b) => b[1] - a[1]);
+    }
+    function clientesEnCarro(cid) {
+      const carro = carros.find(c => c.id === cid);
+      const lista = [];
+      todasLasVentas.forEach(v => {
+        const a = (v.asignaciones || []).find(x => x.carroId === cid);
+        if (a) lista.push({ nombre: (v.cliente && v.cliente.nombre) || '-', direccion: (v.cliente && v.cliente.direccion) || '-', paquetes: a.paquetes, ventaCodigo: v.codigo });
+      });
+      if (carro && Array.isArray(carro.orden_ventas) && carro.orden_ventas.length > 0) {
+        const orden = carro.orden_ventas;
+        lista.sort((a, b) => {
+          const ia = orden.indexOf(a.ventaCodigo);
+          const ib = orden.indexOf(b.ventaCodigo);
+          if (ia === -1 && ib === -1) return 0;
+          if (ia === -1) return 1;
+          if (ib === -1) return -1;
+          return ia - ib;
+        });
+      }
+      return lista;
+    }
+    function ventasEnCarro(cid) {
+      const carro = carros.find(c => c.id === cid);
+      const ventas = todasLasVentas.filter(v => v.tipo_envio !== 'individual' && (v.asignaciones || []).some(a => a.carroId === cid && a.paquetes > 0));
+      if (carro && Array.isArray(carro.orden_ventas) && carro.orden_ventas.length > 0) {
+        const orden = carro.orden_ventas;
+        ventas.sort((a, b) => {
+          const ia = orden.indexOf(a.codigo);
+          const ib = orden.indexOf(b.codigo);
+          if (ia === -1 && ib === -1) return 0;
+          if (ia === -1) return 1;
+          if (ib === -1) return -1;
+          return ia - ib;
+        });
+      }
+      return ventas;
+    }
+
+    function autoAsignarVentas() {
+      todasLasVentas.forEach(v => { if (!v.carguillo_exportado) v.asignaciones = []; });
+
+      const vc = todasLasVentas.filter(v => v.tipo_envio !== 'individual' && !v.carguillo_exportado);
+      if (vc.length === 0) { guardarCarros(); return; }
+
+      const porGrupo = {};
+      vc.forEach(v => {
+        const zk = v.zonaClave || '__sin_zona__';
+        const f = v.fecha_entrega_solicitada || 'sin_fecha';
+        const key = zk + '|' + f;
+        if (!porGrupo[key]) porGrupo[key] = { zonaClave: zk, fecha: f, ventas: [] };
+        porGrupo[key].ventas.push(v);
+      });
+
+      Object.entries(porGrupo).forEach(([key, grupo]) => {
+        const { zonaClave, fecha, ventas } = grupo;
+        let carrosGrupo = carros.filter(c => c.zonaClave === zonaClave && c.fechaEntrega === fecha && !c.enviado);
+
+        if (carrosGrupo.length === 0) {
+          const nuevo = {
+            id: generarId('carro'),
+            zonaClave, numero: '1',
+            maxPaquetes: CARRO_DEFAULT_MAX,
+            fechaEntrega: fecha, enviado: false, orden_ventas: []
+          };
+          carros.push(nuevo);
+          carrosGrupo = [nuevo];
+        }
+
+        const ca = {};
+        carrosGrupo.forEach(c => { ca[c.id] = 0; });
+
+        const vo = [...ventas].sort((a, b) => (b.total_paquetes || 0) - (a.total_paquetes || 0));
+
+        vo.forEach(venta => {
+          const paquetes = parseInt(venta.total_paquetes) || 0;
+          if (paquetes <= 0) return;
+
+          let carroDestino = null;
+          for (const carro of carrosGrupo) {
+            const libre = (carro.maxPaquetes || 0) - (ca[carro.id] || 0);
+            if (libre >= paquetes) { carroDestino = carro; break; }
+          }
+
+          if (!carroDestino) {
+            const maxNuevo = Math.max(CARRO_DEFAULT_MAX, paquetes);
+            carroDestino = {
+              id: generarId('carro'),
+              zonaClave, numero: siguienteNumeroCarro(zonaClave, fecha),
+              maxPaquetes: maxNuevo,
+              fechaEntrega: fecha, enviado: false, orden_ventas: []
+            };
+            carros.push(carroDestino);
+            carrosGrupo.push(carroDestino);
+            ca[carroDestino.id] = 0;
+          }
+
+          const items = (venta.items || [])
+            .map(it => ({ producto: it.producto, paquetes: parseInt(it.paquetes_totales) || 0 }))
+            .filter(it => it.paquetes > 0);
+
+          venta.asignaciones = [{
+            carroId: carroDestino.id,
+            items: items,
+            paquetes: paquetes
+          }];
+          ca[carroDestino.id] += paquetes;
+        });
+
+        carrosGrupo.forEach(carro => {
+          if (!Array.isArray(carro.orden_ventas)) carro.orden_ventas = [];
+          const codigosEnCarro = ventas
+            .filter(v => (v.asignaciones || []).some(a => a.carroId === carro.id && a.paquetes > 0))
+            .map(v => v.codigo);
+          carro.orden_ventas = carro.orden_ventas.filter(c => codigosEnCarro.includes(c));
+          codigosEnCarro.forEach(c => { if (!carro.orden_ventas.includes(c)) carro.orden_ventas.push(c); });
+        });
+      });
+
+      guardarCarros();
+    }
+
+    // ==================================================
+    // MOVER CLIENTE EN CARGUILLO
+    // ==================================================
+    function moverClienteEnCarguillo(carroId, ventaCodigo, dir) {
+      const carro = carros.find(c => c.id === carroId);
+      if (!carro) return;
+      if (!Array.isArray(carro.orden_ventas)) carro.orden_ventas = [];
+
+      const codigosEnCarro = todasLasVentas.filter(v => v.tipo_envio !== 'individual' && (v.asignaciones || []).some(a => a.carroId === carroId && a.paquetes > 0)).map(v => v.codigo);
+      let orden = carro.orden_ventas.filter(c => codigosEnCarro.includes(c));
+      codigosEnCarro.forEach(c => { if (!orden.includes(c)) orden.push(c); });
+      carro.orden_ventas = orden;
+
+      const idx = orden.indexOf(ventaCodigo);
+      if (idx === -1) return;
+      const nIdx = idx + dir;
+      if (nIdx < 0 || nIdx >= orden.length) return;
+      [orden[idx], orden[nIdx]] = [orden[nIdx], orden[idx]];
+      carro.orden_ventas = orden;
+
+      guardarCarros();
+      renderizarCarguillo();
+      if (document.getElementById('modalCarguilloDetalle').classList.contains('open')) {
+        verDetalleCarguillo(carroId);
+      }
+      mostrarToast('Ruta actualizada');
+    }
+
+    // ==================================================
+    // CHECKBOX Y LIMPIAR CARGUILLO
+    // ==================================================
+    function toggleEnviadoCarguillo(cid) {
+      const carro = carros.find(c => c.id === cid);
+      if (!carro) return;
+      carro.enviado = !carro.enviado;
+      guardarCarros();
+      renderizarCarguillo();
+      actualizarBadgeCarguillo();
+      mostrarToast(carro.enviado ? 'Carguillo marcado como enviado' : 'Carguillo marcado como pendiente');
+    }
+
+    function limpiarCarguillo(cid) {
+      const carro = carros.find(c => c.id === cid);
+      if (!carro) return;
+      if (!carro.enviado) { mostrarToast("Primero marca el carguillo como enviado"); return; }
+      if (!confirm('¿Limpiar este carguillo? Se quitarán sus ventas asignadas para poder reutilizarlo.')) return;
+
+      todasLasVentas.forEach(v => {
+        if ((v.asignaciones || []).some(a => a.carroId === cid)) {
+          v.carguillo_exportado = true;
+          v.asignaciones = (v.asignaciones || []).filter(a => a.carroId !== cid);
+        }
+      });
+      carro.orden_ventas = [];
+
+      if (totalPaquetesEnCarro(cid) === 0) {
+        carros = carros.filter(c => c.id !== cid);
+      } else {
+        carro.enviado = false;
+      }
+
+      guardarCarros();
+      autoAsignarVentas();
+      guardarVentas();
+      renderizarCarguillo();
+      renderizarVentasInicio();
+      actualizarBadgeCarguillo();
+      mostrarToast('Carguillo limpiado');
+    }
+
+    // ==================================================
+    // RENDERIZAR CARGUILLO
+    // ==================================================
     function renderizarCarguillo() {
       const cont = document.getElementById('carguilloContenido');
       if (!cont) return;
 
-      const pendientes = todasLasVentas.filter(v => esPendienteCarguillo(v));
+      const vInd = todasLasVentas.filter(v => v.tipo_envio === 'individual' && !v.carguillo_exportado);
+      const carrosActivos = carros.filter(c => totalPaquetesEnCarro(c.id) > 0 || ventasEnCarro(c.id).length > 0);
+
+      if (carrosActivos.length === 0 && vInd.length === 0 && carguillosExportados.length === 0) {
+        cont.innerHTML = '<div class="empty-state">No hay ventas pendientes de exportar.<br>Cuando registres ventas, se distribuirán automáticamente en carros por zona y fecha de entrega.</div>';
+        return;
+      }
+
+      const porZona = {};
+      carrosActivos.forEach(c => {
+        const zk = c.zonaClave || '__sin_zona__';
+        if (!porZona[zk]) porZona[zk] = [];
+        porZona[zk].push(c);
+      });
 
       let html = '';
 
-      if (pendientes.length === 0) {
-        html += '<div class="empty-state">No hay ventas pendientes de exportar.<br>Todas las ventas ya fueron enviadas.</div>';
-      } else {
-        const porZona = {};
-        pendientes.forEach(v => {
-          const zk = v.zonaClave || '__sin_zona__';
-          if (!porZona[zk]) porZona[zk] = [];
-          porZona[zk].push(v);
-        });
+      Object.entries(porZona).forEach(([zk, carrosZona]) => {
+        const zi = ZONAS[zk];
+        const color = zi ? zi.color : '#475569';
+        const nombreZona = zi ? zi.nombreZona : 'Sin zona';
+        const totalPaqZona = carrosZona.reduce((a, c) => a + totalPaquetesEnCarro(c.id), 0);
+        const totalVentasZona = carrosZona.reduce((a, c) => a + ventasEnCarro(c.id).length, 0);
 
-        const totalPaqGlobal = pendientes.reduce((a, v) => a + (v.total_paquetes || 0), 0);
-        const totalZonas = Object.keys(porZona).length;
-
-        html += `<div class="section-header" style="margin-bottom: 12px;">
-          <span>Ventas pendientes de carguillo</span>
-          <span class="badge-count">${pendientes.length} venta${pendientes.length === 1 ? '' : 's'}</span>
+        html += `<div class="grupo-zona-header" style="border-left-color:${color};">
+          <span class="grupo-zona-dot" style="background:${color};"></span>
+          <div style="flex:1; min-width:0;">
+            <div class="grupo-zona-nombre">${escaparHTML(nombreZona)}</div>
+            <div class="grupo-zona-meta">${totalVentasZona} venta${totalVentasZona === 1 ? '' : 's'} · ${totalPaqZona} paquetes</div>
+          </div>
         </div>`;
 
-        html += `<div class="zonas-carguillo-grid">`;
-
-        Object.entries(porZona).forEach(([zk, ventasZona]) => {
-          const zi = ZONAS[zk];
-          const color = zi ? zi.color : '#475569';
-          const nombreZona = zi ? zi.nombreZona : 'Sin zona';
-
-          const paqZona = ventasZona.reduce((a, v) => a + (v.total_paquetes || 0), 0);
-          const montoZona = ventasZona.reduce((a, v) => a + v.monto_total, 0);
-
-          html += `
-            <div class="zona-carguillo-card">
-              <div class="zona-carguillo-header">
-                <span class="zona-carguillo-dot" style="background: ${color};"></span>
-                <div class="zona-carguillo-info">
-                  <div class="zona-carguillo-nombre">${escaparHTML(nombreZona)}</div>
-                  <div class="zona-carguillo-meta">${ventasZona.length} venta${ventasZona.length === 1 ? '' : 's'} • S/ ${montoZona.toFixed(2)}</div>
-                </div>
-                <div class="zona-carguillo-carga">
-                  ${paqZona}
-                  <small>paquetes</small>
-                </div>
-              </div>
-              <div class="zona-carguillo-body">
-                ${ventasZona
-                  .slice()
-                  .sort((a, b) => new Date(b.fecha_venta) - new Date(a.fecha_venta))
-                  .map(v => {
-                    const fecha = v.fecha_venta ? new Date(v.fecha_venta).toLocaleDateString('es-PE') : '';
-                    const zv = (v.es_cliente_externo && v.zona_vendedor_clave) ? ZONAS[v.zona_vendedor_clave] : null;
-                    return `
-                      <div class="venta-carguillo-item" onclick="verDetalleVenta('${v.codigo}')">
-                        <div class="venta-carguillo-top">
-                          <span class="venta-carguillo-cliente">${escaparHTML(v.cliente.nombre)}</span>
-                          <span class="venta-carguillo-monto">S/ ${v.monto_total.toFixed(2)}</span>
-                        </div>
-                        <div class="venta-carguillo-meta">
-                          <span>${escaparHTML(v.codigo)}</span>
-                          <span>•</span>
-                          <span>${v.total_paquetes} paq</span>
-                          <span>•</span>
-                          <span>${fecha}</span>
-                          ${zv ? `<span class="tag-vendedor" style="font-size:8.5px; padding:1.5px 5px; background:${zv.color}1f; color:${zv.colorInk}; border:1px solid ${zv.color}55;">Vend: ${escaparHTML(zv.asesor)}</span>` : ''}
-                          ${v.tipo_envio === 'individual' ? '<span class="tag-individual" style="font-size:8.5px; padding:1.5px 5px;">Individual</span>' : ''}
-                        </div>
-                      </div>
-                    `;
-                  }).join('')
-                }
-                <button class="btn-primary w-full" style="margin-top: 10px;" onclick="enviarVentasYCarguilloZona('${zk}')">
-                  <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                  Enviar carguillo + ventas
-                </button>
-              </div>
-            </div>
-          `;
+        carrosZona.sort((a, b) => {
+          const fa = a.fechaEntrega || '';
+          const fb = b.fechaEntrega || '';
+          return fa.localeCompare(fb);
         });
 
-        html += `</div>`;
+        carrosZona.forEach(carro => {
+          const carga = totalPaquetesEnCarro(carro.id);
+          const ventasDelCarro = ventasEnCarro(carro.id);
+          const max = carro.maxPaquetes || 0;
+          const pct = max > 0 ? Math.min(100, Math.round((carga / max) * 100)) : 0;
+          const clientes = clientesEnCarro(carro.id);
+          const completo = carga >= max && carga > 0;
+          const puedeEnviar = completo && !carro.enviado;
+          const etiqueta = carro.fechaEntrega ? etiquetaFechaRelativa(carro.fechaEntrega) : 'Sin fecha';
 
-        if (totalZonas > 1) {
-          html += `<div style="margin-top: 18px;">
-            <button class="btn-primary w-full" onclick="enviarVentasYCarguilloTodo()">
-              <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-              Enviar carguillo + ventas (${totalPaqGlobal} paq • ${totalZonas} zonas)
-            </button>
+          html += `<div class="carguillo-card ${carro.enviado ? 'enviado' : ''}" data-carro="${carro.id}">
+            <div class="carguillo-card-header">
+              <div class="carguillo-car-icon" style="background:${color};">${escaparHTML(carro.numero || '1')}</div>
+              <div class="carguillo-car-info">
+                <div class="carguillo-car-nombre">Carguillo ${escaparHTML(carro.numero || '1')} — ${escaparHTML(etiqueta)}</div>
+                <div class="carguillo-car-meta">${ventasDelCarro.length} venta${ventasDelCarro.length === 1 ? '' : 's'} · ${clientes.length} cliente${clientes.length === 1 ? '' : 's'}${completo ? ' · COMPLETO' : ''}</div>
+              </div>
+              <div class="carguillo-car-carga">${carga} / ${max}<small>paquetes</small></div>
+            </div>
+            <div class="carguillo-progress"><div class="carguillo-progress-fill" style="width:${pct}%; background:${pct >= 95 ? 'var(--rose)' : (pct >= 80 ? 'var(--amber)' : color)};"></div></div>
+            <div style="padding: 0 15px 10px; display: flex; align-items: center; gap: 8px;">
+              <div class="check-enviado ${carro.enviado ? 'checked' : ''}" onclick="toggleEnviadoCarguillo('${carro.id}')">
+                <span class="box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+                <span>${carro.enviado ? 'Enviado' : 'Marcar enviado'}</span>
+              </div>
+            </div>
+            <div class="carguillo-card-actions">
+              <button class="btn btn-editar-cap" onclick="abrirModalEditarCapacidad('${carro.id}')" title="Editar capacidad">
+                <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              </button>
+              <button class="btn btn-ver-detalle" onclick="verDetalleCarguillo('${carro.id}')">
+                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                Ver
+              </button>
+              <button class="btn btn-limpiar-carguillo" onclick="limpiarCarguillo('${carro.id}')" title="Limpiar carguillo" ${!carro.enviado ? 'disabled' : ''}>
+                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
+              </button>
+              <button class="btn btn-enviar-carguillo" onclick="enviarCarguilloCarro('${carro.id}')" ${!puedeEnviar ? 'disabled' : ''} title="${puedeEnviar ? 'Enviar carguillo' : (carro.enviado ? 'Ya enviado' : 'Carguillo no completo')}">
+                <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Enviar
+              </button>
+            </div>
           </div>`;
-        }
+        });
+      });
+
+      if (vInd.length > 0) {
+        html += `<div class="seccion-header" style="margin-top:20px;"><span>Envíos individuales</span><span class="badge-count">${vInd.length}</span></div>`;
+        vInd.forEach(v => {
+          const paq = v.total_paquetes || 0;
+          const zonaInfo = ZONAS[v.zonaClave];
+          const color = zonaInfo ? zonaInfo.color : '#475569';
+          const fechaEntrega = v.fecha_entrega_solicitada ? ` · ${etiquetaFechaRelativa(v.fecha_entrega_solicitada)}` : '';
+          html += `<div class="carguillo-card" data-ind="${v.codigo}">
+            <div class="carguillo-card-header">
+              <div class="carguillo-car-icon" style="background:${color};">
+                <svg style="width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2.2;" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              </div>
+              <div class="carguillo-car-info">
+                <div class="carguillo-car-nombre">${escaparHTML(v.cliente.nombre)}</div>
+                <div class="carguillo-car-meta">${escaparHTML(zonaInfo ? zonaInfo.nombreZona : '')} · ${escaparHTML(v.codigo)}${fechaEntrega}</div>
+              </div>
+              <div class="carguillo-car-carga">${paq}<small>paquetes</small></div>
+            </div>
+            <div class="carguillo-progress"><div class="carguillo-progress-fill" style="width:100%; background:${color};"></div></div>
+            <div class="carguillo-card-actions">
+              <button class="btn btn-ver-detalle" onclick="verDetalleIndividual('${v.codigo}')">
+                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                Ver
+              </button>
+              <button class="btn btn-enviar-carguillo" onclick="enviarCarguilloIndividual('${v.codigo}')">
+                <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Enviar
+              </button>
+            </div>
+          </div>`;
+        });
       }
 
+      // Historial de carguillos enviados — clickeables para ver detalle y reenviar
       if (carguillosExportados.length > 0) {
         html += `<div class="section-header" style="margin-top: 28px; margin-bottom: 12px;">
           <span>Carguillos enviados</span>
           <span class="badge-count">${carguillosExportados.length}</span>
         </div>`;
 
-        html += `<div class="historial-grid">`;
-        carguillosExportados.forEach(reg => {
+        carguillosExportados.slice(0, 30).forEach(reg => {
           const zonasNombres = (reg.zonas_resumen || []).map(z => z.zona).join(' • ');
           html += `
-            <div class="historial-carguillo-item">
+            <div class="historial-carguillo-item" onclick="verDetalleCarguilloHistorial('${reg.id}')">
               <div class="historial-carguillo-icono">
                 <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
               </div>
@@ -4115,177 +4760,542 @@
                 <div class="historial-carguillo-titulo">${escaparHTML(zonasNombres || 'Carguillo')}</div>
                 <div class="historial-carguillo-meta">
                   ${formatearFechaLarga(reg.fecha)}<br>
-                  ${reg.total_ventas} venta${reg.total_ventas === 1 ? '' : 's'} • ${reg.total_paquetes} paq
+                  ${reg.total_ventas} venta${reg.total_ventas === 1 ? '' : 's'} • ${reg.total_paquetes} paq${reg.fecha_reenvio ? ' • reenviado' : ''}
                 </div>
               </div>
-              <button class="icon-btn-mini" title="Reenviar" onclick="reenviarCarguillo('${reg.id}')" style="color: var(--success);">
-                <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-              </button>
-              <button class="icon-btn-mini danger" title="Eliminar del historial" onclick="eliminarCarguilloHistorial('${reg.id}')">
+              <button class="icon-btn-mini danger" title="Eliminar del historial" onclick="event.stopPropagation(); eliminarCarguilloHistorial('${reg.id}')">
                 <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/></svg>
               </button>
             </div>
           `;
         });
-        html += `</div>`;
       }
 
       cont.innerHTML = html;
     }
 
-    function enviarVentasYCarguilloZona(zonaClave) {
-      const pendientesZona = todasLasVentas.filter(v => esPendienteCarguillo(v) && v.zonaClave === zonaClave);
-      if (pendientesZona.length === 0) { mostrarToast("No hay ventas pendientes en esta zona"); return; }
-      _ejecutarEnvioVentasYCarguillo([zonaClave]);
+    // ==================================================
+    // DETALLE CARGUILLO (activo)
+    // ==================================================
+    function verDetalleCarguillo(carroId) {
+      const carro = carros.find(c => c.id === carroId); if (!carro) return;
+      const productos = productosEnCarro(carroId);
+      const clientes = clientesEnCarro(carroId);
+      const ventas = ventasEnCarro(carroId);
+      const carga = totalPaquetesEnCarro(carroId);
+      const max = carro.maxPaquetes || 0;
+      const fechaEtiqueta = carro.fechaEntrega ? etiquetaFechaRelativa(carro.fechaEntrega) : '';
+      const zonaInfo = ZONAS[carro.zonaClave];
+      const color = zonaInfo ? zonaInfo.color : '#475569';
+
+      document.getElementById('carguilloDetalleTitulo').innerText = 'Carguillo ' + (carro.numero || '') + (fechaEtiqueta ? ' — ' + fechaEtiqueta : '');
+
+      let html = `<div style="display:flex; gap:12px; align-items:center; background:${color}1a; border:1px solid ${color}55; border-radius:var(--radius-sm); padding:12px 14px;">
+        <div style="flex:1;"><div style="font-size:11px; font-weight:800; text-transform:uppercase; color:${color}; letter-spacing:0.4px;">Capacidad</div>
+        <div style="font-size:15px; font-weight:900; margin-top:2px;">${carga} / ${max} paq</div></div>
+        <div style="text-align:right;"><div style="font-size:11px; font-weight:800; text-transform:uppercase; color:${color}; letter-spacing:0.4px;">Ventas</div>
+        <div style="font-size:15px; font-weight:900; margin-top:2px;">${ventas.length}</div></div>
+      </div>`;
+
+      if (carro.fechaEntrega) {
+        html += `<div style="background:var(--bg); border:1px solid var(--border-strong); border-radius:var(--radius-sm); padding:10px 14px; font-size:12px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.4px; font-size:10px;">Fecha de entrega</span>
+          <strong style="color:var(--primary-ink); font-size:13px;">${escaparHTML(fechaEtiqueta)} · ${escaparHTML(carro.fechaEntrega)}</strong>
+        </div>`;
+      }
+
+      html += `<div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-top:12px;">Productos en este carguillo</div>`;
+      html += `<div class="detalle-bloque">`;
+      if (productos.length === 0) html += '<div style="text-align:center; color:var(--text-soft); font-size:11.5px;">Sin productos asignados.</div>';
+      else {
+        productos.forEach(([p, q]) => { html += `<div class="detalle-bloque-item"><span>${escaparHTML(p)}</span><strong>${q} paq</strong></div>`; });
+        html += `<div class="detalle-bloque-item" style="border-top:2px solid var(--border); margin-top:4px; padding-top:8px;"><span style="font-weight:900;">TOTAL</span><strong style="font-size:14px;">${carga} paq</strong></div>`;
+      }
+      html += `</div>`;
+
+      html += `<div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-top:16px; display:flex; justify-content:space-between; align-items:center;">
+        <span>Ruta de entregas</span>
+        <span style="font-size:9.5px; font-weight:700; color:var(--text-soft); text-transform:none; letter-spacing:0;">Ordena con las flechas</span>
+      </div>`;
+
+      if (clientes.length === 0) html += `<div class="detalle-bloque" style="text-align:center; color:var(--text-soft); font-size:11.5px;">Sin entregas.</div>`;
+      else {
+        clientes.forEach((c, i) => {
+          const v = ventas[i];
+          const tc = v ? (v.cliente.telefono_contacto || v.cliente.telefono || '') : '';
+          const tl = v ? (v.cliente.telefono_llegada || '') : '';
+          const pend = v ? getMontoPendiente(v) : 0;
+          const esPrimero = i === 0;
+          const esUltimo = i === clientes.length - 1;
+          const codigo = c.ventaCodigo || (v ? v.codigo : '');
+          html += `<div class="carguillo-modal-cliente ${pend <= 0.01 ? 'n' : ''}">
+            <div class="carguillo-order-client">
+              <button class="btn-order-client" onclick="moverClienteEnCarguillo('${carroId}', '${codigo}', -1)" title="Subir" ${esPrimero ? 'disabled' : ''}>
+                <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+              </button>
+              <button class="btn-order-client" onclick="moverClienteEnCarguillo('${carroId}', '${codigo}', 1)" title="Bajar" ${esUltimo ? 'disabled' : ''}>
+                <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            </div>
+            <div class="carguillo-modal-cliente-info">
+              <div class="carguillo-modal-cliente-nombre">${i + 1}. ${escaparHTML(c.nombre)}</div>
+              <div class="carguillo-modal-cliente-dir"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ${escaparHTML(c.direccion)}</div>
+              <div class="carguillo-modal-cliente-tels">
+                ${tc ? `<a href="tel:${tc.replace(/\D/g,'')}" class="carguillo-modal-tel"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> ${escaparHTML(tc)}</a>` : ''}
+                ${tl ? `<a href="tel:${tl.replace(/\D/g,'')}" class="carguillo-modal-tel" style="background:#f3e8ff; color:#5b21b6;"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Llegada: ${escaparHTML(tl)}</a>` : ''}
+                ${pend > 0.01 ? `<span class="carguillo-modal-tel" style="background:#fff1f2; color:#be123c;"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Cobrar S/ ${pend.toFixed(2)}</span>` : `<span class="carguillo-modal-tel" style="background:#ecfdf5; color:#059669;"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Pagado</span>`}
+              </div>
+            </div>
+            <div class="carguillo-modal-cliente-paq">${c.paquetes} paq</div>
+          </div>`;
+        });
+      }
+
+      html += `<div class="form-grid-2" style="margin-top:16px;">
+        <button onclick="cerrarModalCarguilloDetalle()" class="btn-subtle" style="height:46px;">Cerrar</button>
+        <button onclick="enviarCarguilloCarro('${carroId}'); cerrarModalCarguilloDetalle();" class="btn-primary" style="height:46px; margin:0;">Enviar carguillo</button>
+      </div>`;
+
+      document.getElementById('carguilloDetalleContenido').innerHTML = html;
+      document.getElementById('modalCarguilloDetalle').classList.add('open');
+    }
+    function cerrarModalCarguilloDetalle() { document.getElementById('modalCarguilloDetalle').classList.remove('open'); }
+
+    // ==================================================
+    // DETALLE CARGUILLO ENVIADO (historial) - muestra estado actual + reenviar
+    // ==================================================
+    function verDetalleCarguilloHistorial(id) {
+      const reg = carguillosExportados.find(x => x.id === id);
+      if (!reg) { mostrarToast("Carguillo no encontrado"); return; }
+
+      const ventasSnapshot = reg.payload && reg.payload.ventas ? reg.payload.ventas : [];
+      const ventasActuales = ventasSnapshot.map(vs => {
+        const actual = todasLasVentas.find(v => v.codigo === vs.codigo);
+        return actual || { codigo: vs.codigo, cliente: { nombre: vs.cliente || '-' }, total_paquetes: vs.total_paquetes || 0, monto_total: vs.monto_total || 0, monto_pagado: vs.monto_pagado, monto_pendiente: vs.monto_pendiente, estado_pago: vs.estado_pago, zonaClave: vs.zonaClave, items: vs.items || [], _fallback: true };
+      });
+
+      // Detectar cambios respecto al snapshot original
+      let cambios = 0;
+      ventasSnapshot.forEach((vs, i) => {
+        const va = ventasActuales[i];
+        if (!va || va._fallback) return;
+        const diffPagado = Math.abs((vs.monto_pagado || 0) - (va.monto_pagado || 0)) > 0.01;
+        const diffTotal = Math.abs((vs.monto_total || 0) - (va.monto_total || 0)) > 0.01;
+        const diffPaq = (vs.total_paquetes || 0) !== (va.total_paquetes || 0);
+        if (diffPagado || diffTotal || diffPaq) cambios++;
+      });
+
+      document.getElementById('carguilloDetalleTitulo').innerText = 'Carguillo Enviado';
+
+      const fechaEnvio = reg.fecha ? new Date(reg.fecha).toLocaleString('es-PE') : '-';
+      const fechaReenvio = reg.fecha_reenvio ? new Date(reg.fecha_reenvio).toLocaleString('es-PE') : null;
+
+      let html = `<div style="background:var(--success-bg); border:1px solid #a7f3d0; border-radius:var(--radius-sm); padding:12px 14px;">
+        <div style="font-size:12px; font-weight:900; color:var(--success);">✓ CARGUILLO ENVIADO</div>
+        <div style="font-size:11px; color:var(--text-muted); font-weight:600; margin-top:2px;">Enviado: ${fechaEnvio}</div>
+        ${fechaReenvio ? `<div style="font-size:11px; color:var(--text-muted); font-weight:600; margin-top:2px;">Último reenvío: ${fechaReenvio}</div>` : ''}
+        <div style="font-size:11px; color:var(--text-muted); font-weight:600; margin-top:4px;">
+          ${reg.total_ventas} ventas · ${reg.total_paquetes} paq · S/ ${(reg.total_monto||0).toFixed(2)}
+        </div>
+      </div>`;
+
+      if (cambios > 0) {
+        html += `<div style="background:#fef3c7; border:1px solid #fde68a; border-radius:var(--radius-sm); padding:10px 12px; font-size:11px; font-weight:700; color:#92400e; line-height:1.45;">
+          ⚠ <strong>${cambios} venta${cambios === 1 ? '' : 's'}</strong> cambió desde el envío original. Puedes reenviar este carguillo con los datos actualizados.
+        </div>`;
+      } else {
+        html += `<div style="background:var(--bg); border:1px solid var(--border-strong); border-radius:var(--radius-sm); padding:10px 12px; font-size:11px; font-weight:600; color:var(--text-muted); line-height:1.45;">
+          Sin cambios detectados. Los datos siguen iguales al último envío.
+        </div>`;
+      }
+
+      html += `<div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-top:12px;">Ventas en este carguillo (estado actual)</div>`;
+      html += `<div style="font-size:10.5px; font-weight:600; color:var(--text-soft); margin-bottom:8px;">Toca una venta para ver el detalle o ajustar su pago</div>`;
+
+      if (ventasActuales.length === 0) {
+        html += `<div class="empty-state">No hay ventas registradas.</div>`;
+      } else {
+        ventasActuales.forEach((v, i) => {
+          const vs = ventasSnapshot[i];
+          const pagado = getMontoPendiente(v) <= 0.01;
+          const mPag = getMontoPagado(v);
+          const mPend = getMontoPendiente(v);
+          const hayCambio = vs && !v._fallback && (
+            Math.abs((vs.monto_pagado || 0) - mPag) > 0.01 ||
+            Math.abs((vs.monto_total || 0) - (v.monto_total || 0)) > 0.01 ||
+            (vs.total_paquetes || 0) !== (v.total_paquetes || 0)
+          );
+          const zonaInfo = ZONAS[v.zonaClave];
+          const zonaCorta = zonaInfo ? zonaInfo.nombreZona.split('/')[0].trim() : '';
+          const clienteNombre = v.cliente ? v.cliente.nombre : '-';
+          const bordeExtra = hayCambio ? 'border-color:#fde68a; background:#fffbeb;' : '';
+          html += `<div class="venta-registro-row" style="${bordeExtra}" onclick="cerrarModalCarguilloDetalle(); setTimeout(() => verDetalleVenta('${v.codigo}'), 200);">
+            <div class="venta-registro-info">
+              <div class="venta-registro-nombre">${escaparHTML(clienteNombre)}${hayCambio ? ' <span style="color:#d97706;">⚠</span>' : ''}</div>
+              <div class="venta-registro-meta">${escaparHTML(v.codigo)} · ${v.total_paquetes || 0} paq${zonaCorta ? ' · ' + escaparHTML(zonaCorta) : ''}</div>
+              <div class="venta-registro-meta" style="margin-top:3px;">
+                <span style="color:${pagado ? 'var(--success)' : 'var(--amber)'}; font-weight:800;">
+                  ${pagado ? '✓ Pagado' : '○ Por cobrar'}
+                </span>
+                · Pagado: S/ ${mPag.toFixed(2)} · Pendiente: S/ ${mPend.toFixed(2)}
+              </div>
+            </div>
+            <div class="venta-registro-monto">S/ ${(v.monto_total || 0).toFixed(2)}</div>
+          </div>`;
+        });
+      }
+
+      html += `<div class="form-grid-2" style="margin-top:16px;">
+        <button onclick="cerrarModalCarguilloDetalle()" class="btn-subtle" style="height:46px;">Cerrar</button>
+        <button onclick="reenviarCarguilloActualizado('${reg.id}')" class="btn-primary" style="height:46px; margin:0;">
+          <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Reenviar actualizado
+        </button>
+      </div>`;
+
+      document.getElementById('carguilloDetalleContenido').innerHTML = html;
+      document.getElementById('modalCarguilloDetalle').classList.add('open');
     }
 
-    function enviarVentasYCarguilloTodo() {
-      const pendientes = todasLasVentas.filter(v => esPendienteCarguillo(v));
-      if (pendientes.length === 0) { mostrarToast("No hay ventas pendientes"); return; }
-      const zonasUnicas = [...new Set(pendientes.map(v => v.zonaClave || '__sin_zona__'))];
-      _ejecutarEnvioVentasYCarguillo(zonasUnicas);
-    }
+    // Reconstruye el payload con los datos ACTUALES y lo reenvía
+    function reenviarCarguilloActualizado(id) {
+      const reg = carguillosExportados.find(x => x.id === id);
+      if (!reg) { mostrarToast("Carguillo no encontrado"); return; }
 
-    function _ejecutarEnvioVentasYCarguillo(zonasAExportar) {
+      const codigos = (reg.payload && reg.payload.ventas) ? reg.payload.ventas.map(v => v.codigo) : [];
+      const ventasActuales = codigos.map(c => todasLasVentas.find(v => v.codigo === c)).filter(Boolean);
+
+      if (ventasActuales.length === 0) { mostrarToast("No se encontraron las ventas originales"); return; }
+
+      const esIndividual = !!(reg.payload && reg.payload.meta && reg.payload.meta.es_envio_individual);
       const ahora = new Date();
+
+      // Agrupar ventas por zona
+      const porZona = {};
+      ventasActuales.forEach(v => {
+        const zk = v.zonaClave || '__sin_zona__';
+        if (!porZona[zk]) porZona[zk] = [];
+        porZona[zk].push(v);
+      });
+
       const zonasData = [];
-      const ventasPayload = [];
-
-      zonasAExportar.forEach(zk => {
-        const ventasZona = todasLasVentas.filter(v => esPendienteCarguillo(v) && (v.zonaClave || '__sin_zona__') === zk);
-        if (ventasZona.length === 0) return;
-
-        const zi = ZONAS[zk];
+      Object.entries(porZona).forEach(([zk, ventas]) => {
+        const z = ZONAS[zk];
         const productos = {};
-        ventasZona.forEach(v => {
+        ventas.forEach(v => {
           (v.items || []).forEach(it => {
             const p = parseInt(it.paquetes_totales) || 0;
             if (p > 0) productos[it.producto] = (productos[it.producto] || 0) + p;
           });
         });
-
         const totalPaq = Object.values(productos).reduce((a, b) => a + b, 0);
-        const totalMonto = ventasZona.reduce((a, v) => a + v.monto_total, 0);
+        const totalMonto = ventas.reduce((a, v) => a + v.monto_total, 0);
 
-        zonasData.push({
+        // Preservar codigo_carguillo original si existe
+        let originalZona = null;
+        if (reg.payload && reg.payload.carguillo && Array.isArray(reg.payload.carguillo.zonas)) {
+          originalZona = reg.payload.carguillo.zonas.find(z2 => z2.zonaClave === zk);
+        }
+        const codCarg = originalZona ? originalZona.codigo_carguillo
+          : ('carguillo_' + (ZONA_ABREV[zk] || 'gen') + '_' + fechaCompacta(ahora) + '_' + DEVICE_ID);
+
+        const zData = {
           zonaClave: zk,
-          zona: zi ? zi.nombreZona : 'Sin zona',
-          codigo_carguillo: generarCodigoCarguillo(zk),
-          total_ventas: ventasZona.length,
+          zona: z ? z.nombreZona : 'Sin zona',
+          codigo_carguillo: codCarg,
+          total_ventas: ventas.length,
           total_paquetes: totalPaq,
           total_monto: +totalMonto.toFixed(2),
-          productos: Object.entries(productos).map(([prod, qty]) => ({ producto: prod, paquetes: qty }))
-        });
-
-        ventasZona.forEach(v => {
-          const zv = (v.es_cliente_externo && v.zona_vendedor_clave) ? ZONAS[v.zona_vendedor_clave] : null;
-          ventasPayload.push({
-            codigo: v.codigo,
-            device_id: v.device_id || '',
-            zona: v.zona || '',
-            zonaClave: v.zonaClave || '',
-            fecha_venta: v.fecha_venta,
-            fecha_entrega: v.fecha_entrega_solicitada,
-            cliente: v.cliente ? v.cliente.nombre : '',
-            dni: v.cliente ? v.cliente.dni : '',
-            ruc: v.cliente ? v.cliente.ruc : '',
-            telefono_contacto: v.cliente ? (v.cliente.telefono_contacto || v.cliente.telefono || '') : '',
-            telefono_llegada: v.cliente ? (v.cliente.telefono_llegada || '') : '',
-            direccion: v.cliente ? v.cliente.direccion : '',
-            total_paquetes: v.total_paquetes,
-            monto_total: v.monto_total,
-            monto_pagado: getMontoPagado(v),
-            monto_pendiente: getMontoPendiente(v),
-            condicion_pago: v.condicion_pago,
-            estado_pago: v.estado_pago,
-            tarifa_aplicada: v.tarifa_aplicada,
-            tipo_envio: v.tipo_envio || 'carro',
-            es_cliente_externo: !!v.es_cliente_externo,
-            zona_vendedor_clave: v.zona_vendedor_clave || null,
-            zona_vendedor: zv ? zv.nombreZona : null,
-            vendedor_asignado: zv ? zv.asesor : 'Oficina',
-            items: v.items || []
-          });
-        });
+          productos: Object.entries(productos).map(([p, q]) => ({ producto: p, paquetes: q }))
+        };
+        if (originalZona) {
+          if (originalZona.numero_carro !== undefined) zData.numero_carro = originalZona.numero_carro;
+          if (originalZona.capacidad_carro !== undefined) zData.capacidad_carro = originalZona.capacidad_carro;
+          if (originalZona.fecha_entrega) zData.fecha_entrega = originalZona.fecha_entrega;
+        }
+        if (esIndividual) {
+          zData.es_individual = true;
+          zData.numero_carro = 'IND';
+          zData.capacidad_carro = 0;
+        }
+        zonasData.push(zData);
       });
 
-      if (zonasData.length === 0) { mostrarToast("No hay ventas para enviar"); return; }
+      const ventasPayload = ventasActuales.map(v => construirVentaPayload(v));
+      const totalPaqFinal = ventasPayload.reduce((a, v) => a + (v.total_paquetes || 0), 0);
+      const totalMontoFinal = +ventasPayload.reduce((a, v) => a + (v.monto_total || 0), 0).toFixed(2);
 
       const payload = {
         tipo: "ventas_carguillo_oficina",
         fecha_envio: ahora.toISOString(),
+        fecha_reenvio: ahora.toISOString(),
         vendedor: "Oficina",
         device_id: DEVICE_ID,
         cantidad_zonas: zonasData.length,
         resumen_ventas: {
           total_ventas: ventasPayload.length,
-          total_paquetes: ventasPayload.reduce((a, v) => a + (v.total_paquetes || 0), 0),
-          total_monto: +ventasPayload.reduce((a, v) => a + v.monto_total, 0).toFixed(2)
+          total_paquetes: totalPaqFinal,
+          total_monto: totalMontoFinal
         },
-        carguillo: {
-          zonas: zonasData
-        },
+        carguillo: { zonas: zonasData },
         ventas: ventasPayload
       };
+      if (esIndividual) payload.meta = { es_envio_individual: true };
 
-      const jsonStr = JSON.stringify(payload, null, 2);
-      const url = "https://api.whatsapp.com/send/?phone=" + NUMERO_CIERRE_KING + "&text=" + encodeURIComponent(jsonStr);
-      window.open(url, '_blank');
+      window.open("https://api.whatsapp.com/send/?phone=" + NUMERO_CIERRE_KING + "&text=" + encodeURIComponent(JSON.stringify(payload, null, 2)), '_blank');
 
-      zonasAExportar.forEach(zk => {
-        todasLasVentas.forEach(v => {
-          if (esPendienteCarguillo(v) && (v.zonaClave || '__sin_zona__') === zk) {
-            v.carguillo_exportado = true;
-            v.carguillo_exportado_fecha = ahora.toISOString();
-          }
-        });
-      });
+      // Actualizar historial con el nuevo payload
+      reg.payload = payload;
+      reg.fecha_reenvio = ahora.toISOString();
+      reg.total_ventas = ventasPayload.length;
+      reg.total_paquetes = totalPaqFinal;
+      reg.total_monto = totalMontoFinal;
+      reg.zonas_resumen = zonasData.map(z => ({
+        zona: z.zona, zonaClave: z.zonaClave,
+        ventas: z.total_ventas, paquetes: z.total_paquetes,
+        monto: z.total_monto, numero_carro: z.numero_carro
+      }));
+      guardarCarguillosExportados();
 
-      const totalVentas = ventasPayload.length;
-      const totalPaq = ventasPayload.reduce((a, v) => a + (v.total_paquetes || 0), 0);
-      const totalMonto = +ventasPayload.reduce((a, v) => a + v.monto_total, 0).toFixed(2);
+      cerrarModalCarguilloDetalle();
+      renderizarCarguillo();
+      mostrarToast("Carguillo reenviado con datos actualizados");
+    }
+
+    // ==================================================
+    // DETALLE INDIVIDUAL
+    // ==================================================
+    function verDetalleIndividual(codigo) {
+      const v = todasLasVentas.find(x => x.codigo === codigo && x.tipo_envio === 'individual'); if (!v) return;
+      const fechaEtiqueta = v.fecha_entrega_solicitada ? etiquetaFechaRelativa(v.fecha_entrega_solicitada) : '';
+      const zonaInfo = ZONAS[v.zonaClave];
+      const color = zonaInfo ? zonaInfo.color : '#475569';
+      document.getElementById('carguilloDetalleTitulo').innerText = 'Envío individual' + (fechaEtiqueta ? ' — ' + fechaEtiqueta : '');
+      let html = `<div style="background:${color}1a; border:1px solid ${color}55; border-radius:var(--radius-sm); padding:12px 14px;">
+        <div style="font-size:15px; font-weight:900; color:${zonaInfo ? zonaInfo.colorInk : 'var(--primary-ink)'};">${escaparHTML(v.cliente.nombre)}</div>
+        <div style="font-size:11px; color:var(--text-muted); font-weight:600; margin-top:2px;">${escaparHTML(zonaInfo ? zonaInfo.nombreZona : '')} · ${escaparHTML(v.codigo)}</div>
+      </div>`;
+      if (v.fecha_entrega_solicitada) {
+        html += `<div style="background:var(--bg); border:1px solid var(--border-strong); border-radius:var(--radius-sm); padding:10px 14px; font-size:12px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.4px; font-size:10px;">Fecha de entrega</span>
+          <strong style="color:var(--primary-ink); font-size:13px;">${escaparHTML(fechaEtiqueta)} · ${escaparHTML(v.fecha_entrega_solicitada)}</strong>
+        </div>`;
+      }
+      html += `<div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-top:12px;">Productos</div>`;
+      html += `<div class="detalle-bloque">`;
+      (v.items || []).forEach(it => { html += `<div class="detalle-bloque-item"><span>${escaparHTML(it.producto)}</span><strong>${it.paquetes_totales} paq</strong></div>`; });
+      html += `<div class="detalle-bloque-item" style="border-top:2px solid var(--border); margin-top:4px; padding-top:8px;"><span style="font-weight:900;">TOTAL</span><strong style="font-size:14px;">${v.total_paquetes} paq</strong></div>`;
+      html += `</div>`;
+
+      html += `<div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-top:16px;">Cliente</div>`;
+      const tc = v.cliente.telefono_contacto || v.cliente.telefono || '';
+      const tl = v.cliente.telefono_llegada || '';
+      const pend = getMontoPendiente(v);
+      html += `<div class="carguillo-modal-cliente ${pend <= 0.01 ? 'n' : ''}">
+        <div class="carguillo-modal-cliente-info">
+          <div class="carguillo-modal-cliente-nombre">${escaparHTML(v.cliente.nombre)}</div>
+          <div class="carguillo-modal-cliente-dir"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ${escaparHTML(v.cliente.direccion)}</div>
+          <div class="carguillo-modal-cliente-tels">
+            ${tc ? `<a href="tel:${tc.replace(/\D/g,'')}" class="carguillo-modal-tel"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> ${escaparHTML(tc)}</a>` : ''}
+            ${tl ? `<a href="tel:${tl.replace(/\D/g,'')}" class="carguillo-modal-tel" style="background:#f3e8ff; color:#5b21b6;"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Llegada: ${escaparHTML(tl)}</a>` : ''}
+            ${pend > 0.01 ? `<span class="carguillo-modal-tel" style="background:#fff1f2; color:#be123c;"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Cobrar S/ ${pend.toFixed(2)}</span>` : `<span class="carguillo-modal-tel" style="background:#ecfdf5; color:#059669;"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Pagado</span>`}
+          </div>
+        </div>
+        <div class="carguillo-modal-cliente-paq">${v.total_paquetes} paq</div>
+      </div>`;
+
+      html += `<div class="form-grid-2" style="margin-top:16px;">
+        <button onclick="cerrarModalCarguilloDetalle()" class="btn-subtle" style="height:46px;">Cerrar</button>
+        <button onclick="enviarCarguilloIndividual('${v.codigo}'); cerrarModalCarguilloDetalle();" class="btn-primary" style="height:46px; margin:0;">Enviar</button>
+      </div>`;
+
+      document.getElementById('carguilloDetalleContenido').innerHTML = html;
+      document.getElementById('modalCarguilloDetalle').classList.add('open');
+    }
+
+    // ==================================================
+    // EDITAR CAPACIDAD
+    // ==================================================
+    function abrirModalEditarCapacidad(cid) {
+      const c = carros.find(x => x.id === cid); if (!c) return;
+      carroEditandoId = cid;
+      const zi = ZONAS[c.zonaClave];
+      const fechaEtiqueta = c.fechaEntrega ? ' — ' + etiquetaFechaRelativa(c.fechaEntrega) : '';
+      document.getElementById('modalCapacidadTitulo').innerText = 'Editar Carguillo ' + (c.numero || '') + ' (' + (zi ? zi.nombreZona : '') + ')' + fechaEtiqueta;
+      document.getElementById('capacidadMaxPaq').value = c.maxPaquetes || '';
+      document.getElementById('modalEditarCapacidad').classList.add('open');
+    }
+    function cerrarModalEditarCapacidad() {
+      document.getElementById('modalEditarCapacidad').classList.remove('open');
+      carroEditandoId = null;
+    }
+    function guardarCapacidadCarro() {
+      if (!carroEditandoId) return;
+      const m = parseInt(document.getElementById('capacidadMaxPaq').value) || 0;
+      if (m <= 0) { mostrarToast("Capacidad debe ser mayor a 0"); return; }
+      const c = carros.find(x => x.id === carroEditandoId); if (!c) return;
+      c.maxPaquetes = m;
+      guardarCarros(); autoAsignarVentas();
+      cerrarModalEditarCapacidad();
+      renderizarCarguillo(); actualizarBadgeCarguillo();
+      mostrarToast("Capacidad actualizada");
+    }
+
+    // ==================================================
+    // PAYLOAD VENTA
+    // ==================================================
+    function construirVentaPayload(v) {
+      const zv = (v.es_cliente_externo && v.zona_vendedor_clave) ? ZONAS[v.zona_vendedor_clave] : null;
+      return {
+        codigo: v.codigo,
+        device_id: v.device_id || '',
+        zona: v.zona || '', zonaClave: v.zonaClave || '',
+        fecha_venta: v.fecha_venta, fecha_entrega: v.fecha_entrega_solicitada,
+        cliente: v.cliente ? v.cliente.nombre : '',
+        dni: v.cliente ? (v.cliente.dni || '') : '',
+        ruc: v.cliente ? (v.cliente.ruc || '') : '',
+        codigo_cliente: v.cliente ? (v.cliente.codigo_cliente || '') : '',
+        telefono_contacto: v.cliente ? (v.cliente.telefono_contacto || v.cliente.telefono || '') : '',
+        telefono_llegada: v.cliente ? (v.cliente.telefono_llegada || '') : '',
+        direccion: v.cliente ? v.cliente.direccion : '',
+        direccion_agencia: v.cliente ? (v.cliente.direccion_agencia || '') : '',
+        total_paquetes: v.total_paquetes, monto_total: v.monto_total,
+        monto_pagado: getMontoPagado(v), monto_pendiente: getMontoPendiente(v),
+        condicion_pago: v.condicion_pago, estado_pago: v.estado_pago,
+        tarifa_aplicada: v.tarifa_aplicada,
+        tipo_envio: v.tipo_envio || 'carro',
+        es_cliente_externo: !!v.es_cliente_externo,
+        zona_vendedor_clave: v.zona_vendedor_clave || null,
+        zona_vendedor: zv ? zv.nombreZona : null,
+        vendedor_asignado: zv ? zv.asesor : 'Oficina',
+        items: v.items || []
+      };
+    }
+
+    // ==================================================
+    // ENVIAR CARGUILLO
+    // ==================================================
+    function enviarCarguilloCarro(cid) {
+      const carro = carros.find(c => c.id === cid); if (!carro) { mostrarToast("Carguillo no encontrado"); return; }
+      const vc = ventasEnCarro(cid);
+      if (vc.length === 0) { mostrarToast("Este carguillo no tiene ventas"); return; }
+      const carga = totalPaquetesEnCarro(cid);
+      const max = carro.maxPaquetes || 0;
+      if (carga < max) { mostrarToast("El carguillo aún no está completo"); return; }
+      if (carro.enviado) { mostrarToast("Este carguillo ya fue marcado como enviado"); return; }
+
+      const z = ZONAS[carro.zonaClave];
+      const ahora = new Date();
+      const prods = productosEnCarro(cid);
+      const tPaq = carga;
+      const tMonto = vc.reduce((a, v) => a + v.monto_total, 0);
+      const codCarg = generarCodigoCarguillo(carro);
+      const fechaEntrega = carro.fechaEntrega || ahora.toISOString().split('T')[0];
+
+      const zData = {
+        zonaClave: carro.zonaClave,
+        zona: z ? z.nombreZona : 'Sin zona',
+        codigo_carguillo: codCarg,
+        numero_carro: carro.numero || '',
+        capacidad_carro: carro.maxPaquetes || 0,
+        fecha_entrega: fechaEntrega,
+        total_ventas: vc.length, total_paquetes: tPaq, total_monto: +tMonto.toFixed(2),
+        productos: prods.map(([p, q]) => ({ producto: p, paquetes: q })),
+        ruta_orden: vc.map(v => v.codigo)
+      };
+      const vp = vc.map(v => construirVentaPayload(v));
+      const payload = {
+        tipo: "ventas_carguillo_oficina",
+        fecha_envio: ahora.toISOString(),
+        vendedor: "Oficina",
+        device_id: DEVICE_ID,
+        cantidad_zonas: 1,
+        resumen_ventas: { total_ventas: vp.length, total_paquetes: tPaq, total_monto: +tMonto.toFixed(2) },
+        carguillo: { zonas: [zData] },
+        ventas: vp,
+        meta: { carro_numero: carro.numero || '', carro_capacidad: carro.maxPaquetes || 0, fecha_entrega: fechaEntrega, ruta_orden: zData.ruta_orden }
+      };
+      window.open("https://api.whatsapp.com/send/?phone=" + NUMERO_CIERRE_KING + "&text=" + encodeURIComponent(JSON.stringify(payload, null, 2)), '_blank');
+
+      vc.forEach(v => { v.carguillo_exportado = true; v.carguillo_exportado_fecha = ahora.toISOString(); });
+      carro.enviado = true;
+      carro.fecha_enviado = ahora.toISOString();
 
       const registro = {
         id: generarId('carguillo'),
         fecha: ahora.toISOString(),
         device_id: DEVICE_ID,
-        cantidad_zonas: zonasData.length,
-        total_ventas: totalVentas,
-        total_paquetes: totalPaq,
-        total_monto: totalMonto,
-        zonas_resumen: zonasData.map(z => ({
-          zona: z.zona,
-          zonaClave: z.zonaClave,
-          ventas: z.total_ventas,
-          paquetes: z.total_paquetes,
-          monto: z.total_monto
-        })),
+        cantidad_zonas: 1,
+        total_ventas: vp.length,
+        total_paquetes: tPaq,
+        total_monto: +tMonto.toFixed(2),
+        zonas_resumen: [{ zona: zData.zona, zonaClave: carro.zonaClave, ventas: vp.length, paquetes: tPaq, monto: +tMonto.toFixed(2), numero_carro: carro.numero }],
         payload: payload
       };
-
       carguillosExportados.unshift(registro);
-      guardarCarguillosExportados();
-      guardarVentas();
 
-      renderizarCarguillo();
-      renderizarVentasInicio();
-      actualizarBadgeCarguillo();
-      mostrarToast(`${totalVentas} venta(s) + carguillo enviado(s) • ${totalPaq} paq`);
+      guardarVentas(); guardarCarros(); guardarCarguillosExportados();
+      mostrarToast(`Carguillo ${carro.numero} (${z ? z.nombreZona : ''}) enviado · ${vp.length} ventas · ${tPaq} paq`);
+      renderizarCarguillo(); actualizarBadgeCarguillo(); renderizarVentasInicio();
+    }
+
+    function enviarCarguilloIndividual(codigo) {
+      const v = todasLasVentas.find(x => x.codigo === codigo && x.tipo_envio === 'individual'); if (!v) { mostrarToast("Envío no encontrado"); return; }
+      const z = ZONAS[v.zonaClave];
+      const ahora = new Date();
+      const prods = (v.items || []).map(it => ({ producto: it.producto, paquetes: parseInt(it.paquetes_totales) || 0 }));
+      const fechaEntrega = v.fecha_entrega_solicitada || ahora.toISOString().split('T')[0];
+      const abrev = ZONA_ABREV[v.zonaClave] || 'gen';
+      const codCarg = `carguillo_${abrev}_${fechaCompacta(new Date(fechaEntrega + 'T00:00:00'))}_${DEVICE_ID}_ind_${(v.codigo || '').slice(-2)}`;
+
+      const zData = {
+        zonaClave: v.zonaClave,
+        zona: z ? z.nombreZona : 'Sin zona',
+        codigo_carguillo: codCarg,
+        numero_carro: 'IND', capacidad_carro: 0, es_individual: true,
+        fecha_entrega: fechaEntrega,
+        total_ventas: 1, total_paquetes: v.total_paquetes, total_monto: +v.monto_total.toFixed(2),
+        productos: prods
+      };
+      const payload = {
+        tipo: "ventas_carguillo_oficina",
+        fecha_envio: ahora.toISOString(),
+        vendedor: "Oficina",
+        device_id: DEVICE_ID,
+        cantidad_zonas: 1,
+        resumen_ventas: { total_ventas: 1, total_paquetes: v.total_paquetes, total_monto: +v.monto_total.toFixed(2) },
+        carguillo: { zonas: [zData] },
+        ventas: [construirVentaPayload(v)],
+        meta: { es_envio_individual: true, fecha_entrega: fechaEntrega }
+      };
+      window.open("https://api.whatsapp.com/send/?phone=" + NUMERO_CIERRE_KING + "&text=" + encodeURIComponent(JSON.stringify(payload, null, 2)), '_blank');
+      v.carguillo_exportado = true; v.carguillo_exportado_fecha = ahora.toISOString();
+
+      const registro = {
+        id: generarId('carguillo'),
+        fecha: ahora.toISOString(),
+        device_id: DEVICE_ID,
+        cantidad_zonas: 1,
+        total_ventas: 1,
+        total_paquetes: v.total_paquetes,
+        total_monto: +v.monto_total.toFixed(2),
+        zonas_resumen: [{ zona: zData.zona, zonaClave: v.zonaClave, ventas: 1, paquetes: v.total_paquetes, monto: +v.monto_total.toFixed(2), es_individual: true }],
+        payload: payload
+      };
+      carguillosExportados.unshift(registro);
+
+      guardarVentas(); guardarCarguillosExportados();
+      mostrarToast(`Envío individual ${v.codigo} enviado`);
+      renderizarCarguillo(); actualizarBadgeCarguillo(); renderizarVentasInicio();
     }
 
     function reenviarCarguillo(id) {
       const reg = carguillosExportados.find(x => x.id === id);
       if (!reg) { mostrarToast("Carguillo no encontrado"); return; }
-
-      const jsonStr = JSON.stringify(reg.payload, null, 2);
-      const url = "https://api.whatsapp.com/send/?phone=" + NUMERO_CIERRE_KING + "&text=" + encodeURIComponent(jsonStr);
-      window.open(url, '_blank');
-      mostrarToast("Reenviando carguillo + ventas...");
+      reenviarCarguilloActualizado(id);
     }
 
     async function eliminarCarguilloHistorial(id) {
-      const reg = carguillosExportados.find(x => x.id === id);
-      if (!reg) return;
       if (!confirm("¿Eliminar este carguillo del historial?\n\nLas ventas seguirán marcadas como exportadas.")) return;
       carguillosExportados = carguillosExportados.filter(x => x.id !== id);
       await guardarCarguillosExportados();
@@ -4343,6 +5353,7 @@
       ventasHoy = [];
       directorioClientes = [];
       carguillosExportados = [];
+      carros = [];
       itemsVentaTemporal = [];
       itemsEdicionVenta = [];
       ventaDetalleActual = null;
@@ -4356,7 +5367,9 @@
       envioIndividualActivo = false;
       zonaVentaTemporal = null;
       clienteExternoActivo = false;
-      soloMisVentas = false;
+      codigoClienteGenerado = '';
+      carroEditandoId = null;
+      ajustePagoVentaCodigo = null;
 
       document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
 
@@ -4366,8 +5379,6 @@
       });
       const btnTodas = document.getElementById('btnFiltroTodas');
       if (btnTodas) btnTodas.classList.add('active');
-      const toggleMias = document.getElementById('toggleSoloMias');
-      if (toggleMias) toggleMias.classList.remove('active');
 
       actualizarBotonesFiltroDash();
       await cargarDatos();
@@ -4377,60 +5388,31 @@
     // ==================================================
     // EXPOSICIÓN GLOBAL
     // ==================================================
-    window.navegarA = navegarA;
-    window.abrirModalVenta = abrirModalVenta;
-    window.cerrarModalVenta = cerrarModalVenta;
-    window.irAPaso1 = irAPaso1;
-    window.irAPaso2 = irAPaso2;
-    window.cambiarUnidadMedida = cambiarUnidadMedida;
-    window.actualizarInfoProductoModal = actualizarInfoProductoModal;
-    window.guardarItemVenta = guardarItemVenta;
-    window.cargarItemParaEditar = cargarItemParaEditar;
-    window.eliminarItemModal = eliminarItemModal;
-    window.finalizarRegistroVenta = finalizarRegistroVenta;
-    window.cambiarFiltroDashboard = cambiarFiltroDashboard;
-    window.cambiarTipoGrafico = cambiarTipoGrafico;
-    window.ciclarModoTarifa = ciclarModoTarifa;
-    window.ciclarModoTarifaEdicion = ciclarModoTarifaEdicion;
-    window.seleccionarClienteAntiguo = seleccionarClienteAntiguo;
-    window.verDetalleVenta = verDetalleVenta;
-    window.cerrarModalDetalleVenta = cerrarModalDetalleVenta;
-    window.cambiarFiltroVentas = cambiarFiltroVentas;
-    window.toggleSoloMisVentas = toggleSoloMisVentas;
-    window.abrirModalConfirmarCobroDesdeDetalle = abrirModalConfirmarCobroDesdeDetalle;
-    window.cerrarModalConfirmarCobro = cerrarModalConfirmarCobro;
-    window.confirmarCobroYNotificar = confirmarCobroYNotificar;
-    window.enviarPagosContabilidad = enviarPagosContabilidad;
-    window.enviarReciboCliente = enviarReciboCliente;
-    window.descargarReciboImagen = descargarReciboImagen;
-    window.toggleEnvioIndividual = toggleEnvioIndividual;
-    window.toggleClienteExterno = toggleClienteExterno;
-    window.cambiarZonaComprador = cambiarZonaComprador;
-    window.abrirModalEditarVenta = abrirModalEditarVenta;
-    window.cerrarModalEditarVenta = cerrarModalEditarVenta;
-    window.seleccionarEstadoEdicion = seleccionarEstadoEdicion;
-    window.seleccionarTipoEnvioEdicion = seleccionarTipoEnvioEdicion;
-    window.guardarEdicionVenta = guardarEdicionVenta;
-    window.cambiarCantidadItemEdicion = cambiarCantidadItemEdicion;
-    window.eliminarItemEdicion = eliminarItemEdicion;
-    window.abrirAgregarItemEdicion = abrirAgregarItemEdicion;
-    window.cancelarAgregarItemEdicion = cancelarAgregarItemEdicion;
-    window.confirmarAgregarItemEdicion = confirmarAgregarItemEdicion;
-    window.escribirWhatsAppCliente = escribirWhatsAppCliente;
-    window.enviarCuentaZonaAlComprador = enviarCuentaZonaAlComprador;
-    window.abrirRegistroDetalle = abrirRegistroDetalle;
-    window.cerrarModalRegistroDetalle = cerrarModalRegistroDetalle;
-    window.verDetalleVentaDesdeRegistro = verDetalleVentaDesdeRegistro;
-    window.volverAlRegistro = volverAlRegistro;
-    window.irVentaAnterior = irVentaAnterior;
-    window.irVentaSiguiente = irVentaSiguiente;
-    window.enviarVentasYCarguilloZona = enviarVentasYCarguilloZona;
-    window.enviarVentasYCarguilloTodo = enviarVentasYCarguilloTodo;
-    window.reenviarCarguillo = reenviarCarguillo;
-    window.eliminarCarguilloHistorial = eliminarCarguilloHistorial;
-    window.borrarTodosLosDatos = borrarTodosLosDatos;
-    window.cerrarModalConfirmarBorrar = cerrarModalConfirmarBorrar;
-    window.ejecutarBorrarTodo = ejecutarBorrarTodo;
+    Object.assign(window, {
+      navegarA, abrirModalVenta, cerrarModalVenta, irAPaso1, irAPaso2,
+      cambiarUnidadMedida, actualizarInfoProductoModal, guardarItemVenta,
+      cargarItemParaEditar, eliminarItemModal, finalizarRegistroVenta,
+      cambiarFiltroDashboard, cambiarTipoGrafico, ciclarModoTarifa, ciclarModoTarifaEdicion,
+      seleccionarClienteAntiguo, verDetalleVenta, cerrarModalDetalleVenta,
+      cambiarFiltroVentas, abrirModalConfirmarCobroDesdeDetalle, cerrarModalConfirmarCobro,
+      confirmarCobroYNotificar, enviarPagosContabilidad, enviarReciboCliente,
+      descargarReciboImagen, toggleEnvioIndividual, toggleAdelantoInput, aplicarAdelantoRapido,
+      verificarIdCliente, generarCodigoCliente, toggleClienteExterno, cambiarZonaComprador,
+      abrirModalEditarVenta, cerrarModalEditarVenta, seleccionarEstadoEdicion,
+      seleccionarTipoEnvioEdicion, guardarEdicionVenta, cambiarCantidadItemEdicion,
+      eliminarItemEdicion, abrirAgregarItemEdicion, cancelarAgregarItemEdicion,
+      confirmarAgregarItemEdicion, escribirWhatsAppCliente, enviarCuentaZonaAlComprador,
+      abrirRegistroDetalle, cerrarModalRegistroDetalle, verDetalleVentaDesdeRegistro,
+      volverAlRegistro, irVentaAnterior, irVentaSiguiente,
+      verDetalleCarguillo, verDetalleIndividual, cerrarModalCarguilloDetalle,
+      abrirModalEditarCapacidad, cerrarModalEditarCapacidad, guardarCapacidadCarro,
+      enviarCarguilloCarro, enviarCarguilloIndividual, moverClienteEnCarguillo,
+      toggleEnviadoCarguillo, limpiarCarguillo,
+      reenviarCarguillo, eliminarCarguilloHistorial,
+      verDetalleCarguilloHistorial, reenviarCarguilloActualizado,
+      abrirModalAjustarPago, cerrarModalAjustarPago, guardarAjustePago,
+      borrarTodosLosDatos, cerrarModalConfirmarBorrar, ejecutarBorrarTodo
+    });
 
     // ==================================================
     // INICIALIZACIÓN
